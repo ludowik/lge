@@ -1,6 +1,7 @@
 require 'lua.debug'
 require 'lua.string'
 require 'class'
+require 'index'
 require 'event'
 require 'engine'
 require 'state'
@@ -14,7 +15,16 @@ end
 
 function MySketch:draw()
     love.graphics.setFont(font)
-    love.graphics.print("hello "..sketchIndex, 100, 100)
+    love.graphics.print("hello "..self.index, 100, 100)
 end
 
-sketch = MySketch()
+sketches = {
+    MySketch(),
+    MySketch(),
+    MySketch(),
+    MySketch(),
+    MySketch(),
+    MySketch()
+}
+
+sketch = sketches[1]

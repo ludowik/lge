@@ -24,6 +24,12 @@ function extends(klass, klassParent, ...)
             if klass[fName] == nil then
                klass[fName] = func
             end
+        else
+            if type(func) == 'number' then
+                if klass[fName] == nil then
+                klass[fName] = func
+                end
+            end
         end
     end
     return klass
