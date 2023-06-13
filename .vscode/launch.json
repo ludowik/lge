@@ -12,7 +12,9 @@
                 "command": "/Applications/love.app/Contents/MacOS/love"
             },
             "windows": {
-                "command": "C:/Program Files/LOVE/love.exe",
+                "program": {
+                    "command": "C:/Program Files/LOVE/love.exe",
+                },
             },
             "args": [
                 "${workspaceFolder}",

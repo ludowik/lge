@@ -1,11 +1,13 @@
 require 'lua.debug'
+require 'lua.require'
 require 'lua.string'
 require 'class'
 require 'index'
 require 'event'
-require 'engine'
+require 'graphics2d'
 require 'state'
 require 'sketch'
+require 'engine'
 
 MySketch = class():extends(Sketch)
 
@@ -15,7 +17,7 @@ end
 
 function MySketch:draw()
     love.graphics.setFont(font)
-    love.graphics.print("hello "..self.index, 100, 100)
+    text("hello "..self.index, 100 + 100 * self.index, 100)
 end
 
 sketches = {

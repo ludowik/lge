@@ -1,12 +1,18 @@
 function love.load()
     sketchIndex = 1
+    sketch = sketches[sketchIndex]
+
     font = love.graphics.newFont(25)
 end
 
 function love.update(dt)
-    sketch:update(dt)
+    sketchIndex = sketches[(sketchIndex + 1)] and (sketchIndex + 1) or 1
+    sketch = sketches[sketchIndex]
+
+    sketch?:update(dt)
 end
 
 function love.draw()
-    sketch:draw()
+    local a = {sketch=sketch}
+    a.sketch?:draw()
 end
