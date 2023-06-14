@@ -22,4 +22,4 @@ local customLoader = function(moduleName)
     return "Unable to load file " .. moduleName
 end
 
-table.insert(package.loaders, 1, customLoader)
+--table.insert(package.loaders, 2, customLoader)

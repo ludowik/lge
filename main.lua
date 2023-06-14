@@ -9,6 +9,9 @@ require 'graphics2d'
 require 'state'
 require 'sketch'
 require 'engine'
+require 'lua.package'
+
+makezip()
 
 MySketch = class():extends(Sketch)
 
@@ -30,3 +33,38 @@ sketches = {
     MySketch(),
     MySketch()
 }
+
+local socket_http = require 'socket.http'
+
+http = class()
+
+function http.request(url, success, fail, parameterTable)
+    local result, code, headers = socket_http.request(url)
+
+    if result then
+        local tempFile = getImagePath()
+        local data = love.filesystem.write(tempFile, result)
+
+        if headers['content-type'] and headers['content-type']:startWith('image') then
+            data = image('data')
+        end
+
+        if success then 
+            success(data, code, headers)
+        end
+        
+    else        
+        if fail then
+            fail(result, code, headers)
+        end
+    end
+
+end
+
+local url = 'https://raw.githubusercontent.com/ludowik/lca/main/lca.love'
+http.request(url, function ()
+        exit()
+    end,
+    function (result, code, headers)
+        print(headers)
+    end)

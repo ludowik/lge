@@ -9,9 +9,11 @@ function love.update(dt)
     sketchIndex = sketches[(sketchIndex + 1)] and (sketchIndex + 1) or 1
     sketch = sketches[sketchIndex]
 
-    sketch?:updateSketch(dt)
+    sketch:updateSketch(dt)
 end
 
 function love.draw()
-    sketch?:drawSketch()
+    _, _, W, H = love.window.getSafeArea()
+
+    sketch:drawSketch()
 end
