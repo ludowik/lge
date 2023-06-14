@@ -18,16 +18,16 @@ function class(name)
     return klass
 end
 
-function extends(klass, klassParent, ...)
-    for fName, func in pairs(klassParent) do
-        if type(func) == 'function' and not fName:inList{'extends', 'init', '__init', '__index'} then
-            if klass[fName] == nil then
-               klass[fName] = func
-            end
-        else
-            if type(func) == 'number' then
-                if klass[fName] == nil then
-                klass[fName] = func
+local doNotOverride = {'extends', 'init', '__init', '__index'}
+
+function extends(klass, ...)
+    for _, klassParent in ipairs({...}) do
+        for propName, prop in pairs(klassParent) do
+            if klass[propName] == nil then 
+                if (type(prop) == 'function' and not doNotOverride[propName] or 
+                    type(prop) == 'number')
+                then
+                    klass[propName] = prop
                 end
             end
         end
