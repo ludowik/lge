@@ -1,7 +1,7 @@
 local function transformCode(code)
-    local pattern = "([%w%.]+)%s*%?(.-)\n"
+    local pattern = "([%w%.%:]+)%s*%?(.-)\n"
     local function replaceMatch(variable, code)
-        return string.format("if %s then %s%s end\n", variable, variable, code)
+        return string.format("if %s then %s%s end\n", variable:gsub(':', '.'), variable, code)
     end
 
     local transformedCode, replacements = string.gsub(code, pattern, replaceMatch)
