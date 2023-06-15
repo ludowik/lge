@@ -11,8 +11,6 @@ require 'sketch'
 require 'engine'
 require 'lua.package'
 
-makezip()
-
 MySketch = class():extends(Sketch)
 
 function MySketch:init()
@@ -34,7 +32,7 @@ sketches = {
     MySketch()
 }
 
-local socket_http = require 'socket.http'
+local socket_http = require 'https'
 
 http = class()
 
@@ -42,7 +40,7 @@ function http.request(url, success, fail, parameterTable)
     local result, code, headers = socket_http.request(url)
 
     if result then
-        local tempFile = getImagePath()
+        local tempFile = love.filesystem.getAppdataDirectory()
         local data = love.filesystem.write(tempFile, result)
 
         if headers['content-type'] and headers['content-type']:startWith('image') then
@@ -61,10 +59,18 @@ function http.request(url, success, fail, parameterTable)
 
 end
 
-local url = 'https://raw.githubusercontent.com/ludowik/lca/main/lca.love'
-http.request(url, function ()
-        exit()
-    end,
-    function (result, code, headers)
-        print(headers)
-    end)
+function getOS()
+    return love.system.getOS():gsub(' ', ''):lower()
+end
+
+if getOS():inList{'osx', 'ios'} then
+    local url = 'https://ludowik.github.io/lca/lca.love'
+    http.request(url, function ()
+            exit()
+        end,
+        function (result, code, headers)
+            print(headers)
+        end)
+end
+
+makezip()

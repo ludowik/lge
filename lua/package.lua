@@ -1,11 +1,11 @@
 function makezip()
-    if oswindows then
+    if getOS() == 'windows' then
         local zip = '"C:/Program Files/7-Zip/7z.exe"'
-        os.execute(zip..' u -mx1 -r -tZIP lca.love . -xr!.git* -xr!.DS_Store* -xr!lca.love -xr!__archive')
+        os.execute(zip..' u -mx1 -r -tZIP build/lca.love . -xr!.git* -xr!.DS_Store* -xr!lca.love -xr!__archive')
         
     else
         local zip = 'zip'
-        local zipCommand = zip..' -u -1 -r lca.love . -x *.git* *.DS_Store* lca.love __archive/\\*'
+        local zipCommand = zip..' -u -1 -r build/lca.love . -x *.git* *.DS_Store* lca.love __archive/\\*'
         print(zipCommand)
         os.execute(zipCommand)
     end
