@@ -19,6 +19,9 @@
             "args": [
                 "${workspaceFolder}",
                 "vsc_debug"
+            ],
+            "scriptRoots": [
+                "./"
             ]
         }
     ]

@@ -6,6 +6,7 @@
 if os.getenv "LOCAL_LUA_DEBUGGER_VSCODE" == "1" then
     local lldebugger = require "lldebugger"
     lldebugger.start()
+
     local run = love.run
     function love.run(...)
         local f = lldebugger.call(run, false, ...)
@@ -13,4 +14,11 @@ if os.getenv "LOCAL_LUA_DEBUGGER_VSCODE" == "1" then
             return lldebugger.call(f, false, ...)
         end
     end
+end
+
+function debug.traceback(message, level)
+    for ligne in message:gmatch("[^\n]+") do
+        --print(ligne)
+    end
+    print(debug.errormsg())
 end

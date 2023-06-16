@@ -14,6 +14,6 @@ end
 
 function love.draw()
     _, _, W, H = love.window.getSafeArea()
-
     sketch:drawSketch()
 end
+
