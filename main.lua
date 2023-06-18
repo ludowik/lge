@@ -1,4 +1,4 @@
-require 'lge'
+require 'engine.lge'
 
 MySketch = class():extends(Sketch)
 
