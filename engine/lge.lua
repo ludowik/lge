@@ -3,7 +3,7 @@ require 'lua.require'
 require 'lua.string'
 require 'lua.class'
 require 'lua.index'
-require 'lu.state'
+require 'lua.state'
 
 require 'system.os'
 require 'system.package'

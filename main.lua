@@ -1,5 +1,8 @@
 require 'engine.lge'
 
+-- /Users/ludo/Library/Application Support/LOVE/Lge
+
+
 MySketch = class():extends(Sketch)
 
 function MySketch:init()
@@ -23,14 +26,14 @@ sketches = {
 
 function updateScripts()
     if getOS():inList{'osx', 'ios'} then
-        local url = 'https://ludowik.github.io/lca/lca.love'
-        request(url, function ()
-                love.event.quit()
+        local url = 'https://ludowik.github.io/lge/build/lca.love'
+        request(url, function (result, code, headers)
+                local data = love.filesystem.write('lca.love', code)
             end,
             function (result, code, headers)
                 print(headers)
             end)
     end
 end
-updateScripts()
+
 makezip()

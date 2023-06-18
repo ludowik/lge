@@ -1,7 +1,7 @@
--- function love.conf(t)
---     t.console = false
---     t.graphics = true
--- end
+function love.conf(t)
+    t.console = false
+    t.graphics = true
+end
 
 if os.getenv "LOCAL_LUA_DEBUGGER_VSCODE" == "1" then
     local lldebugger = require "lldebugger"
@@ -18,7 +18,6 @@ end
 
 function debug.traceback(message, level)
     for ligne in message:gmatch("[^\n]+") do
-        --print(ligne)
+        print(ligne)
     end
-    print(debug.errormsg())
 end
