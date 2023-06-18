@@ -1,15 +1,15 @@
-local https = require 'https'
+https = require 'https'
 
-function https.request(url, success, fail, parameterTable)
+function request(url, success, fail, parameterTable)
     local result, code, headers = https.request(url)
 
     if result then
         local tempFile = love.filesystem.getAppdataDirectory()
-        local data = love.filesystem.write(tempFile, result)
+        local data = love.filesystem.write(tempFile..'/LOVE/Lge/coucou.txt', 'coucou')
+        local data = love.filesystem.write(tempFile..'/LOVE/Lge/lca.love', code)
 
-        if headers['content-type'] and headers['content-type']:startWith('image') then
-            data = image('data')
-        end
+        print(tempFile..'/LOVE/Lge/lca.love')
+        print(data)
 
         if success then 
             success(data, code, headers)

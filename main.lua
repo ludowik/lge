@@ -24,8 +24,8 @@ sketches = {
 function updateScripts()
     if getOS():inList{'osx', 'ios'} then
         local url = 'https://ludowik.github.io/lca/lca.love'
-        https.request(url, function ()
-                exit()
+        request(url, function ()
+                love.event.quit()
             end,
             function (result, code, headers)
                 print(headers)
