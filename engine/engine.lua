@@ -3,6 +3,11 @@ function love.load()
     sketch = sketches[sketchIndex]
 
     font = love.graphics.newFont(25)
+
+    push2globals(Graphics2d)
+
+    _, _, W, H = love.window.getSafeArea()    
+    love.window.setMode(W, H)
 end
 
 function love.update(dt)
@@ -13,7 +18,6 @@ function love.update(dt)
 end
 
 function love.draw()
-    _, _, W, H = love.window.getSafeArea()
     sketch:drawSketch()
 end
 

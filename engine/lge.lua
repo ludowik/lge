@@ -13,5 +13,6 @@ require 'maths.rect'
 
 require 'engine.event'
 require 'engine.graphics2d'
+require 'engine.image'
 require 'engine.sketch'
 require 'engine.engine'

@@ -34,3 +34,11 @@ function extends(klass, ...)
     end
     return klass
 end
+
+function push2globals(klass)
+    for propName, prop in pairs(klass) do
+        if type(prop) == 'function' then
+            _G[propName] = prop
+        end
+    end
+end
