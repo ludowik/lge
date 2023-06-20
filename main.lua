@@ -24,6 +24,8 @@ sketches = {
     MySketch()
 }
 
+print(love.filesystem.getAppdataDirectory())
+
 function updateScripts()
     if getOS():inList{'osx', 'ios'} then
         local url = 'https://ludowik.github.io/lge/build/lca.love'
