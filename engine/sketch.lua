@@ -1,17 +1,14 @@
-Sketch = class():extends(Index, State, Rect, Image)
+Sketch = class() : extends(Index, State, Rect, Image)
 
 function Sketch:init(w, h)
-    w = w or W
-    h = h or H
-
     State.init(self)
     Index.init(self)
+
+    w = w or W
+    h = h or H
     Rect.init(self, 0, 0, w, h)
 
-    self.size.x = w
-    self.size.y = h
-
-    Image.init(self, w, h)
+    Image.init(self, self.size.x, self.size.y)
 end
 
 function Sketch:updateSketch(dt)

@@ -9,6 +9,7 @@ require 'system.os'
 require 'system.package'
 require 'system.https'
 
+require 'maths.vec2'
 require 'maths.rect'
 
 require 'engine.event'

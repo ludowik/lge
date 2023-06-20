@@ -1,23 +1,29 @@
 function love.load()
-    sketchIndex = 1
-    sketch = sketches[sketchIndex]
-
-    font = love.graphics.newFont(25)
+    _, _, W, H = love.window.getSafeArea()    
+    love.window.setMode(W, H)
 
     push2globals(Graphics2d)
 
-    _, _, W, H = love.window.getSafeArea()    
-    love.window.setMode(W, H)
+    font = love.graphics.newFont(25)
+
+    load()
+    
+    sketchIndex = 1
+    sketch = process[sketchIndex]
 end
 
 function love.update(dt)
-    sketchIndex = sketches[(sketchIndex + 1)] and (sketchIndex + 1) or 1
-    sketch = sketches[sketchIndex]
+    sketchIndex = process[(sketchIndex + 1)] and (sketchIndex + 1) or 1
+    sketch = process[sketchIndex]
 
     sketch:updateSketch(dt)
 end
 
 function love.draw()
     sketch:drawSketch()
+
+    for _, sketch in ipairs(process) do
+        sketch:drawSketch()
+    end
 end
 

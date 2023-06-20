@@ -9,7 +9,7 @@ function class(name)
     klass.__index = klass
 
     setmetatable(klass, {
-        __call = function(...)
+        __call = function(_, ...)
             local instance = setmetatable({}, klass)
             local init = klass.init or klass.__init
             return init(instance, ...) or instance
