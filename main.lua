@@ -1,6 +1,30 @@
-require 'engine.lge'
+-- require 'system.os'
+-- require 'system.package'
 
--- /Users/ludo/Library/Application Support/LOVE/Lge
+-- function love.load()
+--     _, _, W, H = love.window.getSafeArea()
+
+--     if getOS() == 'ios' then
+--         love.window.setMode(H, W)
+--     end
+-- end
+
+-- function love.update()
+-- end
+
+-- function love.draw()
+--     love.graphics.print(getOS(), 200, 200)
+-- end
+
+-- function love.keypressed(key)
+--     if key == 'escape' then
+--         love.event.quit()
+--     end
+-- end
+
+
+
+require 'engine.lge'
 
 function load()
     process = {}
@@ -30,7 +54,7 @@ function load()
     MySketch()
 end
 
-print(love.filesystem.getAppdataDirectory())
+print(love.filesystem.getSaveDirectory())
 
 function updateScripts()
     if getOS():inList{'osx', 'ios'} then
