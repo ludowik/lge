@@ -58,7 +58,7 @@ print(love.filesystem.getSaveDirectory())
 
 function updateScripts()
     if getOS():inList{'osx', 'ios'} then
-        local url = 'https://ludowik.github.io/lge/build/lca.love'
+        local url = 'https://ludowik.github.io/Lge/build/lca.love'
         request(url, function (result, code, headers)
                 local data = love.filesystem.write('lca.love', code)
             end,
