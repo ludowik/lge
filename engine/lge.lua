@@ -9,9 +9,11 @@ require 'system.os'
 require 'system.package'
 require 'system.https'
 
+require 'maths.vec2'
 require 'maths.rect'
 
 require 'engine.event'
 require 'engine.graphics2d'
+require 'engine.image'
 require 'engine.sketch'
 require 'engine.engine'

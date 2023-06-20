@@ -9,7 +9,7 @@ function class(name)
     klass.__index = klass
 
     setmetatable(klass, {
-        __call = function(...)
+        __call = function(_, ...)
             local instance = setmetatable({}, klass)
             local init = klass.init or klass.__init
             return init(instance, ...) or instance
@@ -33,4 +33,12 @@ function extends(klass, ...)
         end
     end
     return klass
+end
+
+function push2globals(klass)
+    for propName, prop in pairs(klass) do
+        if type(prop) == 'function' then
+            _G[propName] = prop
+        end
+    end
 end

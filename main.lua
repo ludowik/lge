@@ -2,27 +2,33 @@ require 'engine.lge'
 
 -- /Users/ludo/Library/Application Support/LOVE/Lge
 
+function load()
+    process = {}
 
-MySketch = class():extends(Sketch)
+    MySketch = class() : extends(Sketch)
 
-function MySketch:init()
-    Sketch.init(self)
-end
+    function MySketch:init()
+        Sketch.init(self)
+        table.insert(process, self)
 
-function MySketch:draw()
-    love.graphics.clear(255, 0, 0)
-    love.graphics.setFont(font)
-    text("hello "..self.index, 100 + 100 * self.index, 100)
-end
+        self.position:randomize()
+        self.size:randomize()
 
-sketches = {
-    MySketch(),
-    MySketch(),
-    MySketch(),
-    MySketch(),
-    MySketch(),
+        Image.init(self, self.size.x, self.size.y)
+    end
+
+    function MySketch:draw()
+        love.graphics.clear(255, 0, 0)
+        love.graphics.setFont(font)
+        text("hello "..self.index, 100, 100)
+    end
+
     MySketch()
-}
+    MySketch()
+    MySketch()
+    MySketch()
+    MySketch()
+end
 
 print(love.filesystem.getAppdataDirectory())
 
