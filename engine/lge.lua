@@ -9,11 +9,14 @@ require 'system.os'
 require 'system.package'
 require 'system.https'
 
+require 'maths.random'
 require 'maths.vec2'
 require 'maths.rect'
 
-require 'engine.event'
+require 'engine.color'
 require 'engine.graphics2d'
 require 'engine.image'
+
+require 'engine.event'
 require 'engine.sketch'
 require 'engine.engine'

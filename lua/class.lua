@@ -50,6 +50,14 @@ function unitTesting()
     end
 end
 
+function setupClass()
+    for name,object in pairs(classList) do
+        if object.setup then
+            object.setup()
+        end
+    end
+end
+
 class().unitTest = function () 
     assert(true)
 end

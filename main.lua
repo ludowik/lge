@@ -35,16 +35,24 @@ function load()
         Sketch.init(self)
         table.insert(process, self)
 
-        self.position:randomize()
-        self.size:randomize()
+        self:randomize()
+
+        self.clr = Color.random()
 
         Image.init(self, self.size.x, self.size.y)
     end
 
+    function MySketch:randomize()
+        Rect.randomize(self)
+        self.clr = Color.random()
+    end
+
     function MySketch:draw()
         love.graphics.clear(255, 0, 0)
+
+        fill(self.clr)
         love.graphics.setFont(font)
-        text("hello "..self.index, 100, 100)
+        text("hello "..self.index)
     end
 
     MySketch()
@@ -71,3 +79,5 @@ end
 makezip()
 
 request('https://www.shutterstock.com/image-photo/surreal-image-african-elephant-wearing-260nw-1365289022.jpg')
+
+print(debug.traceback())

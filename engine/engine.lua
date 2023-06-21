@@ -2,6 +2,7 @@ function love.load()
     _, _, W, H = love.window.getSafeArea()    
     love.window.setMode(W, H)
 
+    setupClass()
     unitTesting()
     push2globals(Graphics2d)
 
