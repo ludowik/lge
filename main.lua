@@ -57,15 +57,17 @@ end
 print(love.filesystem.getSaveDirectory())
 
 function updateScripts()
-    if getOS():inList{'osx', 'ios'} then
+    --if getOS():inList{'osx', 'ios'} then
         local url = 'https://ludowik.github.io/Lge/build/lca.love'
         request(url, function (result, code, headers)
-                local data = love.filesystem.write('lca.love', code)
+                local data = love.filesystem.write('lca.love', result)
             end,
             function (result, code, headers)
                 print(headers)
             end)
-    end
+    --end
 end
 
 makezip()
+
+request('https://www.shutterstock.com/image-photo/surreal-image-african-elephant-wearing-260nw-1365289022.jpg')

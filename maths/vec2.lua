@@ -36,12 +36,10 @@ function vec2.scalar(u, v)
     return u.x * v.x + u.y * v.y
 end
 
-function vec2.angleBetween(u, v)
-    return math.acos(u:len() * v: len() / u:scalar(v))
+function vec2.unitTest()
+    assert(vec2(1,2) == vec2(1,2))
+    assert(vec2():set(1,2) == vec2(1,2))
+    assert(vec2.random() ~= vec2.random())
+    assert(vec2():len() == 0)
+    assert(vec2(1,2):scalar(vec2(2,2)) == 6)
 end
-
-assert(vec2.random() ~= vec2.random())
-assert(vec2():len() == 0)
-assert(vec2(1,2):scalar(vec2(2,2)) == 6)
-
-print(vec2(1,2):angleBetween(vec2(2,2)))

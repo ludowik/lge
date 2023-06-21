@@ -3,5 +3,7 @@ function string:inList(list)
     for _, v in pairs(list) do if v == self then return true end end
 end
 
-assert(('list'):inList{'list'})
-assert(not ('not in list'):inList{'list'})
+function string.unitTest()
+    assert(('list'):inList{'list'})
+    assert(not ('not in list'):inList{'list'})
+end
