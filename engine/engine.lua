@@ -22,6 +22,7 @@ function love.update(dt)
 end
 
 function love.draw()
+    background(Color(51))
     sketch:drawSketch()
 
     for _, sketch in ipairs(process) do

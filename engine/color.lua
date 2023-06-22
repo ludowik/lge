@@ -15,7 +15,15 @@ function Color:init(...)
     self:set(...)
 end
 
-function Color:set(r, g, b, a)
+function Color:set(r, ...)
+    if type(r) == 'table' then
+        return self:setComponents(r.r, r.g, r.b, r.a)
+    else
+        return self:setComponents(r, ...)
+    end
+end
+
+function Color:setComponents(r, g, b, a)
     self.r = r or 0
     self.g = g or r or 0
     self.b = b or r or 0
@@ -57,4 +65,7 @@ function Color.unitTest()
     assert(clr.a == 1.0)
 
     assert(Color.random ~= Color.random())
+
+    assert(colors.black.r == 0)
+    assert(colors.white.r == 1)
 end

@@ -48,8 +48,7 @@ function load()
     end
 
     function MySketch:draw()
-        love.graphics.clear(255, 0, 0)
-
+        background(51)
         fill(self.clr)
         love.graphics.setFont(font)
         text("hello "..self.index)
@@ -79,5 +78,3 @@ end
 makezip()
 
 request('https://www.shutterstock.com/image-photo/surreal-image-african-elephant-wearing-260nw-1365289022.jpg')
-
-print(debug.traceback())

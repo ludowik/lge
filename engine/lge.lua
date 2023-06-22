@@ -2,6 +2,7 @@ require 'lua.debug'
 require 'lua.require'
 require 'lua.string'
 require 'lua.class'
+require 'lua.array'
 require 'lua.index'
 require 'lua.state'
 
