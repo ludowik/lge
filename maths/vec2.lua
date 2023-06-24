@@ -24,8 +24,8 @@ function vec2:randomize(w, h)
     w = w or W or 1
     h = h or H or 1
 
-    self.x = random() * w
-    self.y = random() * h
+    self.x = random(w)
+    self.y = random(w)
     return self
 end
 

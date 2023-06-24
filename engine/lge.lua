@@ -19,5 +19,8 @@ require 'engine.graphics2d'
 require 'engine.image'
 
 require 'engine.event'
+require 'engine.ui'
+require 'engine.scene'
+require 'engine.parameter'
 require 'engine.sketch'
 require 'engine.engine'

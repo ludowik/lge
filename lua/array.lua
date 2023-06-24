@@ -1,7 +1,17 @@
-Array = class()
+Array = class() : extends(table)
+Array.add = table.insert
 
-function Array:init()
-    return {}
+function Array:init(...)
+    return ...
 end
 
-assert(not getmetatable(Array()))
+function Array:unitTest()
+    local t = Array()
+    t:add('element')
+    
+    assert(t[1] == 'element')
+    assert(#t == 1)
+
+    assert(Array(t) == t)
+    assert(Array() ~= t)
+end

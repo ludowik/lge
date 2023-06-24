@@ -1,5 +1,7 @@
 function love.load()
     _, _, W, H = love.window.getSafeArea()    
+
+    W, H = math.min(W, H), math.max(W, H)
     love.window.setMode(W, H)
 
     setupClass()
@@ -10,23 +12,52 @@ function love.load()
 
     load()
     
-    sketchIndex = 1
-    sketch = process[sketchIndex]
+    parameter = Parameter()
+    parameter:action('quit', quit)
+    parameter:action('update', updateScripts)
+    parameter:action('reload', reload)
+
+    parameter:watch('fps', 'getFPS()')
 end
 
 function love.update(dt)
-    sketchIndex = process[(sketchIndex + 1)] and (sketchIndex + 1) or 1
-    sketch = process[sketchIndex]
-
-    sketch:updateSketch(dt)
+    for _, sketch in ipairs(process) do
+        sketch:updateSketch(dt)
+    end
+    parameter:update(dt)
 end
 
 function love.draw()
-    background(Color(51))
-    sketch:drawSketch()
-
+    background(Color(251))
+    
     for _, sketch in ipairs(process) do
         sketch:drawSketch()
     end
+    parameter:draw()
 end
 
+function restart()
+    love.event.quit('restart')
+end
+
+function reload()
+    process = {}
+    load()
+end
+
+function quit()
+    love.event.quit()
+    exit(0)
+end
+
+function getFPS()
+    return love.timer.getFPS()
+end
+
+function exit()
+    local ffi = require 'ffi'
+    if ffi then
+        ffi.cdef 'void exit(int)'
+        ffi.C.exit(0)
+    end
+end

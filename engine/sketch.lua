@@ -1,6 +1,9 @@
 Sketch = class() : extends(Index, State, Rect, Image)
 
+process = {}
 function Sketch:init(w, h)
+    table.insert(process, self)
+
     State.init(self)
     Index.init(self)
 
@@ -19,6 +22,8 @@ end
 
 function Sketch:drawSketch()
     self:setContext()
+
+    love.graphics.setFont(font)
 
     self:draw()
 
