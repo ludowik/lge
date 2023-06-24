@@ -75,6 +75,4 @@ function updateScripts()
     --end
 end
 
-makezip()
-
-request('https://www.shutterstock.com/image-photo/surreal-image-african-elephant-wearing-260nw-1365289022.jpg')
+--request('https://www.shutterstock.com/image-photo/surreal-image-african-elephant-wearing-260nw-1365289022.jpg')
