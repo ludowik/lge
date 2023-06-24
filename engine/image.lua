@@ -5,7 +5,7 @@ function FrameBuffer:init(w, h)
 end
 
 function FrameBuffer:background()
-    self.canvas:clear()
+    self.canvas:clear(0, 0, 0, 0)
 end
 
 function FrameBuffer:setContext()

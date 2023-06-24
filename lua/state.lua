@@ -11,3 +11,7 @@ end
 function State:resume()
     self.state = 'running'
 end
+
+function State:running()
+    return self.state == 'running'
+end

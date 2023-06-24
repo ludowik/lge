@@ -28,6 +28,10 @@ function Color:setComponents(r, g, b, a)
     self.g = g or r or 0
     self.b = b or r or 0
     self.a = a or 1
+    if self.r > 1 then self.r = self.r / 255 end
+    if self.g > 1 then self.g = self.g / 255 end
+    if self.b > 1 then self.b = self.b / 255 end
+    if self.a > 1 then self.a = self.a / 255 end
     return self
 end
 

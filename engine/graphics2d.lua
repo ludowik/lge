@@ -26,3 +26,10 @@ function Graphics2d.text(str, x, y)
     end
     love.graphics.print(str, x, y)
 end
+
+function Graphics2d.textSize(str)
+    local font = love.graphics.getFont()
+    local w = font:getWidth(str)
+    local h = font:getHeight()
+    return w, h
+end

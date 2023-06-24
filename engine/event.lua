@@ -1,12 +1,27 @@
-function love.keypressed(key)
+class().setup = function ()
+    love.keyboard.setKeyRepeat(true)
+end
+
+function love.keypressed(key, scancode, isrepeat)
     if key == 'r' then
-        updateScripts()
-        love.event.quit('restart')
+        reload()
     end
     if key == 'z' then
         makezip()
     end
     if key == 'escape' then
-        love.event.quit()
+        quit()
     end
+end
+
+function love.mousepressed(x, y, button, istouch, presses)
+    parameter:mousepressed({
+        position = vec2(x, y)
+    })
+end
+
+function love.mousereleased(x, y, button, istouch, presses)
+    parameter:mousereleased({
+        position = vec2(x, y)
+    })
 end
