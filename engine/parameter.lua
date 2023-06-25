@@ -5,7 +5,7 @@ function Parameter:init()
 end
 
 function Parameter:layout()
-    local x, y = 0, 0
+    local x, y = 0, Y
     for _,item in ipairs(self.items) do
         item:computeSize()
         x = W - item.size.x

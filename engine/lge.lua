@@ -6,9 +6,9 @@ require 'lua.array'
 require 'lua.index'
 require 'lua.state'
 
-require 'system.os'
-require 'system.package'
-require 'system.https'
+require 'lib.os'
+require 'lib.package'
+require 'lib.https'
 
 require 'maths.random'
 require 'maths.vec2'

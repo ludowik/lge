@@ -28,5 +28,7 @@ function Sketch:drawSketch()
     self:draw()
 
     love.graphics.setCanvas()
-    love.graphics.draw(self.canvas, self.position.x, self.position.y, 0, 1, 1)
+    love.graphics.draw(self.canvas,
+        X+self.position.x,
+        Y+self.position.y, 0, 1, 1)
 end

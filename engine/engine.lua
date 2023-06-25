@@ -1,9 +1,9 @@
 function love.load()
-    _, _, W, H = love.window.getSafeArea()    
-
-    W, H = math.min(W, H), math.max(W, H)
-    love.window.setMode(W, H)
-
+    -- X, Y, W, H = love.window.getSafeArea()
+    -- W, H = math.min(W, H), math.max(W, H)
+    -- love.window.setMode(W, H)
+    X, Y, W, H = love.window.getSafeArea()
+    
     setupClass()
     unitTesting()
     push2globals(Graphics2d)
@@ -18,6 +18,7 @@ function love.load()
     parameter:action('reload', reload)
 
     parameter:watch('fps', 'getFPS()')
+    parameter:watch('fps', 'X..", "..Y')
 end
 
 function love.update(dt)
@@ -47,7 +48,6 @@ end
 
 function quit()
     love.event.quit()
-    exit(0)
 end
 
 function getFPS()
