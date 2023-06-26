@@ -4,7 +4,10 @@ https = require 'https'
 function request(url, success, fail, parameterTable)
     --local result, code, headers = http.request(url, 'GET')
     print('download...')
-    local code, result, headers = https.request(url)
+    local code, result, headers = https.request(url, {
+        method = 'GET',
+        cache = "reload",
+    })
 
     local title = "request "..url
     local message = "code "..code
