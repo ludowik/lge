@@ -1,5 +1,7 @@
 UI = class() : extends(Rect)
 
+UI.innerMarge = 5
+
 function UI:init(label)
     Rect.init(self)
     self.label = label
@@ -49,12 +51,12 @@ function UIExpression:computeSize()
     love.graphics.setFont(font)
     local w1, h1 = textSize(self.label)
     local w2, h2 = textSize(self:evaluateExpression())
-    self.size:set(w1 + w2, h1 + h2)
+    self.size:set(w1 + UI.innerMarge + w2, math.max(h1, h2))
 end
 
 function UIExpression:draw()
     love.graphics.setFont(font)
     local w, h = textSize(self.label)
     text(self.label, self.position.x, self.position.y)
-    text(self:evaluateExpression(), self.position.x + w, self.position.y)
+    text(self:evaluateExpression(), self.position.x + w + UI.innerMarge, self.position.y)
 end

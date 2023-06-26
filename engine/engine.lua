@@ -13,12 +13,16 @@ function love.load()
     load()
     
     parameter = Parameter()
+    parameter:group('menu', true)
     parameter:action('quit', quit)
-    parameter:action('update', updateScripts)
+    parameter:action('update from git', function () updateScripts(true) end)
+    parameter:action('update from local', function () updateScripts(false) end)
     parameter:action('reload', reload)
 
+    parameter:group('info', false)
     parameter:watch('fps', 'getFPS()')
-    parameter:watch('fps', 'X..", "..Y')
+    parameter:watch('position', 'X..","..Y')
+    parameter:watch('size', 'W..","..H')
 end
 
 function love.update(dt)
