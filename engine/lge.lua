@@ -1,3 +1,4 @@
+require 'lua.info'
 require 'lua.debug'
 require 'lua.require'
 require 'lua.string'

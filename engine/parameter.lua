@@ -6,7 +6,7 @@ function Parameter:init()
 end
 
 function Parameter:group(label, open)
-    local newGroup = Scene()
+    local newGroup = Node()
     newGroup.state = open and 'open' or 'close'
     newGroup:add(UIButton(label, function ()
         newGroup.state = newGroup.state == 'close' and 'open' or 'close'

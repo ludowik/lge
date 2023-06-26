@@ -1,16 +1,6 @@
-Scene = class() : extends(UI)
+Layout = class()
 
-function Scene:init()
-    UI.init(self)
-    self.items = Array()
-end
-
-function Scene:add(item)
-    self.items:add(item)
-    return self
-end
-
-function Scene:layout(x, y)
+function Layout:layout(x, y)
     x, y = x or 0, y or Y
     local w, h = 0, 0
     for _,item in ipairs(self.items) do
@@ -36,7 +26,19 @@ function Scene:layout(x, y)
     self.size:set(w, h)
 end
 
-function Scene:update(dt)
+Node = class() : extends(UI, Layout)
+
+function Node:init()
+    UI.init(self)
+    self.items = Array()
+end
+
+function Node:add(item)
+    self.items:add(item)
+    return self
+end
+
+function Node:update(dt)
     for _,item in ipairs(self.items) do
         if item.update then
             item:update(dt)
@@ -45,7 +47,7 @@ function Scene:update(dt)
     end
 end
 
-function Scene:draw()
+function Node:draw()
     for _,item in ipairs(self.items) do
         if item.draw then
             item:draw()
@@ -54,7 +56,7 @@ function Scene:draw()
     end
 end
 
-function Scene:contains(position)
+function Node:contains(position)
     for _,item in ipairs(self.items) do
         local result = item:contains(position)
         if result then
@@ -63,20 +65,18 @@ function Scene:contains(position)
     end
 end
 
-function Scene:mousepressed(mouse)
-    for _,item in ipairs(self.items) do
-        local result = item:contains(mouse.position)
-        if result then
-            result:click()
-            return true
-        end
+function Node:mousepressed(mouse)
+    local result = self:contains(mouse.position)
+    if result then
+        result:click()
+        return true
     end
 end
 
-function Scene:mousereleased(mouse)
-    for _,item in ipairs(self.items) do
-        if item:contains(mouse.position) then
-            return item
-        end
+function Node:mousereleased(mouse)
+    local result = self:contains(mouse.position)
+    if result then
     end
 end
+
+Scene = class() : extends(Node)

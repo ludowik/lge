@@ -1,23 +1,14 @@
-print(love.filesystem.getAppdataDirectory())
-print(love.filesystem.getSaveDirectory())
-
-local major, minor, revision, codename = love.getVersion()
-local str = string.format("Version %d.%d.%d - %s", major, minor, revision, codename)
-print(str)
-
---love.filesystem.mount('lca.love', '')
-
-__require = require
-require = function (fileName)
-    fileName = fileName:gsub('%.', '%/')
-    print('load file '..fileName)
-    local chunk, err = love.filesystem.load(fileName..'.lua')
-    if chunk then
-        return chunk()
-    else
-        return __require(fileName)
-    end
-end
+-- __require = require
+-- require = function (fileName)
+--     fileName = fileName:gsub('%.', '%/')
+--     print('load file '..fileName)
+--     local chunk, err = love.filesystem.load(fileName..'.lua')
+--     if chunk then
+--         return chunk()
+--     else
+--         return __require(fileName)
+--     end
+-- end
 
 require 'engine.lge'
 

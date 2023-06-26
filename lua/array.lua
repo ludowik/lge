@@ -1,6 +1,8 @@
 Array = class() : extends(table)
 Array.add = table.insert
 
+table.__className = 'table'
+
 function Array:init(...)
     return ...
 end
