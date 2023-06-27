@@ -30,7 +30,7 @@ function vec2:randomize(w, h)
 end
 
 function vec2:len()
-    return math.sqrt(self.x ^ 2 + self.y ^ 2)
+    return sqrt(self.x ^ 2 + self.y ^ 2)
 end
 
 function vec2.scalar(u, v)

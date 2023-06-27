@@ -1,6 +1,6 @@
 function love.load()
     -- X, Y, W, H = love.window.getSafeArea()
-    -- W, H = math.min(W, H), math.max(W, H)
+    -- W, H = min(W, H), max(W, H)
     -- love.window.setMode(W, H)
     X, Y, W, H = love.window.getSafeArea()
     

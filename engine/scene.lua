@@ -18,8 +18,8 @@ function Layout:layout(x, y)
         item.position:set(x, y)
         y = y + item.size.y
 
-        w = math.max(w, item.size.x)
-        h = math.max(h, y)
+        w = max(w, item.size.x)
+        h = max(h, y)
 
         if self.state == 'close' then break end
     end

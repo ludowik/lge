@@ -51,7 +51,7 @@ function UIExpression:computeSize()
     love.graphics.setFont(font)
     local w1, h1 = textSize(self.label)
     local w2, h2 = textSize(self:evaluateExpression())
-    self.size:set(w1 + UI.innerMarge + w2, math.max(h1, h2))
+    self.size:set(w1 + UI.innerMarge + w2, max(h1, h2))
 end
 
 function UIExpression:draw()
