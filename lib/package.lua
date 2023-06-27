@@ -18,7 +18,7 @@ function updateScripts(github)
     url = url..'/build/lca.love'
 
     request(url, function (result, code, headers)
-            local data = love.filesystem.write('lca.love', result)
+            local data = love.filesystem.write('lcaNew.love', result)
         end,
         function (result, code, headers)
             print(headers)
