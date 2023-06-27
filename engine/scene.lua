@@ -2,11 +2,14 @@ Layout = class()
 
 function Layout:layout(x, y)
     x, y = x or 0, y or Y
+    
     local w, h = 0, 0
+
     for _,item in ipairs(self.items) do
         item.position:set()
         item.size:set()
     end
+
     for _,item in ipairs(self.items) do
         if item.layout then
             item:layout(x, y)

@@ -22,6 +22,16 @@ function UI:draw()
     text(self.label, self.position.x, self.position.y)
 end
 
+function UI:mousepressed(mouse)
+    self:click()
+end
+
+function UI:mousemoved(mouse)
+end
+
+function UI:mousereleased(mouse)
+end
+
 function UI:click()
     if self.callback then
         self:callback()

@@ -13,6 +13,7 @@
 require 'engine.lge'
 
 require 'sketch.sketch'
+require 'sketch.2048'
 
 function load()
     MySketch()
@@ -20,6 +21,7 @@ function load()
     MySketch()
     MySketch()
     MySketch()
+    The2048()
 end
 
 -- function love.draw()

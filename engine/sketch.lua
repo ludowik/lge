@@ -27,8 +27,23 @@ function Sketch:drawSketch()
 
     self:draw()
 
+    if self.active then
+        love.graphics.rectangle('fill', 0, 0, self.size.x, self.size.y)
+    end
+
     love.graphics.setCanvas()
     love.graphics.draw(self.canvas,
         X+self.position.x,
         Y+self.position.y, 0, 1, 1)
+end
+
+function Sketch:mousepressed(mouse)
+    self.active = true
+end
+
+function Sketch:mousemoved(mouse)
+end
+
+function Sketch:mousereleased(mouse)
+    self.active = false
 end
