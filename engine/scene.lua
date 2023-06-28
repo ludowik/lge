@@ -1,7 +1,7 @@
 Layout = class()
 
 function Layout:layout(x, y)
-    x, y = x or 0, y or Y
+    x, y = x or 0, y or 0
     
     local w, h = 0, 0
 
