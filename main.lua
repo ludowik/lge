@@ -12,26 +12,17 @@
 
 require 'engine.lge'
 
-require 'sketch.sketch'
+require 'sketch.test'
 require 'sketch.2048'
+require 'sketch.screen'
+require 'sketch.plot'
 
 function load()
     MySketch()
     MySketch()
     MySketch()
     MySketch()
-    MySketch()
     The2048()
+    TV()
+    Plot()
 end
-
--- function love.draw()
--- 	local safeX, safeY, safeW, safeH = love.window.getSafeArea()
-
--- 	love.graphics.translate(safeX, safeY)
--- 	love.graphics.rectangle("line", 0, 0, safeW, safeH)
--- 	love.graphics.line(0, 0, safeW, safeH)
--- 	love.graphics.line(0, safeH, safeW, 0)
--- 	love.graphics.circle('line', safeW/2, safeH/2, safeW/2)
--- 	love.graphics.circle('line', safeW/2, safeH/2, safeH/2)
--- end
-

@@ -18,8 +18,7 @@ function contains(mouse)
     local object = parameter:contains(mouse.position)
     if object then return object end
 
-    for i=#process,1,-1 do
-        local sketch = process[i]
+    for _,sketch in ipairs(process, true) do
         local object = sketch:contains(mouse.position)
         if object then return object end
     end

@@ -10,7 +10,7 @@ function Rect.random()
 end
 
 function Rect:randomize()
-    self.size:randomize()
+    self.size:randomize(W, H)
     self.position:randomize(W-self.size.x, H-self.size.y)
 end
 

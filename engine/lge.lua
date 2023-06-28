@@ -28,3 +28,7 @@ require 'engine.scene'
 require 'engine.parameter'
 require 'engine.sketch'
 require 'engine.engine'
+
+setupClass()
+
+unitTesting()

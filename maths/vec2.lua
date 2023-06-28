@@ -21,11 +21,14 @@ function vec2.random(w, h)
 end
 
 function vec2:randomize(w, h)
-    w = w or W or 1
-    h = h or H or 1
-
-    self.x = random(w)
-    self.y = random(w)
+    if w then
+        h = h or w
+        self.x = random(w)
+        self.y = random(h)
+    else
+        self.x = random()
+        self.y = random()
+    end
     return self
 end
 
@@ -41,6 +44,8 @@ function vec2.unitTest()
     assert(vec2(1,2) == vec2(1,2))
     assert(vec2():set(1,2) == vec2(1,2))
     assert(vec2.random() ~= vec2.random())
+    assert(vec2.random(10000) ~= vec2.random(10000))
+    assert(vec2.random(1, 1) == vec2.random(1, 1))
     assert(vec2():len() == 0)
     assert(vec2(1,2):scalar(vec2(2,2)) == 6)
 end

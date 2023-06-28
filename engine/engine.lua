@@ -4,8 +4,6 @@ function love.load()
     -- love.window.setMode(W, H)
     X, Y, W, H = love.window.getSafeArea()
     
-    setupClass()
-    unitTesting()
     push2globals(Graphics2d)
 
     font = love.graphics.newFont(25)

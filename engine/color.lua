@@ -35,6 +35,10 @@ function Color:setComponents(r, g, b, a)
     return self
 end
 
+function Color:rgba()
+    return self.r, self.g, self.b, self.a
+end
+
 function Color.__eq(a, b)
     return
         (a.r == b.r) and

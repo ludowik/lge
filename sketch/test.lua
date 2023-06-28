@@ -1,0 +1,16 @@
+do
+    Test = class() : extends(Sketch)
+
+    function Test:init()
+        Sketch.init(self)
+        self.clr = Color.random()
+    end
+
+    function Test:draw()
+        background(self.clr)
+        fill(colors.white)
+        text("hello "..self.index)
+    end
+end
+
+MySketch = Test

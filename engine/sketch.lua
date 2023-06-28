@@ -7,11 +7,23 @@ function Sketch:init(w, h)
     State.init(self)
     Index.init(self)
 
-    w = w or W
-    h = h or H
-    Rect.init(self, 0, 0, w, h)
+    local ws, hs
 
-    Image.init(self, self.size.x, self.size.y)
+    if w then
+        ws, hs = w, h
+    else 
+        w = w or W
+        h = h or H
+        ws, hs = w/3, h/3
+    end
+    
+    Rect.init(self,
+        #process * W/20,
+        #process * W/20,
+        ws,
+        hs)
+
+    Image.init(self, w, h)
 end
 
 function Sketch:updateSketch(dt)
@@ -28,13 +40,18 @@ function Sketch:drawSketch()
     self:draw()
 
     if self.active then
-        love.graphics.rectangle('fill', 0, 0, self.size.x, self.size.y)
+        love.graphics.setColor(1, 0, 0, 1)
+        love.graphics.rectangle('line', 1, 1, W-2, H-2)
     end
 
     love.graphics.setCanvas()
+    love.graphics.reset()
     love.graphics.draw(self.canvas,
-        X+self.position.x,
-        Y+self.position.y, 0, 1, 1)
+        X + self.position.x, -- x
+        Y + self.position.y, -- y
+        0, -- rotation
+        self.size.x / self.canvas:getWidth(), -- scale X
+        self.size.y / self.canvas:getHeight()) -- scale Y
 end
 
 function Sketch:mousepressed(mouse)
