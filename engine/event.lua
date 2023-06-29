@@ -28,12 +28,12 @@ end
 local currentObject = nil
 function love.mousepressed(x, y, button, istouch, presses)
     currentObject = contains({
-        position = vec2(x, y-Y)
+        position = vec2(x-X, y-Y)
     })
 
     if currentObject then
         currentObject:mousepressed({
-            position = vec2(x, y-Y)
+            position = vec2(x-X, y-Y)
         })
     end
 end
@@ -41,7 +41,7 @@ end
 function love.mousemoved(x, y, dx, dy, istouch)
     if currentObject then
         currentObject:mousemoved({
-            position = vec2(x, y-Y)
+            position = vec2(x-X, y-Y)
         })
     end
 end
@@ -49,7 +49,7 @@ end
 function love.mousereleased(x, y, button, istouch, presses)
     if currentObject then
         currentObject:mousereleased({
-            position = vec2(x, y-Y)
+            position = vec2(x-X, y-Y)
         })
     end
     currentObject = nil

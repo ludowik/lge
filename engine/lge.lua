@@ -22,13 +22,12 @@ require 'engine.color'
 require 'engine.graphics2d'
 require 'engine.image'
 
+require 'scene.ui'
+require 'scene.layout'
+require 'scene.node'
+require 'scene.scene'
+require 'scene.parameter'
+
 require 'engine.event'
-require 'engine.ui'
-require 'engine.scene'
-require 'engine.parameter'
 require 'engine.sketch'
 require 'engine.engine'
-
-setupClass()
-
-unitTesting()

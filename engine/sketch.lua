@@ -39,13 +39,18 @@ function Sketch:drawSketch()
 
     self:draw()
 
+    text(self.__className, 0, 0)
+
     if self.active then
         love.graphics.setColor(1, 0, 0, 1)
         love.graphics.rectangle('line', 1, 1, W-2, H-2)
     end
 
     love.graphics.setCanvas()
+    
     love.graphics.reset()
+    love.graphics.setScissor(X, Y, W, H)
+        
     love.graphics.draw(self.canvas,
         X + self.position.x, -- x
         Y + self.position.y, -- y

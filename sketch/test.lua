@@ -9,7 +9,6 @@ do
     function Test:draw()
         background(self.clr)
         fill(colors.white)
-        text("hello "..self.index)
     end
 end
 

@@ -24,8 +24,10 @@ function Parameter:watch(label, expression)
     self.currentGroup:add(UIExpression(label, expression))
 end
 
-function Parameter:draw()
+function Parameter:draw()    
     self:layout()
+    love.graphics.translate(X, Y)
     Scene.draw(self)
+    love.graphics.reset()
 end
 

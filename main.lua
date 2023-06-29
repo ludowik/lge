@@ -17,6 +17,10 @@ require 'sketch.2048'
 require 'sketch.screen'
 require 'sketch.plot'
 
+setupClass()
+
+unitTesting()
+
 function load()
     MySketch()
     MySketch()

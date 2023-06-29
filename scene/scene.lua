@@ -1,0 +1,1 @@
+Scene = class() : extends(Node)

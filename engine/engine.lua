@@ -1,8 +1,10 @@
 function love.load()
-    -- X, Y, W, H = love.window.getSafeArea()
-    -- W, H = min(W, H), max(W, H)
-    -- love.window.setMode(W, H)
-    X, Y, W, H = love.window.getSafeArea()
+    if getOS() == 'ios' then
+        X, Y, W, H = love.window.getSafeArea()
+    else
+        X, Y, W, H = 10, 20, 408, 640
+        love.window.setMode(2*X+W, 2*Y+H)
+    end
     
     push2globals(Graphics2d)
 
@@ -31,12 +33,16 @@ function love.update(dt)
 end
 
 function love.draw()
-    background(Color(251))
-    
+    love.graphics.reset()
+
+    background(Color(251))    
     for _, sketch in ipairs(process) do
         sketch:drawSketch()
     end
     parameter:draw()
+
+    love.graphics.setColor(1, 0, 0, 1)
+    love.graphics.rectangle('line', X, Y, W, H)    
 end
 
 function restart()
