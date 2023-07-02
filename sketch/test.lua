@@ -1,15 +1,10 @@
-do
-    Test = class() : extends(Sketch)
+MySketch = class() : extends(Sketch)
 
-    function Test:init()
-        Sketch.init(self)
-        self.clr = Color.random()
-    end
-
-    function Test:draw()
-        background(self.clr)
-        fill(colors.white)
-    end
+function MySketch:init()
+    Sketch.init(self)
+    self.clr = Color.random()
 end
 
-MySketch = Test
+function MySketch:draw()
+    background(self.clr)
+end

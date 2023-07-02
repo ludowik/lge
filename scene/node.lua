@@ -22,7 +22,10 @@ end
 function Node:draw()
     for _,item in ipairs(self.items) do
         if item.draw then
+            love.graphics.push()
+--            love.graphics.translate(item.position.x, item.position.y)
             item:draw()
+            love.graphics.pop()
         end
         if self.state == 'close' then break end
     end

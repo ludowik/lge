@@ -1,8 +1,7 @@
 Sketch = class() : extends(Index, State, Rect, Image)
 
-process = {}
 function Sketch:init(w, h)
-    table.insert(process, self)
+    process:add(self)
 
     State.init(self)
     Index.init(self)
@@ -17,11 +16,11 @@ function Sketch:init(w, h)
         ws, hs = w/3, h/3
     end
     
-    Rect.init(self,
-        #process * W/20,
-        #process * W/20,
-        ws,
-        hs)
+    Rect.init(self, 0, 0, w, h)
+        -- #process * W/20,
+        -- #process * W/20,
+        -- ws,
+        -- hs)
 
     Image.init(self, w, h)
 end
@@ -39,12 +38,8 @@ function Sketch:drawSketch()
 
     self:draw()
 
+    textMode(CORNER)
     text(self.__className, 0, 0)
-
-    if self.active then
-        love.graphics.setColor(1, 0, 0, 1)
-        love.graphics.rectangle('line', 1, 1, W-2, H-2)
-    end
 
     love.graphics.setCanvas()
     

@@ -2,10 +2,16 @@ FrameBuffer = class()
 
 function FrameBuffer:init(w, h)
     self.canvas = love.graphics.newCanvas(w, h)
+
+    local currentCanvas = love.graphics.getCanvas()
+    self:setContext()
+    self:background()
+
+    love.graphics.setCanvas(currentCanvas)
 end
 
 function FrameBuffer:background()
-    self.canvas:clear(0, 0, 0, 0)
+    love.graphics:clear(0, 0, 0, 1)
 end
 
 function FrameBuffer:setContext()

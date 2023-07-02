@@ -8,9 +8,14 @@ end
 function Parameter:group(label, open)
     local newGroup = Node()
     newGroup.state = open and 'open' or 'close'
-    newGroup:add(UIButton(label, function ()
+
+    local newButton = UIButton(label, function ()
         newGroup.state = newGroup.state == 'close' and 'open' or 'close'
-    end))
+    end)
+    newButton.styles = {
+        textColor = colors.blue
+    }
+    newGroup:add(newButton)
 
     self.currentGroup = newGroup
     self:add(self.currentGroup)
@@ -30,4 +35,3 @@ function Parameter:draw()
     Scene.draw(self)
     love.graphics.reset()
 end
-

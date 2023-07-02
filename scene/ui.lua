@@ -15,11 +15,17 @@ end
 function UI:draw()
     love.graphics.setFont(font)
     if self.active then
-        fill(colors.red)
+        textColor(colors.red)
     else
-        fill(colors.black)
+        if self.styles then
+            textColor(self.styles.textColor)
+        else
+            textColor(colors.white)
+        end
     end
-    text(self.label, self.position.x, self.position.y)
+
+    textMode(CORNER)
+    text(self.label, self.position.x, self.position.y, self.size.x)
 end
 
 function UI:mousepressed(mouse)
@@ -46,6 +52,12 @@ function UIButton:init(label, callback)
     self.callback = callback
 end
 
+function UIButton:draw()
+    fill(Color(0, 0.2, 1, 0.1))
+    rect(self.position.x, self.position.y, self.size.x, self.size.y)
+    UI.draw(self)
+end
+
 UIExpression = class() : extends(UI)
 
 function UIExpression:init(label, expression)
@@ -67,6 +79,9 @@ end
 function UIExpression:draw()
     love.graphics.setFont(font)
     local w, h = textSize(self.label)
+
+    textColor(colors.white)
+    
     text(self.label, self.position.x, self.position.y)
     text(self:evaluateExpression(), self.position.x + w + UI.innerMarge, self.position.y)
 end

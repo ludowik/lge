@@ -1,15 +1,17 @@
 local classList = {}
 function class(_, ...)
     assert(_ == nil)
+
     local info = debug.getinfo(2, "Sl")
 
     local klass = {
         __class = true,
-        __className = 'Anonymous',
+        __className = info.source:gfind('.+/(.*)%.lua$')(),
         __classInfo = info.source:gsub('@', './')..':'..info.currentline,
         __init = function(instance, ...)
         end,
-        extends = extends
+        extends = extends,
+        attrib = attrib
     }
     klass.__index = klass
 
@@ -26,10 +28,9 @@ end
 
 local doNotOverride = {'extends', 'init', '__init', '__index'}
 function extends(klass, ...)
-    --klass.__inheritsFrom = klass.__inheritsFrom or {}
+    klass.__inheritsFrom = klass.__inheritsFrom or {}
     for _, klassParent in ipairs({...}) do
-        --table.insert(klass.__inheritsFrom, klassParent)
-        klass.__inheritsFrom = klassParent
+        table.insert(klass.__inheritsFrom, klassParent)
         for propName, prop in pairs(klassParent) do
             if klass[propName] == nil then 
                 if (type(prop) == 'function' and not doNotOverride[propName] or 
@@ -76,12 +77,13 @@ end
 function composition(klass)
     if klass and klass.__className then
         if klass.__inheritsFrom then
-            return klass.__className..' <= '..composition(klass.__inheritsFrom)
+            return klass.__className..' <= '..composition(klass.__inheritsFrom[1])
         else
             return klass.__className
         end
     end
 end
+
 
 class().unitTest = function () 
     assert(true)

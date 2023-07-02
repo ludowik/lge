@@ -12,12 +12,19 @@ function love.keypressed(key, scancode, isrepeat)
     if key == 'escape' then
         quit()
     end
+    if key == 'left' then
+        process:previous()
+    end
+    if key == 'right' then
+        process:next()
+    end
 end
 
 function contains(mouse)
     local object = parameter:contains(mouse.position)
     if object then return object end
 
+    local process = {process:current()}
     for _,sketch in ipairs(process, true) do
         local object = sketch:contains(mouse.position)
         if object then return object end

@@ -4,6 +4,7 @@ function Color.setup()
     colors = {
         black = Color(0),
         white = Color(1),
+        gray = Color(0.62),
 
         red = Color(1, 0, 0),
         green = Color(0, 1, 0),

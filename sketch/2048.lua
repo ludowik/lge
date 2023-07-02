@@ -6,6 +6,5 @@ end
 
 function The2048:draw()
     background()
-    fill(colors.white)
     text("2048", self.size.x/2, self.size.y/2)
 end

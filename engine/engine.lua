@@ -2,7 +2,7 @@ function love.load()
     if getOS() == 'ios' then
         X, Y, W, H = love.window.getSafeArea()
     else
-        X, Y, W, H = 10, 20, 408, 640
+        X, Y, W, H = 10, 20, 800*9/16, 800
         love.window.setMode(2*X+W, 2*Y+H)
     end
     
@@ -10,11 +10,12 @@ function love.load()
 
     font = love.graphics.newFont(25)
 
-    load()
+    reload()
     
     parameter = Parameter()
     parameter:group('menu', true)
     parameter:action('quit', quit)
+    parameter:action('update', function () parameter.scene = UpgradeApp() end)
     parameter:action('update from git', function () updateScripts(true) end)
     parameter:action('update from local', function () updateScripts(false) end)
     parameter:action('reload', reload)
@@ -26,6 +27,7 @@ function love.load()
 end
 
 function love.update(dt)
+    local process = {process:current()}
     for _, sketch in ipairs(process) do
         sketch:updateSketch(dt)
     end
@@ -35,10 +37,15 @@ end
 function love.draw()
     love.graphics.reset()
 
-    background(Color(251))    
+    background(Color(251))
+
+    local process = {process:current()}
     for _, sketch in ipairs(process) do
+        resetStyle()
         sketch:drawSketch()
     end
+    
+    resetStyle()
     parameter:draw()
 
     love.graphics.setColor(1, 0, 0, 1)
@@ -50,7 +57,7 @@ function restart()
 end
 
 function reload()
-    process = {}
+    process = Process()
     load()
 end
 
