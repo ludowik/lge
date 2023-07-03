@@ -97,24 +97,37 @@ function Graphics2d.text(str, x, y, limit, align)
     x = x or 0
     y = y or 0
 
-    limit = limit or W
-    align = align or 'left'
-
+    if limit then
+        align = align or 'left'
+    end
+    
     local mode = textMode()
     local ws, hs = textSize(str, limit, align)
 
     love.graphics.setColor(Graphics2d.textColor():rgba())
     
     if mode == CENTER then
-        love.graphics.printf(str, x-ws/2, y-hs/2, limit, align)
-    else
+        x, y = x-ws/2, y-hs/2
+    end
+
+    if limit then
         love.graphics.printf(str, x, y, limit, align)
+    else
+        love.graphics.print(str, x, y)
     end
 end
 
 function Graphics2d.textSize(str, limit)
     local font = love.graphics.getFont()
-    local w, wrappedtext = font:getWrap(str, limit or W)
-    local h = font:getHeight() * #wrappedtext
+
+    local w, h
+    if limit then
+        local wrappedtext
+        w, wrappedtext = font:getWrap(str, limit or W)
+        h = font:getHeight() * #wrappedtext
+    else
+        w = font:getWidth(str)
+        h = font:getHeight()
+    end
     return w, h
 end

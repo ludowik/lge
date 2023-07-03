@@ -7,7 +7,12 @@ function UpgradeApp:init()
 
     self.scene = Scene()
     self.scene:add(
-        UIButton('upgrade from git', function () updateScripts(true) end):attrib{
+        UIButton('upgrade from git',
+            function () 
+                updateScripts(true)
+                restart()
+            end)
+        :attrib{
             position = anchor:pos(1, 3),
             size = anchor:size(2, 1),
             styles = {
@@ -15,7 +20,12 @@ function UpgradeApp:init()
             }
         })
     self.scene:add(
-        UIButton('upgrade from local', function () updateScripts(false) end):attrib{
+        UIButton('upgrade from local',
+            function ()
+                updateScripts(false)
+                restart()
+            end)
+        :attrib{
             position = anchor:pos(4, 3),
             size = anchor:size(2, 1),
         })

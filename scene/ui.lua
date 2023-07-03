@@ -5,11 +5,19 @@ UI.innerMarge = 5
 function UI:init(label)
     Rect.init(self)
     self.label = label
+
+    self.styles = {
+        textColor = colors.white
+    }
+end
+
+function UI:getLabel()
+    return self.label..' ('..tostring(self.position)..')           '
 end
 
 function UI:computeSize()
     love.graphics.setFont(font)
-    self.size:set(textSize(self.label))
+    self.size:set(textSize(self:getLabel()))
 end
 
 function UI:draw()
@@ -17,15 +25,11 @@ function UI:draw()
     if self.active then
         textColor(colors.red)
     else
-        if self.styles then
-            textColor(self.styles.textColor)
-        else
-            textColor(colors.white)
-        end
+        textColor(self.styles.textColor)
     end
 
-    textMode(CENTER)
-    text(self.label, self.position.x+self.size.x/2, self.position.y+self.size.y/2, self.size.x, 'center')
+    textMode(CORNER)
+    text(self:getLabel(), self.position.x, self.position.y)
 end
 
 function UI:mousepressed(mouse)
@@ -51,8 +55,10 @@ function UIButton:init(label, callback)
     UI.init(self, label)
     self.callback = callback
 
-    self.styles = {
-        fillColor = Color(0, 0.2, 1, 0.1)
+    self:attrib{
+        styles = {
+            fillColor = Color(0, 0.2, 1, 0.1)
+        }
     }
 end
 
@@ -75,17 +81,17 @@ end
 
 function UIExpression:computeSize()
     love.graphics.setFont(font)
-    local w1, h1 = textSize(self.label)
+    local w1, h1 = textSize(self:getLabel())
     local w2, h2 = textSize(self:evaluateExpression())
     self.size:set(w1 + UI.innerMarge + w2, max(h1, h2))
 end
 
 function UIExpression:draw()
     love.graphics.setFont(font)
-    local w, h = textSize(self.label)
+    local w, h = textSize(self:getLabel())
 
     textColor(colors.white)
     
-    text(self.label, self.position.x, self.position.y)
+    text(self:getLabel(), self.position.x, self.position.y)
     text(self:evaluateExpression(), self.position.x + w + UI.innerMarge, self.position.y)
 end

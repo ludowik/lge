@@ -17,6 +17,7 @@ function love.load()
     parameter:action('quit', quit)
     parameter:action('update', function () parameter.scene = UpgradeApp() end)
     parameter:action('reload', reload)
+    parameter:action('restart', restart)
 
     parameter:group('navigate', false)
     parameter:action('next', function () process:next() end)

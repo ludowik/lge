@@ -10,6 +10,10 @@ function vec2:set(x, y)
     return self
 end
 
+function vec2:__tostring()
+    return self.x..', '..self.y
+end
+
 function vec2.__eq(u, v)
     return
         (u.x == v.x) and
