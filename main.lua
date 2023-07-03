@@ -56,32 +56,30 @@ function Anchor:init(ni, nj)
 end
 
 function Anchor:pos(i, j)
-    return vec2((i-1)*(W/self.ni), (j-1)*(H/self.nj))
+    return vec2((i)*(W/self.ni), (j)*(H/self.nj))
 end
 
 function Anchor:size(i, j)
     return vec2(i*(W/self.ni), j*(H/self.nj))
 end
 
-function drawAnchorGrid(anchor)
-    anchor = anchor or Anchor(9, 9)
-
-    stroke(colors.white)
+function Anchor:draw(clr)
+    stroke(clr or colors.white)
     strokeWidth(1)
 
-    for i in range(anchor.ni) do
-        for j in range(anchor.nj) do
+    for i in index(self.ni) do
+        for j in index(self.nj) do
             line(
-                anchor:pos(i, j).x,
-                anchor:pos(1, j).y,
-                anchor:pos(i, j).x + anchor:size(1, 1).x,
-                anchor:pos(1, j).y)
+                self:pos(i, j).x,
+                self:pos(1, j).y,
+                self:pos(i, j).x + self:size(1, 1).x,
+                self:pos(1, j).y)
 
             line(
-                anchor:pos(i, j).x + anchor:size(1, 1).x,
-                anchor:pos(1, j).y,
-                anchor:pos(i, j).x + anchor:size(1, 1).x,
-                anchor:pos(1, j).y + anchor:size(1, 1).y)
+                self:pos(i, j).x + self:size(1, 1).x,
+                self:pos(1, j).y,
+                self:pos(i, j).x + self:size(1, 1).x,
+                self:pos(1, j).y + self:size(1, 1).y)
         end
     end
 end

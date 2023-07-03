@@ -24,8 +24,8 @@ function UI:draw()
         end
     end
 
-    textMode(CORNER)
-    text(self.label, self.position.x, self.position.y, self.size.x)
+    textMode(CENTER)
+    text(self.label, self.position.x+self.size.x/2, self.position.y+self.size.y/2, self.size.x, 'center')
 end
 
 function UI:mousepressed(mouse)
@@ -50,10 +50,14 @@ UIButton = class() : extends(UI)
 function UIButton:init(label, callback)
     UI.init(self, label)
     self.callback = callback
+
+    self.styles = {
+        fillColor = Color(0, 0.2, 1, 0.1)
+    }
 end
 
 function UIButton:draw()
-    fill(Color(0, 0.2, 1, 0.1))
+    fill(self.styles.fillColor)
     rect(self.position.x, self.position.y, self.size.x, self.size.y)
     UI.draw(self)
 end

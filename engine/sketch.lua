@@ -56,6 +56,9 @@ end
 
 function Sketch:mousepressed(mouse)
     self.active = true
+    if self.scene then
+        return self.scene:mousepressed(mouse)
+    end
 end
 
 function Sketch:mousemoved(mouse)

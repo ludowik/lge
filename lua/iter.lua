@@ -43,3 +43,14 @@ function range(n)
         return i
     end
 end
+
+function index(n)
+    local i = -1
+    return function ()
+        i = i + 1
+        if i >= n then 
+            return nil
+        end
+        return i
+    end
+end

@@ -4,5 +4,6 @@ newSketch().draw = function ()
     textMode(CENTER)
     text('hello World !!', W/2, H/2)
 
-    drawAnchorGrid(Anchor(12))
+    Anchor(10):draw(colors.red)
+    
 end

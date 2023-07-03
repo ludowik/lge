@@ -91,29 +91,30 @@ function Graphics2d.textMode(mode)
     return stylesSet('textMode', mode)
 end
 
-function Graphics2d.text(str, x, y, w)
+function Graphics2d.text(str, x, y, limit, align)
     if Graphics2d.textColor() == nil then return end
 
     x = x or 0
     y = y or 0
 
-    w = w or W
+    limit = limit or W
+    align = align or 'left'
 
     local mode = textMode()
-    local ws, hs = textSize(str)
+    local ws, hs = textSize(str, limit, align)
 
     love.graphics.setColor(Graphics2d.textColor():rgba())
     
     if mode == CENTER then
-        love.graphics.printf(str, x-ws/2, y-hs/2, w, 'left')
+        love.graphics.printf(str, x-ws/2, y-hs/2, limit, align)
     else
-        love.graphics.printf(str, x, y, w, 'left')
+        love.graphics.printf(str, x, y, limit, align)
     end
 end
 
-function Graphics2d.textSize(str)
+function Graphics2d.textSize(str, limit)
     local font = love.graphics.getFont()
-    local w = font:getWidth(str)
-    local h = font:getHeight()
+    local w, wrappedtext = font:getWrap(str, limit or W)
+    local h = font:getHeight() * #wrappedtext
     return w, h
 end

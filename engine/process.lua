@@ -24,3 +24,8 @@ function Process:next()
     end
     return self:current()
 end
+
+function Process:random()
+    self.currentProcess = random(#self)
+    return self:current()
+end

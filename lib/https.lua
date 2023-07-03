@@ -7,7 +7,7 @@ function request(url, success, fail, parameterTable)
     local code, result, headers = https.request(url, {
         method = 'GET',
         cache = "reload",
-        timeout = 10,
+        Timeout  = 0.01,
     })
 
     local title = "request "..url
