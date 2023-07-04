@@ -44,6 +44,7 @@ loadSketch 'sketch.screen'
 loadSketch 'sketch.plot'
 loadSketch 'sketch.upgrade'
 loadSketch 'sketch.anchor_grid'
+loadSketch 'sketch.pixels'
 
 setupClass()
 
@@ -56,4 +57,5 @@ function load()
     UpgradeApp()
     anchor_grid()
     MySketch()
+    Pixels()
 end
