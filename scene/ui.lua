@@ -12,7 +12,7 @@ function UI:init(label)
 end
 
 function UI:getLabel()
-    return self.label..' ('..tostring(self.position)..')           '
+    return self.label
 end
 
 function UI:computeSize()

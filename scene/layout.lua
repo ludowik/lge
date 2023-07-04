@@ -22,7 +22,7 @@ function Layout:layout(x, y)
         y = y + item.size.y
 
         w = max(w, item.size.x)
-        h = max(h, y)
+        h = h + item.size.y
 
         if self.state == 'close' then break end
     end
