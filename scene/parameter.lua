@@ -1,5 +1,9 @@
 Parameter = class() : extends(Scene)
 
+function Parameter.setup()
+    Parameter.innerMarge = 5
+end
+
 function Parameter:init()
     Scene.init(self)
     self.currentGroup =  self

@@ -11,6 +11,9 @@ function love.load()
     font = love.graphics.newFont(25)
 
     reload()
+
+    DeltaTime = 0
+    ElaspedTime = 0
     
     parameter = Parameter()
     parameter:group('menu', true)
@@ -31,6 +34,9 @@ function love.load()
 end
 
 function love.update(dt)
+    DeltaTime = dt
+    ElaspedTime = ElaspedTime + dt
+
     local process = {process:current()}
     for _, sketch in ipairs(process) do
         sketch:updateSketch(dt)
@@ -50,10 +56,7 @@ function love.draw()
     end
     
     resetStyle()
-    parameter:draw()
-
-    love.graphics.setColor(1, 0, 0, 1)
-    love.graphics.rectangle('line', X, Y, W, H)    
+    parameter:draw()   
 end
 
 function restart()

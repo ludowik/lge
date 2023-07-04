@@ -1,7 +1,7 @@
 Layout = class()
 
 function Layout:layout(x, y)
-    x, y = x or 0, y or 0
+    x, y = x or 0, y or UI.innerMarge
     
     local w, h = 0, 0
 
@@ -16,13 +16,13 @@ function Layout:layout(x, y)
         else
             item:computeSize()
         end
-        x = W - item.size.x
+        x = W - item.size.x - UI.innerMarge
         
         item.position:set(x, y)
-        y = y + item.size.y
+        y = y + item.size.y + UI.innerMarge
 
         w = max(w, item.size.x)
-        h = h + item.size.y
+        h = h + item.size.y + UI.innerMarge
 
         if self.state == 'close' then break end
     end

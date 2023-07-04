@@ -5,5 +5,4 @@ newSketch().draw = function ()
     text('hello World !!', W/2, H/2)
 
     Anchor(10):draw(colors.red)
-    
 end

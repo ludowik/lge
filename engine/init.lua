@@ -22,6 +22,7 @@ require 'lib.performance'
 require 'engine.color'
 require 'engine.graphics2d'
 require 'engine.image'
+require 'engine.anchor'
 
 require 'scene.ui'
 require 'scene.layout'

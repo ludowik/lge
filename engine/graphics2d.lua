@@ -74,9 +74,29 @@ function Graphics2d.rect(x, y, w, h)
         love.graphics.rectangle('fill', x, y, w, h)
     end
     if stroke() then
+        local width = strokeWidth()
         love.graphics.setColor(stroke():rgba())
-        love.graphics.setLineWidth(strokeWidth())
-        love.graphics.rectangle('line', x, y, w, h)
+        love.graphics.setLineWidth(width)
+        love.graphics.rectangle('line', x+width/2, y+width/2, w-width, h-width)
+    end
+end
+
+function Graphics2d.circle(x, y, radius)
+    Graphics2d.ellipse(x, y, radius, radius)
+end
+
+function Graphics2d.ellipse(x, y, rx, ry)
+    ry = ry or rx
+
+    if fill() then
+        love.graphics.setColor(fill():rgba())
+        love.graphics.ellipse('fill', x, y, rx, ry)
+    end
+    if stroke() then
+        local width = strokeWidth()
+        love.graphics.setColor(stroke():rgba())
+        love.graphics.setLineWidth(width)
+        love.graphics.ellipse('line', x, y, rx-width/2, ry-width/2)
     end
 end
 
