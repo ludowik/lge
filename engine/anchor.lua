@@ -4,7 +4,7 @@ function Anchor:init(ni, nj)
     self.ni = ni or 10
     self.nj = nj or math.ceil(H/(W/self.ni))
 
-    self.clr = Color(1, 1, 1, 0.5)
+    self.clr = Color(1, 1, 1, 0.25)
 end
 
 function Anchor:pos(i, j)

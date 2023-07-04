@@ -60,6 +60,18 @@ function Graphics2d.strokeWidth(width)
     return stylesSet('strokeWidth', width)
 end
 
+function Graphics2d.point(x, y)
+    love.graphics.setColor(stroke():rgba())
+    love.graphics.setPointSize(strokeWidth())
+    love.graphics.points(x, y)
+end
+
+function Graphics2d.points(...)
+    love.graphics.setColor(stroke():rgba())
+    love.graphics.setPointSize(strokeWidth())
+    love.graphics.points(...)
+end
+
 function Graphics2d.line(x1, y1, x2, y2)
     if stroke() then
         love.graphics.setColor(stroke():rgba())
