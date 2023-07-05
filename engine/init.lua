@@ -25,6 +25,8 @@ require 'engine.image'
 require 'engine.anchor'
 
 require 'scene.ui'
+require 'scene.ui_button'
+require 'scene.ui_expression'
 require 'scene.layout'
 require 'scene.node'
 require 'scene.scene'

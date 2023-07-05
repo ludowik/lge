@@ -28,6 +28,9 @@ function UpgradeApp:init()
         :attrib{
             position = anchor:pos(4, 3),
             size = anchor:size(2, 1),
+            styles = {
+                fillColor = colors.blue
+            }
         })
 end
 

@@ -59,9 +59,9 @@ function load()
     UpgradeApp()
     anchor_grid()
     MySketch()
-    Pixels()
 
     sketchCircles = Sketch()
     sketchCircles.draw = sketch.draw
 
+    Pixels()
 end

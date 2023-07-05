@@ -5,5 +5,4 @@ end
 
 --random = love.math.random
 random = math.random
-
 noise = love.math.noise

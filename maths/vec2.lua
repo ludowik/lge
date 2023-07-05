@@ -20,6 +20,12 @@ function vec2.__eq(u, v)
         (u.y == v.y)
 end
 
+function vec2.__sub(u, v)
+    return vec2(
+        u.x - v.x,
+        u.y - v.y)
+end
+
 function vec2.random(w, h)
     return vec2():randomize(w, h)
 end
