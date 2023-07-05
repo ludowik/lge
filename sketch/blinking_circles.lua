@@ -27,12 +27,14 @@ function drawCircles(n, a)
             local radius = w / 2 * sin(ElapsedTime + 100 * noise(x, y))
 
             local r = 0.5 + cos(ElapsedTime * 10 * noise(x, y))/2
+            r = 0.2
 
             fill(1-r, 0.25, 0.5, a)
+--            noFill()
             
             strokeSize((sin(ElapsedTime * noise(x, y)) + 1) * radius / 4)
             stroke(r, 0.5, 0.5, a)
-
+--noStroke()
             circle(x*w, y*w, abs(radius))
         end
     end
