@@ -45,6 +45,8 @@ loadSketch 'sketch.plot'
 loadSketch 'sketch.upgrade'
 loadSketch 'sketch.anchor_grid'
 loadSketch 'sketch.pixels'
+local sketch = loadSketch 'sketch.blinking_circles'
+assert(sketch.setup)
 
 setupClass()
 
@@ -58,4 +60,8 @@ function load()
     anchor_grid()
     MySketch()
     Pixels()
+
+    sketchCircles = Sketch()
+    sketchCircles.draw = sketch.draw
+
 end

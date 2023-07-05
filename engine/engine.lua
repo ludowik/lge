@@ -13,7 +13,7 @@ function love.load()
     reload()
 
     DeltaTime = 0
-    ElaspedTime = 0
+    ElapsedTime = 0
     
     parameter = Parameter()
     parameter:group('menu', true)
@@ -35,7 +35,7 @@ end
 
 function love.update(dt)
     DeltaTime = dt
-    ElaspedTime = ElaspedTime + dt
+    ElapsedTime = ElapsedTime + dt
 
     local process = {process:current()}
     for _, sketch in ipairs(process) do

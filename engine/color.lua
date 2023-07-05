@@ -37,6 +37,10 @@ function Color:setComponents(r, g, b, a)
     return self
 end
 
+function Color:__tostring()
+    return self.r..', '..self.g..', '..self.b..', '..self.a
+end
+
 function Color:rgba()
     return self.r, self.g, self.b, self.a
 end

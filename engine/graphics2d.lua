@@ -33,7 +33,7 @@ function Graphics2d.resetStyle()
     textColor(colors.white)
 
     noStroke()
-    strokeWidth(5)
+    strokeSize(5)
 
     fill(colors.gray)
 end
@@ -56,28 +56,32 @@ function Graphics2d.stroke(clr, ...)
     return stylesSet('strokeColor', clr)
 end
 
-function Graphics2d.strokeWidth(width)
-    return stylesSet('strokeWidth', width)
+function Graphics2d.strokeSize(size)
+    return stylesSet('strokeSize', size)
 end
 
 function Graphics2d.point(x, y)
     love.graphics.setColor(stroke():rgba())
-    love.graphics.setPointSize(strokeWidth())
+    love.graphics.setPointSize(strokeSize())
     love.graphics.points(x, y)
 end
 
 function Graphics2d.points(...)
     love.graphics.setColor(stroke():rgba())
-    love.graphics.setPointSize(strokeWidth())
+    love.graphics.setPointSize(strokeSize())
     love.graphics.points(...)
 end
 
 function Graphics2d.line(x1, y1, x2, y2)
     if stroke() then
         love.graphics.setColor(stroke():rgba())
-        love.graphics.setLineWidth(strokeWidth())
+        love.graphics.setLineWidth(strokeSize())
         love.graphics.line(x1, y1, x2, y2)
     end
+end
+
+function Graphics2d.rectMode(mode)
+    return stylesSet('rectMode', mode)
 end
 
 function Graphics2d.rect(x, y, w, h)
@@ -86,11 +90,15 @@ function Graphics2d.rect(x, y, w, h)
         love.graphics.rectangle('fill', x, y, w, h)
     end
     if stroke() then
-        local width = strokeWidth()
+        local width = strokeSize()
         love.graphics.setColor(stroke():rgba())
         love.graphics.setLineWidth(width)
         love.graphics.rectangle('line', x+width/2, y+width/2, w-width, h-width)
     end
+end
+
+function Graphics2d.circleMode(mode)
+    return stylesSet('circleMode', mode)
 end
 
 function Graphics2d.circle(x, y, radius)
@@ -105,10 +113,10 @@ function Graphics2d.ellipse(x, y, rx, ry)
         love.graphics.ellipse('fill', x, y, rx, ry)
     end
     if stroke() then
-        local width = strokeWidth()
+        local size = strokeSize()
         love.graphics.setColor(stroke():rgba())
-        love.graphics.setLineWidth(width)
-        love.graphics.ellipse('line', x, y, rx-width/2, ry-width/2)
+        love.graphics.setLineWidth(size)
+        love.graphics.ellipse('line', x, y, rx-size/2, ry-size/2)
     end
 end
 

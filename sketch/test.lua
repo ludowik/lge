@@ -22,29 +22,29 @@ function MySketch:draw()
 end
 
 function drawPoint(x, y, w, h)
-    strokeWidth(2)
+    strokeSize(2)
     stroke(colors.red)
     point(x+w/2, y+h/2)
 
-    strokeWidth(10)
+    strokeSize(10)
     stroke(colors.green)
     points{x*3, y, x*3+w, y+h}
 
-    strokeWidth(5)
+    strokeSize(5)
     stroke(colors.white)
     points{{x*5, y, 1,0,0,1}, {x*5+w*2, y+h, 0,1,0,1}}
 end
 
 function drawLine(x, y, w, h)
-    strokeWidth(2)
+    strokeSize(2)
     stroke(colors.red)
     line(x, y+w/2, x+w, y+h/2)
 
-    strokeWidth(10)
+    strokeSize(10)
     stroke(colors.green)
     line(x*3, y, x*3+w, y+h*2)
 
-    strokeWidth(5)
+    strokeSize(5)
     stroke(colors.blue)
     line(x*5, y, x*5+w*2, y+h)
 end
@@ -54,11 +54,11 @@ function drawRect(x, y, w, h)
     fill(colors.red)
     rect(x, y, w, h)
 
-    strokeWidth(10)
+    strokeSize(10)
     stroke(colors.green)
     rect(x*3, y, w, h*2)
 
-    strokeWidth(5)
+    strokeSize(5)
     stroke(colors.blue)
     rect(x*5, y, w*2, h)
 end
@@ -68,11 +68,11 @@ function drawEllipse(x, y, w, h)
     fill(colors.red)
     circle(x+w/2, y+h/2, w/2)
 
-    strokeWidth(10)
+    strokeSize(10)
     stroke(colors.green)
     ellipse(x*3+w/2, y+h, w/2, h)
 
-    strokeWidth(5)
+    strokeSize(5)
     stroke(colors.blue)
     ellipse(x*6, y+h/2, w, h/2)
 end

@@ -17,7 +17,7 @@ end
 
 function Anchor:draw(clr)
     stroke(clr or self.clr)
-    strokeWidth(0.5)
+    strokeSize(0.5)
 
     for i in index(self.ni) do
         for j in index(self.nj) do
