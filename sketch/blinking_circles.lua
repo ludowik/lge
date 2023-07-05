@@ -30,7 +30,7 @@ function drawCircles(n, a)
 
             fill(1-r, 0.25, 0.5, a)
             
-            strokeSize((sin(ElapsedTime * noise(x, y)) + 1) * radius / 4)
+            strokeSize((sin(ElapsedTime * noise(x, y)) + 1) * radius / 8)
             stroke(r, 0.5, 0.5, a)
 
             circle(x*w, y*w, abs(radius))

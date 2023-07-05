@@ -16,8 +16,11 @@ function Parameter:group(label, open)
     local newButton = UIButton(label, function ()
         newGroup.state = newGroup.state == 'close' and 'open' or 'close'
     end)
-    newButton.styles = {
-        textColor = colors.blue
+    newButton:attrib{
+        styles = {
+            fillColor = colors.blue,
+            textColor = colors.white,
+        }
     }
     newGroup:add(newButton)
 

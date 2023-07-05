@@ -7,7 +7,8 @@ function UI:init(label)
     self.label = label
 
     self.styles = {
-        textColor = colors.white
+        fillColor = colors.gray,
+        textColor = colors.white,
     }
 end
 
@@ -21,6 +22,10 @@ function UI:computeSize()
 end
 
 function UI:draw()
+    noStroke()
+    fill(self.styles.fillColor)
+    rect(self.position.x, self.position.y, self.size.x, self.size.y)
+    
     love.graphics.setFont(font)
     if self.active then
         textColor(colors.red)
@@ -47,51 +52,4 @@ function UI:click()
         self:callback()
         return true
     end    
-end
-
-UIButton = class() : extends(UI)
-
-function UIButton:init(label, callback)
-    UI.init(self, label)
-    self.callback = callback
-
-    self:attrib{
-        styles = {
-            fillColor = Color(0, 0.2, 1, 0.1)
-        }
-    }
-end
-
-function UIButton:draw()
-    fill(self.styles.fillColor)
-    rect(self.position.x, self.position.y, self.size.x, self.size.y)
-    UI.draw(self)
-end
-
-UIExpression = class() : extends(UI)
-
-function UIExpression:init(label, expression)
-    self.expression = expression or label
-    UI.init(self, label)
-end
-
-function UIExpression:evaluateExpression()
-    return loadstring('return ' .. self.expression)()
-end
-
-function UIExpression:computeSize()
-    love.graphics.setFont(font)
-    local w1, h1 = textSize(self:getLabel())
-    local w2, h2 = textSize(self:evaluateExpression())
-    self.size:set(w1 + UI.innerMarge + w2, max(h1, h2))
-end
-
-function UIExpression:draw()
-    love.graphics.setFont(font)
-    local w, h = textSize(self:getLabel())
-
-    textColor(colors.white)
-    
-    text(self:getLabel(), self.position.x, self.position.y)
-    text(self:evaluateExpression(), self.position.x + w + UI.innerMarge, self.position.y)
 end

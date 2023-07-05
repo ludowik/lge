@@ -33,31 +33,39 @@ function contains(mouse)
 end
 
 local currentObject = nil
+
+mouse = {}
+
 function love.mousepressed(x, y, button, istouch, presses)
-    currentObject = contains({
-        position = vec2(x-X, y-Y)
-    })
+    mouse.position = vec2(x-X, y-Y)
+    mouse.startPosition = mouse.position
+    mouse.previousPosition = mouse.position
+    
+    currentObject = contains(mouse)
 
     if currentObject then
-        currentObject:mousepressed({
-            position = vec2(x-X, y-Y)
-        })
+        currentObject:mousepressed(mouse)
     end
 end
 
 function love.mousemoved(x, y, dx, dy, istouch)
     if currentObject then
-        currentObject:mousemoved({
-            position = vec2(x-X, y-Y)
-        })
+        mouse.previousPosition = mouse.position
+        mouse.position = vec2(x-X, y-Y)
+        mouse.move = mouse.position - mouse.startPosition
+
+        currentObject:mousemoved(mouse)
     end
 end
 
 function love.mousereleased(x, y, button, istouch, presses)
     if currentObject then
-        currentObject:mousereleased({
-            position = vec2(x-X, y-Y)
-        })
+        mouse.previousPosition = mouse.position
+        mouse.position = vec2(x-X, y-Y)
+        mouse.endPosition = mouse.position
+        mouse.move = mouse.endPosition - mouse.startPosition        
+        
+        currentObject:mousereleased(mouse)
     end
     currentObject = nil
 end

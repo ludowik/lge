@@ -8,29 +8,36 @@ function love.load()
     
     push2globals(Graphics2d)
 
-    font = love.graphics.newFont(25)
-
-    reload()
-
     DeltaTime = 0
     ElapsedTime = 0
     
+    reload()    
+    
     parameter = Parameter()
-    parameter:group('menu', true)
+    parameter:group('menu')
     parameter:action('quit', quit)
     parameter:action('update', function () parameter.scene = UpgradeApp() end)
     parameter:action('reload', reload)
     parameter:action('restart', restart)
 
-    parameter:group('navigate', false)
+    parameter:group('navigate')
     parameter:action('next', function () process:next() end)
     parameter:action('previous', function () process:previous() end)
     parameter:action('random', function () process:random() end)
 
-    parameter:group('info', false)
+    parameter:group('info')
     parameter:watch('fps', 'getFPS()')
     parameter:watch('position', 'X..","..Y')
     parameter:watch('size', 'W..","..H')
+    parameter:watch('delta time', 'string.format("%.3f", DeltaTime)')
+    parameter:watch('elapsed time', 'string.format("%.1f", ElapsedTime)')
+
+    parameter:group('mouse', true)
+    parameter:watch('startPosition', 'mouse.startPosition')
+    parameter:watch('position', 'mouse.position')
+    parameter:watch('previousPosition', 'mouse.previousPosition')
+    parameter:watch('move', 'mouse.move')
+    
 end
 
 function love.update(dt)

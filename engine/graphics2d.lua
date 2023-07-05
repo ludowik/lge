@@ -1,10 +1,13 @@
 Graphics2d = class()
 
-local __paramColor = Color()
-function paramColor(clr, ...)
+function Graphics2d.setup()
+    font = love.graphics.newFont(25)
+end
+
+local function paramColor(clr, ...)
     if clr == nil then return end
     if type(clr) == 'table' then return clr end
-    return __paramColor:setComponents(clr, ...)
+    return Color(clr, ...)
 end
 
 function Graphics2d.background(clr, ...)
