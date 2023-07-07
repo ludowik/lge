@@ -20,19 +20,20 @@ function love.keypressed(key, scancode, isrepeat)
     end
 end
 
-function contains(mouse)
-    local object = parameter:contains(mouse.position)
-    if object then return object end
-
-    local process = {process:current()}
-    for _,sketch in ipairs(process, true) do
-        local object = sketch:contains(mouse.position)
-        if object then return object end
-    end
-    
-end
-
 local currentObject = nil
+
+local globalManager = class()
+function globalManager:mousepressed(mouse)
+end
+function globalManager:mousemoved(mouse)
+end
+function globalManager:mousereleased(mouse)
+    if mouse.position.x < .5 * W then
+        process:previous()
+    else
+        process:next()
+    end
+end
 
 mouse = {}
 
@@ -40,8 +41,12 @@ function love.mousepressed(x, y, button, istouch, presses)
     mouse.position = vec2(x-X, y-Y)
     mouse.startPosition = mouse.position
     mouse.previousPosition = mouse.position
-    
-    currentObject = contains(mouse)
+
+    if mouse.position.y > .8 * H then   
+        currentObject = globalManager
+    else
+        currentObject = contains(mouse)
+    end
 
     if currentObject then
         currentObject:mousepressed(mouse)

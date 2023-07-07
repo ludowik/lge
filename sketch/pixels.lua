@@ -15,7 +15,7 @@ Pixels.noiseFunctions = {
         return ((x*65.685) * (y*9584.3652)) % 1
     end,
     function (x, y)
-        local n = love.math.noise(
+        local n = noise(
             baseX + .01654 * x,
             baseY + .02984 * y,
             ElapsedTime*.5)

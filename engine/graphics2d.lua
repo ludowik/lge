@@ -1,6 +1,7 @@
 Graphics2d = class()
 
 function Graphics2d.setup()
+    push2globals(Graphics2d)
     font = love.graphics.newFont(25)
 end
 
@@ -32,6 +33,8 @@ function stylesReset(name)
 end
 
 function Graphics2d.resetStyle()
+    love.graphics.reset()
+
     textMode(CORNER)
     textColor(colors.white)
 
