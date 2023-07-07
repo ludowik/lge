@@ -3,7 +3,9 @@ Pixels = class() : extends(Sketch)
 function Pixels:init()
     Sketch.init(self)
 
-    self.imageData = self.canvas:newImageData()
+    self.pixelRatio = 4
+
+    self.imageData = love.image.newImageData(W/self.pixelRatio, H/self.pixelRatio)
     self.pointer = require("ffi").cast("uint8_t*", self.imageData:getFFIPointer()) -- imageData has one byte per channel per pixel.    
 end
 
@@ -21,17 +23,24 @@ Pixels.noiseFunctions = {
             ElapsedTime*.5)
         return n, n, n, 1
     end,
+    function (x, y)
+        rd = rd or love.math.newRandomGenerator()
+        rd:setSeed(x/10*y/5845+ElapsedTime*10)
+        return rd:random() % 1
+    end,
 }
 
 function Pixels:draw()
-    local fragment = Pixels.noiseFunctions[2]
+    seed = 56494446
+
+    local fragment = Pixels.noiseFunctions[3]
     
 	local pointer, i = self.pointer, 0    
     local r, g, b, a = 0, 0, 0, 0
 
     for y in index(self.imageData:getHeight()) do
         for x in index(self.imageData:getWidth()) do
-            r, g, b, a = fragment(x, y)
+            r, g, b, a = fragment(x*self.pixelRatio, y*self.pixelRatio)
 
             pointer[i  ] = r * 255
             pointer[i+1] = (g or r) * 255
@@ -42,5 +51,6 @@ function Pixels:draw()
         end
 	end
 
-    love.graphics.draw(love.graphics.newImage(self.imageData))
+    love.graphics.setDefaultFilter('nearest', 'nearest', 0)
+    love.graphics.draw(love.graphics.newImage(self.imageData), 0, 0, 0, self.pixelRatio, self.pixelRatio)
 end
