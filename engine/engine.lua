@@ -1,18 +1,26 @@
 function love.load()
-    if getOS() == 'ios' then
+    initMode()
+    initTime()
+    initParameter()
+
+    reload()
+end
+
+function initTime()
+    DeltaTime = 0
+    ElapsedTime = 0
+end
+
+function initMode()
+        if getOS() == 'ios' then
         X, Y, W, H = love.window.getSafeArea()
     else
         X, Y, W, H = 10, 20, 800*9/16, 800
         love.window.setMode(2*X+W, 2*Y+H)
     end
-    
-    push2globals(Graphics2d)
+end
 
-    DeltaTime = 0
-    ElapsedTime = 0
-    
-    reload()    
-    
+function initParameter()
     parameter = Parameter()
     parameter:group('menu')
     parameter:action('quit', quit)
@@ -37,12 +45,26 @@ function love.load()
     parameter:watch('position', 'mouse.position')
     parameter:watch('previousPosition', 'mouse.previousPosition')
     parameter:watch('move', 'mouse.move')
-    
+end
+
+function updateTime(dt)
+    DeltaTime = dt
+    ElapsedTime = ElapsedTime + dt
+end
+
+function contains(mouse)
+    local object = parameter:contains(mouse.position)
+    if object then return object end
+
+    local process = {process:current()}
+    for _,sketch in ipairs(process, true) do
+        local object = sketch:contains(mouse.position)
+        if object then return object end
+    end 
 end
 
 function love.update(dt)
-    DeltaTime = dt
-    ElapsedTime = ElapsedTime + dt
+    updateTime(dt)
 
     local process = {process:current()}
     for _, sketch in ipairs(process) do
@@ -52,8 +74,6 @@ function love.update(dt)
 end
 
 function love.draw()
-    love.graphics.reset()
-
     background(Color(251))
 
     local process = {process:current()}
