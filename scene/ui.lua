@@ -16,8 +16,16 @@ function UI:getLabel()
     return self.label
 end
 
+function UI:fontSize()
+    if self.parent then
+        fontSize(self.parent.state == 'open' and 32 or 18)
+    else
+        fontSize(22)
+    end
+end
+
 function UI:computeSize()
-    love.graphics.setFont(font)
+    self:fontSize()
     self.size:set(textSize(self:getLabel()))
 end
 
@@ -26,12 +34,13 @@ function UI:draw()
     fill(self.styles.fillColor)
     rect(self.position.x, self.position.y, self.size.x, self.size.y)
     
-    love.graphics.setFont(font)
     if self.active then
         textColor(colors.red)
     else
         textColor(self.styles.textColor)
     end
+
+    self:fontSize()
 
     textMode(CORNER)
     text(self:getLabel(), self.position.x, self.position.y)

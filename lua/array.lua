@@ -7,6 +7,12 @@ function Array:init(...)
     return ...
 end
 
+function Array:foreach(f)
+    for i,v in ipairs(self) do
+        f(v, i)
+    end
+end
+
 function Array:unitTest()
     local t = Array()
     t:add('element')

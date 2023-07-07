@@ -1,7 +1,6 @@
 Graphics2d = class()
 
 function Graphics2d.setup()
-    font = love.graphics.newFont(25)
 end
 
 local function paramColor(clr, ...)

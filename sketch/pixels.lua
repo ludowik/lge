@@ -25,7 +25,7 @@ Pixels.noiseFunctions = {
     end,
     function (x, y)
         rd = rd or love.math.newRandomGenerator()
-        rd:setSeed(x/10*y/5845+ElapsedTime*10)
+        rd:setSeed(x/10*y/584+ElapsedTime)
         return rd:random() % 1
     end,
 }

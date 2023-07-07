@@ -14,9 +14,15 @@ function Parameter:group(label, open)
     newGroup.state = open and 'open' or 'close'
 
     local newButton = UIButton(label, function ()
+        self:foreach(function (node)
+            if node.state then
+                node.state = 'close'
+            end
+        end)
         newGroup.state = newGroup.state == 'close' and 'open' or 'close'
     end)
     newButton:attrib{
+        parent = newGroup,
         styles = {
             fillColor = colors.blue,
             textColor = colors.white,

@@ -34,7 +34,7 @@ end
 function Sketch:drawSketch()
     self:setContext()
 
-    love.graphics.setFont(font)
+    fontSize(22)
 
     self:draw()
 

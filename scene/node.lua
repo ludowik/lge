@@ -10,6 +10,10 @@ function Node:add(item)
     return self
 end
 
+function Node:foreach(f)
+    return self.items:foreach(f)
+end
+
 function Node:update(dt)
     for _,item in ipairs(self.items) do
         if item.update then
