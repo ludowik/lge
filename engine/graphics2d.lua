@@ -1,8 +1,18 @@
 Graphics2d = class()
 
 function Graphics2d.setup()
+    initMode()
     push2globals(Graphics2d)
     font = love.graphics.newFont(25)
+end
+
+function initMode()
+    if getOS() == 'ios' then
+        X, Y, W, H = love.window.getSafeArea()
+    else
+        X, Y, W, H = 10, 20, 800*9/16, 800
+        love.window.setMode(2*X+W, 2*Y+H)
+    end
 end
 
 local function paramColor(clr, ...)

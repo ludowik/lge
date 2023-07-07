@@ -2,6 +2,10 @@ Node = class() : extends(UI, Layout)
 
 function Node:init()
     UI.init(self)
+    self:clear()
+end
+
+function Node:clear()
     self.items = Array()
 end
 

@@ -1,56 +1,15 @@
 function love.load()
-    initMode()
-    initTime()
-    initParameter()
+    classSetup()
+    classUnitTesting()
+
+    components = Node()
+    components:add(TimeManager)
+    components:add(parameter)
+    components:add(process)
 
     reload()
 end
 
-function initTime()
-    DeltaTime = 0
-    ElapsedTime = 0
-end
-
-function initMode()
-        if getOS() == 'ios' then
-        X, Y, W, H = love.window.getSafeArea()
-    else
-        X, Y, W, H = 10, 20, 800*9/16, 800
-        love.window.setMode(2*X+W, 2*Y+H)
-    end
-end
-
-function initParameter()
-    parameter = Parameter()
-    parameter:group('menu')
-    parameter:action('quit', quit)
-    parameter:action('update', function () parameter.scene = UpgradeApp() end)
-    parameter:action('reload', reload)
-    parameter:action('restart', restart)
-
-    parameter:group('navigate')
-    parameter:action('next', function () process:next() end)
-    parameter:action('previous', function () process:previous() end)
-    parameter:action('random', function () process:random() end)
-
-    parameter:group('info')
-    parameter:watch('fps', 'getFPS()')
-    parameter:watch('position', 'X..","..Y')
-    parameter:watch('size', 'W..","..H')
-    parameter:watch('delta time', 'string.format("%.3f", DeltaTime)')
-    parameter:watch('elapsed time', 'string.format("%.1f", ElapsedTime)')
-
-    parameter:group('mouse', true)
-    parameter:watch('startPosition', 'mouse.startPosition')
-    parameter:watch('position', 'mouse.position')
-    parameter:watch('previousPosition', 'mouse.previousPosition')
-    parameter:watch('move', 'mouse.move')
-end
-
-function updateTime(dt)
-    DeltaTime = dt
-    ElapsedTime = ElapsedTime + dt
-end
 
 function contains(mouse)
     local object = parameter:contains(mouse.position)
@@ -64,13 +23,14 @@ function contains(mouse)
 end
 
 function love.update(dt)
-    updateTime(dt)
-
-    local process = {process:current()}
-    for _, sketch in ipairs(process) do
-        sketch:updateSketch(dt)
-    end
-    parameter:update(dt)
+    components:update(dt)
+    --process:update(dt)
+    
+    -- local process = {process:current()}
+    -- for _, sketch in ipairs(process) do
+    --     sketch:updateSketch(dt)
+    -- end
+    --parameter:update(dt)
 end
 
 function love.draw()
@@ -91,7 +51,7 @@ function restart()
 end
 
 function reload()
-    process = Process()
+    process:clear()
     load()
 end
 

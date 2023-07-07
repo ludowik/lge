@@ -52,15 +52,7 @@ function push2globals(klass)
     end
 end
 
-function unitTesting()
-    for name,klass in pairs(classList) do
-        if klass.unitTest then
-            klass.unitTest()
-        end
-    end
-end
-
-function setupClass()
+function classSetup()
     for name,klass in pairs(_G) do
         if type(klass) == 'table' and klass.__class then
             klass.__className = name
@@ -71,6 +63,14 @@ function setupClass()
             klass.setup()
         end
         print(klass.__classInfo..': '..composition(klass))
+    end
+end
+
+function classUnitTesting()
+    for name,klass in pairs(classList) do
+        if klass.unitTest then
+            klass.unitTest()
+        end
     end
 end
 

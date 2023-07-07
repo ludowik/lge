@@ -1,15 +1,3 @@
--- __require = require
--- require = function (fileName)
---     fileName = fileName:gsub('%.', '%/')
---     print('load file '..fileName)
---     local chunk, err = love.filesystem.load(fileName..'.lua')
---     if chunk then
---         return chunk()
---     else
---         return __require(fileName)
---     end
--- end
-
 require 'engine'
 
 function newSketch()
@@ -47,10 +35,6 @@ loadSketch 'sketch.anchor_grid'
 loadSketch 'sketch.pixels'
 local sketch = loadSketch 'sketch.blinking_circles'
 assert(sketch.setup)
-
-setupClass()
-
-unitTesting()
 
 function load()
     The2048()

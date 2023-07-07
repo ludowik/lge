@@ -34,6 +34,7 @@ require 'scene.scene'
 require 'scene.parameter'
 
 require 'engine.event'
-require 'engine.process'
 require 'engine.sketch'
+require 'engine.process_manager'
+require 'engine.time_manager'
 require 'engine.engine'
