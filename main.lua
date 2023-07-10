@@ -13,39 +13,44 @@ function isSketch(klass)
     return isSketch(klass.__inheritsFrom[1])
 end
 
-function loadSketch(name)
+local environnements = {}
+function declareSketch(name)
+    if environnements[name] then return environnements[name] end
     local env = setmetatable({}, {__index = _G})
+    environnements[name] = env
     setfenv(0, env)
     require(name)
     for k,v in pairs(env) do
         if isSketch(v) then
             _G[k] = v
             v.env = env
+            env.__sketch = v
         end
     end
     return env
 end
 
-loadSketch 'sketch.test'
-loadSketch 'sketch.2048'
-loadSketch 'sketch.screen'
-loadSketch 'sketch.plot'
-loadSketch 'sketch.upgrade'
-loadSketch 'sketch.anchor_grid'
-loadSketch 'sketch.pixels'
-local sketch = loadSketch 'sketch.blinking_circles'
-assert(sketch.setup)
+function declareSketches()
+    local directoryItems = love.filesystem.getDirectoryItems('sketch/')
+    for _,item in ipairs(directoryItems) do
+        declareSketch('sketch.'..item:gsub('%.lua', ''))
+    end
+end
+
+function loadSketches()
+    for k,env in pairs(environnements) do
+        env.__sketch()
+    end
+end
+
+declareSketches()
 
 function load()
-    The2048()
-    TV()
-    Plot()
-    UpgradeApp()
-    anchor_grid()
-    MySketch()
+    loadSketches()
 
+    local sketch = declareSketch('sketch.blinking_circles')
     sketchCircles = Sketch()
     sketchCircles.draw = sketch.draw
 
-    Pixels()
+    process:setSketch('Hexagone')
 end

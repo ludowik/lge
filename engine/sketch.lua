@@ -54,6 +54,11 @@ function Sketch:drawSketch()
         self.size.y / self.canvas:getHeight()) -- scale Y
 end
 
+function Sketch:draw()
+    background()
+    text(self.__className, self.size.x/2, self.size.y/2)
+end
+
 function Sketch:mousepressed(mouse)
     self.active = true
     if self.scene then

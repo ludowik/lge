@@ -1,0 +1,1 @@
+--Hexagone = class() : extends(Sketch)

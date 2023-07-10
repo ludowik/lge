@@ -9,6 +9,15 @@ function ProcessManager:add(sketch)
     self.currentProcess = #self.items
 end
 
+function ProcessManager:setSketch(name)
+    for i,process in ipairs(self.items) do
+        if process.__className == name then
+            self.currentProcess = i
+            break
+        end        
+    end
+end
+
 function ProcessManager:loop()
     self.loopOverProcess = not self.loopOverProcess
     self.loopLastProcess = self:current()
