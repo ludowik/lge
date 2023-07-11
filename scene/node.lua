@@ -18,6 +18,10 @@ function Node:foreach(f)
     return self.items:foreach(f)
 end
 
+function Node:remove(f)
+    return self.items:remove(f)
+end
+
 function Node:update(dt)
     for _,item in ipairs(self.items) do
         if item.update then
@@ -31,7 +35,6 @@ function Node:draw()
     for _,item in ipairs(self.items) do
         if item.draw then
             love.graphics.push()
---            love.graphics.translate(item.position.x, item.position.y)
             item:draw()
             love.graphics.pop()
         end

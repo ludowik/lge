@@ -33,25 +33,26 @@ end
 
 function Sketch:drawSketch()
     self:setContext()
-
-    fontSize(22)
+    
+    resetStyle()
 
     self:draw()
 
-    textMode(CORNER)
-    text(self.__className, 0, 0)
-
-    love.graphics.setCanvas()
+    resetStyle()
+    resetMatrix()
     
-    love.graphics.reset()
+    love.graphics.setColor(colors.white:rgba())
+    love.graphics.setCanvas()
     love.graphics.setScissor(X, Y, W, H)
-        
     love.graphics.draw(self.canvas,
         X + self.position.x, -- x
         Y + self.position.y, -- y
         0, -- rotation
         self.size.x / self.canvas:getWidth(), -- scale X
         self.size.y / self.canvas:getHeight()) -- scale Y
+
+    textMode(CORNER)
+    text(self.__className, 0, 0)
 end
 
 function Sketch:draw()

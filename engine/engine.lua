@@ -34,14 +34,19 @@ function love.update(dt)
 end
 
 function love.draw()
+    love.graphics.setScissor()
+    love.graphics.discard()
+    
     background(Color(251))
 
     local process = {process:current()}
     for _, sketch in ipairs(process) do
+        resetMatrix()
         resetStyle()
         sketch:drawSketch()
     end
     
+    resetMatrix()
     resetStyle()
     parameter:draw()   
 end

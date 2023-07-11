@@ -10,6 +10,10 @@ function vec2:set(x, y)
     return self
 end
 
+function vec2.fromAngle(angle)
+    return vec2(cos(angle), sin(angle))
+end
+
 function vec2:__tostring()
     return self.x..', '..self.y
 end
@@ -20,10 +24,22 @@ function vec2.__eq(u, v)
         (u.y == v.y)
 end
 
+function vec2.__add(u, v)
+    return vec2(
+        u.x + v.x,
+        u.y + v.y)
+end
+
 function vec2.__sub(u, v)
     return vec2(
         u.x - v.x,
         u.y - v.y)
+end
+
+function vec2.__mul(u, coef)
+    return vec2(
+        u.x * coef,
+        u.y * coef)
 end
 
 function vec2.random(w, h)
@@ -44,6 +60,12 @@ end
 
 function vec2:len()
     return sqrt(self.x ^ 2 + self.y ^ 2)
+end
+
+function vec2:normalize(len)
+    local ratio = (len or 1) / self:len()
+    self.x = self.x * ratio
+    self.y = self.y * ratio
 end
 
 function vec2.scalar(u, v)

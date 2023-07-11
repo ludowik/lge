@@ -10,13 +10,14 @@ function FrameBuffer:init(w, h)
     love.graphics.setCanvas(currentCanvas)
 end
 
-function FrameBuffer:background()
-    love.graphics:clear(0, 0, 0, 1)
-end
-
 function FrameBuffer:setContext()
     love.graphics.setCanvas(self.canvas)
 end
+
+function FrameBuffer:background()
+    love.graphics.clear(0, 0, 0, 1)
+end
+
 
 Image = class() : extends(FrameBuffer)
 

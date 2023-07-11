@@ -43,15 +43,14 @@ function stylesReset(name)
 end
 
 function Graphics2d.resetStyle()
-    love.graphics.reset()
-
     textMode(CORNER)
     textColor(colors.white)
+    fontSize(22)
 
-    noStroke()
-    strokeSize(5)
+    stroke(colors.white)
+    strokeSize(1)	
 
-    fill(colors.gray)
+    noFill()
 end
 
 function Graphics2d.noFill()
@@ -77,13 +76,17 @@ function Graphics2d.strokeSize(size)
 end
 
 function Graphics2d.point(x, y)
-    love.graphics.setColor(stroke():rgba())
+    if stroke() then
+        love.graphics.setColor(stroke():rgba())
+    end
     love.graphics.setPointSize(strokeSize())
     love.graphics.points(x, y)
 end
 
 function Graphics2d.points(...)
-    love.graphics.setColor(stroke():rgba())
+    if stroke() then
+        love.graphics.setColor(stroke():rgba())
+    end
     love.graphics.setPointSize(strokeSize())
     love.graphics.points(...)
 end
