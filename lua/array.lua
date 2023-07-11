@@ -13,6 +13,14 @@ function Array:foreach(f)
     end
 end
 
+function Array:remove(f)
+    for i,v in ipairs(self, true) do
+        if f(v) then
+            table.remove(self, i)
+        end
+    end
+end
+
 function Array:unitTest()
     local t = Array()
     t:add('element')

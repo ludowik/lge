@@ -20,6 +20,7 @@ require 'lib.https'
 require 'lib.performance'
 
 require 'engine.color'
+require 'engine.transform'
 require 'engine.graphics2d'
 require 'engine.image'
 require 'engine.font'

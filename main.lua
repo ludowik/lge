@@ -25,6 +25,7 @@ function declareSketch(name)
             _G[k] = v
             v.env = env
             env.__sketch = v
+            break;
         end
     end
     return env
@@ -39,7 +40,9 @@ end
 
 function loadSketches()
     for k,env in pairs(environnements) do
-        env.__sketch()
+        if env.__sketch then
+            env.__sketch()
+        end
     end
 end
 

@@ -70,7 +70,7 @@ end
 
 function Parameter:draw()    
     self:layout()
-    love.graphics.translate(X, Y)
+    translate(X, Y)
     Scene.draw(self)
-    love.graphics.reset()
+    resetMatrix()
 end
