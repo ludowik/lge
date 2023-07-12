@@ -82,7 +82,7 @@ function Graphics2d.point(x, y)
     --love.graphics.setPointSize(strokeSize())
     --love.graphics.points(x, y)
 
-    love.graphics.ellipse('fill', x, y, strokeSize()/2, strokeSize()/2, 360)
+    love.graphics.ellipse('fill', x, y, strokeSize()/2, strokeSize()/2)
 end
 
 function Graphics2d.points(...)

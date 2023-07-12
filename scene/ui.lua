@@ -18,15 +18,17 @@ end
 
 function UI:fontSize()
     if self.parent then
-        fontSize(self.parent.state == 'open' and 32 or 18)
+        fontSize(self.parent.state == 'open' and 32 or 16)
     else
-        fontSize(22)
+        fontSize(20)
     end
 end
 
 function UI:computeSize()
     self:fontSize()
-    self.size:set(textSize(self:getLabel()))
+
+    local w, h = textSize(self:getLabel())
+    self.size:set(w + 2 * UI.innerMarge, h)
 end
 
 function UI:draw()
@@ -43,7 +45,7 @@ function UI:draw()
     self:fontSize()
 
     textMode(CORNER)
-    text(self:getLabel(), self.position.x, self.position.y)
+    text(self:getLabel(), self.position.x + UI.innerMarge, self.position.y)
 end
 
 function UI:mousepressed(mouse)

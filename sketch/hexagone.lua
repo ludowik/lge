@@ -9,12 +9,14 @@ function Hexagone:init()
 end
 
 function Hexagone:update(dt)
-    self.particles:add(Particle())
+    if self.particles:count() < 120 then
+        self.particles:add(Particle())
+    end
     self.particles:remove(function (item) return item.state == 'dead' end )
 end
 
 function Hexagone:draw()
-    fill(0, 0, 0, 0.1)
+    fill(0, 0, 0, 0.02)
     rect(0, 0, W, H)
 
     noFill()
@@ -29,15 +31,19 @@ Particle = class()
 
 Particle.DISTANCE = 30
 
+Particle.n = 0
+
 function Particle:init()
-    self.clr = Color(1, 0, 0)
-    self.clr.a = random()
+    Particle.n = Particle.n + 1
+
+    self.clr = Color.hsl(Particle.n / 10)
+    self.clr.a = 0.8
 
     self.position = vec2()
     self.angle = PI/13 + TAU/3 * random(1, 3)
-    self.speed = random(250, 450)
+    self.speed = random(50, 150)
     self.distance = Particle.DISTANCE
-    self.life = random(5, 250)
+    self.chanceToDie = 0.1
 end
 
 function Particle:update(dt)
@@ -46,28 +52,29 @@ function Particle:update(dt)
     self.distance = self.distance - deltaPosition:len()
 
     if deltaPosition:len() > self.distance then
-        deltaPosition:normalize(self.distance)
-        self.distance = Particle.DISTANCE
-
-        if random() < .5 then
-            self.angle = self.angle + PI/3
+        if random() <= self.chanceToDie then
+            self.state = 'dead'
         else
-            self.angle = self.angle - PI/3
+            deltaPosition:normalize(self.distance)
+            self.distance = Particle.DISTANCE
+
+            if random() < .5 then
+                self.angle = self.angle + PI/3
+            else
+                self.angle = self.angle - PI/3
+            end
+
+            local pctChange = 0.4
+            self.speed = self.speed + (random() * pctChange - pctChange/2) * self.speed
         end
     end
 
     self.position = self.position + deltaPosition
-
-    self.life = self.life * 0.995
-
-    if self.life <= 1 then 
-        self.state = 'dead'
-    end        
 end
 
 function Particle:draw()
     stroke(self.clr)
-    strokeSize(map(self.life, 0, 20, 1, 2.5))
+    strokeSize(4)
 
     function step(dt)
         self:update(dt)
