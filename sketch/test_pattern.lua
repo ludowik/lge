@@ -1,6 +1,6 @@
-TV = class() : extends(Sketch)
+TestPattern = class() : extends(Sketch)
 
-function TV:draw()
+function TestPattern:draw()
 	background()
 
 	rect(0, 0, W, H)

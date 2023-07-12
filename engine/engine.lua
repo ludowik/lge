@@ -4,7 +4,6 @@ function love.load()
 
     components = Node()
     components:add(TimeManager)
-    components:add(parameter)
     components:add(process)
 
     reload()
@@ -12,25 +11,17 @@ end
 
 
 function contains(mouse)
-    local object = parameter:contains(mouse.position)
+    local process = process:current()
+    
+    local object = process.parameter:contains(mouse.position)
     if object then return object end
 
-    local process = {process:current()}
-    for _,sketch in ipairs(process, true) do
-        local object = sketch:contains(mouse.position)
-        if object then return object end
-    end 
+    local object = process:contains(mouse.position)
+    if object then return object end
 end
 
 function love.update(dt)
     components:update(dt)
-    --process:update(dt)
-    
-    -- local process = {process:current()}
-    -- for _, sketch in ipairs(process) do
-    --     sketch:updateSketch(dt)
-    -- end
-    --parameter:update(dt)
 end
 
 function love.draw()
@@ -39,16 +30,14 @@ function love.draw()
     
     background(Color(251))
 
-    local process = {process:current()}
-    for _, sketch in ipairs(process) do
-        resetMatrix()
-        resetStyle()
-        sketch:drawSketch()
-    end
+    local process = process:current()
+    resetMatrix()
+    resetStyle()
+    process:drawSketch()
     
     resetMatrix()
     resetStyle()
-    parameter:draw()   
+    process.parameter:draw()   
 end
 
 function restart()

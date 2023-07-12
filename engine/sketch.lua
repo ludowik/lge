@@ -23,9 +23,21 @@ function Sketch:init(w, h)
         -- hs)
 
     Image.init(self, w, h)
+
+    self:initMenu()
 end
 
-function Sketch:updateSketch(dt)
+function Sketch:initMenu()
+    self.parameter = Parameter()
+    self.parameter:initMenu()
+    self.parameter:group(self.__className, true)
+
+    -- for k,v in pairs(self) do
+    --     self.parameter:watch({object = self, name = k})
+    -- end
+end
+
+function Sketch:updateSketch(dt)    
     if self.update then
         self:update(dt)
     end
@@ -52,7 +64,7 @@ function Sketch:drawSketch()
         self.size.y / self.canvas:getHeight()) -- scale Y
 
     textMode(CORNER)
-    text(self.__className, 0, 0)
+    text(self.__className, X, Y)
 end
 
 function Sketch:draw()

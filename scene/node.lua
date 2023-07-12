@@ -14,6 +14,10 @@ function Node:add(item)
     return self
 end
 
+function Node:count()
+    return  #self.items
+end
+
 function Node:foreach(f)
     return self.items:foreach(f)
 end

@@ -1,12 +1,12 @@
-MySketch = class() : extends(Sketch)
+Sketch2d = class() : extends(Sketch)
 
-function MySketch:init()
+function Sketch2d:init()
     Sketch.init(self)
     self.clr = Color.random()
     self.anchor = Anchor()
 end
 
-function MySketch:draw()
+function Sketch2d:draw()
     background(colors.black)
 
     self.anchor:draw()
@@ -22,7 +22,7 @@ function MySketch:draw()
 end
 
 function drawPoint(x, y, w, h)
-    strokeSize(2)
+    strokeSize(20)
     stroke(colors.red)
     point(x+w/2, y+h/2)
 
@@ -64,6 +64,8 @@ function drawRect(x, y, w, h)
 end
 
 function drawEllipse(x, y, w, h)
+    love.graphics.setLineStyle('smooth')
+
     noStroke()
     fill(colors.red)
     circle(x+w/2, y+h/2, w/2)

@@ -1,7 +1,9 @@
 FrameBuffer = class()
 
 function FrameBuffer:init(w, h)
-    self.canvas = love.graphics.newCanvas(w, h)
+    self.canvas = love.graphics.newCanvas(w, h, {
+        msaa = 5
+    })
 
     local currentCanvas = love.graphics.getCanvas()
     self:setContext()

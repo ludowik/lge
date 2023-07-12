@@ -51,6 +51,7 @@ function Pixels:draw()
         end
 	end
 
-    love.graphics.setDefaultFilter('nearest', 'nearest', 0)
-    love.graphics.draw(love.graphics.newImage(self.imageData), 0, 0, 0, self.pixelRatio, self.pixelRatio)
+    local image = love.graphics.newImage(self.imageData)
+    image:setFilter('nearest', 'nearest', 0)
+    love.graphics.draw(image, 0, 0, 0, self.pixelRatio, self.pixelRatio)
 end

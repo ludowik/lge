@@ -10,6 +10,7 @@ function ProcessManager:add(sketch)
 end
 
 function ProcessManager:setSketch(name)
+    name = name:lower()
     for i,process in ipairs(self.items) do
         if process.__className == name then
             self.currentProcess = i

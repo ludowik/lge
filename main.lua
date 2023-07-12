@@ -41,14 +41,13 @@ end
 function loadSketches()
     for k,env in pairs(environnements) do
         if env.__sketch then
-            env.__sketch()
+            env.sketch = env.__sketch()
         end
     end
 end
 
-declareSketches()
-
 function load()
+    declareSketches()
     loadSketches()
 
     local sketch = declareSketch('sketch.blinking_circles')
