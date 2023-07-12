@@ -36,17 +36,31 @@ function Parameter:init()
     self.currentGroup =  self
 end
 
-function Parameter:group(label, open)
-    local newGroup = Node()
-    newGroup.state = open and 'open' or 'close'
+function Parameter:openGroup(group)
+    self:closeAllGroups()
+    group.state = 'open'
+end
 
-    local newButton = UIButton(label, function ()
-        self:foreach(function (node)
+function Parameter:closeAllGroups()
+    self:foreach(
+        function (node)
             if node.state then
                 node.state = 'close'
             end
         end)
-        newGroup.state = newGroup.state == 'close' and 'open' or 'close'
+end
+
+function Parameter:group(label, open)
+    local newGroup = Node()
+
+    if open then 
+        self:openGroup(newGroup)
+    else
+        newGroup.state = 'close'
+    end
+
+    local newButton = UIButton(label, function ()
+        self:openGroup(newGroup)
     end)
     newButton:attrib{
         parent = newGroup,
