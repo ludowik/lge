@@ -10,6 +10,8 @@ function ProcessManager:add(sketch)
 end
 
 function ProcessManager:setSketch(name)
+    if not name then return end
+    
     name = name:lower()
     for i,process in ipairs(self.items) do
         if process.__className == name then

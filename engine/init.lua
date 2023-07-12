@@ -8,6 +8,7 @@ require 'lua.class'
 require 'lua.array'
 require 'lua.index'
 require 'lua.state'
+require 'lua.settings'
 
 require 'maths.random'
 require 'maths.vec2'

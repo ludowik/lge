@@ -54,5 +54,5 @@ function load()
     sketchCircles = Sketch()
     sketchCircles.draw = sketch.draw
 
-    process:setSketch('Hexagone')
+    process:setSketch(settings.sketch)
 end
