@@ -25,7 +25,8 @@ function declareSketch(name)
             _G[k] = v
             v.env = env
             env.__sketch = v
-            break;
+            print(name..'/'..k)
+            break
         end
     end
     return env

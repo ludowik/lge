@@ -21,6 +21,6 @@ function updateScripts(github)
             local data = love.filesystem.write('lcaNew.love', result)
         end,
         function (result, code, headers)
-            print(headers)
+            print(result, code, headers)
         end)
 end

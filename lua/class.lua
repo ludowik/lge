@@ -62,7 +62,7 @@ function classSetup()
         if klass.setup then
             klass.setup()
         end
-        print(klass.__classInfo..': '..composition(klass))
+        -- print(klass.__classInfo..': '..composition(klass))
     end
 end
 
