@@ -5,18 +5,19 @@ function Hexagone:init()
 
     self.particles = Node()
 
-    self.parameter:watch({object = self, expression = 'particles:count()'})
+    self.parameter:watch(Bind(self, 'particles:count()'))
+    self.parameter:watch(Bind(self, 'particles'))
 end
 
 function Hexagone:update(dt)
-    if self.particles:count() < 120 then
+    if random() < 0.2 then
         self.particles:add(Particle())
     end
     self.particles:remove(function (item) return item.state == 'dead' end )
 end
 
 function Hexagone:draw()
-    fill(0, 0, 0, 0.02)
+    fill(0, 0, 0, 0.05)
     rect(0, 0, W, H)
 
     noFill()
@@ -36,7 +37,7 @@ Particle.n = 0
 function Particle:init()
     Particle.n = Particle.n + 1
 
-    self.clr = Color.hsl(Particle.n / 10)
+    self.clr = Color.hsl(Particle.n / 1024)
     self.clr.a = 0.8
 
     self.position = vec2()

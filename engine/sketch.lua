@@ -1,10 +1,11 @@
-Sketch = class() : extends(Index, State, Rect, Image)
+Sketch = class() : extends(Index, State, Rect, Image, MouseEvent)
 
 function Sketch:init(w, h)
     process:add(self)
 
     State.init(self)
     Index.init(self)
+    MouseEvent.init(self)
 
     local ws, hs
 

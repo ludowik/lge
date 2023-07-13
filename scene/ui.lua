@@ -1,9 +1,11 @@
-UI = class() : extends(Rect)
+UI = class() : extends(Rect, MouseEvent)
 
 UI.innerMarge = 5
 
 function UI:init(label)
     Rect.init(self)
+    MouseEvent.init(self)
+
     self.label = label
 
     self.styles = {
@@ -46,21 +48,4 @@ function UI:draw()
 
     textMode(CORNER)
     text(self:getLabel(), self.position.x + UI.innerMarge, self.position.y)
-end
-
-function UI:mousepressed(mouse)
-    self:click()
-end
-
-function UI:mousemoved(mouse)
-end
-
-function UI:mousereleased(mouse)
-end
-
-function UI:click()
-    if self.callback then
-        self:callback()
-        return true
-    end    
 end

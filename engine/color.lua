@@ -30,6 +30,11 @@ function Color.hsl(h, s, l, a)
     return Color(r, g, b, a)
 end
 
+function Color.hsb(h, s, b, a)
+    local r, g, b = hsb2rgb(h, s, b)
+    return Color(r, g, b, a)
+end
+
 function Color:setComponents(r, g, b, a)
     self.r = r or 0
     self.g = g or r or 0
@@ -70,10 +75,7 @@ function Color:randomize()
     return self
 end
 
-function rgb2hsl(red, green, blue)
-    -- Normalization of RGB values
-    local r, g, b = red, green, blue
-
+function rgb2hsl(r, g, b)
     -- Finding the maximum and minimum values
     local max = math.max(r, g, b)
     local min = math.min(r, g, b)
@@ -101,9 +103,9 @@ function rgb2hsl(red, green, blue)
     end
     hue = hue * 60
 
-    -- Adjusting hue to be in the range of 0-360
+    -- Adjusting hue to be in the range of 0-1
     if hue < 0 then
-        hue = hue + 360
+        hue = hue + 1
     end
 
     return hue, saturation, lightness
@@ -113,8 +115,8 @@ function hsl2rgb(hue, saturation, lightness)
     saturation = saturation or 0.5
     lightness = lightness or 0.5
 
-    -- Adjusting hue to be in the range of 0-360
-    hue = hue % 360
+    -- Adjusting hue to be in the range of 0-1
+    hue = hue % 1
 
     -- Normalizing saturation and lightness to be in the range of 0-1
     saturation = math.max(0, math.min(1, saturation))
@@ -124,6 +126,7 @@ function hsl2rgb(hue, saturation, lightness)
         -- If saturation is 0, it's a shade of gray
         local grayValue = lightness
         return grayValue, grayValue, grayValue
+
     else
         local q
         if lightness < 0.5 then
@@ -131,6 +134,7 @@ function hsl2rgb(hue, saturation, lightness)
         else
             q = lightness + saturation - lightness * saturation
         end
+
         local p = 2 * lightness - q
 
         local function hueToRGB(t)
@@ -139,29 +143,30 @@ function hsl2rgb(hue, saturation, lightness)
             elseif t > 1 then
                 t = t - 1
             end
+            
             if t < 1/6 then
                 return p + (q - p) * 6 * t
+
             elseif t < 1/2 then
                 return q
+
             elseif t < 2/3 then
                 return p + (q - p) * (2/3 - t) * 6
+
             else
                 return p
             end
         end
 
-        local red = hueToRGB(hue / 360 + 1/3)
-        local green = hueToRGB(hue / 360)
-        local blue = hueToRGB(hue / 360 - 1/3)
+        local r = hueToRGB(hue + 1 / 3)
+        local g = hueToRGB(hue)
+        local b = hueToRGB(hue - 1 / 3)
 
-        return red, green, blue
+        return r, g, b
     end
 end
 
-function rgb2hsb(red, green, blue)
-    -- Normalization of RGB values
-    local r, g, b = red, green, blue
-
+function rgb2hsb(r, g, b)
     -- Finding the maximum and minimum values
     local max = math.max(r, g, b)
     local min = math.min(r, g, b)
@@ -189,9 +194,9 @@ function rgb2hsb(red, green, blue)
     end
     hue = hue * 60
 
-    -- Adjusting hue to be in the range of 0-360
+    -- Adjusting hue to be in the range of 0-1
     if hue < 0 then
-        hue = hue + 360
+        hue = hue + 1
     end
 
     return hue, saturation, brightness
@@ -201,8 +206,8 @@ function hsb2rgb(hue, saturation, lightness)
     saturation = saturation or 0.5
     lightness = lightness or 1
 
-    -- Adjusting hue to be in the range of 0-360
-    hue = hue % 360
+    -- Adjusting hue to be in the range of 0-1
+    hue = hue % 1
 
     -- Normalizing saturation and lightness to be in the range of 0-1
     saturation = math.max(0, math.min(1, saturation))
@@ -210,8 +215,8 @@ function hsb2rgb(hue, saturation, lightness)
 
     if saturation == 0 then
         -- If saturation is 0, it's a shade of gray
-        local grayValue = lightness
-        return grayValue, grayValue, grayValue
+        return lightness, lightness, lightness
+
     else
         local q
         if lightness < 0.5 then
@@ -219,6 +224,7 @@ function hsb2rgb(hue, saturation, lightness)
         else
             q = lightness + saturation - lightness * saturation
         end
+
         local p = 2 * lightness - q
 
         local function hueToRGB(t)
@@ -227,22 +233,26 @@ function hsb2rgb(hue, saturation, lightness)
             elseif t > 1 then
                 t = t - 1
             end
+
             if t < 1/6 then
                 return p + (q - p) * 6 * t
+
             elseif t < 1/2 then
                 return q
+
             elseif t < 2/3 then
                 return p + (q - p) * (2/3 - t) * 6
+
             else
                 return p
             end
         end
 
-        local red = hueToRGB(hue / 360 + 1/3)
-        local green = hueToRGB(hue / 360)
-        local blue = hueToRGB(hue / 360 - 1/3)
+        local r = hueToRGB(hue + 1/3)
+        local g = hueToRGB(hue)
+        local b = hueToRGB(hue - 1/3)
 
-        return red, green, blue
+        return r, g, b
     end
 end
 

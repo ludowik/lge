@@ -21,6 +21,10 @@ function Array:remove(f)
     end
 end
 
+function Array:random()
+    return self[random(1, #self)]
+end
+
 function Array:unitTest()
     local t = Array()
     t:add('element')

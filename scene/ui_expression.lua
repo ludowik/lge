@@ -3,9 +3,9 @@ UIExpression = class() : extends(UI)
 function UIExpression:init(label, expression)
     self.expression = expression or label
 
-    local type_expression = type(label)
-    if type_expression == 'table' then
-        label = self.expression.name or self.expression.expression
+    local type_label = type(label)
+    if type_label == 'table' then
+        label = self.expression.name or self.expression.ref
     end
 
     UI.init(self, label)
@@ -21,15 +21,29 @@ function UIExpression:evaluateExpression()
         return tostring(loadstring('return ' .. self.expression)() or '')
 
     elseif type_expression == 'table' then
-        if self.expression.name then
-            return tostring(self.expression.object[self.expression.name])
-        
-        elseif self.expression.expression then
-            __object__ = self.expression.object
-            local result = tostring(loadstring('return __object__.'..self.expression.expression)() or '')
-            __object__ = nil
-            return result
-        end
+        return self.expression:get()
     end
-    return 'error'
+    return 'Expression error !'
+end
+
+
+Bind = class()
+
+function Bind:init(object, ref)
+    self.object = object
+    self.ref = ref
+end
+
+function Bind:get()
+    if self.object then
+        __object__ = self.object
+        local result = tostring(loadstring('return __object__.'..self.ref)() or '')
+        __object__ = nil
+        return result
+    end
+
+    return tostring(loadstring('return ' .. self.ref)() or '')
+end
+
+function Bind:set()
 end

@@ -8,6 +8,8 @@ function Anchor:init(ni, nj)
 end
 
 function Anchor:pos(i, j)
+    if i < 0 then i = self.ni + i end
+    if j < 0 then j = self.nj + j end
     return vec2((i)*(W/self.ni), (j)*(H/self.nj))
 end
 

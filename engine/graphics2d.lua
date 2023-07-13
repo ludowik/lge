@@ -43,14 +43,16 @@ function stylesReset(name)
 end
 
 function Graphics2d.resetStyle()
-    textMode(CORNER)
-    textColor(colors.white)
-    fontSize(22)
-
     stroke(colors.white)
     strokeSize(1)	
 
     noFill()
+
+    rectMode(CORNER)
+    
+    textMode(CORNER)
+    textColor(colors.white)
+    fontSize(22)    
 end
 
 function Graphics2d.noFill()
@@ -106,6 +108,12 @@ function Graphics2d.rectMode(mode)
 end
 
 function Graphics2d.rect(x, y, w, h)
+    local mode = rectMode()
+    
+    if mode == CENTER then
+        x, y = x-w/2, y-h/2
+    end
+
     if fill() then
         love.graphics.setColor(fill():rgba())
         love.graphics.rectangle('fill', x, y, w, h)

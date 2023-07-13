@@ -22,32 +22,10 @@ end
 
 local currentObject = nil
 
-local globalManager = class()
-function globalManager:mousepressed(mouse)
-end
-function globalManager:mousemoved(mouse)
-end
-function globalManager:mousereleased(mouse)
-    if mouse.position.x < .5 * W then
-        process:previous()
-    else
-        process:next()
-    end
-end
-
-mouse = {}
-
 function love.mousepressed(x, y, button, istouch, presses)
-    mouse.position = vec2(x-X, y-Y)
-    mouse.startPosition = mouse.position
-    mouse.previousPosition = mouse.position
+    mouse:pressed(x, y)
 
-    if mouse.position.y > .8 * H then   
-        currentObject = globalManager
-    else
-        currentObject = contains(mouse)
-    end
-
+    currentObject = contains(mouse)
     if currentObject then
         currentObject:mousepressed(mouse)
     end
@@ -55,21 +33,14 @@ end
 
 function love.mousemoved(x, y, dx, dy, istouch)
     if currentObject then
-        mouse.previousPosition = mouse.position
-        mouse.position = vec2(x-X, y-Y)
-        mouse.move = mouse.position - mouse.startPosition
-
+        mouse:moved(x, y)
         currentObject:mousemoved(mouse)
     end
 end
 
 function love.mousereleased(x, y, button, istouch, presses)
     if currentObject then
-        mouse.previousPosition = mouse.position
-        mouse.position = vec2(x-X, y-Y)
-        mouse.endPosition = mouse.position
-        mouse.move = mouse.endPosition - mouse.startPosition        
-        
+        mouse:released(x, y)
         currentObject:mousereleased(mouse)
     end
     currentObject = nil

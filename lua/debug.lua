@@ -17,10 +17,3 @@ if arg[#arg] == "-debug" then
     local mobdebug = require "mobdebug"
     mobdebug.start()
 end
-
-function debug._traceback(message, level)
-    for ligne in message:gmatch("[^\n]+") do
-        print(ligne:gsub('engine/', './engine/'))
-    end
-    return message
-end

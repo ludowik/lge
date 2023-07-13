@@ -5,6 +5,10 @@ function vec2:init(x, y)
 end
 
 function vec2:set(x, y)
+    if type(x) == 'table' then
+        x, y = x.x, x.y
+    end
+    
     self.x = x or 0
     self.y = y or 0
     return self
@@ -40,6 +44,12 @@ function vec2.__mul(u, coef)
     return vec2(
         u.x * coef,
         u.y * coef)
+end
+
+function vec2.__div(u, coef)
+    return vec2(
+        u.x / coef,
+        u.y / coef)
 end
 
 function vec2.random(w, h)

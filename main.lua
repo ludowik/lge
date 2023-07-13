@@ -1,11 +1,6 @@
-require 'engine'
+--love.filesystem.setRequirePath('./?.lua;./?/init.lua;./?/!.lua')
 
-function newSketch()
-    local info = debug.getinfo(2, "Sl")
-    local className = info.source:gfind('.+/(.*)%.lua$')()
-    _G[className] = class() : extends(Sketch)
-    return _G[className]
-end
+require 'engine'
 
 function isSketch(klass)
     if klass == Sketch then return true end
@@ -21,11 +16,12 @@ function declareSketch(name)
     setfenv(0, env)
     require(name)
     for k,v in pairs(env) do
+        env.__name = name
+            
         if isSketch(v) then
             _G[k] = v
             v.env = env
             env.__sketch = v
-            print(name..'/'..k)
             break
         end
     end
@@ -35,25 +31,43 @@ end
 function declareSketches()
     local directoryItems = love.filesystem.getDirectoryItems('sketch/')
     for _,item in ipairs(directoryItems) do
-        declareSketch('sketch.'..item:gsub('%.lua', ''))
+        local sketchName = item:gsub('%.lua', '')
+        declareSketch('sketch.'..sketchName)
+    end
+end
+
+function loadSketch(env)
+    if env.__sketch then
+        env.sketch = env.__sketch()
+
+    elseif env.draw then
+        env.sketch = Sketch()
+        env.sketch.__className = env.__name:gsub('sketch%.', '')
+
+        if env.setup then
+            env.sketch.setup = function (...) return env.setup(...) end
+            env.sketch.setup()
+        end
+
+        if env.update then
+            env.sketch.update = function (_, ...) return env.update(...) end
+        end
+
+        if env.draw then
+            env.sketch.draw = function (_, ...) return env.draw(...) end
+        end
     end
 end
 
 function loadSketches()
     for k,env in pairs(environnements) do
-        if env.__sketch then
-            env.sketch = env.__sketch()
-        end
+        loadSketch(env)
     end
 end
 
 function load()
     declareSketches()
     loadSketches()
-
-    local sketch = declareSketch('sketch.blinking_circles')
-    sketchCircles = Sketch()
-    sketchCircles.draw = sketch.draw
 
     process:setSketch(settings.sketch)
 end

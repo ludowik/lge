@@ -19,7 +19,11 @@ function class(_, ...)
         __call = function(_, ...)
             local instance = setmetatable({}, klass)
             local init = klass.init or klass.__init
-            return init(instance, ...) or instance
+            local newInstance = init(instance, ...)
+            if newInstance then
+                instance = setmetatable(newInstance, klass)
+            end
+            return instance
         end
     })
     table.insert(classList, klass)
@@ -62,7 +66,6 @@ function classSetup()
         if klass.setup then
             klass.setup()
         end
-        -- print(klass.__classInfo..': '..composition(klass))
     end
 end
 

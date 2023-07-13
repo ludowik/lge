@@ -26,6 +26,8 @@ require 'engine.graphics2d'
 require 'engine.image'
 require 'engine.font'
 require 'engine.anchor'
+require 'engine.mouse'
+require 'engine.mouse_event'
 
 require 'scene.ui'
 require 'scene.ui_button'

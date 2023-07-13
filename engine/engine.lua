@@ -6,13 +6,31 @@ function love.load()
     components:add(TimeManager)
     components:add(process)
 
+    globalManager = GlobalManager()
+
     reload()
 end
 
+GlobalManager = class() : extends(Rect)
+
+function GlobalManager:init()
+    Rect.init(self, 0, 0.8* H, W, 0.2 * H)
+end
+
+function GlobalManager:mousereleased(mouse)
+    if mouse.position.x < .5 * W then
+        process:previous()
+    else
+        process:next()
+    end
+end
 
 function contains(mouse)
     local process = process:current()
     
+    local object = globalManager:contains(mouse.position)
+    if object then return object end
+
     local object = process.parameter:contains(mouse.position)
     if object then return object end
 
