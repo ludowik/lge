@@ -9,9 +9,53 @@ end
 
 function The2048:initGame()
     self.grid = Grid(4, 4)
+    self:addCell()
+end
 
-    while not self:isGameOver() do
-        self:addCell()
+function The2048:action(direction)
+    if direction == 'left' then
+        for i = 2,4 do
+            for j = 1,4,1 do
+                if (not self.grid:get(i-1, j) and self.grid:get(i, j))
+                then
+                    self.grid:set(i-1, j, self.grid:get(i, j))
+                    self.grid:set(i, j, nil)
+                end
+            end
+        end
+
+    elseif direction == 'right' then
+        for i = 3,1,-1 do
+            for j = 1,4,1 do
+                if (not self.grid:get(i+1, j) and self.grid:get(i, j))
+                then
+                    self.grid:set(i+1, j, self.grid:get(i, j))
+                    self.grid:set(i, j, nil)
+                end
+            end
+        end
+
+    elseif direction == 'up' then
+        for j = 2,4 do
+            for i = 1,4,1 do
+                if (not self.grid:get(i, j-1) and self.grid:get(i, j))
+                then
+                    self.grid:set(i, j-1, self.grid:get(i, j))
+                    self.grid:set(i, j, nil)
+                end
+            end
+        end
+
+    elseif direction == 'down' then
+        for j = 3,1,-1 do
+            for i = 1,4,1 do
+                if (not self.grid:get(i, j+1) and self.grid:get(i, j))
+                then
+                    self.grid:set(i, j+1, self.grid:get(i, j))
+                    self.grid:set(i, j, nil)
+                end
+            end
+        end
     end
 end
 
@@ -37,6 +81,10 @@ function The2048:addCell()
         Array{2, 4}:random())
 end
 
+function The2048:update(dt)
+    self:action('down')
+end
+
 function The2048:draw()
     background()
 
@@ -53,10 +101,12 @@ function The2048:draw()
 
     for i in range(4) do
         for j in range(4) do
-            local position = self.anchor:pos(i-.5, -(j+1))
+            local position = self.anchor:pos(i-.5, -(5-j)-1)
             local center = position + size / 2
 
             rect(center.x, center.y, size.x-4, size.y-4)
+
+            text(i..','..j, position.x, position.y)
             
             local value = self.grid:get(i, j)
             if value then

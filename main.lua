@@ -69,5 +69,9 @@ function load()
     declareSketches()
     loadSketches()
 
-    process:setSketch(getSettings('sketch'))
+    if love.filesystem.isFused() then
+        process:setSketch('time_gym')
+    else
+        process:setSketch(getSettings('sketch'))
+    end
 end

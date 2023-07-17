@@ -15,6 +15,7 @@ function TimeGym:init()
             styles = {
                 fontSize = 32,
                 mode = CENTER,
+                fillColor = Color(190, 189, 127),
             },
         }
         self.scene:add(interface)
@@ -25,8 +26,13 @@ function TimeGym:init()
         return addInterface(UIButton, label, i, j, m, n, callback)
     end
 
-    self.cycleDuration = 5
-    self.cycleCount = 3
+    if debugMode then
+        self.cycleDuration = 5
+        self.cycleCount = 3
+    else
+        self.cycleDuration = 60
+        self.cycleCount = 5
+    end
 
     local j = 1
     addButton('<<', 0.5, j, 1, 1, function ()
@@ -87,7 +93,7 @@ function TimeGym:init()
             self.state = 'running'
             self.actionLabel = 'Pause'
         end
-    end).styles.fillColor = colors.red
+    end).styles.fillColor = Color(165, 106, 106)
 
     self.currentTime = 0.2
     addInterface(UIDelay, 'time', 0.5, 7.5, 5, 1).sketch = self
@@ -125,7 +131,7 @@ function TimeGym:update(dt)
 end
 
 function TimeGym:draw()
-    background()
+    background(243, 230, 225)
     self.scene:draw()
 end
 

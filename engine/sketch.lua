@@ -58,11 +58,13 @@ function Sketch:drawSketch()
         self.size.x / self.canvas:getWidth(), -- scale x
         self.size.y / self.canvas:getHeight()) -- scale y
 
-    resetStyle()
-    resetMatrix()
-    
-    textMode(CORNER)
-    text(self.__className, 0, 0)
+    -- if not love.filesystem.isFused() then
+    --     resetStyle()
+    --     resetMatrix()
+        
+    --     textMode(CORNER)
+    --     text(self.__className, 0, 0)
+    -- end
 end
 
 function Sketch:draw()
