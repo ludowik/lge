@@ -18,9 +18,10 @@ end
 function The2048:isGameOver()
     for i in range(4) do
         for j in range(4) do
-            if not self.grid:get(i, j) then return end
+            if not self.grid:get(i, j) then return false end
         end
     end
+    return true
 end
 
 function The2048:addCell()

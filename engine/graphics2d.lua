@@ -23,7 +23,9 @@ end
 
 function Graphics2d.background(clr, ...)
     clr = paramColor(clr, ...) or colors.black    
-    love.graphics.clear(clr.r, clr.g, clr.b, clr.a)
+--    love.graphics.clear(clr.r, clr.g, clr.b, clr.a)  
+    love.graphics.setColor(clr.r, clr.g, clr.b, clr.a)
+    love.graphics.rectangle('fill', 0, 0, W, H)
 end
 
 local styles = {}
@@ -107,7 +109,7 @@ function Graphics2d.rectMode(mode)
     return stylesSet('rectMode', mode)
 end
 
-function Graphics2d.rect(x, y, w, h)
+function Graphics2d.rect(x, y, w, h, radius)
     local mode = rectMode()
     
     if mode == CENTER then
@@ -116,13 +118,13 @@ function Graphics2d.rect(x, y, w, h)
 
     if fill() then
         love.graphics.setColor(fill():rgba())
-        love.graphics.rectangle('fill', x, y, w, h)
+        love.graphics.rectangle('fill', x, y, w, h, radius)
     end
     if stroke() then
         local width = strokeSize()
         love.graphics.setColor(stroke():rgba())
         love.graphics.setLineWidth(width)
-        love.graphics.rectangle('line', x+width/2, y+width/2, w-width, h-width)
+        love.graphics.rectangle('line', x+width/2, y+width/2, w-width, h-width, radius)
     end
 end
 
@@ -163,6 +165,8 @@ end
 function Graphics2d.text(str, x, y, limit, align)
     if Graphics2d.textColor() == nil then return end
 
+    str = tostring(str)
+    
     x = x or 0
     y = y or 0
 
@@ -187,9 +191,9 @@ function Graphics2d.text(str, x, y, limit, align)
 end
 
 function Graphics2d.textSize(str, limit)
-    local font = love.graphics.getFont()
+    str = tostring(str)
 
-    local w, h
+    local font, w, h = love.graphics.getFont()
     if limit then
         local wrappedtext
         w, wrappedtext = font:getWrap(str, limit or W)

@@ -11,10 +11,11 @@ function love.load()
     reload()
 end
 
-GlobalManager = class() : extends(Rect)
+GlobalManager = class() : extends(Rect, MouseEvent)
 
 function GlobalManager:init()
     Rect.init(self, 0, 0.8* H, W, 0.2 * H)
+    MouseEvent.init(self)
 end
 
 function GlobalManager:mousereleased(mouse)
@@ -40,14 +41,11 @@ end
 
 function love.update(dt)
     components:update(dt)
+
+    updateSettings()
 end
 
-function love.draw()
-    love.graphics.setScissor()
-    love.graphics.discard()
-    
-    background(Color(251))
-
+function love.draw()    
     local process = process:current()
     resetMatrix()
     resetStyle()
@@ -58,13 +56,13 @@ function love.draw()
     process.parameter:draw()   
 end
 
-function restart()
-    love.event.quit('restart')
-end
-
 function reload()
     process:clear()
     load()
+end
+
+function restart()
+    love.event.quit('restart')
 end
 
 function quit()

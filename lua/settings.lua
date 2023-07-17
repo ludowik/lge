@@ -1,5 +1,4 @@
-local settingsFileName = 'settings'
-
+-- string
 function tolua(t)
     local code = 'return {'
     for k,v in pairs(t) do
@@ -22,6 +21,10 @@ function tolua(t)
     return code
 end
 
+local settingsFileName = 'settings'
+
+local settings
+
 function saveSettings()
     love.filesystem.write(settingsFileName, tolua(settings))
 end
@@ -37,11 +40,26 @@ function loadSettings()
     }
 end
 
+function updateSettings()
+    local needUpdate = false
+    if settings.sketch ~= process:current().__className then
+        settings.sketch = process:current().__className
+        needUpdate = true
+    end
+    if needUpdate then
+        saveSettings()
+    end
+end
+
 settings = loadSettings()
 
 function setSettings(name, value)
     settings[name] = value
     saveSettings()
+end
+
+function getSettings(name)
+    return settings[name]
 end
 
 setSettings('testBoolean', true)

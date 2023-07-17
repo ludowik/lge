@@ -29,6 +29,7 @@ require 'engine.anchor'
 require 'engine.mouse'
 require 'engine.mouse_event'
 
+require 'scene.bind'
 require 'scene.ui'
 require 'scene.ui_button'
 require 'scene.ui_expression'

@@ -7,7 +7,7 @@ function FrameBuffer:init(w, h)
 
     local currentCanvas = love.graphics.getCanvas()
     self:setContext()
-    self:background()
+    self:background(0, 0, 0, 0)
 
     love.graphics.setCanvas(currentCanvas)
 end
@@ -16,8 +16,8 @@ function FrameBuffer:setContext()
     love.graphics.setCanvas(self.canvas)
 end
 
-function FrameBuffer:background()
-    love.graphics.clear(0, 0, 0, 1)
+function FrameBuffer:background(...)
+    love.graphics.clear(...)
 end
 
 

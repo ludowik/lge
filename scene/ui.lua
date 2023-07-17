@@ -8,25 +8,26 @@ function UI:init(label)
 
     self.label = label
 
-    self.styles = {
+    self.styles = Array{
         fillColor = colors.gray,
         textColor = colors.white,
+        fontSize = 25,
     }
 end
 
 function UI:getLabel()
-    return self.label
+    return tostring(self.label)
 end
 
 function UI:fontSize()
     if self.parent then
-        fontSize(self.parent.state == 'open' and 32 or 16)
+        fontSize(self.parent.state == 'open' and 32 or 22)
     else
-        fontSize(20)
+        fontSize(self.styles.fontSize)
     end
 end
 
-function UI:computeSize()
+function UI:computeSize()    
     self:fontSize()
 
     local w, h = textSize(self:getLabel())
@@ -36,7 +37,7 @@ end
 function UI:draw()
     noStroke()
     fill(self.styles.fillColor)
-    rect(self.position.x, self.position.y, self.size.x, self.size.y)
+    rect(self.position.x, self.position.y, self.size.x, self.size.y, 4)
     
     if self.active then
         textColor(colors.red)
@@ -46,6 +47,11 @@ function UI:draw()
 
     self:fontSize()
 
-    textMode(CORNER)
-    text(self:getLabel(), self.position.x + UI.innerMarge, self.position.y)
+    if self.styles.mode == CENTER then
+        textMode(CENTER)
+        text(self:getLabel(), self.position.x + self.size.x/2, self.position.y + self.size.y/2)
+    else
+        textMode(CORNER)
+        text(self:getLabel(), self.position.x + UI.innerMarge, self.position.y)
+    end
 end

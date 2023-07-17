@@ -12,16 +12,12 @@ function Sketch:init(w, h)
     if w then
         ws, hs = w, h
     else 
-        w = w or W
-        h = h or H
+        w = w or (W+X*2)
+        h = h or (H+Y*2)
         ws, hs = w/3, h/3
     end
     
     Rect.init(self, 0, 0, w, h)
-        -- #process * W/20,
-        -- #process * W/20,
-        -- ws,
-        -- hs)
 
     Image.init(self, w, h)
 
@@ -32,10 +28,6 @@ function Sketch:initMenu()
     self.parameter = Parameter()
     self.parameter:initMenu()
     self.parameter:group(self.__className, true)
-
-    -- for k,v in pairs(self) do
-    --     self.parameter:watch({object = self, name = k})
-    -- end
 end
 
 function Sketch:updateSketch(dt)    
@@ -45,27 +37,34 @@ function Sketch:updateSketch(dt)
 end
 
 function Sketch:drawSketch()
-    self:setContext()
-    
-    resetStyle()
+    love.graphics.setCanvas()
+    love.graphics.clear(0.1, 0.5, 0.1, 1)
 
-    self:draw()
+    self:setContext()
 
     resetStyle()
     resetMatrix()
-    
-    love.graphics.setColor(colors.white:rgba())
-    love.graphics.setCanvas()
+
     love.graphics.setScissor(X, Y, W, H)
+    self:draw()
+    love.graphics.setScissor()
+    
+    love.graphics.setCanvas()
+    love.graphics.setColor(colors.white:rgba())
+
+    love.graphics.origin()
     love.graphics.draw(self.canvas,
-        X + self.position.x, -- x
-        Y + self.position.y, -- y
+        self.position.x, -- x
+        self.position.y, -- y
         0, -- rotation
         self.size.x / self.canvas:getWidth(), -- scale X
         self.size.y / self.canvas:getHeight()) -- scale Y
 
+    resetStyle()
+    resetMatrix()
+    
     textMode(CORNER)
-    text(self.__className, X, Y)
+    text(self.__className, 0, 0)
 end
 
 function Sketch:draw()

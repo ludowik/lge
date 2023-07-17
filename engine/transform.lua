@@ -1,5 +1,6 @@
 function resetMatrix()
     love.graphics.origin()
+    love.graphics.translate(X, Y)
 end
 
 function push()

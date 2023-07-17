@@ -10,7 +10,7 @@ function UpgradeApp:init()
         UIButton('upgrade from git',
             function () 
                 updateScripts(true)
-                restart()
+                quit()
             end)
         :attrib{
             position = anchor:pos(1, 3),
@@ -23,7 +23,7 @@ function UpgradeApp:init()
         UIButton('upgrade from local',
             function ()
                 updateScripts(false)
-                restart()
+                quit()
             end)
         :attrib{
             position = anchor:pos(4, 3),

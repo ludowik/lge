@@ -28,20 +28,26 @@ end
 
 function Node:update(dt)
     for _,item in ipairs(self.items) do
-        if item.update then
-            item:update(dt)
+        if item.state ~= 'hidden' then
+            if item.update then
+                item:update(dt)
+            end
         end
+
         if self.state == 'close' then break end
     end
 end
 
 function Node:draw()
     for _,item in ipairs(self.items) do
-        if item.draw then
-            love.graphics.push()
-            item:draw()
-            love.graphics.pop()
+        if item.state ~= 'hidden' then
+            if item.draw then
+                push()
+                item:draw()
+                pop()
+            end
         end
+        
         if self.state == 'close' then break end
     end
 end

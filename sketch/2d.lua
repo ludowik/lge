@@ -64,8 +64,6 @@ function drawRect(x, y, w, h)
 end
 
 function drawEllipse(x, y, w, h)
-    love.graphics.setLineStyle('smooth')
-
     noStroke()
     fill(colors.red)
     circle(x+w/2, y+h/2, w/2)

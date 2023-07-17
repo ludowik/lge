@@ -37,15 +37,21 @@ function Parameter:init()
 end
 
 function Parameter:openGroup(group)
-    self:closeAllGroups()
+    self:setStateForAllGroups('hidden')
     group.state = 'open'
 end
 
-function Parameter:closeAllGroups()
+function Parameter:closeGroup(group)
+    self:setStateForAllGroups('close')
+    group.state = 'close'
+end
+
+function Parameter:setStateForAllGroups(state)
+    state = state or 'hidden'
     self:foreach(
         function (node)
             if node.state then
-                node.state = 'close'
+                node.state = state
             end
         end)
 end
@@ -60,7 +66,11 @@ function Parameter:group(label, open)
     end
 
     local newButton = UIButton(label, function ()
-        self:openGroup(newGroup)
+        if newGroup.state == 'close' then
+            self:openGroup(newGroup)
+        else
+            self:closeGroup(newGroup)
+        end
     end)
     newButton:attrib{
         parent = newGroup,
@@ -85,7 +95,6 @@ end
 
 function Parameter:draw()    
     self:layout()
-    translate(X, Y)
     Scene.draw(self)
     resetMatrix()
 end

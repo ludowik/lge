@@ -69,5 +69,5 @@ function load()
     declareSketches()
     loadSketches()
 
-    process:setSketch(settings.sketch)
+    process:setSketch(getSettings('sketch'))
 end

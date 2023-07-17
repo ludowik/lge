@@ -4,7 +4,6 @@ end
 
 function draw()
     noStroke()
-
     fill(1, 1, 1, 0.6)
 
     rectMode(CORNER)
