@@ -21,20 +21,19 @@ function Anchor:draw(clr)
     stroke(clr or self.clr)
     strokeSize(0.5)
 
-    for i in index(self.ni) do
-        for j in index(self.nj) do
-        
-            line(
-                self:pos(i, j).x,
-                self:pos(1, j).y,
-                self:pos(i, j).x + self:size(1, 1).x,
-                self:pos(1, j).y)
+    for j in index(self.nj+1) do
+        line(
+            self:pos(0, j).x,
+            self:pos(0, j).y,
+            self:pos(0, j).x + self:size(self.ni, 0).x,
+            self:pos(0, j).y)
+    end
 
-            line(
-                self:pos(i, j).x + self:size(1, 1).x,
-                self:pos(1, j).y,
-                self:pos(i, j).x + self:size(1, 1).x,
-                self:pos(1, j).y + self:size(1, 1).y)
-        end
+    for i in index(self.ni+1) do
+        line(
+            self:pos(i, 0).x,
+            self:pos(i, 0).y,
+            self:pos(i, 0).x,
+            self:pos(i, 0).y + self:size(0, self.nj).y)
     end
 end

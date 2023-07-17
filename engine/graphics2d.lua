@@ -15,17 +15,11 @@ function initMode()
     end
 end
 
-local function paramColor(clr, ...)
-    if clr == nil then return end
-    if type(clr) == 'table' then return clr end
-    return Color(clr, ...)
-end
-
 function Graphics2d.background(clr, ...)
-    clr = paramColor(clr, ...) or colors.black    
+    clr = Color.fromParam(clr, ...) or colors.black
 --    love.graphics.clear(clr.r, clr.g, clr.b, clr.a)  
     love.graphics.setColor(clr.r, clr.g, clr.b, clr.a)
-    love.graphics.rectangle('fill', 0, 0, W, H)
+    love.graphics.rectangle('fill', -X, -Y, 2*X+W, 2*Y+H)
 end
 
 local styles = {}
@@ -62,7 +56,7 @@ function Graphics2d.noFill()
 end
 
 function Graphics2d.fill(clr, ...)
-    clr = paramColor(clr, ...)
+    clr = Color.fromParam(clr, ...)
     return stylesSet('fillColor', clr)
 end
 
@@ -71,7 +65,7 @@ function Graphics2d.noStroke()
 end
 
 function Graphics2d.stroke(clr, ...)
-    clr = paramColor(clr, ...)
+    clr = Color.fromParam(clr, ...)
     return stylesSet('strokeColor', clr)
 end
 

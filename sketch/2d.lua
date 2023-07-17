@@ -12,7 +12,6 @@ function Sketch2d:draw()
     self.anchor:draw()
 
     local size = self.anchor:size(1, 1)
-
     local x, y, w, h = size.x, size.y, size.x, size.y
     
     drawPoint(x, y, w, h)

@@ -17,11 +17,7 @@ function Hexagone:update(dt)
 end
 
 function Hexagone:draw()
-    noStroke()
-    fill(0, 0, 0, 0.05)
-    rect(0, 0, W, H)
-
-    noFill()
+    background(0, 0, 0, 0.05)
 
     translate(W/2, H/2)
 

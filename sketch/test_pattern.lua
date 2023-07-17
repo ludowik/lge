@@ -9,7 +9,7 @@ function TestPattern:draw()
 	circle(W/2, H/2, W/2)
 	circle(W/2, H/2, H/2)
     
-    noStroke()
+    noFill()
 	rect(0, 0, W, H)
 end
 

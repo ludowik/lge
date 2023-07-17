@@ -35,7 +35,7 @@ function UpgradeApp:init()
 end
 
 function UpgradeApp:draw()
-    background(colors.black)
+    background()
     anchor:draw()
     self.scene:draw()
 end

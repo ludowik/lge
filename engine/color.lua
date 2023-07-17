@@ -39,6 +39,12 @@ function Color:set(r, ...)
     end
 end
 
+function Color.fromParam(clr, ...)
+    if clr == nil then return end
+    if type(clr) == 'table' then return clr end
+    return Color(clr, ...)
+end
+
 function Color.hsl(h, s, l, a)
     local r, g, b = hsl2rgb(h, s, l)
     return Color(r, g, b, a)

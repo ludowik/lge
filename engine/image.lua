@@ -7,7 +7,7 @@ function FrameBuffer:init(w, h)
 
     local currentCanvas = love.graphics.getCanvas()
     self:setContext()
-    self:background(0, 0, 0, 0)
+    self:background(colors.transparent)
 
     love.graphics.setCanvas(currentCanvas)
 end
@@ -17,7 +17,8 @@ function FrameBuffer:setContext()
 end
 
 function FrameBuffer:background(...)
-    love.graphics.clear(...)
+    clr = Color.fromParam(clr, ...) or colors.black
+    love.graphics.clear(clr.r, clr.g, clr.b, clr.a)
 end
 
 

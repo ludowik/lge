@@ -12,8 +12,8 @@ function Sketch:init(w, h)
     if w then
         ws, hs = w, h
     else 
-        w = w or (W+X*2)
-        h = h or (H+Y*2)
+        w = w or (2*X+W)
+        h = h or (2*Y+H)
         ws, hs = w/3, h/3
     end
     
@@ -45,9 +45,7 @@ function Sketch:drawSketch()
     resetStyle()
     resetMatrix()
 
-    love.graphics.setScissor(X, Y, W, H)
     self:draw()
-    love.graphics.setScissor()
     
     love.graphics.setCanvas()
     love.graphics.setColor(colors.white:rgba())
@@ -57,8 +55,8 @@ function Sketch:drawSketch()
         self.position.x, -- x
         self.position.y, -- y
         0, -- rotation
-        self.size.x / self.canvas:getWidth(), -- scale X
-        self.size.y / self.canvas:getHeight()) -- scale Y
+        self.size.x / self.canvas:getWidth(), -- scale x
+        self.size.y / self.canvas:getHeight()) -- scale y
 
     resetStyle()
     resetMatrix()
