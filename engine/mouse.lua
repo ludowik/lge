@@ -29,8 +29,8 @@ function Mouse:released(x, y)
     self.move:set(mouse.endPosition - mouse.startPosition)
 end
 
-function Mouse:getDirection()    
-    if max(abs(mouse.move.x), (mouse.move.y)) < W/4 then
+function Mouse:getDirection()
+    if max(abs(mouse.move.x), abs(mouse.move.y)) < W/4 then
         return
     end
 
