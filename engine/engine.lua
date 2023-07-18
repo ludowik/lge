@@ -10,7 +10,7 @@ function love.load()
 
     reload()
 
-    timeBeforeHideParameter = 5
+    timeBeforeHideParameter = 15
 end
 
 GlobalManager = class() : extends(Rect, MouseEvent, KeyboardEvent)
@@ -42,7 +42,7 @@ function contains(mouse)
         local object = globalManager:contains(mouse.position)
         if object then return object end
     
-        if timeBeforeHideParameter < 0 then
+        if timeBeforeHideParameter > 0 then
             local object = process.parameter:contains(mouse.position)
             if object then return object end
         end

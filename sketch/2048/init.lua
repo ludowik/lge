@@ -2,7 +2,7 @@ The2048 = class() : extends(Sketch)
 
 function The2048:init()
     Sketch.init(self)
-    self.anchor = Anchor(5)
+    self.anchor = Anchor(4.5)
 
     self:initGame(readFile('2048'))
 end
@@ -145,7 +145,7 @@ function The2048:draw()
     local innerMarge = 5
     local center, size
     
-    center = self.anchor:pos(2.5, -4)
+    center = self.anchor:pos(2.25, -3.5)
     size = self.anchor:size(4, 4)
 
     noStroke()
@@ -157,7 +157,7 @@ function The2048:draw()
     local position, value
     for i in range(4) do
         for j in range(4) do
-            position = self.anchor:pos(i-.5, -3-(4-j))
+            position = self.anchor:pos(i-.75, -3-(3.5-j))
             center = position + size / 2
 
             value = self.grid:get(i, j)
