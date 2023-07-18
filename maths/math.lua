@@ -32,3 +32,12 @@ math.TAU = math.pi * 2
 
 PI = math.pi
 TAU = math.TAU
+
+function getPowerOf2(value)
+    local n = 0
+    while value >= 2 and floor(value) == value do
+        value = value / 2
+        n = n + 1
+    end
+    return n
+end

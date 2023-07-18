@@ -11,10 +11,14 @@ end
 local environnements = {}
 function declareSketch(name)
     if environnements[name] then return environnements[name] end
+
     local env = setmetatable({}, {__index = _G})
-    environnements[name] = env
     setfenv(0, env)
+    
+    environnements[name] = env
+    
     require(name)
+
     for k,v in pairs(env) do
         env.__name = name            
         if isSketch(v) then
@@ -59,7 +63,13 @@ function loadSketch(env)
 end
 
 function loadSketches()
+    local environnementsList = Array()
     for k,env in pairs(environnements) do
+        environnementsList:add(env)
+    end
+    environnementsList:sort(function (a, b) return a.__name < b.__name end)
+
+    for k,env in ipairs(environnementsList) do
         loadSketch(env)
     end
 end

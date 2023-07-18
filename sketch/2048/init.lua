@@ -4,12 +4,19 @@ function The2048:init()
     Sketch.init(self)
     self.anchor = Anchor(5)
 
-    self:initGame()
+    self:initGame(readFile('2048'))
 end
 
-function The2048:initGame()
+function The2048:initGame(data)
     self.grid = Grid(4, 4)
-    self:addCell()
+
+    if data and #data > 0 then
+        for k,v in pairs(data) do
+            self.grid.items[tonumber(k)] = v
+        end
+    else
+        self:addCell()
+    end
 end
 
 function The2048:addCell()
@@ -37,15 +44,20 @@ function The2048:isGameOver()
 end
 
 function The2048:action(direction, f)
-    self:applyFunction(direction, self.move)
-    self:applyFunction(direction, self.fusion)
-    self:applyFunction(direction, self.move)
+    local change = 
+        self:applyFunction(direction, self.move, true) +
+        self:applyFunction(direction, self.fusion, false) +
+        self:applyFunction(direction, self.move, true)
 
-    self:addCell()
+    if change > 0 then
+        self:addCell()
+    end
+
+    saveFile('2048', self.grid.items)
 end
 
-function The2048:applyFunction(direction, f)
-    local change
+function The2048:applyFunction(direction, f, repeatOnChange)
+    local change, totalChange = 0, 0
     repeat
         change = 0
         if direction == 'left' then            
@@ -76,28 +88,36 @@ function The2048:applyFunction(direction, f)
                 end
             end
         end
-    until change == 0
+        totalChange = totalChange + change
+    until change == 0 or repeatOnChange
+
+    return totalChange
 end
 
 function The2048:move(i, j, di, dj)
-    if not self.grid:get(i+di, j+dj) and self.grid:get(i, j) then
-        self.grid:set(i+di, j+dj, self.grid:get(i, j))
-        self.grid:set(i, j, nil)
+    local grid = self.grid
+    if not grid:get(i+di, j+dj) and grid:get(i, j) then
+        grid:set(i+di, j+dj, grid:get(i, j))
+        grid:set(i, j, nil)
         return 1
     end
     return 0
 end
 
 function The2048:fusion(i, j, di, dj)
-    if self.grid:get(i+di, j+dj) and self.grid:get(i, j) == self.grid:get(i+di, j+dj) then
-        self.grid:set(i+di, j+dj, self.grid:get(i, j) * 2)
-        self.grid:set(i, j, nil)
+    local grid = self.grid
+    if grid:get(i+di, j+dj) and grid:get(i, j) == grid:get(i+di, j+dj) then
+        grid:set(i+di, j+dj, grid:get(i, j) * 2)
+        grid:set(i, j, nil)
+        return 1
     end
     return 0
 end
 
 function The2048:keypressed(key, scancode, isrepeat)
-    self:action(key)
+    if not self:isGameOver() then
+        self:action(key)
+    end
 end
 
 function mouse:getDirection()
@@ -109,7 +129,11 @@ function mouse:getDirection()
 end
 
 function The2048:mousereleased(mouse)
-    self:action(mouse:getDirection())    
+    if self:isGameOver() then
+        self:initGame()
+    else
+        self:action(mouse:getDirection())
+    end
 end
 
 function The2048:draw()
@@ -140,7 +164,7 @@ function The2048:draw()
 
             if value then
                 noStroke()
-                fill(Color.hsl(getPowOf2(value)/16))
+                fill(Color.hsl(getPowerOf2(value)/16))
                 rect(center.x, center.y, size.x - innerMarge, size.y - innerMarge, innerMarge)
 
                 stroke(colors.black)
@@ -148,13 +172,21 @@ function The2048:draw()
             end
         end
     end
-end
 
-function getPowOf2(value)
-    local n = 0
-    while value >= 2 do
-        value = value / 2
-        n = n + 1
+    if self:isGameOver() then
+        background(0, 0, 0, 0.6)
+
+        stroke(colors.white)
+        fill(colors.black)
+
+        fontSize(50)
+        local gameOver = 'Game Over'
+        local w, h = textSize(gameOver)
+
+        rectMode(CENTER)
+        rect(W/2, H/2, w*1.2, h*1.2, 20)
+
+        textMode(CENTER)
+        text(gameOver, W/2, H/2)
     end
-    return n
 end

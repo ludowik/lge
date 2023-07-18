@@ -1,43 +1,26 @@
--- string
-function tolua(t)
-    local code = 'return {'
-    for k,v in pairs(t) do
-        local serializeTypes = {
-            boolean = tostring,
-            number = tostring,
-            string = function (v) return '"'..v..'"' end,
-            table = function (v) return '"TODO"' end, 
-        }
-
-        if serializeTypes[type(v)] then
-            code = code..'\n'    
-            code = code..'\t'..k..' = '
-            code = code..serializeTypes[type(v)](v)
-            code = code..','
-        end
-    end
-
-    code = code..'\n}'
-    return code
-end
-
 local settingsFileName = 'settings'
 
 local settings
 
 function saveSettings()
-    love.filesystem.write(settingsFileName, tolua(settings))
+    saveFile(settingsFileName, settings)
+end
+
+function saveFile(fileName, table)
+    love.filesystem.write(fileName, Array.tolua(table))
 end
 
 function loadSettings()
-    local ok, f = pcall(function () return love.filesystem.load(settingsFileName) end)
-    if ok and f then
-        return f() or {}
-    end
-
-    return {
+    return readFile(settingsFileName) or {
         sketch = 'Hexagone'
     }
+end
+
+function readFile(fileName)
+    local ok, f = pcall(function () return love.filesystem.load(fileName) end)
+    if ok and f then
+        return f()
+    end
 end
 
 function updateSettings()
