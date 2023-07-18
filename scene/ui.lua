@@ -1,4 +1,4 @@
-UI = class() : extends(Rect, MouseEvent)
+UI = class() : extends(Rect, MouseEvent, KeyboardEvent)
 
 UI.innerMarge = 5
 

@@ -16,8 +16,7 @@ function declareSketch(name)
     setfenv(0, env)
     require(name)
     for k,v in pairs(env) do
-        env.__name = name
-            
+        env.__name = name            
         if isSketch(v) then
             _G[k] = v
             v.env = env

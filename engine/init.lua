@@ -9,6 +9,7 @@ require 'lua.array'
 require 'lua.index'
 require 'lua.state'
 require 'lua.settings'
+require 'lua.grid'
 
 require 'maths.random'
 require 'maths.vec2'

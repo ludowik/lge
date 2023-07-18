@@ -1,4 +1,4 @@
-Sketch = class() : extends(Index, State, Rect, Image, MouseEvent)
+Sketch = class() : extends(Index, State, Rect, Image, MouseEvent, KeyboardEvent)
 
 function Sketch:init(w, h)
     process:add(self)

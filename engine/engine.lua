@@ -13,7 +13,7 @@ function love.load()
     timeBeforeHideParameter = 5
 end
 
-GlobalManager = class() : extends(Rect, MouseEvent)
+GlobalManager = class() : extends(Rect, MouseEvent, KeyboardEvent)
 
 function GlobalManager:init()
     Rect.init(self, 0, 0.8* H, W, 0.2 * H)

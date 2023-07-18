@@ -19,3 +19,12 @@ function MouseEvent:click()
         return true
     end    
 end
+
+KeyboardEvent = class()
+
+function KeyboardEvent:init(mouse)
+end
+
+function KeyboardEvent:keypressed(key, scancode, isrepeat)
+    self:click()
+end
