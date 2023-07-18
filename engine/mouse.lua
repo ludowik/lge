@@ -29,4 +29,16 @@ function Mouse:released(x, y)
     self.move:set(mouse.endPosition - mouse.startPosition)
 end
 
+function Mouse:getDirection()    
+    if max(abs(mouse.move.x), (mouse.move.y)) < W/4 then
+        return
+    end
+
+    if abs(mouse.move.x) > abs(mouse.move.y) then
+        return mouse.move.x < 0 and 'left' or 'right'
+    else
+        return mouse.move.y < 0 and 'up' or 'down'
+    end
+end
+
 mouse = Mouse()

@@ -44,10 +44,10 @@ function The2048:isGameOver()
 end
 
 function The2048:action(direction, f)
-    local change = 
-        self:applyFunction(direction, self.move, true) +
-        self:applyFunction(direction, self.fusion, false) +
-        self:applyFunction(direction, self.move, true)
+    local change = 0
+    change = change + self:applyFunction(direction, self.move, true)
+    change = change + self:applyFunction(direction, self.fusion, false)
+    change = change + self:applyFunction(direction, self.move, true)
 
     if change > 0 then
         self:addCell()
@@ -89,7 +89,7 @@ function The2048:applyFunction(direction, f, repeatOnChange)
             end
         end
         totalChange = totalChange + change
-    until change == 0 or repeatOnChange
+    until change == 0 or not repeatOnChange
 
     return totalChange
 end
@@ -117,14 +117,6 @@ end
 function The2048:keypressed(key, scancode, isrepeat)
     if not self:isGameOver() then
         self:action(key)
-    end
-end
-
-function mouse:getDirection()
-    if abs(mouse.move.x) > abs(mouse.move.y) then
-        return mouse.move.x < 0 and 'left' or 'right'
-    else
-        return mouse.move.y < 0 and 'up' or 'down'
     end
 end
 
