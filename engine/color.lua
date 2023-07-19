@@ -45,6 +45,20 @@ function Color.fromParam(clr, ...)
     return Color(clr, ...)
 end
 
+function Color.hexa(hexa)
+    local r, g, b
+
+    r = hexa % 256
+    hexa = (hexa - r) / 255
+
+    g = hexa % 256
+    hexa = (hexa - g) / 255
+
+    b = hexa % 256
+
+    return Color(r/255, g/255, b/255)
+end
+
 function Color.hsl(h, s, l, a)
     local r, g, b = hsl2rgb(h, s, l)
     return Color(r, g, b, a)

@@ -21,7 +21,7 @@ end
 
 function UI:fontSize()
     if self.parent then
-        fontSize(self.parent.state == 'open' and 32 or 22)
+        fontSize(self.parent.state == 'open' and 28 or 24)
     else
         fontSize(self.styles.fontSize)
     end

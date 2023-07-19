@@ -26,6 +26,12 @@
             ],
             "ignorePatterns": [
                 "class"
+            ],
+            "scriptRoots": [
+                "."
+            ],
+            "scriptFiles": [
+                "./*.lua"
             ]
         }
     ]

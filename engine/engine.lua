@@ -9,8 +9,6 @@ function love.load()
     globalManager = GlobalManager()
 
     reload()
-
-    timeBeforeHideParameter = 15
 end
 
 GlobalManager = class() : extends(Rect, MouseEvent, KeyboardEvent)
@@ -22,11 +20,6 @@ end
 
 function GlobalManager:mousereleased(mouse)
     local sketch = process:current()
-
-    if timeBeforeHideParameter < 0 then
-        timeBeforeHideParameter = 5
-        return
-    end
 
     if mouse.position.x < .5 * W then
         process:previous()
@@ -41,11 +34,9 @@ function contains(mouse)
     if not love.filesystem.isFused() then
         local object = globalManager:contains(mouse.position)
         if object then return object end
-    
-        if timeBeforeHideParameter > 0 then
-            local object = process.parameter:contains(mouse.position)
-            if object then return object end
-        end
+
+        local object = process.parameter:contains(mouse.position)
+        if object then return object end
     end
     
     local object = process:contains(mouse.position)
@@ -56,8 +47,6 @@ function love.update(dt)
     components:update(dt)
 
     updateSettings()
-
-    timeBeforeHideParameter = timeBeforeHideParameter - dt
 end
 
 function love.draw()    
@@ -66,9 +55,7 @@ function love.draw()
     resetStyle()
     process:drawSketch()
     
-    if (not love.filesystem.isFused() and 
-        timeBeforeHideParameter > 0)
-    then
+    if not love.filesystem.isFused() then
         resetMatrix()
         resetStyle()
         process.parameter:draw()

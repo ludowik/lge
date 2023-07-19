@@ -129,7 +129,7 @@ function The2048:mousereleased(mouse)
 end
 
 function The2048:draw()
-    background()
+    background(self.backgroundColor)
 
     rectMode(CENTER)            
     textMode(CENTER)
@@ -141,7 +141,7 @@ function The2048:draw()
     size = self.anchor:size(4, 4)
 
     noStroke()
-    fill(colors.gray)
+    fill(self.boardColor)
     rect(center.x, center.y, size.x + 2*innerMarge, size.y + 2*innerMarge, innerMarge)
     
     size = self.anchor:size(1, 1)
@@ -156,10 +156,15 @@ function The2048:draw()
 
             if value then
                 noStroke()
-                fill(Color.hsl(getPowerOf2(value)/16))
+
+                fill(self.colors[getPowerOf2(value)] or self.defaultColor)
                 rect(center.x, center.y, size.x - innerMarge, size.y - innerMarge, innerMarge)
 
-                stroke(colors.black)
+                if value <= 4 then
+                    textColor(self.textColor)
+                else
+                    textColor(colors.white)
+                end
                 text(value, center.x, center.y)
             end
         end
@@ -182,3 +187,29 @@ function The2048:draw()
         text(gameOver, W/2, H/2)
     end
 end
+
+The2048.colors = {
+    Color(238, 228, 218),
+    Color(237, 224, 200),
+    Color(242, 177, 121),
+    Color(245, 149,  99),
+    Color(246, 124,  95),
+    Color(246,  94,  59),
+    Color(237, 207, 114),
+    Color(237, 204,  97),
+    Color(237, 200,  80),
+    Color(237, 197,  63),
+    Color(237, 194,  46),
+    Color(173, 183, 119),
+    Color(170, 183, 102),
+    Color(164, 183,  79),
+    Color(161, 183,  63),
+}
+
+The2048.defaultColor = Color(161, 183,  63)
+The2048.textColor = Color(118, 109, 100)
+The2048.boardColor = Color(204, 192, 179)
+The2048.backgroundColor = Color(250, 248, 239)
+
+-- scoreBoardColor : Color(187, 173, 160)
+-- buttonColor : Color(119, 110, 101)

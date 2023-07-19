@@ -6,7 +6,7 @@ end
 
 function ProcessManager:add(sketch)
     Node.add(self, sketch)
-    self.currentProcess = #self.items
+    self:setCurrentSketch(#self.items)
 end
 
 function ProcessManager:setSketch(name)
@@ -15,10 +15,15 @@ function ProcessManager:setSketch(name)
     name = name:lower()
     for i,process in ipairs(self.items) do
         if process.__className == name then
-            self.currentProcess = i
+            self:setCurrentSketch(i)
             break
         end        
     end
+end
+
+function ProcessManager:setCurrentSketch(currentProcess)
+    self.currentProcess = currentProcess
+    love.window.setTitle(self:current().__className)
 end
 
 function ProcessManager:loop()
@@ -48,22 +53,24 @@ function ProcessManager:current()
 end
 
 function ProcessManager:previous()
-    self.currentProcess = self.currentProcess - 1
-    if self.currentProcess < 1 then
-        self.currentProcess = #self.items
+    local currentProcess = self.currentProcess - 1
+    if currentProcess < 1 then
+        currentProcess = #self.items
     end
+    self:setCurrentSketch(currentProcess)
     return self:current()
 end
 
 function ProcessManager:next()
-    self.currentProcess = self.currentProcess + 1
-    if self.currentProcess > #self.items then
-        self.currentProcess = 1
+    local currentProcess = self.currentProcess + 1
+    if currentProcess > #self.items then
+        currentProcess = 1
     end
+    self:setCurrentSketch(currentProcess)
     return self:current()
 end
 
 function ProcessManager:random()
-    self.currentProcess = random(#self.items)
+    self:setCurrentSketch(random(#self.items))
     return self:current()
 end

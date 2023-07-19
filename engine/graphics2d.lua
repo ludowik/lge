@@ -48,7 +48,7 @@ function Graphics2d.resetStyle()
     
     textMode(CORNER)
     textColor(colors.white)
-    fontSize(22)    
+    fontSize(24)    
 end
 
 function Graphics2d.noFill()
@@ -148,8 +148,9 @@ end
 CENTER = 'center'
 CORNER = 'corner'
 
-function Graphics2d.textColor(mode)
-    return stylesSet('textColor', mode)
+function Graphics2d.textColor(clr, ...)
+    clr = Color.fromParam(clr, ...)
+    return stylesSet('textColor', clr)
 end
 
 function Graphics2d.textMode(mode)

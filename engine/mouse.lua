@@ -30,14 +30,16 @@ function Mouse:released(x, y)
 end
 
 function Mouse:getDirection()
-    if max(abs(mouse.move.x), abs(mouse.move.y)) < W/4 then
+    if max(abs(mouse.move.x), abs(mouse.move.y)) < min(W, H)/5 then
         return
     end
 
-    if abs(mouse.move.x) > abs(mouse.move.y) then
-        return mouse.move.x < 0 and 'left' or 'right'
-    else
-        return mouse.move.y < 0 and 'up' or 'down'
+    if min(abs(mouse.move.x), abs(mouse.move.y)) < 0.5 * max(abs(mouse.move.x), abs(mouse.move.y)) then
+        if abs(mouse.move.x) > abs(mouse.move.y) then
+            return mouse.move.x < 0 and 'left' or 'right'
+        else
+            return mouse.move.y < 0 and 'up' or 'down'
+        end
     end
 end
 

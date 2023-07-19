@@ -19,7 +19,7 @@ function vec2.fromAngle(angle)
 end
 
 function vec2:__tostring()
-    return self.x..', '..self.y
+    return string.format("%.2f,%.2f", self.x, self.y)
 end
 
 function vec2.__eq(u, v)

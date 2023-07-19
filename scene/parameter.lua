@@ -24,8 +24,7 @@ function Parameter:initMenu()
     self:watch('delta time', 'string.format("%.3f", DeltaTime)')
     self:watch('elapsed time', 'string.format("%.1f", ElapsedTime)')
     self:watch('version', 'version')
-
-    self:group('mouse')
+    
     self:watch('startPosition', 'mouse.startPosition')
     self:watch('position', 'mouse.position')
     self:watch('previousPosition', 'mouse.previousPosition')
