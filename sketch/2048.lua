@@ -2,45 +2,89 @@ The2048 = class() : extends(Sketch)
 
 function The2048:init()
     Sketch.init(self)
+
     self.anchor = Anchor(4.5)
 
-    self:initGame(readFile('2048'))
-end
-
-function The2048:initGame(data)
     self.grid = Grid(4, 4)
 
-    if data and #data > 0 then
-        for k,v in pairs(data) do
-            self.grid.items[tonumber(k)] = v
-        end
-    else
-        self:addCell()
+    self.score = 0
+    self.scoreMax = 0
+
+    self.parameter:action('reset', function () self:initGame() end)
+
+    self.parameter:watch('score', Bind(self, 'score'))
+    self.parameter:watch('scoreMax', Bind(self, 'scoreMax'))   
+
+    if not self:loadGame() then
+        self:initGame()
     end
+end
+
+function The2048:initGame()
+    self.grid:clear()
+    self:addCell()
+
+    self.score = 0
+end
+
+function The2048:loadGame()
+    self.grid:clear()
+
+    -- load data
+    local data = readFile('2048')
+    if not data then return false end
+
+    -- use data to restore the game
+    for k,value in pairs(data.cells) do
+        self.grid.items[tonumber(k)] = {value = value}
+    end
+
+    self.score = data.score or 0
+    self.scoreMax = data.scoreMax or score
+
+    return true
+end
+
+function The2048:saveGame(data)
+    -- generate data to save
+    local data = {
+        cells = Array(),
+        score = self.score,
+        scoreMax = self.scoreMax,
+    }
+
+    self.grid.items:foreachKey(function (cell, k) data.cells[k] = cell.value end)
+
+    -- save data
+    saveFile('2048', data)
 end
 
 function The2048:addCell()
-    if self:isGameOver() then return end
+    local availablePosition = Array()
+    for i in range(4) do
+        for j in range(4) do
+            if not self:get(i, j) then
+                availablePosition:add({i, j})
+            end
+        end
+    end
 
-    local i, j
-    
-    repeat
-        i, j = random(1, 4), random(1, 4)
-    until not self.grid:get(i, j)
-    
-    self.grid:set(
+    if #availablePosition == O then
+        return
+    end
+
+    local i, j = unpack(availablePosition:random())
+    self:set(
         i,
         j,
         Array{2, 4}:random())
+
+    self:animateNew(i, j)
 end
 
 function The2048:isGameOver()
-    for i in range(4) do
-        for j in range(4) do
-            if not self.grid:get(i, j) then return false end
-        end
-    end
-    return true
+    local change = self:applyFunction('all', self.moveOrFusionAvailable, false)
+    return change == 0 and true
 end
 
 function The2048:action(direction, f)
@@ -53,35 +97,36 @@ function The2048:action(direction, f)
         self:addCell()
     end
 
-    saveFile('2048', self.grid.items)
+    self:saveGame()
 end
 
 function The2048:applyFunction(direction, f, repeatOnChange)
-    local change, totalChange = 0, 0
+    local totalChange = 0
+    local change
     repeat
         change = 0
-        if direction == 'left' then            
+        if direction == 'all' or direction == 'left' then            
             for i = 2,4 do
                 for j = 1,4,1 do
                     change = change + f(self, i, j, -1, 0)
                 end
             end
-        
-        elseif direction == 'right' then
+        end
+        if direction == 'all' or direction == 'right' then
             for i = 3,1,-1 do
                 for j = 1,4,1 do
                     change = change + f(self, i, j, 1, 0)
                 end
             end
-
-        elseif direction == 'up' then
+        end
+        if direction == 'all' or direction == 'up' then
             for j = 2,4 do
                 for i = 1,4,1 do
                     change = change + f(self, i, j, 0, -1)
                 end
             end
-
-        elseif direction == 'down' then
+        end
+        if direction == 'all' or direction == 'down' then
             for j = 3,1,-1 do
                 for i = 1,4,1 do
                     change = change + f(self, i, j, 0, 1)
@@ -94,38 +139,103 @@ function The2048:applyFunction(direction, f, repeatOnChange)
     return totalChange
 end
 
+function The2048:getCell(i, j)
+    return self.grid:get(i, j) or {}
+end
+
+function The2048:setCell(i, j, cell)
+    return self.grid:set(i, j, cell)
+end
+
+function The2048:get(i, j)
+    local cell = self:getCell(i, j)
+    return cell.value
+end
+
+function The2048:set(i, j, value)
+    local cell = self.grid:get(i, j)
+    if not cell then
+        cell = {}
+        self.grid:set(i, j, cell)
+    end
+    cell.value = value
+end
+
+function The2048:moveOrFusionAvailable(i, j, di, dj)
+    if not self:get(i+di, j+dj) and self:get(i, j) then
+        return 1
+    end
+    if self:get(i+di, j+dj) and self:get(i, j) == self:get(i+di, j+dj) then
+        return 1
+    end
+    return 0
+end
+
 function The2048:move(i, j, di, dj)
-    local grid = self.grid
-    if not grid:get(i+di, j+dj) and grid:get(i, j) then
-        grid:set(i+di, j+dj, grid:get(i, j))
-        grid:set(i, j, nil)
+    if not self:get(i+di, j+dj) and self:get(i, j) then
+        local cell = self:getCell(i, j)
+        cell.fromPosition = cell.fromPosition or self:cellPosition(i, j)
+        self:setCell(i+di, j+dj, cell)
+        self:setCell(i, j, nil)
         return 1
     end
     return 0
 end
 
 function The2048:fusion(i, j, di, dj)
-    local grid = self.grid
-    if grid:get(i+di, j+dj) and grid:get(i, j) == grid:get(i+di, j+dj) then
-        grid:set(i+di, j+dj, grid:get(i, j) * 2)
-        grid:set(i, j, nil)
+    if self:get(i+di, j+dj) and self:get(i, j) == self:get(i+di, j+dj) then
+        local value = 2 * self:get(i, j)
+        self:set(i+di, j+dj, value)
+        self:set(i, j, nil)
+
+        self.score = self.score + value
+        self.scoreMax = max(self.score, self.scoreMax)
         return 1
     end
     return 0
 end
 
-function The2048:keypressed(key, scancode, isrepeat)
-    if not self:isGameOver() then
+function The2048:animateNew(i, j)
+    local cell = self.grid:get(i, j)
+    if cell then
+        if cell.tween then
+            cell.scale = nil
+            cell.tween:stop()
+        end
+
+        cell.scale = vec2()
+        cell.tween = animate(cell, {scale = vec2(1, 1)}, 0.2, function (tween)
+            cell.scale = nil
+        end)
+    end
+end
+
+function The2048:animateMove(ifrom, jfrom, i, j)
+    local cell = self.grid:get(i, j)
+    local cellFrom = self.grid:get(ifrom, jfrom)
+    if cell then
+        cell.position = self:cellPosition(ifrom, jfrom)
+        cell.tweens = {
+            {cell, {position = self:cellPosition(i, j)}, 2, function () cell.position = nil end}
+        }
+        animate(unpack(cell.tweens[1]))
+    end
+end
+
+function The2048:keypressed(key)
+    if self:isGameOver() then
+        self:initGame()
+    else
         self:action(key)
     end
 end
 
 function The2048:mousereleased(mouse)
-    if self:isGameOver() then
-        self:initGame()
-    else
-        self:action(mouse:getDirection())
-    end
+    self:keypressed(mouse:getDirection())
+end
+
+function The2048:cellPosition(i, j)
+    return self.anchor:pos(i-.75, -3-(3.5-j))
 end
 
 function The2048:draw()
@@ -146,26 +256,49 @@ function The2048:draw()
     
     size = self.anchor:size(1, 1)
 
-    local position, value
+    local position, cell
     for i in range(4) do
         for j in range(4) do
-            position = self.anchor:pos(i-.75, -3-(3.5-j))
-            center = position + size / 2
+            cell = self:getCell(i, j)
 
-            value = self.grid:get(i, j)
+            if cell.value then
+                push()
 
-            if value then
+                if cell.position then
+                    position = cell.position
+                else
+                    position = self:cellPosition(i, j)
+                end
+
+                center = position + size / 2
+
+                translate(center.x, center.y)
+
+                if cell.scale then
+                    scale(cell.scale.x, cell.scale.y)
+                end
+
+                if cell.rotate then
+                    rotate(cell.rotate)
+                end
+
+                if cell.translate then
+                    translate(cell.translate.x, cell.translate.y)
+                end
+
                 noStroke()
 
-                fill(self.colors[getPowerOf2(value)] or self.defaultColor)
-                rect(center.x, center.y, size.x - innerMarge, size.y - innerMarge, innerMarge)
+                fill(self.colors[getPowerOf2(cell.value)] or self.defaultColor)
+                rect(0, 0, size.x - innerMarge, size.y - innerMarge, innerMarge)
 
-                if value <= 4 then
+                if cell.value <= 4 then
                     textColor(self.textColor)
                 else
                     textColor(colors.white)
                 end
-                text(value, center.x, center.y)
+                text(cell.value, 0, 0)
+
+                pop()
             end
         end
     end

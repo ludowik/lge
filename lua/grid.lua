@@ -6,6 +6,10 @@ function Grid:init(w, h)
     self.w = w
     self.h = h
 
+    self:clear()
+end
+
+function Grid:clear()
     self.items = Array()
 end
 

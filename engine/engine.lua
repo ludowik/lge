@@ -3,7 +3,8 @@ function love.load()
     classUnitTesting()
 
     components = Node()
-    components:add(TimeManager)
+    components:add(timeManager)
+    components:add(tweenManager)
     components:add(process)
 
     globalManager = GlobalManager()

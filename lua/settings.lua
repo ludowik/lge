@@ -7,7 +7,7 @@ function saveSettings()
 end
 
 function saveFile(fileName, table)
-    love.filesystem.write(fileName, Array.tolua(table))
+    love.filesystem.write(fileName, 'return '..Array.tolua(table))
 end
 
 function loadSettings()
