@@ -47,6 +47,8 @@ function loadSketch(env)
         env.sketch = Sketch()
         env.sketch.__className = env.__name:gsub('sketch%.', '')
 
+        env.parameter = env.sketch.parameter
+        
         if env.setup then
             env.sketch.setup = function (...) return env.setup(...) end
             env.sketch.setup()
@@ -60,6 +62,8 @@ function loadSketch(env)
             env.sketch.draw = function (_, ...) return env.draw(...) end
         end
     end
+    
+    env.sketch.env = env
 end
 
 function loadSketches()
@@ -79,8 +83,8 @@ function load()
     loadSketches()
 
     if love.filesystem.isFused() then
-        process:setSketch('time_gym')
+        processManager:setSketch('time_gym')
     else
-        process:setSketch(getSettings('sketch'))
+        processManager:setSketch(getSettings('sketch'))
     end
 end

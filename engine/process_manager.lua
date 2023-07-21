@@ -1,7 +1,7 @@
 ProcessManager = class() : extends(Node)
 
 function ProcessManager.setup()
-    process = ProcessManager()
+    processManager = ProcessManager()
 end
 
 function ProcessManager:add(sketch)
@@ -23,6 +23,7 @@ end
 
 function ProcessManager:setCurrentSketch(currentProcess)
     self.currentProcess = currentProcess
+    _G.env = self:current().env
     love.window.setTitle(self:current().__className)
 end
 

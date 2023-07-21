@@ -10,12 +10,12 @@ function love.keypressed(key, scancode, isrepeat)
     elseif key == 'escape' then
         quit()
     elseif key == 'pageup' then
-        process:previous()
+        processManager:previous()
     elseif key == 'pagedown' then
-        process:next()
+        processManager:next()
     end
 
-    process:current():keypressed(key, scancode, isrepeat)
+    processManager:current():keypressed(key, scancode, isrepeat)
 end
 
 local currentObject = nil

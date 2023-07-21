@@ -25,8 +25,8 @@ end
 
 function updateSettings()
     local needUpdate = false
-    if settings.sketch ~= process:current().__className then
-        settings.sketch = process:current().__className
+    if settings.sketch ~= processManager:current().__className then
+        settings.sketch = processManager:current().__className
         needUpdate = true
     end
     if needUpdate then

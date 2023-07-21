@@ -5,7 +5,7 @@ function love.load()
     components = Node()
     components:add(timeManager)
     components:add(tweenManager)
-    components:add(process)
+    components:add(processManager)
 
     globalManager = GlobalManager()
 
@@ -20,17 +20,17 @@ function GlobalManager:init()
 end
 
 function GlobalManager:mousereleased(mouse)
-    local sketch = process:current()
+    local sketch = processManager:current()
 
     if mouse.position.x < .5 * W then
-        process:previous()
+        processManager:previous()
     else
-        process:next()
+        processManager:next()
     end
 end
 
 function contains(mouse)
-    local process = process:current()
+    local process = processManager:current()
     
     if not love.filesystem.isFused() then
         local object = globalManager:contains(mouse.position)
@@ -51,7 +51,7 @@ function love.update(dt)
 end
 
 function love.draw()    
-    local process = process:current()
+    local process = processManager:current()
     resetMatrix()
     resetStyle()
     process:drawSketch()
@@ -64,7 +64,7 @@ function love.draw()
 end
 
 function reload()
-    process:clear()
+    processManager:clear()
     load()
 end
 

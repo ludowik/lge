@@ -3,10 +3,10 @@ Grid = class() : extends(Array)
 function Grid:init(w, h)
     assert(w, h)
 
-    self.w = w
-    self.h = h
+    self.w = floor(w)
+    self.h = floor(h)
 
-    self:clear()
+    self:clear(iniVaue)
 end
 
 function Grid:clear()
@@ -14,13 +14,21 @@ function Grid:clear()
 end
 
 function Grid:offset(x, y)
-    return x + y * self.w
+    return x + (y-1) * self.w
 end
 
 function Grid:set(x, y, value)
-    self.items[self:offset(x, y)] = value
+    local offset = self:offset(x, y)
+    if offset < 1 or offset > self.w * self.h then 
+        return 
+    end
+    self.items[offset] = value
 end
 
 function Grid:get(x, y)
-    return self.items[self:offset(x, y)]
+    local offset = self:offset(x, y)
+    if offset < 1 or offset > self.w * self.h then
+        return
+    end
+    return self.items[offset]
 end

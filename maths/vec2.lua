@@ -11,6 +11,7 @@ function vec2:set(x, y)
     
     self.x = x or 0
     self.y = y or 0
+
     return self
 end
 
@@ -18,8 +19,16 @@ function vec2.fromAngle(angle)
     return vec2(cos(angle), sin(angle))
 end
 
+function isinteger(v)
+    return v == floor(v)
+end
+
 function vec2:__tostring()
-    return string.format("%.2f,%.2f", self.x, self.y)
+    if isinteger(self.x) and isinteger(self.y) then
+        return string.format("%2d,%2d", self.x, self.y)
+    else
+        return string.format("%.2f,%.2f", self.x, self.y)
+    end
 end
 
 function vec2.__eq(u, v)
@@ -80,6 +89,13 @@ end
 
 function vec2.scalar(u, v)
     return u.x * v.x + u.y * v.y
+end
+
+function vec2:floor()
+    self.x = floor(self.x)
+    self.y = floor(self.y)
+
+    return self
 end
 
 function vec2.unitTest()

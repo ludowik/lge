@@ -1,7 +1,7 @@
 Sketch = class() : extends(Index, State, Rect, Image, MouseEvent, KeyboardEvent)
 
 function Sketch:init(w, h)
-    process:add(self)
+    processManager:add(self)
 
     State.init(self)
     Index.init(self)
@@ -57,14 +57,6 @@ function Sketch:drawSketch()
         0, -- rotation
         self.size.x / self.canvas:getWidth(), -- scale x
         self.size.y / self.canvas:getHeight()) -- scale y
-
-    -- if not love.filesystem.isFused() then
-    --     resetStyle()
-    --     resetMatrix()
-        
-    --     textMode(CORNER)
-    --     text(self.__className, 0, 0)
-    -- end
 end
 
 function Sketch:draw()

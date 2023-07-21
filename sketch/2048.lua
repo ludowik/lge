@@ -32,7 +32,7 @@ function The2048:loadGame()
 
     -- load data
     local data = readFile('2048')
-    if not data then return false end
+    if not data or not data.cells then return false end
 
     -- use data to restore the game
     for k,value in pairs(data.cells) do
