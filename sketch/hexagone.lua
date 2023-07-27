@@ -13,7 +13,7 @@ function Hexagone:update(dt)
     if random() < 0.2 then
         self.particles:add(Particle())
     end
-    self.particles:remove(function (item) return item.state == 'dead' end )
+    self.particles:removeIfTrue(function (item) return item.state == 'dead' end )
 end
 
 function Hexagone:draw()

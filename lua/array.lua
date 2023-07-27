@@ -1,5 +1,6 @@
 Array = class() : extends(table)
 Array.add = table.insert
+Array.unpack = table.unpack or unpack
 
 table.__className = 'table'
 
@@ -19,12 +20,24 @@ function Array:foreachKey(f)
     end
 end
 
-function Array:remove(f)
+function Array:removeIfTrue(f)
     for i,v in ipairs(self, true) do
         if f(v) then
             table.remove(self, i)
         end
     end
+end
+
+function Array:clone()
+    local t = Array()
+    Array.foreachKey(self, function(v, k)
+        if type(v) == 'table' then
+            t[k] = Array.clone(v)
+        else
+            t[k] = v
+        end
+    end)
+    return t
 end
 
 function Array:random()

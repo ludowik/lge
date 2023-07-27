@@ -49,18 +49,19 @@ function loadSketch(env)
 
         env.parameter = env.sketch.parameter
         
-        if env.setup then
-            env.sketch.setup = function (...) return env.setup(...) end
-            env.sketch.setup()
+        local function encapsulate(fname)
+            if env[fname] then
+                env.sketch[fname] = function (_, ...) return env[fname](...) end
+            end
         end
 
-        if env.update then
-            env.sketch.update = function (_, ...) return env.update(...) end
-        end
+        encapsulate('setup')
+        encapsulate('update')
+        encapsulate('draw')
+        encapsulate('mousereleased')
+        encapsulate('keypressed')
 
-        if env.draw then
-            env.sketch.draw = function (_, ...) return env.draw(...) end
-        end
+        env.sketch:setup()
     end
     
     env.sketch.env = env

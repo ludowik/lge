@@ -22,8 +22,8 @@ function Node:foreach(f)
     return self.items:foreach(f)
 end
 
-function Node:remove(f)
-    return self.items:remove(f)
+function Node:removeIfTrue(f)
+    return self.items:removeIfTrue(f)
 end
 
 function Node:update(dt)

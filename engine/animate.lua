@@ -6,6 +6,7 @@ end
 
 function TweenManager:update(dt)
     self:foreach(function (v) v:update(dt) end)
+    self:removeIfTrue(function (v) return v.state == 'dead' end)
 end
 
 Tween = class()
@@ -19,8 +20,10 @@ function Tween:init(source, target, delay, callback)
     end
 
     self.source = source
+    self.origin = Array.clone(source)
     self.target = target
     self.delay = delay
+    self.elapsed = 0
     self.callback = callback or nilf
 
     self.state = 'wait'
@@ -29,16 +32,23 @@ end
 function Tween:update(dt)
     if self.state ~= 'running' then return end
 
-    self.delay = self.delay - dt
+    self.elapsed = min(self.delay, self.elapsed + dt)
+
     for k,v in pairs(self.target) do
-        self.source[k] = self.source[k] + self.delta[k] * dt
+        self.source[k] = self.origin[k] + (self.target[k] - self.origin[k]) * (self.elapsed / self.delay)
     end
-    if self.delay <= 0 then
+
+    if self.elapsed >= self.delay then
+        -- ensure source = target
+        -- for k,v in pairs(self.target) do
+        --     self.source[k] = self.target[k]
+        -- end
+
         self:finalize()
     end
 end
 
-function Tween:start()
+function Tween:play()
     self.state = 'running'
 end
 
@@ -58,7 +68,7 @@ end
 
 function animate(source, target, delay, callback)
     local tween = Tween(source, target, delay, callback)
-    tween:start()
+    tween:play()
     return tween
 end
 
@@ -66,7 +76,7 @@ local function sequenceNext(callback, tweens, next)
     return function ()
         local result = callback() 
         if next <= #tweens then
-            tweens[next]:start()
+            tweens[next]:play()
         end
         return result
     end
@@ -79,7 +89,7 @@ function sequence(...)
     end
 
     if #tweens > 0 then
-        tweens[1]:start()
+        tweens[1]:play()
     end
 end
 
@@ -90,8 +100,10 @@ function TweenManager.unitTest()
         c = 0,
     }
 
+    Tween(test, {a=2}, 2, function () print('a', test.a) end):play()
+
     sequence(
-        Tween(test, {a=1}, 1, function () print('a', test.a) end),
-        Tween(test, {c=2}, 1, function () print('c', test.c) end)
+        Tween(test, {b=1}, 1, function () print('b', test.b) end),
+        Tween(test, {c=1}, 1, function () print('c', test.c) end)
     )
 end
