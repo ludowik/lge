@@ -8,6 +8,14 @@ function Array:init(...)
     return ...
 end
 
+function Array:removeIfTrue(f)
+    for i,v in ipairs(self, true) do
+        if f(v) then
+            table.remove(self, i)
+        end
+    end
+end
+
 function Array:foreach(f)
     for i,v in ipairs(self) do
         f(v, i)
@@ -20,16 +28,12 @@ function Array:foreachKey(f)
     end
 end
 
-function Array:removeIfTrue(f)
-    for i,v in ipairs(self, true) do
-        if f(v) then
-            table.remove(self, i)
-        end
-    end
-end
+local __cloningObjects = {}
 
 function Array:clone()
+    if __cloningObjects[self] then return __cloningObjects[self] end
     local t = Array()
+    __cloningObjects[self] = t
     Array.foreachKey(self, function(v, k)
         if type(v) == 'table' then
             t[k] = Array.clone(v)
@@ -37,6 +41,7 @@ function Array:clone()
             t[k] = v
         end
     end)
+    __cloningObjects[self] = nil
     return t
 end
 

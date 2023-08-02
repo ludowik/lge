@@ -19,6 +19,10 @@ function vec2.fromAngle(angle)
     return vec2(cos(angle), sin(angle))
 end
 
+function vec2:clone()
+    return vec2(self.x, self.y)
+end
+
 function isinteger(v)
     return v == floor(v)
 end

@@ -14,15 +14,18 @@ Tween = class()
 function Tween:init(source, target, delay, callback)
     tweenManager:add(self)
 
-    self.delta = {}
-    for k,v in pairs(target) do
-        self.delta[k] = (target[k] - source[k]) / delay
-    end
-
     self.source = source
     self.origin = Array.clone(source)
     self.target = target
-    self.delay = delay
+
+    if type(delay) == 'table' then
+        self.delayBeforeStart = delay.delayBeforeStart
+        self.delay = delay.delay
+    else
+        self.delayBeforeStart = 0
+        self.delay = delay
+    end
+
     self.elapsed = 0
     self.callback = callback or nilf
 
@@ -32,7 +35,11 @@ end
 function Tween:update(dt)
     if self.state ~= 'running' then return end
 
-    self.elapsed = min(self.delay, self.elapsed + dt)
+    if self.delayBeforeStart > 0 then
+        self.delayBeforeStart = self.delayBeforeStart - dt
+    else
+        self.elapsed = min(self.delay, self.elapsed + dt)
+    end
 
     for k,v in pairs(self.target) do
         self.source[k] = self.origin[k] + (self.target[k] - self.origin[k]) * (self.elapsed / self.delay)
@@ -40,9 +47,9 @@ function Tween:update(dt)
 
     if self.elapsed >= self.delay then
         -- ensure source = target
-        -- for k,v in pairs(self.target) do
-        --     self.source[k] = self.target[k]
-        -- end
+        for k,v in pairs(self.target) do
+            self.source[k] = self.target[k]
+        end
 
         self:finalize()
     end

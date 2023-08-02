@@ -11,7 +11,7 @@ function Layout:layout(x, y)
     end
 
     for _,item in ipairs(self.items) do
-        if item.state ~= 'hidden' then
+        if item.visible ~= false then
             if item.layout then
                 item:layout(x, y)
             else

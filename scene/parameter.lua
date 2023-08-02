@@ -37,21 +37,25 @@ function Parameter:init()
 end
 
 function Parameter:openGroup(group)
-    self:setStateForAllGroups('hidden')
+    self:setStateForAllGroups('hidden', false)
     group.state = 'open'
+    group.visible = true
 end
 
 function Parameter:closeGroup(group)
-    self:setStateForAllGroups('close')
+    self:setStateForAllGroups('close', true)
     group.state = 'close'
+    group.visible = true
 end
 
-function Parameter:setStateForAllGroups(state)
+function Parameter:setStateForAllGroups(state, visible)
     state = state or 'hidden'
+    visible = visible or false
     self:foreach(
         function (node)
             if node.state then
                 node.state = state
+                node.visible = visible
             end
         end)
 end
@@ -63,6 +67,7 @@ function Parameter:group(label, open)
         self:openGroup(newGroup)
     else
         newGroup.state = 'close'
+        newGroup.visible = true
     end
 
     local newButton = UIButton(label, function ()

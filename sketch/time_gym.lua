@@ -1,3 +1,6 @@
+-- TODO : décompte du temps 5/15
+-- TODO : utiliser le temps et pas le delta pour avancer l'horloge
+
 TimeGym = class() : extends(Sketch)
 
 function TimeGym:init()

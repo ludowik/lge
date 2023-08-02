@@ -28,7 +28,7 @@ end
 
 function Node:update(dt)
     for _,item in ipairs(self.items) do
-        if item.state ~= 'hidden' then
+        if item.visible ~= false then
             if item.update then
                 item:update(dt)
             end
@@ -40,7 +40,7 @@ end
 
 function Node:draw()
     for _,item in ipairs(self.items) do
-        if item.state ~= 'hidden' then
+        if item.visible ~= false then
             if item.draw then
                 push()
                 item:draw()

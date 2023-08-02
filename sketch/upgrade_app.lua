@@ -16,7 +16,9 @@ function UpgradeApp:init()
             position = anchor:pos(1, 3),
             size = anchor:size(2, 1),
             styles = {
-                fillColor = colors.blue
+                fillColor = colors.blue,
+                wrapSize = anchor:size(2, 1).x,
+                mode = 'center',
             }
         })
     self.scene:add(
@@ -29,7 +31,9 @@ function UpgradeApp:init()
             position = anchor:pos(4, 3),
             size = anchor:size(2, 1),
             styles = {
-                fillColor = colors.blue
+                fillColor = colors.blue,
+                wrapSize = anchor:size(2, 1).x,
+                mode = 'center',
             }
         })
 end

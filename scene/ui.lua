@@ -47,11 +47,14 @@ function UI:draw()
 
     self:fontSize()
 
+    local wrapSize = self.styles.wrapSize
+    local wrapAlign = self.styles.wrapAlign
+
     if self.styles.mode == CENTER then
         textMode(CENTER)
-        text(self:getLabel(), self.position.x + self.size.x/2, self.position.y + self.size.y/2)
+        text(self:getLabel(), self.position.x + self.size.x/2, self.position.y + self.size.y/2, wrapSize, wrapAlign)
     else
         textMode(CORNER)
-        text(self:getLabel(), self.position.x + UI.innerMarge, self.position.y)
+        text(self:getLabel(), self.position.x + UI.innerMarge, self.position.y, wrapSize, wrapAlign)
     end
 end
