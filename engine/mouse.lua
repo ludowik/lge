@@ -6,6 +6,7 @@ function Mouse:init()
     self.endPosition = vec2()
     self.previousPosition = vec2()
     self.move = vec2()
+    self.direction = nil
 end
 
 function Mouse:pressed(x, y)
@@ -13,6 +14,7 @@ function Mouse:pressed(x, y)
     self.startPosition:set(mouse.position)
     self.endPosition:set(mouse.position)
     self.previousPosition:set(mouse.position)
+    self.direction = nil
 end
 
 function Mouse:moved(x, y)
@@ -30,17 +32,21 @@ function Mouse:released(x, y)
 end
 
 function Mouse:getDirection()
+    if self.direction then return end
+    
     if max(abs(mouse.move.x), abs(mouse.move.y)) < min(W, H)/5 then
         return
     end
 
     if min(abs(mouse.move.x), abs(mouse.move.y)) < 0.5 * max(abs(mouse.move.x), abs(mouse.move.y)) then
         if abs(mouse.move.x) > abs(mouse.move.y) then
-            return mouse.move.x < 0 and 'left' or 'right'
+            self.direction = mouse.move.x < 0 and 'left' or 'right'
         else
-            return mouse.move.y < 0 and 'up' or 'down'
+            self.direction = mouse.move.y < 0 and 'up' or 'down'
         end
     end
+
+    return self.direction
 end
 
 mouse = Mouse()

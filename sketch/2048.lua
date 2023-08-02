@@ -286,8 +286,11 @@ function The2048:keypressed(key)
     end
 end
 
-function The2048:mousereleased(mouse)
-    self:keypressed(mouse:getDirection())
+function The2048:mousemoved(mouse)
+    local direction = mouse:getDirection()
+    if direction then
+        self:keypressed(direction)
+    end
 end
 
 function The2048:cellPosition(i, j)

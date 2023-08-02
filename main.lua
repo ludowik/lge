@@ -58,6 +58,7 @@ function loadSketch(env)
         encapsulate('setup')
         encapsulate('update')
         encapsulate('draw')
+        encapsulate('mousemoved')
         encapsulate('mousereleased')
         encapsulate('keypressed')
 
