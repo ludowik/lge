@@ -1,6 +1,6 @@
 The2048 = class() : extends(Sketch)
 
-DELAY = 0.1
+DELAY = 0.05
 
 function The2048:init()
     Sketch.init(self)
@@ -282,7 +282,9 @@ function The2048:keypressed(key)
     if self:isGameOver() then
         self:initGame()
     else
-        self.actions:add(key)
+        if #self.actions <= 0 then
+            self.actions:add(key)
+        end
     end
 end
 

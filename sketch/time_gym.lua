@@ -60,13 +60,13 @@ function TimeGym:init()
     end)
 
     j = 4
-    self.state = 'stop'
-    self.actionLabel = 'GO'
+    -- self.state = 'stop'
+    -- self.actionLabel = 'GO'
 
-    self.currentTime = 0
-    self.maxTime = 0
-    self.currentCycle = 0
-    self.lastCycle = 0
+    -- self.currentTime = 0
+    -- self.maxTime = 0
+    -- self.currentCycle = 0
+    -- self.lastCycle = 0
     
     addButton('Reset', 0.5, j, 1.5, 3, function ()
         self.state = 'stop'
@@ -76,7 +76,7 @@ function TimeGym:init()
         self.maxTime = self.cycleDuration
         self.currentCycle = 1
         self.lastCycle = self.cycleCount
-    end)
+    end):callback()
 
     addButton(Bind(self, 'actionLabel'), 2.5, j, 3, 3, function ()
         if self.state == 'stop' then
@@ -98,7 +98,6 @@ function TimeGym:init()
         end
     end).styles.fillColor = Color(165, 106, 106)
 
-    self.currentTime = 0.2
     addInterface(UIDelay, 'time', 0.5, 7.5, 5, 1).sketch = self
     addInterface(UICycle, 'count', 0.5, 9, 5, 1).sketch = self
 end
@@ -149,6 +148,10 @@ function UIDelay:init(label, sketch)
     }
 end
 
+function UIDelay:getLabel()
+    return floor(self.sketch.currentTime)..'/'..self.sketch.maxTime
+end
+
 function UIDelay:draw()
     UI.draw(self)
 
@@ -167,6 +170,10 @@ function UICycle:init(label, sketch)
         fillColor = Color(0.05, 0.05, 0.4, 0.7),
         timeColor = Color(0.1, 0.1, 0.9, 0.7)
     }
+end
+
+function UICycle:getLabel()
+    return floor(self.sketch.currentCycle-1)..'/'..self.sketch.lastCycle
 end
 
 function UICycle:draw()

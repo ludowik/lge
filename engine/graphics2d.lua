@@ -17,7 +17,6 @@ end
 
 function Graphics2d.background(clr, ...)
     clr = Color.fromParam(clr, ...) or colors.black
---    love.graphics.clear(clr.r, clr.g, clr.b, clr.a)  
     love.graphics.setColor(clr.r, clr.g, clr.b, clr.a)
     love.graphics.rectangle('fill', -X, -Y, 2*X+W, 2*Y+H)
 end
@@ -45,6 +44,9 @@ function Graphics2d.resetStyle()
     noFill()
 
     rectMode(CORNER)
+
+    circleMode(CENTER)
+    ellipseMode(CENTER)
     
     textMode(CORNER)
     textColor(colors.white)
@@ -127,11 +129,20 @@ function Graphics2d.circleMode(mode)
 end
 
 function Graphics2d.circle(x, y, radius)
-    Graphics2d.ellipse(x, y, radius, radius)
+    Graphics2d.ellipse(x, y, radius, radius, circleMode())
 end
 
-function Graphics2d.ellipse(x, y, rx, ry)
+function Graphics2d.ellipseMode(mode)
+    return stylesSet('ellipseMode', mode)
+end
+
+function Graphics2d.ellipse(x, y, rx, ry, mode)
     ry = ry or rx
+    mode = mode or ellipseMode()
+
+    if mode == CORNER then
+        x, y = x-rx, y-ry
+    end
 
     if fill() then
         love.graphics.setColor(fill():rgba())
