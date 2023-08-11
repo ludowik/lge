@@ -24,10 +24,14 @@ function Sketch:init(w, h)
     self:initMenu()
 end
 
+function Sketch:__tostring()
+    return self.__className
+end
+
 function Sketch:initMenu()
     self.parameter = Parameter()
     self.parameter:initMenu()
-    self.parameter:group(self.__className, true)
+    self.parameter:group(self, true)
 end
 
 function Sketch:updateSketch(dt)    
@@ -61,6 +65,10 @@ end
 
 function Sketch:draw()
     background()
+
+    fontSize(W/4)
+
+    textMode(CENTER)
     text(self.__className, self.size.x/2, self.size.y/2)
 end
 

@@ -103,7 +103,9 @@ function Parameter:boolean(label, varName)
 end
 
 function Parameter:integer(label, varName, min, max, initValue)
-    self.currentGroup:add(UISlider(label, varName, min, max))
+    local ui = UISlider(label, varName, min, max)
+    self.currentGroup:add(ui)
+    return ui
 end
 
 function Parameter:draw()    
