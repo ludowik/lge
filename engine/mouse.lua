@@ -1,5 +1,10 @@
 Mouse = class()
 
+ENDING = 'ending'
+PRESSED = 'pressed'
+MOVING = 'moving'
+RELEASED = 'released'
+
 function Mouse:init()
     self.position = vec2()
     self.startPosition = vec2()
@@ -7,6 +12,7 @@ function Mouse:init()
     self.previousPosition = vec2()
     self.move = vec2()
     self.direction = nil
+    self.state = ENDING
 end
 
 function Mouse:pressed(x, y)
@@ -15,6 +21,7 @@ function Mouse:pressed(x, y)
     self.endPosition:set(mouse.position)
     self.previousPosition:set(mouse.position)
     self.direction = nil
+    self.state = PRESSED
 end
 
 function Mouse:moved(x, y)
@@ -22,6 +29,7 @@ function Mouse:moved(x, y)
     self.position:set(x-X, y-Y)
     self.endPosition:set(mouse.position)
     self.move:set(mouse.endPosition - mouse.startPosition)
+    self.state = MOVING
 end
 
 function Mouse:released(x, y)
@@ -29,6 +37,7 @@ function Mouse:released(x, y)
     self.position:set(x-X, y-Y)
     self.endPosition:set(mouse.position)
     self.move:set(mouse.endPosition - mouse.startPosition)
+    self.state = RELEASED
 end
 
 function Mouse:getDirection()

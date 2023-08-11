@@ -18,10 +18,10 @@ end
 function UIExpression:evaluateExpression()
     local type_expression = type(self.expression)
     if type_expression == 'string' then
-        return tostring(loadstring('return ' .. self.expression)() or '')
+        return tostring(loadstring('return ' .. self.expression)()) or ''
 
     elseif type_expression == 'table' then
-        return self.expression:get()
+        return tostring(self.expression) or ''
     end
     return 'Expression error !'
 end

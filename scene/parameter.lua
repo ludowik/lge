@@ -98,6 +98,14 @@ function Parameter:watch(label, expression)
     self.currentGroup:add(UIExpression(label, expression))
 end
 
+function Parameter:boolean(label, varName)
+    self.currentGroup:add(UICheck(label, varName))
+end
+
+function Parameter:integer(label, varName, min, max, initValue)
+    self.currentGroup:add(UISlider(label, varName, min, max))
+end
+
 function Parameter:draw()    
     self:layout()
     Scene.draw(self)

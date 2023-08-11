@@ -1,25 +1,32 @@
 Bind = class()
 
 function Bind:init(object, ref)
-    self.object = object
-    self.ref = ref
+    self.object = ref and object
+    self.ref = ref or object
 end
 
 function Bind:__tostring()
-    return self:get()
+    return tostring(self:get())
 end
 
 function Bind:get()
-    if self.object then
-        __object__ = self.object
-        local result = tostring(loadstring('return __object__.'..self.ref)() or '')
-        __object__ = nil
-        return result
-    end
-
-    return tostring(loadstring('return ' .. self.ref)() or '')
+    local object = self.object or _G.env or _G
+    return object[self.ref]
 end
 
-function Bind:set()
-    assert(false)
+function Bind:set(value)
+    local object = self.object or _G.env or _G
+    object[self.ref] = value
+end
+
+function Bind:increment(value)
+    self:set(self:get() + value)
+end
+
+function Bind:decrement(value)
+    self:set(self:get() - value)
+end
+
+function Bind:toggle()
+    self:set(not self:get())
 end

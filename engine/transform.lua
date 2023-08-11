@@ -3,11 +3,11 @@ function resetMatrix()
     love.graphics.translate(X, Y)
 end
 
-function push()
+function pushMatrix()
     love.graphics.push()
 end
 
-function pop()
+function popMatrix()
     love.graphics.pop()
 end
 

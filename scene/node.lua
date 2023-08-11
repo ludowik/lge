@@ -9,13 +9,17 @@ function Node:clear()
     self.items = Array()
 end
 
+function Node:__tostring()
+    return tostring(#self.items)
+end
+
 function Node:add(item)
     self.items:add(item)
     return self
 end
 
 function Node:count()
-    return  #self.items
+    return #self.items
 end
 
 function Node:foreach(f)
@@ -42,9 +46,9 @@ function Node:draw()
     for _,item in ipairs(self.items) do
         if item.visible ~= false then
             if item.draw then
-                push()
+                pushMatrix()
                 item:draw()
-                pop()
+                popMatrix()
             end
         end
         

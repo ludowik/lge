@@ -23,7 +23,8 @@ end
 
 function ProcessManager:setCurrentSketch(currentProcess)
     self.currentProcess = currentProcess
-    _G.env = self:current().env
+    _G.env = self:current().env or _G.env
+    setfenv(0, _G.env)
     love.window.setTitle(self:current().__className)
 end
 

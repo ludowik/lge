@@ -24,33 +24,77 @@ function Grid:clear(initValue)
     end
 end
 
-function Grid:offset(x, y)
-    return x + (y-1) * self.w
+function Grid:newCell()
+    return {
+        value = nil
+    }
 end
 
-function Grid:set(x, y, value)
+function Grid:offset(x, y)
+    if (1 <= x and x <= self.w and
+        1 <= y and y <= self.h)
+    then 
+        return x + (y-1) * self.w
+    else
+        return -1
+    end
+end
+
+function Grid:setCell(x, y, cell)
     local offset = self:offset(x, y)
-    if offset < 1 or offset > self.w * self.h then 
+    if offset == -1 then 
         return 
     end
-    self.items[offset] = value
+    self.items[offset] = cell
 end
 
-function Grid:get(x, y)
+function Grid:getCell(x, y)
     local offset = self:offset(x, y)
-    if offset < 1 or offset > self.w * self.h then
-        return
+    if offset == -1 then 
+        return 
+    end
+    if self.items[offset] == nil then
+        self.items[offset] = self:newCell()
     end
     return self.items[offset]
 end
 
+function Grid:set(x, y, value)
+    local offset = self:offset(x, y)
+    if offset == -1 then 
+        return 
+    end
+    self:getCell(x, y).value = value
+end
+
+function Grid:get(x, y)
+    local offset = self:offset(x, y)
+    if offset == -1 then 
+        return 
+    end
+    return self:getCell(x, y).value
+end
+
 function Grid:foreach(f)
-    for i in range(self.w) do
-        for j in range(self.h) do
-            local cell = self:get(i, j)
+    for x in range(self.w) do
+        for y in range(self.h) do
+            local cell = self:getCell(x, y)
             if cell then
-                f(cell, i, j)
+                f(cell, x, y)
             end
         end
     end
+end
+
+function Grid:countCellsWithNoValue()
+    local count = 0
+    for x in range(self.w) do
+        for y in range(self.h) do
+            local value = self:get(x, y)
+            if value == nil then
+                count = count + 1
+            end
+        end
+    end
+    return count
 end

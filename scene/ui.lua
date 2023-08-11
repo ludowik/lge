@@ -16,6 +16,9 @@ function UI:init(label)
 end
 
 function UI:getLabel()
+    if self.value then
+        return tostring(self.label)..' = '..(tostring(self.value) or '')
+    end
     return tostring(self.label)
 end
 

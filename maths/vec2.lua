@@ -23,10 +23,6 @@ function vec2:clone()
     return vec2(self.x, self.y)
 end
 
-function isinteger(v)
-    return v == floor(v)
-end
-
 function vec2:__tostring()
     if isinteger(self.x) and isinteger(self.y) then
         return string.format("%2d,%2d", self.x, self.y)

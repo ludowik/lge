@@ -21,8 +21,8 @@ function The2048:init()
     self.parameter:watch('score', Bind(self, 'score'))
     self.parameter:watch('scoreMax', Bind(self, 'scoreMax'))   
 
-    self.parameter:watch('tween', '#tweenManager')
-    self.parameter:watch('animations', Bind(self, 'animations:getn()'))
+    self.parameter:watch('tween', 'tweenManager')
+    self.parameter:watch('animations', Bind(self, 'animations'))
 
     if not self:loadGame() then
         self:initGame()
@@ -41,6 +41,13 @@ function The2048:initGame()
 end
 
 function The2048:loadGame()
+    local status, result = xpcall(function () return self:__loadGame() end, nilf)
+    if status then
+        return result
+    end
+end
+
+function The2048:__loadGame()
     self.grid:clear()
     
     self.cells = Array()
@@ -54,7 +61,7 @@ function The2048:loadGame()
     for k,value in pairs(data.cells) do
         local index = tonumber(k)
         local i, j = (index-1)%4+1, floor((index-1)/4)+1
-        self.grid.items[index] = self:newCell(i, j, value)
+        self:setCell(i, j, self:newCell(i, j, value))
     end
 
     self.score = data.score or 0
@@ -71,7 +78,10 @@ function The2048:saveGame(data)
         scoreMax = self.scoreMax,
     }
 
-    self.grid.items:foreachKey(function (cell, k) data.cells[k] = cell.value end)
+    self.grid:foreach(function (cell, i, j)
+        local k = self.grid:offset(i, j)
+        data.cells[k] = cell.value
+    end)
 
     -- save data
     saveFile('2048', data)
@@ -190,25 +200,19 @@ function The2048:applyFunction(direction, f, repeatOnChange)
 end
 
 function The2048:getCell(i, j)
-    return self.grid:get(i, j)
+    return self.grid:getCell(i, j)
 end
 
 function The2048:setCell(i, j, cell)
-    return self.grid:set(i, j, cell)
+    return self.grid:setCell(i, j, cell)
 end
 
 function The2048:get(i, j)
-    local cell = self:getCell(i, j)
-    return cell and cell.value
+    return self.grid:get(i, j)
 end
 
 function The2048:set(i, j, value)
-    local cell = self.grid:get(i, j)
-    if not cell then
-        cell = {}
-        self.grid:set(i, j, cell)
-    end
-    cell.value = value
+    return self.grid:set(i, j, value)
 end
 
 function The2048:moveOrFusionAvailable(i, j, di, dj)
@@ -247,7 +251,7 @@ function The2048:fusion(i, j, di, dj)
     local startCell = self:getCell(i, j)
     local endCell = self:getCell(i+di, j+dj)
 
-    if (startCell and endCell and 
+    if (startCell.value and endCell.value and 
         startCell.value == endCell.value and 
         not startCell.fusion and
         not endCell.fusion)
@@ -364,7 +368,7 @@ Tile = class()
 Tile.innerMarge = 5
 
 function Tile:draw(position, cellSize)
-    push()
+    pushMatrix()
 
     local center = position + cellSize / 2
 
@@ -391,7 +395,7 @@ function Tile:draw(position, cellSize)
     end
     text(value, 0, 0)
 
-    pop()
+    popMatrix()
 end
 
 The2048.colors = {

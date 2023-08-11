@@ -1,12 +1,12 @@
 local classList = {}
-function class(_, ...)
-    assert(_ == nil)
+function class(__className)
+    assert(__className == nil or type(__className) == 'string')
 
     local info = debug.getinfo(2, "Sl")
 
     local klass = {
         __class = true,
-        __className = info.source:gfind('.+/(.*)%.lua$')(),
+        __className = __className or info.source:gfind('.+/(.*)%.lua$')(),
         __classInfo = info.source:gsub('@', './')..':'..info.currentline,
         __init = function(instance, ...)
         end,
@@ -27,6 +27,11 @@ function class(_, ...)
         end
     })
     table.insert(classList, klass)
+
+    if __className then
+        _G[__className] = klass
+    end
+
     return klass
 end
 

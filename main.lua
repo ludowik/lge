@@ -1,5 +1,3 @@
---love.filesystem.setRequirePath('./?.lua;./?/init.lua;./?/!.lua')
-
 require 'engine'
 
 function isSketch(klass)
@@ -19,8 +17,9 @@ function declareSketch(name)
     
     require(name)
 
+    env.__name = name
+
     for k,v in pairs(env) do
-        env.__name = name            
         if isSketch(v) then
             _G[k] = v
             v.env = env
@@ -40,6 +39,8 @@ function declareSketches()
 end
 
 function loadSketch(env)
+    env.env = env
+
     if env.__sketch then
         env.sketch = env.__sketch()
 

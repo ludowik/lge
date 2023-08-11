@@ -1,6 +1,6 @@
 MouseEvent = class()
 
-function MouseEvent:init(mouse)
+function MouseEvent:init()
 end
 
 function MouseEvent:mousepressed(mouse)
@@ -22,7 +22,7 @@ end
 
 KeyboardEvent = class()
 
-function KeyboardEvent:init(mouse)
+function KeyboardEvent:init()
 end
 
 function KeyboardEvent:keypressed(key, scancode, isrepeat)

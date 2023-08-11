@@ -8,6 +8,10 @@ function Array:init(...)
     return ...
 end
 
+function Array:__tostring()
+    return tostring(#self)
+end
+
 function Array:removeIfTrue(f)
     for i,v in ipairs(self, true) do
         if f(v) then
