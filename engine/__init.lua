@@ -1,16 +1,19 @@
 require 'lua'
 require 'maths'
 require 'lib'
-require 'scene'
 
 require 'engine.color'
 require 'engine.transform'
 require 'engine.graphics2d'
 require 'engine.image'
 require 'engine.font'
+
 require 'engine.anchor'
 require 'engine.mouse'
 require 'engine.mouse_event'
+
+require 'scene'
+
 require 'engine.version'
 require 'engine.event'
 require 'engine.animate'
