@@ -20,16 +20,41 @@ function Array:removeIfTrue(f)
     end
 end
 
+function Array:forn(n, functionOrValue)
+    if type(functionOrValue) == 'function' then
+        for i in range(n) do
+            self[i] = ffunctionOrValue(i)
+        end
+    else
+        for i in range(n) do
+            self[i] = functionOrValue
+        end
+    end
+    return self
+end
+
 function Array:foreach(f)
     for i,v in ipairs(self) do
         f(v, i)
     end
+    return self
 end
 
 function Array:foreachKey(f)
     for k,v in pairs(self) do
         f(v, k)
     end
+    return self
+end
+
+function Array:max()
+    if #self == 0 then return end
+
+    local maxValue = math.mininteger
+    for i,v in ipairs(self) do
+        maxValue = max(maxValue, v)
+    end
+    return maxValue
 end
 
 local __cloningObjects = {}

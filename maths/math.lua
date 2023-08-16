@@ -16,6 +16,7 @@ abs = math.abs
 
 floor = math.floor
 ceil = math.ceil
+round = function (v) return math.ceil(v - 0.5) end
 
 sqrt = math.sqrt
 
