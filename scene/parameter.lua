@@ -104,6 +104,16 @@ end
 
 function Parameter:integer(label, varName, min, max, initValue)
     local ui = UISlider(label, varName, min, max)
+    ui.intValue = true
+    ui.incrementValue = 1
+    self.currentGroup:add(ui)
+    return ui
+end
+
+function Parameter:number(label, varName, min, max, initValue)
+    local ui = UISlider(label, varName, min, max)
+    ui.intValue = false
+    ui.incrementValue = 0.2
     self.currentGroup:add(ui)
     return ui
 end

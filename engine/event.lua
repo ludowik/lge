@@ -6,7 +6,7 @@ function love.keypressed(key, scancode, isrepeat)
     print(key, scancode, isrepeat)
 
     if key == 'r' then
-        reload()
+        reload(true)
 
     elseif key == 'z' then
         makezip()

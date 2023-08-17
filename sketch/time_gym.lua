@@ -60,13 +60,6 @@ function TimeGym:init()
     end)
 
     j = 4
-    -- self.state = 'stop'
-    -- self.actionLabel = 'GO'
-
-    -- self.currentTime = 0
-    -- self.maxTime = 0
-    -- self.currentCycle = 0
-    -- self.lastCycle = 0
     
     addButton('Reset', 0.5, j, 1.5, 3, function ()
         self.state = 'stop'

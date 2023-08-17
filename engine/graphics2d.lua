@@ -11,7 +11,9 @@ function initMode()
         X, Y, W, H = love.window.getSafeArea()
     else
         X, Y, W, H = 10, 20, 800*9/16, 800
-        love.window.setMode(2*X+W, 2*Y+H)
+        love.window.setMode(2*X+W, 2*Y+H, {
+            msaa = 5
+        })
     end
 end
 

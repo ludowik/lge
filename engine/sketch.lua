@@ -34,7 +34,16 @@ function Sketch:initMenu()
     self.parameter:group(self, true)
 end
 
-function Sketch:updateSketch(dt)    
+function Sketch:checkReload()
+    local fileInfo = love.filesystem.getInfo(env.__sourceFile)
+    if fileInfo.modtime > env.__modtime then
+        env.__modtime = fileInfo.modtime
+        reload(true)
+    end
+end
+
+function Sketch:updateSketch(dt)
+    self:checkReload()
     if self.update then
         self:update(dt)
     end
@@ -42,6 +51,8 @@ end
 
 function Sketch:drawSketch()
     love.graphics.setCanvas()
+    love.graphics.setShader()
+    
     love.graphics.clear(0.1, 0.5, 0.1, 1)
 
     self:setContext()
@@ -52,6 +63,8 @@ function Sketch:drawSketch()
     self:draw()
     
     love.graphics.setCanvas()
+    love.graphics.setShader()
+
     love.graphics.setColor(colors.white:rgba())
 
     love.graphics.origin()

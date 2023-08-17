@@ -52,6 +52,7 @@ end
 
 function love.draw()    
     local process = processManager:current()
+
     resetMatrix()
     resetStyle()
     process:drawSketch()
@@ -63,9 +64,9 @@ function love.draw()
     end
 end
 
-function reload()
+function reload(reload)
     processManager:clear()
-    load()
+    load(reload)
 end
 
 function restart()
