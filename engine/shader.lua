@@ -11,7 +11,9 @@ function Shader:init(name)
 end
 
 function Shader:loadProgram()
-    if self:loadShaderCode(self.vertexShader) or self:loadShaderCode(self.pixelShader) then
+    local vs = self:loadShaderCode(self.vertexShader)
+    local ps = self:loadShaderCode(self.pixelShader)
+    if vs or ps then
         self.errorMsg = nil
         
         local status, result = xpcall(function () return love.graphics.newShader(self.pixelShader.code, self.vertexShader.code) end,

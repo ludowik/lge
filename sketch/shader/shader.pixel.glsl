@@ -1,19 +1,19 @@
 #pragma language glsl3
 
 // uniforms
-uniform float TIME = 0.;
-uniform float TIMESCALE = 1.;
-uniform float SHAPE_SIZE = 0.5;
-uniform float SMOOTHNESS = 0.5;
+uniform float TIME;
+uniform float TIMESCALE;
+uniform float SHAPE_SIZE;
+uniform float SMOOTHNESS;
 
-uniform float z = 5.;
-uniform vec3 CAMERA_POS_WORLD = vec3(0., 2., -5.);
+uniform float z;
+uniform vec3 CAMERA_POS_WORLD;
 
 // variables
-uniform int MAX_STEPS = 100;
+uniform int MAX_STEPS;
 
-uniform float MAX_DIST = 100.;
-uniform float SURF_DIST = 0.01;
+uniform float MAX_DIST;
+uniform float SURF_DIST;
 
 // shapes
 float sdSphere(vec3 p, vec3 sp, float r) {
@@ -59,7 +59,7 @@ float GetDist(vec3 p) {
 
     float sp1 = sdSphere(p, shape1_pos * movescale, SHAPE_SIZE * 0.5);
     float sp2 = sdSphere(p, shape2_pos * movescale, SHAPE_SIZE * 0.75);
-    float sp3 = sdSphere(p, shape3_pos * movescale, SHAPE_SIZE * 1);
+    float sp3 = sdSphere(p, shape3_pos * movescale, SHAPE_SIZE * 1.);
     
     float sp4 = sdSphere(p, vec3(0.), 0.8);
 
@@ -67,7 +67,7 @@ float GetDist(vec3 p) {
     spheres = smoothUnion(spheres, sp3, SMOOTHNESS);
     spheres = smoothUnion(spheres, sp4, SMOOTHNESS);
 
-    spheres = _union(spheres, (p.y+1));
+    spheres = _union(spheres, (p.y + 1.));
 
     return spheres;
 }
@@ -110,9 +110,9 @@ float GetLight(vec3 p) {
 }
 
 vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
-    vec3 ws_pixels_pos = vec3((screen_coords * 2 - love_ScreenSize.xy) / love_ScreenSize.x, 1.);
+    vec3 ws_pixels_pos = vec3((screen_coords * 2. - love_ScreenSize.xy) / love_ScreenSize.x, 1.);
     
-    ws_pixels_pos.y *= -1;
+    ws_pixels_pos.y *= -1.;
     
     vec3 ro = vec3(CAMERA_POS_WORLD.xy, -z);
     vec3 rd = normalize(ws_pixels_pos);
