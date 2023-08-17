@@ -32,7 +32,7 @@ end
 function contains(mouse)
     local process = processManager:current()
     
-    if not love.filesystem.isFused() then
+    if not fused() then
         local object = globalManager:contains(mouse.position)
         if object then return object end
 
@@ -46,7 +46,7 @@ end
 
 function love.update(dt)
     components:update(dt)
-
+    tapsUpdate()
     updateSettings()
 end
 
@@ -57,11 +57,19 @@ function love.draw()
     resetStyle()
     process:drawSketch()
     
-    if not love.filesystem.isFused() then
+    if not fused() then
         resetMatrix()
         resetStyle()
         process.parameter:draw()
     end
+end
+
+function toggleFused()
+    setSettings('fused', not getSettings('fused'))
+end
+
+function fused()
+    return getSettings('fused')
 end
 
 function reload(reload)

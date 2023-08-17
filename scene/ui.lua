@@ -11,7 +11,7 @@ function UI:init(label)
     self.styles = Array{
         fillColor = colors.gray,
         textColor = colors.white,
-        fontSize = 25,
+        fontSize = 22,
     }
 end
 
@@ -24,7 +24,7 @@ end
 
 function UI:fontSize()
     if self.parent then
-        fontSize(self.parent.state == 'open' and 28 or 24)
+        fontSize(self.parent.state == 'open' and 28 or 22)
     else
         fontSize(self.styles.fontSize)
     end

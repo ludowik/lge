@@ -2,7 +2,7 @@ function load(reload)
     declareSketches(reload)
     loadSketches()
 
-    if love.filesystem.isFused() then
+    if fused() then
         processManager:setSketch('time_gym')
     else
         processManager:setSketch(getSettings('sketch'))
@@ -18,9 +18,8 @@ end
 
 local environnements = {}
 function declareSketch(sourceFile, reload)
-    local sketchName = sourceFile:gsub('%.lua', '')
-    name = sketchName
-
+    local name = sourceFile:gsub('%.lua', ''):gsub('%/', '%.')
+    
     if reload then
         environnements[name] = nil
         package.loaded[name] = nil
@@ -33,6 +32,7 @@ function declareSketch(sourceFile, reload)
     
     environnements[name] = env
     
+    print(name)
     require(name)
 
     env.__name = name

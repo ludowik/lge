@@ -11,3 +11,7 @@ require 'lua.state'
 require 'lua.settings'
 require 'lua.grid'
 require 'lua.function'
+
+function message(msg)
+    love.window.showMessageBox('message', msg, {'OK'})
+end

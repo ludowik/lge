@@ -52,7 +52,7 @@ function Graphics2d.resetStyle()
     
     textMode(CORNER)
     textColor(colors.white)
-    fontSize(24)    
+    fontSize(22)    
 end
 
 function Graphics2d.noFill()

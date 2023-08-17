@@ -53,9 +53,26 @@ local function mousereleased(x, y, button, presses)
     currentObject = nil
 end
 
+local taps = Array()
+function tapsAdd()
+    taps:add(ElapsedTime)
+    tapsUpdate()
+end
+
+function tapsUpdate()
+    if #taps == 0 then return end
+    if ElapsedTime - taps[1] > 0.5 then
+        if #taps == 3 then 
+            toggleFused()
+        end
+        taps = Array()
+    end
+end
+
 if getOS() == 'ios' then
     function love.touchpressed(id, x, y, dx, dy, pressure)
         mousepressed(x, y, id, 1)
+        tapsAdd()
     end
 
     function love.touchmoved(id, x, y, dx, dy, pressure)
@@ -69,6 +86,7 @@ if getOS() == 'ios' then
 else
     function love.mousepressed(x, y, button, istouch, presses)
         mousepressed(x, y, button, presses)
+        tapsAdd()
     end
 
     function love.mousemoved(x, y, dx, dy, istouch)
