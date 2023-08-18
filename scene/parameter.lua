@@ -35,6 +35,8 @@ function Parameter:initMenu()
     self:watch('position', 'mouse.position')
     self:watch('previousPosition', 'mouse.previousPosition')
     self:watch('move', 'mouse.move')
+
+    self:group('sketch', true)
 end
 
 function Parameter:init()

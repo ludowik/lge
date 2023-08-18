@@ -81,6 +81,18 @@ function Color:setComponents(r, g, b, a)
     return self
 end
 
+function Color.mix(clr1, clr2, alpha)
+    local a1 = alpha or clr1.a
+    local a2 = alpha and (1-a1) or clr2.a
+    local k = a1 + a2
+    return Color(
+        (clr1.r * a1 + clr2.r * a2) / k,
+        (clr1.g * a1 + clr2.g * a2) / k,
+        (clr1.b * a1 + clr2.b * a2) / k,
+        1
+    )
+end
+
 function Color:__tostring()
     return self.r..', '..self.g..', '..self.b..', '..self.a
 end

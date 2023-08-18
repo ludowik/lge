@@ -1,3 +1,0 @@
-galaxy
-utilise un shader ?
-

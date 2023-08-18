@@ -81,8 +81,6 @@ function Graphics2d.point(x, y)
     if stroke() then
         love.graphics.setColor(stroke():rgba())
     end
-    --love.graphics.setPointSize(strokeSize())
-    --love.graphics.points(x, y)
 
     love.graphics.ellipse('fill', x, y, strokeSize()/2, strokeSize()/2)
 end
@@ -100,6 +98,14 @@ function Graphics2d.line(x1, y1, x2, y2)
         love.graphics.setColor(stroke():rgba())
         love.graphics.setLineWidth(strokeSize())
         love.graphics.line(x1, y1, x2, y2)
+    end
+end
+
+function Graphics2d.polygon(...)
+    if stroke() then
+        love.graphics.setColor(stroke():rgba())
+        love.graphics.setLineWidth(strokeSize())
+        love.graphics.polygon('line', ...)
     end
 end
 
@@ -160,6 +166,7 @@ end
 
 CENTER = 'center'
 CORNER = 'corner'
+RIGHT_CORNER = 'righ_corner'
 
 function Graphics2d.textColor(clr, ...)
     clr = Color.fromParam(clr, ...)
@@ -183,12 +190,16 @@ function Graphics2d.text(str, x, y, limit, align)
     end
     
     local mode = textMode()
-    local ws, hs = textSize(str, limit, align)
+    local ws, hs = textSize(str, limit)
 
     love.graphics.setColor(Graphics2d.textColor():rgba())
     
     if mode == CENTER then
         x, y = x-ws/2, y-hs/2
+    end
+
+    if not limit and align == 'right' then
+        x = x-ws
     end
 
     if limit then

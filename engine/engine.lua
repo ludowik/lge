@@ -6,8 +6,12 @@ function love.load()
     components:add(timeManager)
     components:add(tweenManager)
     components:add(processManager)
+    components:add(eventManager)
 
     globalManager = GlobalManager()
+
+    parameter = Parameter()
+    parameter:initMenu()
 
     reload()
 end
@@ -36,7 +40,7 @@ function contains(mouse)
         local object = globalManager:contains(mouse.position)
         if object then return object end
 
-        local object = process.parameter:contains(mouse.position)
+        local object = parameter:contains(mouse.position)
         if object then return object end
     end
     
@@ -46,26 +50,31 @@ end
 
 function love.update(dt)
     components:update(dt)
-    tapsUpdate()
     updateSettings()
 end
 
-function love.draw()    
+function love.draw()  
+    love.graphics.reset()
+
     local process = processManager:current()
 
     resetMatrix()
     resetStyle()
     process:drawSketch()
     
-    if not fused() then
-        resetMatrix()
-        resetStyle()
-        process.parameter:draw()
-    end
+    resetMatrix()
+    resetStyle()
+    parameter:draw()
 end
 
 function toggleFused()
     setSettings('fused', not getSettings('fused'))
+
+    if fused() then
+        parameter:openGroup(parameter.currentGroup)
+    else
+        parameter:closeGroup(parameter.currentGroup)
+    end
 end
 
 function fused()

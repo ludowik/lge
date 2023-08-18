@@ -21,25 +21,25 @@ float sdSphere(vec3 p, vec3 sp, float r) {
 }
 
 // boolean operator
-float _union(float a, float b) {
+float shapeUnion(float a, float b) {
     return min(a, b);
 }
 
-float smoothUnion(float d1, float d2, float k) {
+float shapeSmoothUnion(float d1, float d2, float k) {
     float h = clamp(0.5 + 0.5 * (d2 - d1) / k, 0., 1.);
     return mix(d2, d1, h) - k * h * (1. - h);
 }
 
-float _substraction(float a, float b) {
+float shapeSubstraction(float a, float b) {
     return max(-a, b);
 }
 
-float smoothSubstraction(float d1, float d2, float k) {
+float shapeSmoothSubstraction(float d1, float d2, float k) {
     float h = clamp(0.5 - 0.5 * (d2 + d1) / k, 0., 1.);
     return mix(d2, -d1, h) + k * h * (1. - h);
 }
 
-float _intersection(float a, float b) {
+float shapeIntersection(float a, float b) {
     return max(a, b);
 }
 
@@ -63,11 +63,11 @@ float GetDist(vec3 p) {
     
     float sp4 = sdSphere(p, vec3(0.), 0.8);
 
-    float spheres = smoothUnion(sp1, sp2, SMOOTHNESS);
-    spheres = smoothUnion(spheres, sp3, SMOOTHNESS);
-    spheres = smoothUnion(spheres, sp4, SMOOTHNESS);
+    float spheres = shapeSmoothUnion(sp1, sp2, SMOOTHNESS);
+    spheres = shapeSmoothUnion(spheres, sp3, SMOOTHNESS);
+    spheres = shapeSmoothUnion(spheres, sp4, SMOOTHNESS);
 
-    spheres = _union(spheres, (p.y + 1.));
+    spheres = shapeUnion(spheres, (p.y + 1.));
 
     return spheres;
 }

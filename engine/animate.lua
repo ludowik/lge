@@ -69,7 +69,7 @@ function Tween:reset()
 end
 
 function Tween:finalize()
-    self.callback()
+    self.callback(self)
     self.state = 'dead'
 end
 
@@ -107,10 +107,12 @@ function TweenManager.unitTest()
         c = 0,
     }
 
-    Tween(test, {a=2}, 2, function () print('a', test.a) end):play()
+    Tween(test, {a=2}, 2, function (t)
+        assert(test.a == 2)
+    end):play()
 
     sequence(
-        Tween(test, {b=1}, 1, function () print('b', test.b) end),
-        Tween(test, {c=1}, 1, function () print('c', test.c) end)
+        Tween(test, {b=1}, 1, function () assert(test.b == 1) end),
+        Tween(test, {c=1}, 1, function () assert(test.c == 1) end)
     )
 end

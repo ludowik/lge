@@ -1,8 +1,6 @@
 Sketch = class() : extends(Index, State, Rect, Image, MouseEvent, KeyboardEvent)
 
 function Sketch:init(w, h)
-    processManager:add(self)
-
     State.init(self)
     Index.init(self)
     MouseEvent.init(self)
@@ -22,6 +20,8 @@ function Sketch:init(w, h)
     Image.init(self, w, h)
 
     self:initMenu()
+
+    processManager:add(self)
 end
 
 function Sketch:__tostring()
@@ -30,8 +30,8 @@ end
 
 function Sketch:initMenu()
     self.parameter = Parameter()
-    self.parameter:initMenu()
-    self.parameter:group(self, true)
+    --self.parameter:initMenu()
+    --self.parameter:group(self, true)
 end
 
 function Sketch:checkReload()

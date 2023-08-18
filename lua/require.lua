@@ -1,11 +1,5 @@
 local function transformCode(code)
-    local pattern = "([%w%.%:]+)%s*%?(.-)\n"
-    local function replaceMatch(variable, code)
-        return string.format("if %s then %s%s end\n", variable:gsub(':', '.'), variable, code)
-    end
-
-    local transformedCode, replacements = string.gsub(code, pattern, replaceMatch)
-    return transformedCode
+    return code
 end
 
 local customLoader = function(moduleName)
@@ -16,7 +10,7 @@ local customLoader = function(moduleName)
         if file then
             local content = assert(file:read("*a"))
             local transformedContent = transformCode(content)
-            return assert(loadstring(transformedContent, moduleName))
+            return assert(loadstring(transformedContent, "@"..filePath))
         end
     end
     return "Unable to load file " .. moduleName

@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"name": "Saved data",
+			"path": "C:/Users/LMILHAU/AppData/Roaming/LOVE/Lge"
+		},
+		{
+			"name": "Lge",
+			"path": "."
+		}
+	],
+	"settings": {
+		"debug.console.fontSize": 14,
+		"debug.autoExpandLazyVariables": true
+	}
+}

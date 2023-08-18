@@ -21,11 +21,17 @@ function ProcessManager:setSketch(name)
     end
 end
 
-function ProcessManager:setCurrentSketch(currentProcess)
-    self.currentProcess = currentProcess
+function ProcessManager:setCurrentSketch(processIndex)
+    self.processIndex = processIndex
     _G.env = self:current().env or _G.env
     setfenv(0, _G.env)
-    love.window.setTitle(self:current().__className)
+    local process = self:current()
+    love.window.setTitle(process.__className)
+    parameter.currentGroup.items[1].label = process.__className
+    parameter.currentGroup.items = {
+        parameter.currentGroup.items[1],
+        unpack(process.parameter.items),
+    }
 end
 
 function ProcessManager:loop()
@@ -51,24 +57,24 @@ function ProcessManager:update(dt)
 end
 
 function ProcessManager:current()
-    return self.items[self.currentProcess]
+    return self.items[self.processIndex]
 end
 
 function ProcessManager:previous()
-    local currentProcess = self.currentProcess - 1
-    if currentProcess < 1 then
-        currentProcess = #self.items
+    local processIndex = self.processIndex - 1
+    if processIndex < 1 then
+        processIndex = #self.items
     end
-    self:setCurrentSketch(currentProcess)
+    self:setCurrentSketch(processIndex)
     return self:current()
 end
 
 function ProcessManager:next()
-    local currentProcess = self.currentProcess + 1
-    if currentProcess > #self.items then
-        currentProcess = 1
+    local processIndex = self.processIndex + 1
+    if processIndex > #self.items then
+        processIndex = 1
     end
-    self:setCurrentSketch(currentProcess)
+    self:setCurrentSketch(processIndex)
     return self:current()
 end
 

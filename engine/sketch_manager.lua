@@ -2,11 +2,7 @@ function load(reload)
     declareSketches(reload)
     loadSketches()
 
-    if fused() then
-        processManager:setSketch('time_gym')
-    else
-        processManager:setSketch(getSettings('sketch'))
-    end
+    processManager:setSketch(getSettings('sketch'))
 end
 
 function declareSketches(reload)
@@ -32,7 +28,6 @@ function declareSketch(sourceFile, reload)
     
     environnements[name] = env
     
-    print(name)
     require(name)
 
     env.__name = name
@@ -86,12 +81,16 @@ function loadSketch(env)
             end
         end
 
-        encapsulate('setup')
-        encapsulate('update')
-        encapsulate('draw')
-        encapsulate('mousemoved')
-        encapsulate('mousereleased')
-        encapsulate('keypressed')
+        for _,fname in ipairs({
+            'setup',
+            'update',
+            'draw',
+            'mousemoved',
+            'mousereleased',
+            'keypressed',
+        }) do
+            encapsulate(fname)
+        end
 
         env.sketch:setup()
     end
