@@ -38,10 +38,17 @@ function UI:computeSize()
 end
 
 function UI:draw()
+    self:drawBack()
+    self:drawFront()
+end
+
+function UI:drawBack()
     noStroke()
     fill(self.styles.fillColor)
     rect(self.position.x, self.position.y, self.size.x, self.size.y, 4)
-    
+end
+
+function UI:drawFront()
     if self.active then
         textColor(colors.red)
     else

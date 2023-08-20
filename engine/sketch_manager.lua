@@ -68,9 +68,12 @@ function loadSketch(env)
 
     if env.__sketch then
         env.sketch = env.__sketch()
+        env.sketch.env = env
 
     elseif env.draw then
         env.sketch = Sketch()
+        env.sketch.env = env
+
         env.sketch.__className = env.__name:gsub('sketch%.', '')
 
         env.parameter = env.sketch.parameter
@@ -94,6 +97,4 @@ function loadSketch(env)
 
         env.sketch:setup()
     end
-    
-    env.sketch.env = env
 end

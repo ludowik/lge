@@ -2,7 +2,7 @@ function setup()
     devices = love.audio.getRecordingDevices()
     device = devices[1]
 
-    status = device:start(2048)
+    status = device:start(8000)
 
     buffer = Array()
 
@@ -36,7 +36,7 @@ function update(dt)
     end
 end
 
-function draw()
+function _draw()
     background()
 
     local arrays = Array()

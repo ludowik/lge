@@ -113,6 +113,7 @@ function TimeGym:update(dt)
         self.currentTime = self.currentTime + dt
         
         if self.currentTime >= self.maxTime then
+            vibrate()
             self.currentTime = 0
             self.currentCycle = self.currentCycle + 1
         end
@@ -136,8 +137,8 @@ function UIDelay:init(label, sketch)
     UI.init(self, label)
     self.sketch = sketch
     self.styles:attrib{
-        fillColor = Color(0.05, 0.4, 0.05, 0.7),
-        timeColor = Color(0.1, 0.9, 0.1, 0.7),
+        timeColor = colors.green, -- Color(0.1, 0.9, 0.1, 0.7),
+        textColor = Color(165, 106, 106),
     }
 end
 
@@ -146,12 +147,14 @@ function UIDelay:getLabel()
 end
 
 function UIDelay:draw()
-    UI.draw(self)
-
+    self:drawBack()
+    
     local pct = self.sketch.currentTime / self.sketch.maxTime
     local w = self.size.x * pct
     fill(self.styles.timeColor)
     rect(self.position.x, self.position.y, w, self.size.y)
+
+    self:drawFront()
 end
 
 UICycle = class() : extends(UI)
@@ -160,8 +163,8 @@ function UICycle:init(label, sketch)
     UI.init(self, label)
     self.sketch = sketch
     self.styles:attrib{
-        fillColor = Color(0.05, 0.05, 0.4, 0.7),
-        timeColor = Color(0.1, 0.1, 0.9, 0.7)
+        --fillColor = Color(0.05, 0.05, 0.4, 0.7),
+        timeColor = colors.blue, -- Color(0.1, 0.1, 0.9, 0.7)
     }
 end
 
@@ -170,10 +173,12 @@ function UICycle:getLabel()
 end
 
 function UICycle:draw()
-    UI.draw(self)
+    self:drawBack()
 
     local pct = (self.sketch.currentCycle-1) / self.sketch.lastCycle
     local w = self.size.x * pct
     fill(self.styles.timeColor)
     rect(self.position.x, self.position.y, w, self.size.y)
+
+    self:drawFront()
 end

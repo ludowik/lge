@@ -18,11 +18,8 @@ function The2048:init()
 
     self.parameter:action('reset', function () self:initGame() end)
 
-    self.parameter:watch('score', Bind(self, 'score'))
-    self.parameter:watch('scoreMax', Bind(self, 'scoreMax'))   
-
-    self.parameter:watch('tween', 'tweenManager')
-    self.parameter:watch('animations', Bind(self, 'animations'))
+    self.parameter:watch('Score', Bind(self, 'score'))
+    self.parameter:watch('Best', Bind(self, 'scoreMax'))
 
     if not self:loadGame() then
         self:initGame()

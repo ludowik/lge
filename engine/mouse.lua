@@ -40,10 +40,11 @@ function Mouse:released(x, y)
     self.state = RELEASED
 end
 
-function Mouse:getDirection()
+function Mouse:getDirection(len)
     if self.direction then return end
     
-    if max(abs(mouse.move.x), abs(mouse.move.y)) < min(W, H)/5 then
+    len = len or (min(W, H) / 6)
+    if max(abs(mouse.move.x), abs(mouse.move.y)) < len then
         return
     end
 

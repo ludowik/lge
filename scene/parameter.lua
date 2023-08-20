@@ -6,18 +6,17 @@ end
 
 function Parameter:initMenu()
     self:group('menu')
-    self:action('quit', quit)
-    
     self:action('update', function () self.scene = UpgradeApp() end)
     self:action('update from local', function ()
         updateScripts(false)
         quit()
     end)
-
     self:action('reload', reload)
     self:action('restart', restart)
+    self:action('exit', exit)
 
     self:group('navigate')
+    self:action('fused', function () toggleFused() end)
     self:action('next', function () processManager:next() end)
     self:action('previous', function () processManager:previous() end)
     self:action('random', function () processManager:random() end)
