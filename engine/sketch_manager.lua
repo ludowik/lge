@@ -70,7 +70,7 @@ function loadSketch(env)
         env.sketch = env.__sketch()
         env.sketch.env = env
 
-    elseif env.draw then
+    elseif env.setup or env.draw then
         env.sketch = Sketch()
         env.sketch.env = env
 

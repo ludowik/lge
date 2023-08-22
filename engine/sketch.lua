@@ -79,16 +79,23 @@ end
 function Sketch:draw()
     background()
 
-    fontSize(W/4)
+    local scene = self.scene or env.scene
+    if scene then
+        scene:draw()
+    else
+        fontSize(W/4)
 
-    textMode(CENTER)
-    text(self.__className, self.size.x/2, self.size.y/2)
+        textMode(CENTER)
+        text(self.__className, self.size.x/2, self.size.y/2)
+    end
 end
 
 function Sketch:mousepressed(mouse)
     self.active = true
-    if self.scene then
-        return self.scene:mousepressed(mouse)
+
+    local scene = self.scene or env.scene
+    if scene then
+        return scene:mousepressed(mouse)
     end
 end
 

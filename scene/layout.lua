@@ -1,7 +1,10 @@
 Layout = class()
 
-function Layout:layout(x, y)
-    x, y = x or 0, y or UI.innerMarge
+function Layout:layout(x, y, align)
+    x = x or 0
+    y = y or UI.innerMarge
+
+    align = align or 'right'
 
     local w, h = 0, 0
 
@@ -17,11 +20,21 @@ function Layout:layout(x, y)
             else
                 item:computeSize()
             end
-            x = W - item.size.x - UI.innerMarge
+
+            -- right align
+            if align == 'right' then
+                x = W - item.size.x - UI.innerMarge
+            elseif align == 'center' then
+                x = W/2 - item.size.x/2
+            end
             
+            -- set position
             item.position:set(x, y)
+
+            -- compute next y
             y = y + item.size.y + UI.innerMarge
 
+            -- compute node size
             w = max(w, item.size.x)
             h = h + item.size.y + UI.innerMarge
         end
