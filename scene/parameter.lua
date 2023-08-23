@@ -6,16 +6,23 @@ end
 
 function Parameter:initMenu()
     self:group('menu')
-    self:action('update', function () self.scene = UpgradeApp() end)
+    self:action('update', function () self.scene = UpdateApp() end)
+
+    self:action('update from git', function ()
+        updateScripts(true)
+        quit()
+    end)
     self:action('update from local', function ()
         updateScripts(false)
         quit()
     end)
+
     self:action('reload', reload)
     self:action('restart', restart)
     self:action('exit', exit)
 
-    self:group('navigate')
+    --self:group('navigate')
+    self:space()
     self:action('fused', function () toggleFused() end)
     self:action('next', function () processManager:next() end)
     self:action('previous', function () processManager:previous() end)
@@ -68,7 +75,12 @@ function Parameter:group(label, open)
         if newGroup.state == 'close' then
             self:openGroup(newGroup)
         else
-            self:closeGroup(newGroup)
+            if newGroup == self.items[1] then
+                self:openGroup(self.items[2])
+            else
+                self:openGroup(self.items[1])
+            end
+            --self:closeGroup(newGroup)
         end
     end)
     newButton:attrib{
@@ -82,6 +94,10 @@ function Parameter:group(label, open)
 
     self.currentGroup = newGroup
     self:add(self.currentGroup)
+end
+
+function Parameter:space()
+    self.currentGroup:add(UI())
 end
 
 function Parameter:action(label, callback)

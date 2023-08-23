@@ -12,6 +12,9 @@ function love.keypressed(key, scancode, isrepeat)
     elseif key == 'i' then
         processManager:setSketch('info')
     
+    elseif key == 'f' then
+        toggleFused()
+    
     elseif key == 'escape' then
         quit()
     

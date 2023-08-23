@@ -38,6 +38,8 @@ function UI:computeSize()
 end
 
 function UI:draw()
+    if not self.label then return end
+    
     self:drawBack()
     self:drawFront()
 end

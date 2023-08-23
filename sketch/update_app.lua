@@ -1,13 +1,13 @@
-UpgradeApp = class() : extends(Sketch)
+UpdateApp = class() : extends(Sketch)
 
-function UpgradeApp:init()
+function UpdateApp:init()
     Sketch.init(self)
 
     anchor = Anchor(7, 7)
 
     self.scene = Scene()
     self.scene:add(
-        UIButton('upgrade from git',
+        UIButton('update from git',
             function () 
                 updateScripts(true)
                 quit()
@@ -22,7 +22,7 @@ function UpgradeApp:init()
             }
         })
     self.scene:add(
-        UIButton('upgrade from local',
+        UIButton('update from local',
             function ()
                 updateScripts(false)
                 quit()
@@ -38,7 +38,7 @@ function UpgradeApp:init()
         })
 end
 
-function UpgradeApp:draw()
+function UpdateApp:draw()
     background()
     anchor:draw()
     self.scene:draw()

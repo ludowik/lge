@@ -5,42 +5,12 @@ function EventManager.setup()
 end
 
 function EventManager:init()
-    self.taps = Array()
     self.currentObject = nil
-end
-
-function EventManager:addTap(x, y)
-    self.taps:add({
-        time = ElapsedTime,
-        position = vec2(x, y),
-    })
-end
-
-function EventManager:update()
-    local taps = self.taps
-    if #taps == 0 then return end
-
-    if ElapsedTime - taps[1].time > 0.6 then
-
-        if #taps == 3 then
-            local delay = (taps[3].time - taps[1].time)
-            local distance = (taps[3].position - taps[1].position):len()
-            if delay < 0.6 and distance < 10 then
-                toggleFused()
-            end
-        end
-
-        self.taps = Array()        
-    end
 end
 
 local function mousepressed(x, y)
     if #love.touch.getTouches() == 5 then
         toggleFused()
-    end
-    
-    if getOS() ~= 'ios' then
-        eventManager:addTap(x, y)
     end
 
     mouse:pressed(x, y)
