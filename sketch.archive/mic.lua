@@ -36,7 +36,7 @@ function update(dt)
     end
 end
 
-function _draw()
+function draw()
     background()
 
     local arrays = Array()
