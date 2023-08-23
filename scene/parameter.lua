@@ -5,8 +5,12 @@ function Parameter.setup()
 end
 
 function Parameter:initMenu()
+    self.layoutMode = 'right'
+
     self:group('menu')
-    self:action('update', function () self.scene = UpdateApp() end)
+    self:action('info', function () processManager:setSketch('Info') end)
+    self:action('sketches', function () processManager:setSketch('Sketches') end)
+    self:action('update', function () processManager:setSketch('Update_App') end)
 
     self:action('update from git', function ()
         updateScripts(true)
@@ -129,6 +133,6 @@ function Parameter:number(label, varName, min, max, initValue)
 end
 
 function Parameter:draw()    
-    self:layout(0, 0, 'right')
+    self:layout()
     Scene.draw(self)
 end

@@ -4,7 +4,7 @@ function Layout:layout(x, y, align)
     x = x or 0
     y = y or UI.innerMarge
 
-    align = align or 'left'
+    align = align or self.layoutMode or 'left'
 
     local w, h = 0, 0
 

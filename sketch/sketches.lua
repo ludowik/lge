@@ -8,7 +8,18 @@ function setup()
                 styles = {
                     fillColor = colors.transparent,
                 },
+                draw = function (self)
+                    UIButton.draw(self)
+                    local process = processManager:getSketch(self.label)
+                    if process and self.label ~= 'sketches' then
+                        love.graphics.draw(process.canvas,
+                            self.position.x + self.size.x,
+                            self.position.y, 0,
+                            self.size.y / H,
+                            self.size.y / H)
+                    end
+                end
             })
     end)
-    scene:layout(0, 0, 'center')
+    scene.layoutMode = 'center'
 end
