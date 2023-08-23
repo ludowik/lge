@@ -22,19 +22,6 @@ function Parameter:initMenu()
     self:action('random', function () processManager:random() end)
     self:action('loop', function () processManager:loop() end)
 
-    self:group('info')
-    self:watch('fps', 'getFPS()')
-    self:watch('position', 'X..","..Y')
-    self:watch('size', 'W..","..H')
-    self:watch('delta time', 'string.format("%.3f", DeltaTime)')
-    self:watch('elapsed time', 'string.format("%.1f", ElapsedTime)')
-    self:watch('version', 'version')
-    
-    self:watch('startPosition', 'mouse.startPosition')
-    self:watch('position', 'mouse.position')
-    self:watch('previousPosition', 'mouse.previousPosition')
-    self:watch('move', 'mouse.move')
-
     self:group('sketch', true)
 end
 
@@ -126,7 +113,6 @@ function Parameter:number(label, varName, min, max, initValue)
 end
 
 function Parameter:draw()    
-    self:layout()
+    self:layout(0, 0, 'right')
     Scene.draw(self)
-    resetMatrix()
 end

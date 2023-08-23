@@ -1,6 +1,6 @@
 function makezip()
     if getOS() == 'windows' then
-        os.execute('.vscode/build.cmd')
+        os.execute('.vscode\\build.cmd')
         
     else
         os.execute('.vscode/build.sh')

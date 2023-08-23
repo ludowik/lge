@@ -1,6 +1,6 @@
 class().setup = function ()
-    --love.math.setRandomSeed(love.timer.getTime())
-    math.randomseed(love.timer.getTime())
+    --love.math.setRandomSeed(love.timer.time())
+    math.randomseed(time())
 end
 
 --random = love.math.random

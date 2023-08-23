@@ -4,7 +4,7 @@ function Hexagone:init()
     Sketch.init(self)
 
     self.particles = Node()
-    self.parameter:watch(n, self.particles)
+    self.parameter:watch('particles', self.particles)
 end
 
 function Hexagone:update(dt)

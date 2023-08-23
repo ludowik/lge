@@ -9,6 +9,9 @@ function love.keypressed(key, scancode, isrepeat)
     elseif key == 'z' then
         makezip()
     
+    elseif key == 'i' then
+        processManager:setSketch('info')
+    
     elseif key == 'escape' then
         quit()
     
