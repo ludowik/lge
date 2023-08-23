@@ -4,7 +4,7 @@ function Layout:layout(x, y, align)
     x = x or 0
     y = y or UI.innerMarge
 
-    align = align or 'right'
+    align = align or self.layoutMode or 'left'
 
     local w, h = 0, 0
 
@@ -16,7 +16,7 @@ function Layout:layout(x, y, align)
     for _,item in ipairs(self.items) do
         if item.visible ~= false then
             if item.layout then
-                item:layout(x, y)
+                item:layout(x, y, align)
             else
                 item:computeSize()
             end

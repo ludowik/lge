@@ -58,9 +58,11 @@ end
 
 function Node:contains(position)
     for _,item in ipairs(self.items) do
-        local result = item:contains(position)
-        if result then
-            return result
+        if item.visible ~= false then        
+            local result = item:contains(position)
+            if result then
+                return result
+            end
         end
     end
 end

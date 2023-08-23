@@ -9,6 +9,18 @@ function love.keypressed(key, scancode, isrepeat)
     elseif key == 'z' then
         makezip()
     
+    elseif key == 'i' then
+        processManager:setSketch('info')
+
+    elseif key == 's' then
+        processManager:setSketch('sketches')
+
+    elseif key == 'l' then
+        processManager:loop()
+    
+    elseif key == 'f' then
+        toggleFused()
+    
     elseif key == 'escape' then
         quit()
     

@@ -55,7 +55,7 @@ end
 
 function push2globals(klass)
     for propName, prop in pairs(klass) do
-        if type(prop) == 'function' then
+        if type(prop) == 'function' and not propName:inList{'setup'} then
             _G[propName] = prop
         end
     end
@@ -91,7 +91,6 @@ function composition(klass)
         end
     end
 end
-
 
 class().unitTest = function () 
     assert(true)

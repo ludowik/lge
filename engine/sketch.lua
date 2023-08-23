@@ -81,6 +81,7 @@ function Sketch:draw()
 
     local scene = self.scene or env.scene
     if scene then
+        scene:layout()
         scene:draw()
     else
         fontSize(W/4)

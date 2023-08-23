@@ -22,6 +22,9 @@ function Mouse:pressed(x, y)
     self.previousPosition:set(mouse.position)
     self.direction = nil
     self.state = PRESSED
+    self.startTime = time()
+    self.endTime = self.startTime
+    self.elapsedTime = 0
 end
 
 function Mouse:moved(x, y)
@@ -30,6 +33,8 @@ function Mouse:moved(x, y)
     self.endPosition:set(mouse.position)
     self.move:set(mouse.endPosition - mouse.startPosition)
     self.state = MOVING
+    self.endTime = time()
+    self.elapsedTime = self.endTime - self.startTime
 end
 
 function Mouse:released(x, y)
@@ -38,6 +43,8 @@ function Mouse:released(x, y)
     self.endPosition:set(mouse.position)
     self.move:set(mouse.endPosition - mouse.startPosition)
     self.state = RELEASED
+    self.endTime = time()
+    self.elapsedTime = self.endTime - self.startTime
 end
 
 function Mouse:getDirection(len)

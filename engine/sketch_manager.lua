@@ -95,6 +95,8 @@ function loadSketch(env)
             encapsulate(fname)
         end
 
-        env.sketch:setup()
+        if env.sketch.setup then
+            env.sketch:setup()
+        end
     end
 end

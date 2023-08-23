@@ -21,6 +21,17 @@ function ProcessManager:setSketch(name)
     end
 end
 
+function ProcessManager:getSketch(name)
+    if not name then return end
+    
+    name = name:lower()
+    for i,process in ipairs(self.items) do
+        if process.__className == name then
+            return process
+        end        
+    end
+end
+
 function ProcessManager:setCurrentSketch(processIndex)
     self.processIndex = processIndex
     _G.env = self:current().env or _G.env
