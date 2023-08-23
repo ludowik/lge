@@ -76,6 +76,8 @@ function Parameter:group(label, open)
     end
 
     local newButton = UIButton(label, function ()
+        if fused() then return end
+
         if newGroup.state == 'close' then
             self:openGroup(newGroup)
         else
@@ -87,13 +89,21 @@ function Parameter:group(label, open)
             --self:closeGroup(newGroup)
         end
     end)
+
     newButton:attrib{
         parent = newGroup,
         styles = {
             fillColor = colors.blue,
             textColor = colors.white,
-        }
+        },
+        mousereleased = function ()
+            if mouse:getDirection() == 'left' then
+                toggleFused()
+                return
+            end
+        end,
     }
+
     newGroup:add(newButton)
 
     self.currentGroup = newGroup

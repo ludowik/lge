@@ -39,11 +39,11 @@ function contains(mouse)
     if not fused() then
         local object = globalManager:contains(mouse.position)
         if object then return object end
-
-        local object = parameter:contains(mouse.position)
-        if object then return object end
     end
     
+    local object = parameter:contains(mouse.position)
+    if object then return object end
+
     local object = process:contains(mouse.position)
     if object then return object end
 end

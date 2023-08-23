@@ -28,7 +28,7 @@ local function mousemoved(x, y)
     end
 end
 
-local function mousereleased(x, y)
+local function mousereleased(x, y)    
     if eventManager.currentObject then
         mouse:released(x, y)
         eventManager.currentObject:mousereleased(mouse)
