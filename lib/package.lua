@@ -10,7 +10,7 @@ end
 function updateScripts(github)
     local url 
     if github then
-        url = 'https://ludowik.github.io/Lge'
+        url = 'https://ludowik.github.io/lge'
     else
         url = 'http://192.168.1.13:8080'
     end
