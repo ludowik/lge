@@ -11,6 +11,9 @@
 	],
 	"settings": {
 		"debug.console.fontSize": 14,
-		"debug.autoExpandLazyVariables": true
+		"debug.autoExpandLazyVariables": true,
+		"Lua.diagnostics.disable": [
+			"lowercase-global"
+		]
 	}
 }

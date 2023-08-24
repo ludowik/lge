@@ -64,6 +64,7 @@ function loadSketches()
 end
 
 function loadSketch(env)
+    _G.env = env
     env.env = env
 
     if env.__sketch then
@@ -88,6 +89,7 @@ function loadSketch(env)
             'setup',
             'update',
             'draw',
+            'mousepressed',
             'mousemoved',
             'mousereleased',
             'keypressed',

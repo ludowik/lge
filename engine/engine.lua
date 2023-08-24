@@ -1,17 +1,23 @@
+Engine = class()
+
+function Engine.setup()
+    engine = Engine()
+end
+
 function love.load()
     classSetup()
     classUnitTesting()
 
-    components = Node()
-    components:add(timeManager)
-    components:add(tweenManager)
-    components:add(processManager)
-    components:add(eventManager)
+    engine.components = Node()
+    engine.components:add(timeManager)
+    engine.components:add(tweenManager)
+    engine.components:add(processManager)
+    engine.components:add(eventManager)
 
-    globalManager = GlobalManager()
+    engine.globalManager = GlobalManager()
 
-    parameter = Parameter()
-    parameter:initMenu()
+    engine.parameter = Parameter()
+    engine.parameter:initMenu()
 
     reload()
 end
@@ -37,11 +43,11 @@ function contains(mouse)
     local process = processManager:current()
     
     if not fused() then
-        local object = globalManager:contains(mouse.position)
+        local object = engine.globalManager:contains(mouse.position)
         if object then return object end
     end
     
-    local object = parameter:contains(mouse.position)
+    local object = engine.parameter:contains(mouse.position)
     if object then return object end
 
     local object = process:contains(mouse.position)
@@ -49,7 +55,7 @@ function contains(mouse)
 end
 
 function love.update(dt)
-    components:update(dt)
+    engine.components:update(dt)
     updateSettings()
 end
 
@@ -64,16 +70,16 @@ function love.draw()
     
     resetMatrix()
     resetStyle()
-    parameter:draw()
+    engine.parameter:draw()
 end
 
 function toggleFused()
     setSettings('fused', not getSettings('fused'))
 
     if fused() then
-        parameter:openGroup(parameter.currentGroup)
+        engine.parameter:openGroup(engine.parameter.currentGroup)
     else
-        parameter:closeGroup(parameter.currentGroup)
+        engine.parameter:closeGroup(engine.parameter.currentGroup)
     end
 end
 
@@ -83,7 +89,7 @@ end
 
 function reload(reload)
     processManager:clear()
-    load(reload)
+    return load(reload)
 end
 
 function restart()

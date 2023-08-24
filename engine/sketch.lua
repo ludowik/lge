@@ -66,8 +66,15 @@ function Sketch:drawSketch()
     love.graphics.setShader()
 
     love.graphics.setColor(colors.white:rgba())
+    love.graphics.setBlendMode('alpha')
 
     love.graphics.origin()
+
+    if originMode() == BOTTOM_LEFT then
+        love.graphics.scale(1, -1)
+        love.graphics.translate(0, -(2*Y+H))
+    end
+
     love.graphics.draw(self.canvas,
         self.position.x, -- x
         self.position.y, -- y

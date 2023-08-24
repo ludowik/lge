@@ -23,3 +23,16 @@ function setup()
     end)
     scene.layoutMode = 'center'
 end
+
+local dy = 0
+
+function draw()
+    background()
+    
+    scene:layout(0, dy + H/2 - scene.size.y/2)
+    scene:draw()
+end
+
+function mousemoved(mouse)
+    dy = dy + mouse.deltaPos.y
+end

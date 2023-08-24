@@ -1,7 +1,7 @@
 function runningTime(f, n)
     local startTime = os.clock()
 
-    n = n or 10^9
+    n = n or (10 ^ 9)
     while n > 0 do
         n = n - 1
         f()

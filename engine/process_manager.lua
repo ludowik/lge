@@ -38,9 +38,9 @@ function ProcessManager:setCurrentSketch(processIndex)
     setfenv(0, _G.env)
     local process = self:current()
     love.window.setTitle(process.__className)
-    parameter.currentGroup.items[1].label = process.__className
-    parameter.currentGroup.items = {
-        parameter.currentGroup.items[1],
+    engine.parameter.currentGroup.items[1].label = process.__className
+    engine.parameter.currentGroup.items = {
+        engine.parameter.currentGroup.items[1],
         unpack(process.parameter.items),
     }
 end

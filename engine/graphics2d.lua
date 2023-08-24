@@ -1,12 +1,12 @@
 Graphics2d = class()
 
 function Graphics2d.setup()
-    initMode()
+    Graphics2d.initMode()
     push2globals(Graphics2d)
     font = love.graphics.newFont(25)
 end
 
-function initMode()
+function Graphics2d.initMode()
     if getOS() == 'ios' then
         X, Y, W, H = love.window.getSafeArea()
     else
@@ -40,6 +40,8 @@ function stylesReset(name)
 end
 
 function Graphics2d.resetStyle()
+    blendMode(NORMAL)
+
     stroke(colors.white)
     strokeSize(1)	
 
@@ -52,7 +54,29 @@ function Graphics2d.resetStyle()
     
     textMode(CORNER)
     textColor(colors.white)
-    fontSize(22)    
+    fontSize(22)
+end
+
+TOP_LEFT = 'top_left'
+BOTTOM_LEFT = 'bottom_left'
+
+function Graphics2d.originMode(mode)
+    if mode then
+        env.__originMode = mode
+    end
+    return env.__originMode or TOP_LEFT
+end
+
+NORMAL = 'alpha'
+ADD = 'add'
+MULTIPLY = 'multiply'
+
+function Graphics2d.blendMode(mode)
+    if mode == MULTIPLY then
+        love.graphics.setBlendMode(MULTIPLY, 'premultiplied')
+    else
+        love.graphics.setBlendMode(mode)
+    end
 end
 
 function Graphics2d.noFill()

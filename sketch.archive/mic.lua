@@ -8,7 +8,7 @@ function setup()
 
     parameter:watch('#devices')
     parameter:watch('status')
-    parameter:watch('#buffer')    
+    parameter:watch('#buffer')
     
     mode = 2
     parameter:integer('mode', 'mode', 1, 2, 1)

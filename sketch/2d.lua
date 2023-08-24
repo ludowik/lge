@@ -3,7 +3,7 @@ Sketch2d = class() : extends(Sketch)
 function Sketch2d:init()
     Sketch.init(self)
     self.clr = Color.random()
-    self.anchor = Anchor()
+    self.anchor = Anchor(15)
 end
 
 function Sketch2d:draw()
@@ -25,7 +25,7 @@ function Sketch2d:draw()
     local size = self.anchor:size(1, 1)
     local x, y, w, h = size.x, size.y, size.x, size.y
     
-    for _,f in ipairs{drawPoint, drawLine, drawRect, drawCircle, drawEllipse} do
+    for _,f in ipairs{drawPoint, drawLine, drawRect, drawCircle, drawEllipse, drawBlendMode} do
         f(x, y, w, h)
         y = y + h*3
     end
@@ -103,4 +103,28 @@ function drawEllipse(x, y, w, h)
     strokeSize(5)
     stroke(colors.blue)
     ellipse(x*6, y+h, w, h/2)
+end
+
+function drawBlendMode(x, y, r)    
+    noStroke()
+
+    local function drawCircles(mode, x, y)
+        blendMode(mode)
+
+        fill(1, 0, 0)
+        circle(x-r/2, y-r/2, r)
+
+        fill(0, 1, 0)
+        circle(x+r/2, y-r/2, r)
+
+        fill(0, 0, 1)
+        circle(x, y+r/2, r)
+    end
+
+    drawCircles(NORMAL, x + 3*r/2, y + 3*r/2)
+    drawCircles(ADD, x + 4*r + 3*r/2, y + 3*r/2)
+
+    fill(colors.gray)
+    rect(x + 8*r - r/2, y - r/2, 4*r, 4*r)
+    drawCircles(MULTIPLY, x + 8*r + 3*r/2, y + 3*r/2)
 end

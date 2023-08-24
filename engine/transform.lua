@@ -12,7 +12,8 @@ function popMatrix()
 end
 
 function translate(x, y, z)
-    love.graphics.translate(x, y, z)
+    assert(not z)
+    love.graphics.translate(x, y)
 end
 
 function rotate(angle)
@@ -20,5 +21,6 @@ function rotate(angle)
 end
 
 function scale(x, y, z)
-    love.graphics.scale(x, y, z)
+    assert(not z)
+    love.graphics.scale(x, y)
 end

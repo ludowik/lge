@@ -7,11 +7,9 @@ function setup()
     SMOOTHNESS = 0.5
     parameter:number('SMOOTHNESS', 'SMOOTHNESS')
 
-    paused = false
-    parameter:boolean('paused', 'paused')
+    parameter:boolean('paused', 'paused', true)
 
-    z = 3
-    parameter:integer('depth', 'z')
+    parameter:integer('depth', 'z', 3)
 end
 
 function update(dt)

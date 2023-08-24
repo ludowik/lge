@@ -11,38 +11,54 @@ function Mouse:init()
     self.endPosition = vec2()
     self.previousPosition = vec2()
     self.move = vec2()
+    self.deltaPos = vec2()
     self.direction = nil
     self.state = ENDING
 end
 
 function Mouse:pressed(x, y)
-    self.position:set(x-X, y-Y)
-    self.startPosition:set(mouse.position)
-    self.endPosition:set(mouse.position)
-    self.previousPosition:set(mouse.position)
-    self.direction = nil
     self.state = PRESSED
+    
+    self.position:set(x-X, y-Y)    
+    self.previousPosition:set(mouse.position)
+
+    self.startPosition:set(mouse.position)
+    self.endPosition:set(mouse.position)    
+
+    self.move:set()
+    self.deltaPos:set()
+
+    self.direction = nil
+
     self.startTime = time()
     self.endTime = self.startTime
     self.elapsedTime = 0
 end
 
 function Mouse:moved(x, y)
+    self.state = MOVING
+
     self.previousPosition:set(mouse.position)
     self.position:set(x-X, y-Y)
+
     self.endPosition:set(mouse.position)
     self.move:set(mouse.endPosition - mouse.startPosition)
-    self.state = MOVING
+    self.deltaPos:set(mouse.endPosition - mouse.previousPosition)
+
     self.endTime = time()
     self.elapsedTime = self.endTime - self.startTime
 end
 
 function Mouse:released(x, y)
+    self.state = RELEASED
+    
     self.previousPosition:set(mouse.position)
     self.position:set(x-X, y-Y)
-    self.endPosition:set(mouse.position)
+
+    self.endPosition:set(mouse.position)    
     self.move:set(mouse.endPosition - mouse.startPosition)
-    self.state = RELEASED
+    self.deltaPos:set(mouse.endPosition - mouse.previousPosition)
+
     self.endTime = time()
     self.elapsedTime = self.endTime - self.startTime
 end

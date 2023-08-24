@@ -1,4 +1,4 @@
-Parameter = class() : extends(Scene)
+Parameter = class():extends(Scene)
 
 function Parameter.setup()
     Parameter.innerMarge = 5
@@ -38,7 +38,7 @@ end
 
 function Parameter:init()
     Scene.init(self)
-    self.currentGroup =  self
+    self.currentGroup = self
 end
 
 function Parameter:openGroup(group)
@@ -57,7 +57,7 @@ function Parameter:setStateForAllGroups(state, visible)
     state = state or 'hidden'
     visible = visible or false
     self:foreach(
-        function (node)
+        function(node)
             if node.state then
                 node.state = state
                 node.visible = visible
@@ -68,7 +68,7 @@ end
 function Parameter:group(label, open)
     local newGroup = Node()
 
-    if open then 
+    if open then
         self:openGroup(newGroup)
     else
         newGroup.state = 'close'
@@ -90,7 +90,7 @@ function Parameter:group(label, open)
         end
     end)
 
-    newButton:attrib{
+    newButton:attrib {
         parent = newGroup,
         styles = {
             fillColor = colors.blue,
@@ -110,6 +110,11 @@ function Parameter:group(label, open)
     self:add(self.currentGroup)
 end
 
+function Parameter:declareParameter(varName, initValue)
+    if type(varName) == 'string' and env[varName] == null then
+        env[varName] = initValue
+    end
+end
 function Parameter:space()
     self.currentGroup:add(UI())
 end
@@ -122,11 +127,13 @@ function Parameter:watch(label, expression)
     self.currentGroup:add(UIExpression(label, expression))
 end
 
-function Parameter:boolean(label, varName)
+function Parameter:boolean(label, varName, initValue)
+    self:declareParameter(varName, initValue)
     self.currentGroup:add(UICheck(label, varName))
 end
 
 function Parameter:integer(label, varName, min, max, initValue)
+    self:declareParameter(varName, initValue or min)
     local ui = UISlider(label, varName, min, max)
     ui.intValue = true
     ui.incrementValue = 1
@@ -135,6 +142,7 @@ function Parameter:integer(label, varName, min, max, initValue)
 end
 
 function Parameter:number(label, varName, min, max, initValue)
+    self:declareParameter(varName, initValue or min)
     local ui = UISlider(label, varName, min, max)
     ui.intValue = false
     ui.incrementValue = 0.2
@@ -142,7 +150,7 @@ function Parameter:number(label, varName, min, max, initValue)
     return ui
 end
 
-function Parameter:draw()    
+function Parameter:draw()
     self:layout()
     Scene.draw(self)
 end

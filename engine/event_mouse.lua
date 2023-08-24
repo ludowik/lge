@@ -8,7 +8,7 @@ function EventManager:init()
     self.currentObject = nil
 end
 
-local function mousepressed(x, y)
+local function mousepressed(x, y, id)
     if #love.touch.getTouches() == 5 then
         toggleFused()
     end
@@ -21,14 +21,14 @@ local function mousepressed(x, y)
     end
 end
 
-local function mousemoved(x, y)
+local function mousemoved(x, y, id)
     if eventManager.currentObject then
         mouse:moved(x, y)
         eventManager.currentObject:mousemoved(mouse)
     end
 end
 
-local function mousereleased(x, y)    
+local function mousereleased(x, y, id)
     if eventManager.currentObject then
         mouse:released(x, y)
         eventManager.currentObject:mousereleased(mouse)
