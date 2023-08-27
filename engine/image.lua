@@ -22,8 +22,8 @@ function FrameBuffer:background(...)
 end
 
 
-Image = class() : extends(FrameBuffer)
+Image = class()
 
-function Image:init(w, h)
-    FrameBuffer.init(self, w, h)
+function Image:init(filename)
+    self.texture = love.graphics.newImage('resources/'..filename)
 end

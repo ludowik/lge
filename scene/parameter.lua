@@ -7,11 +7,7 @@ end
 function Parameter:initMenu()
     self.layoutMode = 'right'
 
-    self:group('menu')
-    self:action('info', function () processManager:setSketch('Info') end)
-    self:action('sketches', function () processManager:setSketch('Sketches') end)
-    self:action('update', function () processManager:setSketch('Update_App') end)
-
+    self.menu = self:group('menu')
     self:action('update from git', function ()
         updateScripts(true)
         quit()
@@ -20,12 +16,21 @@ function Parameter:initMenu()
         updateScripts(false)
         quit()
     end)
-
     self:action('reload', reload)
     self:action('restart', restart)
     self:action('exit', exit)
 
-    --self:group('navigate')
+    self:space()
+    self:action('info', function ()
+        processManager:setSketch('Info')
+        self:openGroup(self.sketchMenu)
+    end)
+
+    self:action('sketches', function ()
+        processManager:setSketch('Sketches')        
+        self:openGroup(self.sketchMenu)
+    end)
+    
     self:space()
     self:action('fused', function () toggleFused() end)
     self:action('next', function () processManager:next() end)
@@ -33,7 +38,7 @@ function Parameter:initMenu()
     self:action('random', function () processManager:random() end)
     self:action('loop', function () processManager:loop() end)
 
-    self:group('sketch', true)
+    self.sketchMenu = self:group('sketch', true)
 end
 
 function Parameter:init()
@@ -108,6 +113,8 @@ function Parameter:group(label, open)
 
     self.currentGroup = newGroup
     self:add(self.currentGroup)
+
+    return newGroup
 end
 
 function Parameter:declareParameter(varName, initValue)

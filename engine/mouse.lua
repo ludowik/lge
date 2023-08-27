@@ -6,18 +6,23 @@ MOVING = 'moving'
 RELEASED = 'released'
 
 function Mouse:init()
+    self.state = ENDING
+    self.id = 0
     self.position = vec2()
-    self.startPosition = vec2()
-    self.endPosition = vec2()
     self.previousPosition = vec2()
+    self.startPosition = vec2()
+    self.endPosition = vec2()    
     self.move = vec2()
     self.deltaPos = vec2()
     self.direction = nil
-    self.state = ENDING
+    self.startTime = 0
+    self.endTime = 0
+    self.elapsedTime = 0
 end
 
-function Mouse:pressed(x, y)
+function Mouse:pressed(id, x, y)
     self.state = PRESSED
+    self.id = id
     
     self.position:set(x-X, y-Y)    
     self.previousPosition:set(mouse.position)
@@ -35,8 +40,9 @@ function Mouse:pressed(x, y)
     self.elapsedTime = 0
 end
 
-function Mouse:moved(x, y)
+function Mouse:moved(id, x, y)
     self.state = MOVING
+    self.id = id
 
     self.previousPosition:set(mouse.position)
     self.position:set(x-X, y-Y)
@@ -49,8 +55,9 @@ function Mouse:moved(x, y)
     self.elapsedTime = self.endTime - self.startTime
 end
 
-function Mouse:released(x, y)
+function Mouse:released(id, x, y)
     self.state = RELEASED
+    self.id = id
     
     self.previousPosition:set(mouse.position)
     self.position:set(x-X, y-Y)
@@ -63,11 +70,11 @@ function Mouse:released(x, y)
     self.elapsedTime = self.endTime - self.startTime
 end
 
-function Mouse:getDirection(len)
+function Mouse:getDirection(minLen)
     if self.direction then return end
     
-    len = len or (min(W, H) / 6)
-    if max(abs(mouse.move.x), abs(mouse.move.y)) < len then
+    minLen = minLen or (min(W, H) / 6)
+    if max(abs(mouse.move.x), abs(mouse.move.y)) < minLen then
         return
     end
 

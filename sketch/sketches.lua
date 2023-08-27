@@ -1,6 +1,6 @@
 function setup()
     scene = Scene()
-    processManager:foreach(function (env)
+    environnementsList:foreach(function (env)
         scene:add(UIButton(env.__className,
             function (self)
                 processManager:setSketch(self.label)

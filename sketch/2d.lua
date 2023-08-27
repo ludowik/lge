@@ -4,6 +4,8 @@ function Sketch2d:init()
     Sketch.init(self)
     self.clr = Color.random()
     self.anchor = Anchor(15)
+
+    image = Image('rusty_metal.jpg')
 end
 
 function Sketch2d:draw()
@@ -25,7 +27,17 @@ function Sketch2d:draw()
     local size = self.anchor:size(1, 1)
     local x, y, w, h = size.x, size.y, size.x, size.y
     
-    for _,f in ipairs{drawPoint, drawLine, drawRect, drawCircle, drawEllipse, drawBlendMode} do
+    for _,f in ipairs{
+        drawPoint,
+        drawLine,
+        drawRect,
+        drawCircle,
+        drawEllipse,
+        drawBlendMode,
+        drawSprite
+    } do
+        blendMode(NORMAL)
+        fill(colors.white)
         f(x, y, w, h)
         y = y + h*3
     end
@@ -105,7 +117,8 @@ function drawEllipse(x, y, w, h)
     ellipse(x*6, y+h, w, h/2)
 end
 
-function drawBlendMode(x, y, r)    
+function drawBlendMode(x, y, r)
+    r = r * 2 / 3
     noStroke()
 
     local function drawCircles(mode, x, y)
@@ -127,4 +140,8 @@ function drawBlendMode(x, y, r)
     fill(colors.gray)
     rect(x + 8*r - r/2, y - r/2, 4*r, 4*r)
     drawCircles(MULTIPLY, x + 8*r + 3*r/2, y + 3*r/2)
+end
+
+function drawSprite(x, y, w, h)
+    sprite(image, x, y, 2*w, 2*h)
 end

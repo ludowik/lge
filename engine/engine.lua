@@ -5,6 +5,10 @@ function Engine.setup()
 end
 
 function love.load()
+    Engine.load()
+end
+
+function Engine.load()
     classSetup()
     classUnitTesting()
 
@@ -14,38 +18,14 @@ function love.load()
     engine.components:add(processManager)
     engine.components:add(eventManager)
 
-    engine.globalManager = GlobalManager()
-
     engine.parameter = Parameter()
     engine.parameter:initMenu()
 
     reload()
 end
 
-GlobalManager = class() : extends(Rect, MouseEvent, KeyboardEvent)
-
-function GlobalManager:init()
-    Rect.init(self, 0, 0.8* H, W, 0.2 * H)
-    MouseEvent.init(self)
-end
-
-function GlobalManager:mousereleased(mouse)
-    local sketch = processManager:current()
-
-    if mouse.position.x < .5 * W then
-        processManager:previous()
-    else
-        processManager:next()
-    end
-end
-
 function contains(mouse)
     local process = processManager:current()
-    
-    if not fused() then
-        local object = engine.globalManager:contains(mouse.position)
-        if object then return object end
-    end
     
     local object = engine.parameter:contains(mouse.position)
     if object then return object end

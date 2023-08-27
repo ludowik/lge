@@ -1,7 +1,7 @@
 #pragma language glsl3
 
 // uniforms
-uniform float TIME;
+uniform float iTime;
 uniform float TIMESCALE;
 uniform float SHAPE_SIZE;
 uniform float SMOOTHNESS;
@@ -49,7 +49,7 @@ float smoothIntersection(float d1, float d2, float k) {
 }
 
 float GetDist(vec3 p) {
-    float t = TIME * TIMESCALE;
+    float t = iTime * TIMESCALE;
 
     vec3 shape1_pos = vec3(sin(t * +0.337), abs(sin(t * +0.428)), sin(t * -0.989));
     vec3 shape2_pos = vec3(sin(t * -0.214), abs(sin(t * -0.725)), sin(t * +0.56));
@@ -95,7 +95,7 @@ float RayMarch(vec3 ro, vec3 rd) {
 
 float GetLight(vec3 p) {
     vec3 lightPos = vec3(0., 5., -1.);
-    lightPos.xz += vec2(sin(TIME), cos(TIME)) * 2.;
+    lightPos.xz += vec2(sin(iTime), cos(iTime)) * 2.;
 
     vec3 l = normalize(lightPos - p);
     vec3 n = GetNormal(p);

@@ -47,6 +47,8 @@ function Graphics2d.resetStyle()
 
     noFill()
 
+    tint(colors.white)
+
     rectMode(CORNER)
 
     circleMode(CENTER)
@@ -86,6 +88,11 @@ end
 function Graphics2d.fill(clr, ...)
     clr = Color.fromParam(clr, ...)
     return stylesSet('fillColor', clr)
+end
+
+function Graphics2d.tint(clr, ...)
+    clr = Color.fromParam(clr, ...)
+    return stylesSet('tintColor', clr)
 end
 
 function Graphics2d.noStroke()
@@ -246,4 +253,12 @@ function Graphics2d.textSize(str, limit)
         h = font:getHeight()
     end
     return w, h
+end
+
+function Graphics2d.sprite(image, x, y, w, h)
+    w = w or image.texture:getWidth()
+    h = h or image.texture:getHeight()
+
+    love.graphics.setColor(Graphics2d.tint():rgba())
+    love.graphics.draw(image.texture, x, y, 0, w/image.texture:getWidth(), h/image.texture:getHeight())
 end

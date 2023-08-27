@@ -12,7 +12,8 @@ function declareSketches(reload)
     end
 end
 
-local environnements = {}
+local environnements = Array()
+environnementsList = nil
 function declareSketch(sourceFile, reload)
     local name = sourceFile:gsub('%.lua', ''):gsub('%/', '%.')
     
@@ -31,6 +32,8 @@ function declareSketch(sourceFile, reload)
     require(name)
 
     env.__name = name
+    env.__className = name:gsub('sketch%.', '')
+
     env.__sourceFile = sourceFile
     env.__modtime = love.filesystem.getInfo(sourceFile).modtime
 
@@ -52,7 +55,7 @@ function isSketch(klass)
 end
 
 function loadSketches()
-    local environnementsList = Array()
+    environnementsList = Array()
     for k,env in pairs(environnements) do
         environnementsList:add(env)
     end
@@ -75,7 +78,7 @@ function loadSketch(env)
         env.sketch = Sketch()
         env.sketch.env = env
 
-        env.sketch.__className = env.__name:gsub('sketch%.', '')
+        env.sketch.__className = env.__className
 
         env.parameter = env.sketch.parameter
         

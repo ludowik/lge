@@ -1,4 +1,4 @@
-Sketch = class() : extends(Index, State, Rect, Image, MouseEvent, KeyboardEvent)
+Sketch = class() : extends(Index, State, Rect, FrameBuffer, MouseEvent, KeyboardEvent)
 
 function Sketch:init(w, h)
     State.init(self)
@@ -17,7 +17,7 @@ function Sketch:init(w, h)
     
     Rect.init(self, 0, 0, w, h)
 
-    Image.init(self, w, h)
+    FrameBuffer.init(self, w, h)
 
     self:initMenu()
 
@@ -30,8 +30,6 @@ end
 
 function Sketch:initMenu()
     self.parameter = Parameter()
-    --self.parameter:initMenu()
-    --self.parameter:group(self, true)
 end
 
 function Sketch:checkReload()
