@@ -56,7 +56,7 @@ function ShaderToy:loadShaderCode(shader)
     local ok = Shader.loadShaderCode(self, shader)
     if ok then
         local declarations = [[
-            vec4 iResolution = love_ScreenSize;
+            vec4 iResolution;
             //uniform vec3      iResolution;           // viewport resolution (in pixels)
             uniform float     iTime;                 // shader playback time (in seconds)
             uniform float     iTimeDelta;            // render time (in seconds)
@@ -86,6 +86,8 @@ function ShaderToy:loadShaderCode(shader)
 
         local mainFunction = [[
             vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
+                iResolution = love_ScreenSize;
+                
                 vec4 fragColor;
                 mainImage(fragColor, screen_coords);
                 return fragColor;
