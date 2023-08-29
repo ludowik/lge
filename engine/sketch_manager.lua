@@ -27,8 +27,6 @@ function declareSketch(sourceFile, reload)
     local env = setmetatable({}, {__index = _G})
     setfenv(0, env)
     
-    environnements[name] = env
-    
     require(name)
 
     env.__name = name
@@ -45,7 +43,10 @@ function declareSketch(sourceFile, reload)
             break
         end
     end
-    return env
+
+    if env.__sketch or env.setup or env.draw then
+        environnements[name] = env
+    end
 end
 
 function isSketch(klass)

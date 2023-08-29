@@ -49,28 +49,3 @@ function draw()
     end
 end
 
-Shape = class()
-
-function Shape:init()
-    self.vertices = Array()
-end
-
-function Shape:draw()
-    polygon(self.vertices)
-end
-
-local shape
-
-function beginShape()
-    shape = Shape()
-end
-
-function vertex(x, y)
-    shape.vertices:add(x)
-    shape.vertices:add(y)
-end
-
-function endShape(mode)
-    shape:draw()
-    return shape
-end

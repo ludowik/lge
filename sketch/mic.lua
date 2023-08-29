@@ -1,3 +1,7 @@
+if getOS() == 'ios' then
+    return
+end
+
 function setup()
     devices = love.audio.getRecordingDevices()
     device = devices[1]
@@ -66,5 +70,5 @@ function draw()
         table.insert(arrays, y)
     end
 
-    polygon(arrays)
+    polyline(arrays)
 end

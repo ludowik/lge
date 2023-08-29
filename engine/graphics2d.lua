@@ -132,6 +132,14 @@ function Graphics2d.line(x1, y1, x2, y2)
     end
 end
 
+function Graphics2d.polyline(...)
+    if stroke() then
+        love.graphics.setColor(stroke():rgba())
+        love.graphics.setLineWidth(strokeSize())
+        love.graphics.line(...)
+    end
+end
+
 function Graphics2d.polygon(...)
     if stroke() then
         love.graphics.setColor(stroke():rgba())

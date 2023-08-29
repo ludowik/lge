@@ -1,10 +1,16 @@
 local bit = require 'bit'
 
-function nextSeed(seed)
-    seed = seed * 3432 + 23434
-    local result = bit.rshift(seed, bit.rshift(seed, 4) + 2) ^ 1.5234 + 233241
-    result = bit.rshift(result, 4) ^ 3.14
-    return result
+local X = os.time()
+function setSeedValue(seed)
+    X = seed or os.time()
+end
+
+local A1 = 710425941047
+local B1 = 813633012810
+local M1 = 711719770602
+function getRandomValue()
+    X = (A1 * X + B1) % M1
+    return X / M1
 end
 
 function setup()
@@ -29,11 +35,10 @@ function setup()
             random = function (self, ...) return self.rd:random(...) end,
         },
         {
-            seedValue = 264,
-            seed = function (self, seed) self.seedValue = seed end,
+            seed = function (self, seed) setSeedValue(seed) end,
             random = function (self, ...)
-                self.seedValue = nextSeed(self.seedValue)
-                return map(math.modf(self.seedValue) % 22091 / 22091, 0, 1, ...)
+                local value = getRandomValue()
+                return map(value, 0, 1, ...)
             end,
         },
     }
