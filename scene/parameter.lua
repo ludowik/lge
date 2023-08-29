@@ -134,23 +134,23 @@ function Parameter:watch(label, expression)
     self.currentGroup:add(UIExpression(label, expression))
 end
 
-function Parameter:boolean(label, varName, initValue)
+function Parameter:boolean(label, varName, initValue, callback)
     self:declareParameter(varName, initValue)
-    self.currentGroup:add(UICheck(label, varName))
+    self.currentGroup:add(UICheck(label, varName, callback))
 end
 
-function Parameter:integer(label, varName, min, max, initValue)
+function Parameter:integer(label, varName, min, max, initValue, callback)
     self:declareParameter(varName, initValue or min)
-    local ui = UISlider(label, varName, min, max)
+    local ui = UISlider(label, varName, min, max, callback)
     ui.intValue = true
     ui.incrementValue = 1
     self.currentGroup:add(ui)
     return ui
 end
 
-function Parameter:number(label, varName, min, max, initValue)
+function Parameter:number(label, varName, min, max, initValue, callback)
     self:declareParameter(varName, initValue or min)
-    local ui = UISlider(label, varName, min, max)
+    local ui = UISlider(label, varName, min, max, callback)
     ui.intValue = false
     ui.incrementValue = 0.2
     self.currentGroup:add(ui)

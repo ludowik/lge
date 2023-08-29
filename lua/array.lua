@@ -47,6 +47,17 @@ function Array:foreachKey(f)
     return self
 end
 
+function Array:chainIt()
+    local n = #self
+    self[1].__previous = self[n]
+    self[n].__next = self[1]
+
+    for i=1,n-1 do
+        self[i].__next = self[i+1]
+        self[i+1].__previous = self[i]
+    end
+end
+
 function Array:max()
     if #self == 0 then return end
 

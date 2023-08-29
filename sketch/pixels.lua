@@ -7,6 +7,8 @@ function Pixels:init()
 
     self.imageData = love.image.newImageData(W/self.pixelRatio, H/self.pixelRatio)
     self.pointer = require("ffi").cast("uint8_t*", self.imageData:getFFIPointer()) -- imageData has one byte per channel per pixel.    
+
+    self.parameter:integer('Noise function', 'noiseFunctionIndex', 1, #Pixels.noiseFunctions, 1)
 end
 
 local baseX = 100 * love.math.random()
@@ -33,7 +35,7 @@ Pixels.noiseFunctions = {
 function Pixels:draw()
     seed = 56494446
 
-    local fragment = Pixels.noiseFunctions[3]
+    local fragment = Pixels.noiseFunctions[noiseFunctionIndex]
     
 	local pointer, i = self.pointer, 0    
     local r, g, b, a = 0, 0, 0, 0

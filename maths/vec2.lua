@@ -43,10 +43,22 @@ function vec2.__add(u, v)
         u.y + v.y)
 end
 
+function vec2.add(u, v)
+    u.x = u.x + v.x
+    u.y = u.y + v.y
+    return u
+end
+
 function vec2.__sub(u, v)
     return vec2(
         u.x - v.x,
         u.y - v.y)
+end
+
+function vec2.sub(u, v)
+    u.x = u.x - v.x
+    u.y = u.y - v.y
+    return u
 end
 
 function vec2.__mul(u, coef)
@@ -55,10 +67,22 @@ function vec2.__mul(u, coef)
         u.y * coef)
 end
 
+function vec2.mul(u, coef)
+    u.x = u.x * coef
+    u.y = u.y * coef
+    return u
+end
+
 function vec2.__div(u, coef)
     return vec2(
         u.x / coef,
         u.y / coef)
+end
+
+function vec2.div(u, coef)
+    u.x = u.x / coef
+    u.y = u.y / coef
+    return u
 end
 
 function vec2.random(w, h)
