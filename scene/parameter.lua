@@ -133,7 +133,7 @@ end
 
 function Parameter:link(label, url)
     self.currentGroup:add(UIButton(label, function ()
-        openURL(url)
+        openURL(url or label)
     end))
 end
 
