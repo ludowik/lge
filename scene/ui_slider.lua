@@ -9,7 +9,7 @@ function UISlider:init(label, varName, minValue, maxValue, callback)
     self.maxValue = maxValue or 100
 
     self.intValue = false    
-    self.incrementValue = 1
+    self.incrementValue = (self.maxValue - self.minValue) / 20
 end
 
 function UISlider:mousepressed(mouse)

@@ -126,6 +126,17 @@ function Parameter:space()
     self.currentGroup:add(UI())
 end
 
+function openURL(url)    
+    local cmd = getOS() == 'windows' and 'start' or 'open'
+    os.execute(cmd..' '..url)
+end
+
+function Parameter:link(label, url)
+    self.currentGroup:add(UIButton(label, function ()
+        openURL(url)
+    end))
+end
+
 function Parameter:action(label, callback)
     self.currentGroup:add(UIButton(label, callback))
 end

@@ -35,6 +35,9 @@ function declareSketch(sourceFile, reload)
     env.__sourceFile = sourceFile
     env.__modtime = love.filesystem.getInfo(sourceFile).modtime
 
+    env.DeltaTime = 0
+    env.ElapsedTime = 0
+
     for k,v in pairs(env) do
         if isSketch(v) then
             _G[k] = v

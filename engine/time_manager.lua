@@ -5,11 +5,11 @@ function TimeManager.setup()
 end
 
 function TimeManager:init()
-    DeltaTime = 0
-    ElapsedTime = 0
+    -- DeltaTime = 0
+    -- ElapsedTime = 0
 end
 
 function TimeManager:update(dt)
-    DeltaTime = dt
-    ElapsedTime = ElapsedTime + dt
+    env.DeltaTime = dt
+    env.ElapsedTime = env.ElapsedTime + dt
 end

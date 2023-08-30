@@ -3,6 +3,11 @@ function string:inList(list)
     for _, v in pairs(list) do if v == self then return true end end
 end
 
+function string:random()
+    local i = random(1, #self)
+    return self:sub(i, i)
+end
+
 function string.unitTest()
     assert(('list'):inList{'list'})
     assert(not ('not in list'):inList{'list'})

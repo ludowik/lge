@@ -3,7 +3,7 @@ class().setup = function ()
     math.randomseed(time())
 end
 
---random = love.math.random
+seed = math.randomseed
 random = math.random
 
 local __noise__ = love.math.perlinNoise or love.math.noise
