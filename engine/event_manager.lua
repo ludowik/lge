@@ -43,6 +43,8 @@ function EventManager:mousereleased(id, x, y)
 end
 
 function EventManager:keypressed(key, scancode, isrepeat)
+    processManager:current():keypressed(key, scancode, isrepeat)
+    
     if key == 'r' then
         reload(true)
 
@@ -73,6 +75,4 @@ function EventManager:keypressed(key, scancode, isrepeat)
     elseif key == 'kpenter' then
         processManager:loop()
     end
-
-    processManager:current():keypressed(key, scancode, isrepeat)
 end

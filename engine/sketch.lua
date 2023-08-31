@@ -1,9 +1,8 @@
 Sketch = class() : extends(Index, State, Rect, FrameBuffer, MouseEvent, KeyboardEvent)
 
 function Sketch:init(w, h)
-    State.init(self)
     Index.init(self)
-    MouseEvent.init(self)
+    State.init(self)
 
     local ws, hs
 
@@ -18,6 +17,8 @@ function Sketch:init(w, h)
     Rect.init(self, 0, 0, w, h)
 
     FrameBuffer.init(self, w, h)
+    MouseEvent.init(self)
+    KeyboardEvent.init(self)
 
     self:initMenu()
 

@@ -1,17 +1,41 @@
 function setup()
     scene = Scene()
+    navigate(getSettings('category'))
+end
+
+function navigate(category)
+    setSettings('category', category)
+    
+    scene:clear()
+
+    if category then
+        scene:add(UIButton('..', function (self) navigate() end))
+    end
+
+    local categories = {}
     environnementsList:foreach(function (env)
-        scene:add(UIButton(env.__className,
+        if env.__category ~= category then
+            if category == nil and env.__category and categories[env.__category] == nil then
+                categories[env.__category] = UIButton(env.__category,
+                    function (self)
+                        navigate(env.__category)
+                    end)
+                scene:add(categories[env.__category])
+            end
+            return
+        end
+
+        scene:add(UIButton(env.__category and (env.__category..' : '..env.__className) or env.__className,
             function (self)
-                processManager:setSketch(self.label)
+                processManager:setSketch(env.__className)
             end):attrib{
                 styles = {
                     fillColor = colors.transparent,
                 },
                 draw = function (self)
                     UIButton.draw(self)
-                    local process = processManager:getSketch(self.label)
-                    if process and self.label ~= 'sketches' then
+                    local process = processManager:getSketch(env.__className)
+                    if process and env.__className ~= 'sketches' then
                         love.graphics.draw(process.canvas,
                             self.position.x + self.size.x,
                             self.position.y, 0,

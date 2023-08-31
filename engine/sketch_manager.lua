@@ -6,38 +6,62 @@ function load(reload)
 end
 
 function declareSketches(reload)
-    local directoryItems = love.filesystem.getDirectoryItems('sketch/')
-    for _,sourceFile in ipairs(directoryItems) do
-        declareSketch('sketch/'..sourceFile, reload)
+    local function scan(path, category)
+        local directoryItems = love.filesystem.getDirectoryItems(path)
+        for _,itemName in ipairs(directoryItems) do
+            local name = itemName:gsub('%.lua', '')
+            local itemPath = path..'/'..itemName
+
+            local info = love.filesystem.getInfo(itemPath)
+            if info.type == 'directory' then
+                local infoInit = love.filesystem.getInfo(itemPath..'/'..'__init.lua')
+                if infoInit then
+                    declareSketch(name, itemPath, category, reload)
+                else
+                    -- recursive scan
+                    scan(itemPath, itemName)
+                end
+            else
+                declareSketch(name, itemPath, category, reload)
+            end
+        end
     end
+    scan('sketch')
 end
 
+Environnement = class()
+
+function Environnement:init(name, itemPath, category)
+    setmetatable(self, {__index = _G})
+    setfenv(0, self)
+    
+    local requirePath = itemPath:gsub('%/', '%.'):gsub('%.lua', '')
+    require(requirePath)
+
+    self.__name = name
+    self.__className = name:gsub('sketch%.', '')
+    self.__category = category
+
+    self.__sourceFile = itemPath
+    self.__modtime = love.filesystem.getInfo(itemPath).modtime
+
+    self.DeltaTime = 0
+    self.ElapsedTime = 0
+end
+ 
 local environnements = Array()
 environnementsList = nil
-function declareSketch(sourceFile, reload)
-    local name = sourceFile:gsub('%.lua', ''):gsub('%/', '%.')
-    
+function declareSketch(name, itemPath, category, reload)    
     if reload then
-        environnements[name] = nil
-        package.loaded[name] = nil
+        local requirePath = itemPath:gsub('%/', '%.'):gsub('%.lua', '')
+        environnements[requirePath] = nil
+        package.loaded[requirePath] = nil
     end
     
     if environnements[name] then return environnements[name] end
 
-    local env = setmetatable({}, {__index = _G})
-    setfenv(0, env)
+    local env = Environnement(name, itemPath, category)
     
-    require(name)
-
-    env.__name = name
-    env.__className = name:gsub('sketch%.', '')
-
-    env.__sourceFile = sourceFile
-    env.__modtime = love.filesystem.getInfo(sourceFile).modtime
-
-    env.DeltaTime = 0
-    env.ElapsedTime = 0
-
     for k,v in pairs(env) do
         if isSketch(v) then
             _G[k] = v
@@ -63,7 +87,9 @@ function loadSketches()
     for k,env in pairs(environnements) do
         environnementsList:add(env)
     end
-    environnementsList:sort(function (a, b) return a.__name < b.__name end)
+    environnementsList:sort(function (a, b)
+        return (a.__category or '')..'.'..a.__name < (b.__category or '')..'.'..b.__name
+    end)
 
     for k,env in ipairs(environnementsList) do
         loadSketch(env)
