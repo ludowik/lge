@@ -79,6 +79,12 @@ function animate(source, target, delay, callback)
     return tween
 end
 
+function timer(delay, callback)
+    local tween = Tween({}, {}, delay, callback)
+    tween:play()
+    return tween
+end
+
 local function sequenceNext(callback, tweens, next)
     return function ()
         local result = callback() 
@@ -105,14 +111,18 @@ function TweenManager.unitTest()
         a = 0,
         b = 0,
         c = 0,
+        d = 0,
     }
 
-    Tween(test, {a=2}, 2, function (t)
+    animate(test, {a=2}, 2, function (t)
         assert(test.a == 2)
-    end):play()
+    end)
 
     sequence(
         Tween(test, {b=1}, 1, function () assert(test.b == 1) end),
         Tween(test, {c=1}, 1, function () assert(test.c == 1) end)
     )
+
+    timer(3, function (t)
+    end)
 end

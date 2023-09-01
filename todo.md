@@ -6,5 +6,7 @@ del langton.lua from old deposit
 del collatz.lua from old deposit
 del chaos.lua from old deposit
 del phyllotaxis.lua from old deposit
+del mandelbrot.lua from old deposit
+del horloge.lua from old deposit
 
 try random https://github.com/linux-man/randomlua/blob/master/randomlua.lua

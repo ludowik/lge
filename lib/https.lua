@@ -1,3 +1,5 @@
+if getOS() == 'web' then return end
+
 local https = require 'https'
 
 function request(url, success, fail, parameterTable)

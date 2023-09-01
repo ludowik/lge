@@ -58,5 +58,5 @@ function draw()
 end
 
 function mousemoved(mouse)
-    dy = dy + mouse.deltaPos.y
+    --dy = dy + mouse.deltaPos.y
 end

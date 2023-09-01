@@ -1,4 +1,4 @@
-if getOS() == 'ios' then
+if getOS() == 'ios' or not love.audio then
     return
 end
 

@@ -43,6 +43,8 @@ function setup()
         },
     }
 
+    anchor = Anchor(12, #randomGeneratorList + 1)
+
     randomGeneratorList:foreach(function (v) 
         v.distribution = Array():forn(11, 0)
         v:seed(0)
@@ -53,6 +55,12 @@ function setup()
 end
 
 function update(dt)
+    for i in range(10) do
+        step()
+    end
+end
+
+function step()
     tirage = tirage + 1
 
     function updateRandomGenerator(randomGenerator)
@@ -69,7 +77,13 @@ end
 function draw()
     background()
 
-    local x, y, w, h = 20, 100, 25, 80
+    local x, y, w, h
+
+    x = anchor:size(1, 1).x / 2
+    y = anchor:size(1, 1).y / 2
+
+    w = anchor:size(1, 1).x
+    h = anchor:size(1, 1).y / 2
 
     function drawRandomGenerator(randomGenerator)
         local maxInstance = randomGenerator.distribution:max()
@@ -82,7 +96,7 @@ function draw()
             else
                 fill(colors.gray)
             end
-            rect(x + (i-1) * (w*1.4), y+h, w, -h * (v/maxInstance))
+            rect(x + (i-1) * (w), y+h, w*0.8, -h * (v/maxInstance))
         end
     end
 

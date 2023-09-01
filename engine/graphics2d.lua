@@ -263,10 +263,26 @@ function Graphics2d.textSize(str, limit)
     return w, h
 end
 
+function Graphics2d.spriteMode(mode)
+    return stylesSet('spriteMode', mode)
+end
+
 function Graphics2d.sprite(image, x, y, w, h)
-    w = w or image.texture:getWidth()
-    h = h or image.texture:getHeight()
+    x = x or 0
+    y = y or 0
+
+    image:update()
+
+    local texture = image.texture or image.canvas
+
+    local mode = spriteMode()
+    w = w or texture:getWidth()
+    h = h or texture:getHeight()
+
+    if mode == CENTER then
+        x, y = x-w/2, y-h/2
+    end
 
     love.graphics.setColor(Graphics2d.tint():rgba())
-    love.graphics.draw(image.texture, x, y, 0, w/image.texture:getWidth(), h/image.texture:getHeight())
+    love.graphics.draw(texture, x, y, 0, w/texture:getWidth(), h/texture:getHeight())
 end

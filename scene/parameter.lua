@@ -101,11 +101,12 @@ function Parameter:group(label, open)
             fillColor = colors.blue,
             textColor = colors.white,
         },
-        mousereleased = function ()
+        mousereleased = function (...)
             if mouse:getDirection() == 'left' then
                 toggleFused()
                 return
             end
+            MouseEvent.mousereleased(...)
         end,
     }
 

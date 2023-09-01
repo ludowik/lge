@@ -1,8 +1,10 @@
 Shader = class()
 
-function Shader:init(name)
+function Shader:init(name, path)
+    path = path or 'resources'
+
     self.name = name
-    self.pathName = 'sketch/shader/'..self.name
+    self.pathName = path..'/'..self.name
     
     self.vertexShader = {pathFile = self.pathName..'.vertex.glsl'}
     self.pixelShader  = {pathFile = self.pathName..'.pixel.glsl'}

@@ -1,4 +1,7 @@
 function love.conf(t)
-    t.audio.mixwithsystem = true
+    if t.audio then
+        t.audio.mixwithsystem = true
+    end
+    
     love.filesystem.setRequirePath('?.lua;?/init.lua;?/__init.lua')
 end

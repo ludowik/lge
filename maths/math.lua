@@ -23,6 +23,9 @@ sqrt = math.sqrt
 sin = math.sin
 cos = math.cos
 
+rad = math.rad
+deg = math.deg
+
 math.maxinteger =  2^52
 math.mininteger = -2^52
 

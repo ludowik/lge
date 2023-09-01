@@ -4,13 +4,13 @@ function MouseEvent:init()
 end
 
 function MouseEvent:mousepressed(mouse)
-    self:click()
 end
 
 function MouseEvent:mousemoved(mouse)
 end
 
 function MouseEvent:mousereleased(mouse)
+    self:click()
 end
 
 function MouseEvent:click()

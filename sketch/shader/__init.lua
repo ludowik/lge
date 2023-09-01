@@ -1,9 +1,11 @@
 function setup()
+    path = 'sketch/shader'
+
     shaders = {
-        Shader('shader'),
-        ShaderToy('intro'),
-        ShaderToy('twisted_columns'),
-        Shader('chladni_plates'),
+        Shader('shader', path),
+        ShaderToy('intro', path),
+        ShaderToy('twisted_columns', path),
+        Shader('chladni_plates', path),
     }
 
     parameter:number('SHAPE_SIZE', 'SHAPE_SIZE', 0.1, 2.5, 0.5)

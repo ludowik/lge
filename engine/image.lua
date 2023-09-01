@@ -21,9 +21,33 @@ function FrameBuffer:background(...)
     love.graphics.clear(clr.r, clr.g, clr.b, clr.a)
 end
 
+function FrameBuffer:getImageData()
+    if self.imageData then return end
+    self.imageData = self.canvas:newImageData()
+end
+
+function FrameBuffer:update()
+    if self.imageData then
+        self.texture = love.graphics.newImage(self.imageData)
+        --self.imageData = nil
+    end
+end
+
+function FrameBuffer:set(x, y, ...)
+    self:getImageData()
+    self.imageData:setPixel(x, y, Color.fromParam(...):rgba())
+end
+
+function FrameBuffer:get(x, y)
+    return self.imageData:getPixel(x, y)
+end
+
 
 Image = class()
 
-function Image:init(filename)
+function Image:init(filename, ...)
     self.texture = love.graphics.newImage('resources/'..filename)
+end
+
+function Image:update()
 end
