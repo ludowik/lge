@@ -11,6 +11,8 @@ function saveFile(fileName, table)
 end
 
 function loadSettings()
+    if getOS() == 'web' then return {} end
+
     return readFile(settingsFileName) or {
         sketch = 'Hexagone'
     }
@@ -18,7 +20,7 @@ end
 
 function readFile(fileName)
     local ok, f = pcall(function () return love.filesystem.load(fileName) end)
-    if ok and f then
+    if ok and type(f) == 'function' then
         return f()
     end
 end

@@ -1,3 +1,5 @@
+if getOS() == 'web' then return end
+
 local bit = require 'bit'
 
 local X = os.time()

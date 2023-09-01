@@ -1,0 +1,24 @@
+name = "lge"
+default_targets = ["lovejs"]
+build_directory = "build"
+love_version = "11.4"
+
+love_files = [
+    "./engine/*.lua",
+    "./lib/*.lua",
+    "./lua/*.lua",
+    "./maths/*.lua",
+    "./resources/*.*",
+    "./scene/*.lua",
+    "./sketch/*.lua",
+    "./conf.lua",
+    "./main.lua",
+]
+
+[hooks]
+postbuild = [
+    '"c:/Program Files/Git/usr/bin/unzip" -o {build_directory}/lovejs/lge-lovejs.zip -d {build_directory}/lovejs/lge-lovejs',
+]
+
+[lovejs]
+memory = "2000000000"  # starting memory of the webpage (default is 20 MB)

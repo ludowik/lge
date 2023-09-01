@@ -1,3 +1,5 @@
+if getOS() == 'web' then return end
+
 Pixels = class() : extends(Sketch)
 
 function Pixels:init()
@@ -6,7 +8,7 @@ function Pixels:init()
     self.pixelRatio = 4
 
     self.imageData = love.image.newImageData(W/self.pixelRatio, H/self.pixelRatio)
-    self.pointer = require("ffi").cast("uint8_t*", self.imageData:getFFIPointer()) -- imageData has one byte per channel per pixel.    
+    self.pointer = require('ffi').cast('uint8_t*', self.imageData:getFFIPointer()) -- imageData has one byte per channel per pixel.    
 
     self.parameter:integer('Noise function', 'noiseFunctionIndex', 1, #Pixels.noiseFunctions, 1)
 end
