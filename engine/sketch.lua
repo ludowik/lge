@@ -31,6 +31,7 @@ end
 
 function Sketch:initMenu()
     self.parameter = Parameter()
+    self.parameter:add(UIExpression('fps', 'getFPS()'))
 end
 
 function Sketch:checkReload()
