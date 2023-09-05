@@ -9,7 +9,8 @@ function Parameter:initNavigation()
 
     self:action('<', function ()
         processManager:setSketch('Sketches')
-    end)
+    end,
+    {fillColor=colors.transparent})
 end
 
 function Parameter:initMenu()
@@ -146,8 +147,12 @@ function Parameter:link(label, url)
     end))
 end
 
-function Parameter:action(label, callback)
-    self.currentGroup:add(UIButton(label, callback))
+function Parameter:action(label, callback, styles)
+    local ui = UIButton(label, callback)
+    if styles then
+        ui.styles:attrib(styles)
+    end
+    self.currentGroup:add(ui)
 end
 
 function Parameter:watch(label, expression)
