@@ -33,9 +33,13 @@ function FrameBuffer:update()
     end
 end
 
-function FrameBuffer:set(x, y, ...)
+function FrameBuffer:set(x, y, clr, ...)
     self:getImageData()
-    self.imageData:setPixel(x, y, Color.fromParam(...):rgba())
+    if type(clr) == 'table' then
+        self.imageData:setPixel(x, y, clr:rgba())
+    else
+        self.imageData:setPixel(x, y, clr, ...)
+    end
 end
 
 function FrameBuffer:get(x, y)

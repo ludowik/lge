@@ -101,6 +101,10 @@ function vec2:randomize(w, h)
     return self
 end
 
+function vec2:dist(v)
+    return (v-self):len()
+end
+
 function vec2:len()
     return sqrt(self.x ^ 2 + self.y ^ 2)
 end
