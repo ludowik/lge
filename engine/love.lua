@@ -1,3 +1,15 @@
+function love.load()
+    Engine.load()
+end
+
+function love.update(dt)
+    Engine.update(dt)
+end
+
+function love.draw()  
+    Engine.draw()
+end
+
 if getOS() == 'ios' then
     function love.touchpressed(id, x, y, dx, dy, pressure)
         eventManager:mousepressed(id, x, y)

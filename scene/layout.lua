@@ -1,8 +1,8 @@
 Layout = class()
 
-function Layout:layout(x, y, align)
-    x = x or 0
-    y = y or UI.innerMarge
+function Layout:layout(_x, _y, align)
+    local x = _x or 0
+    local y = _y or UI.innerMarge
 
     align = align or self.layoutMode or 'left'
 
@@ -21,13 +21,13 @@ function Layout:layout(x, y, align)
                 item:computeSize()
             end
 
-            -- right align
+            -- alignment
             if align == 'right' then
                 x = W - item.size.x - UI.innerMarge
             elseif align == 'center' then
                 x = W/2 - item.size.x/2
             end
-            
+
             -- set position
             item.position:set(x, y)
 

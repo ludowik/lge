@@ -4,10 +4,19 @@ function Parameter.setup()
     Parameter.innerMarge = 5
 end
 
+function Parameter:initNavigation()
+    self.layoutMode = 'left'
+
+    self:action('<', function ()
+        processManager:setSketch('Sketches')
+    end)
+end
+
 function Parameter:initMenu()
     self.layoutMode = 'right'
 
     self.menu = self:group('menu')
+
     self:action('update from git', function ()
         updateScripts(true)
         quit()
@@ -91,7 +100,6 @@ function Parameter:group(label, open)
             else
                 self:openGroup(self.items[1])
             end
-            --self:closeGroup(newGroup)
         end
     end)
 

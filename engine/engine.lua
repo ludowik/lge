@@ -4,10 +4,6 @@ function Engine.setup()
     engine = Engine()
 end
 
-function love.load()
-    Engine.load()
-end
-
 function Engine.load()
     classSetup()
     classUnitTesting()
@@ -15,11 +11,14 @@ function Engine.load()
     engine.components = Node()
     engine.components:add(timeManager)
     engine.components:add(tweenManager)
-    engine.components:add(processManager)
     engine.components:add(eventManager)
+    engine.components:add(processManager)    
 
     engine.parameter = Parameter()
     engine.parameter:initMenu()
+
+    engine.navigation = Parameter()
+    engine.navigation:initNavigation()
 
     reload()
 end
@@ -30,16 +29,19 @@ function contains(mouse)
     local object = engine.parameter:contains(mouse.position)
     if object then return object end
 
+    local object = engine.navigation:contains(mouse.position)
+    if object then return object end
+
     local object = process:contains(mouse.position)
     if object then return object end
 end
 
-function love.update(dt)
+function Engine.update(dt)
     engine.components:update(dt)
     updateSettings()
 end
 
-function love.draw()  
+function Engine.draw()
     love.graphics.reset()
 
     local process = processManager:current()
@@ -50,7 +52,9 @@ function love.draw()
     
     resetMatrix()
     resetStyle()
+    
     engine.parameter:draw()
+    engine.navigation:draw()
 end
 
 function toggleFused()
