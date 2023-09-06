@@ -53,8 +53,14 @@ function Engine.draw()
     resetMatrix()
     resetStyle()
     
-    engine.parameter:draw()
-    engine.navigation:draw()
+    if not fused() then
+        engine.parameter:draw()
+
+        local process = processManager:current()
+        if process.__className ~= 'sketches' then
+            engine.navigation:draw()
+        end
+    end
 end
 
 function toggleFused()

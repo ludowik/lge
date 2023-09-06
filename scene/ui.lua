@@ -45,7 +45,11 @@ function UI:draw()
 end
 
 function UI:drawBack()
-    noStroke()
+    if self.styles.strokeColor then
+        stroke(self.styles.strokeColor)
+    else
+        noStroke()
+    end
     fill(self.styles.fillColor)
     rect(self.position.x, self.position.y, self.size.x, self.size.y, 4)
 end

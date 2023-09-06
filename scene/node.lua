@@ -43,6 +43,8 @@ function Node:update(dt)
 end
 
 function Node:draw()
+    if self.state == 'open' and #self.items == 1 then return end
+
     for _,item in ipairs(self.items) do
         if item.visible ~= false then
             if item.draw then

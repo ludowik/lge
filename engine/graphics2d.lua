@@ -251,7 +251,9 @@ end
 function Graphics2d.textSize(str, limit)
     str = tostring(str)
 
-    local font, w, h = love.graphics.getFont()
+    local font, w, h = FontManager.getFont()
+    love.graphics.setFont(font)
+    
     if limit then
         local wrappedtext
         w, wrappedtext = font:getWrap(str, limit or W)

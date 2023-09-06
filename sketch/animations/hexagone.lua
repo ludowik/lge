@@ -4,11 +4,10 @@ function Hexagone:init()
     Sketch.init(self)
 
     self.particles = Node()
-    self.parameter:watch('particles', self.particles)
 end
 
 function Hexagone:update(dt)
-    if random() < 0.2 then
+    if random() < 0.5 then
         self.particles:add(Particle())
     end
     self.particles:removeIfTrue(function (item) return item.state == 'dead' end )
@@ -25,7 +24,7 @@ end
 
 Particle = class()
 
-Particle.DISTANCE = 30
+Particle.DISTANCE = 50
 
 Particle.n = 0
 

@@ -1,6 +1,8 @@
 function setup()
-    sizeW = W
-    sizeH = H
+    scale = 0.5
+
+    sizeW = W * 0.5
+    sizeH = H * 0.5
 
     buf1 = Buffer('float'):resize(sizeW*sizeH)
     buf2 = Buffer('float'):resize(sizeW*sizeH)
@@ -60,7 +62,7 @@ function draw()
     background()
 
     spriteMode(CORNER)
-    sprite(img)
+    sprite(img, 0, 0)
 
     noFill()
 

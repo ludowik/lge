@@ -27,6 +27,11 @@ function EventManager:mousemoved(id, x, y)
 end
 
 function EventManager:mousereleased(id, x, y)
+    if mouse:getDirection(H*.75) == 'down' then
+        toggleFused()
+        return
+    end
+
     mouse:released(id, x, y)
     
     if eventManager.currentObject then        

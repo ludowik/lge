@@ -11,5 +11,11 @@ del horloge.lua from old deposit
 del gol.lua from old deposit
 del waves.lua from old deposit
 del reaction_diffusion.lua from old deposit
+del logo.lua from old deposit
+del fluid.lua from old deposit
+del plan.lua from old deposit
+del pi.lua from old deposit
 
 try random https://github.com/linux-man/randomlua/blob/master/randomlua.lua
+
+transcode pi.js from js deposit

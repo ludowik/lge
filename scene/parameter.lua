@@ -7,10 +7,15 @@ end
 function Parameter:initNavigation()
     self.layoutMode = 'left'
 
-    self:action('<', function ()
+    self:action('<',
+    function ()
         processManager:setSketch('Sketches')
     end,
-    {fillColor=colors.transparent})
+    {
+        fillColor = colors.transparent,
+        strokeColor = colors.red,
+        textColor = colors.transparent
+    })
 end
 
 function Parameter:initMenu()
@@ -111,10 +116,6 @@ function Parameter:group(label, open)
             textColor = colors.white,
         },
         mousereleased = function (...)
-            if mouse:getDirection() == 'left' then
-                toggleFused()
-                return
-            end
             MouseEvent.mousereleased(...)
         end,
     }

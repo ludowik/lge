@@ -9,7 +9,15 @@ function navigate(category)
     scene:clear()
 
     if category then
-        scene:add(UIButton('..', function (self) navigate() end))
+        local link = UIButton(' -oo- ', function (self) navigate() end)
+        link:attrib{
+            styles = {
+                fillColor = colors.gray,
+                fontSize = 32
+            }
+        }
+
+        scene:add(link)
     end
 
     local categories = {}
@@ -20,30 +28,43 @@ function navigate(category)
                     function (self)
                         navigate(env.__category)
                     end)
+
+                categories[env.__category]:attrib{
+                    styles = {
+                        fillColor = colors.gray,
+                        fontSize = 32
+                    }
+                }
+
                 scene:add(categories[env.__category])
             end
             return
         end
 
-        scene:add(UIButton(env.__category and (env.__category..' : '..env.__className) or env.__className,
+        local link = UIButton(env.__className,
             function (self)
                 processManager:setSketch(env.__className)
-            end):attrib{
-                styles = {
-                    fillColor = colors.transparent,
-                },
-                draw = function (self)
-                    UIButton.draw(self)
-                    local process = processManager:getSketch(env.__className)
-                    if process and env.__className ~= 'sketches' then
-                        love.graphics.draw(process.canvas,
-                            self.position.x + self.size.x,
-                            self.position.y, 0,
-                            self.size.y / H,
-                            self.size.y / H)
-                    end
+            end)
+
+        scene:add(link)
+        
+        link:attrib{
+            styles = {
+                fillColor = colors.transparent,
+                fontSize = 32
+            },
+            draw = function (self)
+                UIButton.draw(self)
+                local process = processManager:getSketch(env.__className)
+                if process and env.__className ~= 'sketches' then
+                    love.graphics.draw(process.canvas,
+                        self.position.x + self.size.x,
+                        self.position.y, 0,
+                        self.size.y / H,
+                        self.size.y / H)
                 end
-            })
+            end
+        }
     end)
     scene.layoutMode = 'center'
 end
