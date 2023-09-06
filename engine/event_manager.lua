@@ -38,13 +38,6 @@ function EventManager:mousereleased(id, x, y)
         eventManager.currentObject:mousereleased(mouse)
         eventManager.currentObject = nil
     end
-
-    local mouseDirection = mouse:getDirection(H/3)
-    if mouseDirection == 'up' then
-        processManager:previous()
-    elseif mouseDirection == 'down' then
-        processManager:next()
-    end
 end
 
 function EventManager:keypressed(key, scancode, isrepeat)

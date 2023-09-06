@@ -7,15 +7,18 @@ end
 function Parameter:initNavigation()
     self.layoutMode = 'left'
 
-    self:action('<',
-    function ()
-        processManager:setSketch('Sketches')
-    end,
-    {
-        fillColor = colors.transparent,
-        strokeColor = colors.red,
-        textColor = colors.transparent
-    })
+    self:action('',
+        function ()
+            processManager:setSketch('Sketches')
+        end,
+        {
+            styles = {
+                fillColor = colors.transparent,
+                strokeColor = colors.transparent,
+                textColor = colors.transparent
+            },
+            fixedSize = Anchor(10):size(1, 1)
+        })
 end
 
 function Parameter:initMenu()
@@ -148,10 +151,10 @@ function Parameter:link(label, url)
     end))
 end
 
-function Parameter:action(label, callback, styles)
+function Parameter:action(label, callback, attribs)
     local ui = UIButton(label, callback)
-    if styles then
-        ui.styles:attrib(styles)
+    if attribs then
+        ui:attrib(attribs)
     end
     self.currentGroup:add(ui)
 end
@@ -183,7 +186,7 @@ function Parameter:number(label, varName, min, max, initValue, callback)
     return ui
 end
 
-function Parameter:draw()
-    self:layout()
+function Parameter:draw(x, y)
+    self:layout(x, y)
     Scene.draw(self)
 end

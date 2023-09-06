@@ -31,6 +31,8 @@ function Node:removeIfTrue(f)
 end
 
 function Node:update(dt)
+    if self.state == 'open' and #self.items == 1 then return end
+
     for _,item in ipairs(self.items) do
         if item.visible ~= false then
             if item.update then
@@ -59,6 +61,8 @@ function Node:draw()
 end
 
 function Node:contains(position)
+    if self.state == 'open' and #self.items == 1 then return end
+
     for _,item in ipairs(self.items) do
         if item.visible ~= false then        
             local result = item:contains(position)
@@ -66,6 +70,8 @@ function Node:contains(position)
                 return result
             end
         end
+
+        if self.state == 'close' then break end
     end
 end
 

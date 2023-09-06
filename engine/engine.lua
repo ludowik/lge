@@ -29,7 +29,7 @@ function contains(mouse)
     local object = engine.parameter:contains(mouse.position)
     if object then return object end
 
-    local object = engine.navigation:contains(mouse.position)
+    local object = not fused() and engine.navigation:contains(mouse.position)
     if object then return object end
 
     local object = process:contains(mouse.position)
@@ -58,7 +58,7 @@ function Engine.draw()
 
         local process = processManager:current()
         if process.__className ~= 'sketches' then
-            engine.navigation:draw()
+            engine.navigation:draw(-X, -Y)
         end
     end
 end

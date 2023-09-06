@@ -30,7 +30,12 @@ function UI:fontSize()
     end
 end
 
-function UI:computeSize()    
+function UI:computeSize()
+    if self.fixedSize then
+        self.size:set(self.fixedSize.x, self.fixedSize.y)
+        return
+    end
+
     self:fontSize()
 
     local w, h = textSize(self:getLabel())

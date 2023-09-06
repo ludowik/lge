@@ -3,7 +3,7 @@ function setup()
 
     scene:add(UIExpression('version', 'version'))
     
-    scene:add(UI(''))
+    scene:add(UI())
     scene:add(UIExpression('fps', 'getFPS()'))
     scene:add(UIExpression('delta time', 'string.format("%.3f", DeltaTime)'))
     scene:add(UIExpression('elapsed time', 'string.format("%.1f", ElapsedTime)'))
