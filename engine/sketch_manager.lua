@@ -47,6 +47,7 @@ function Environnement:init(name, itemPath, category)
 
     self.DeltaTime = 0
     self.ElapsedTime = 0
+    self.indexFrame = 0
 end
  
 local environnements = Array()

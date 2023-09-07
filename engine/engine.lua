@@ -23,7 +23,7 @@ function Engine.load()
     reload()
 end
 
-function contains(mouse)
+function Engine.contains(mouse)
     local process = processManager:current()
     
     local object = engine.parameter:contains(mouse.position)
@@ -45,21 +45,31 @@ function Engine.draw()
     love.graphics.reset()
 
     local process = processManager:current()
-
-    resetMatrix()
-    resetStyle()
-    process:drawSketch()
-    
-    resetMatrix()
-    resetStyle()
+    do
+        resetMatrix()
+        resetStyle()
+        process:drawSketch()
+    end  
     
     if not fused() then
+        resetMatrix()
+        resetStyle()
+
         engine.parameter:draw()
 
         local process = processManager:current()
         if process.__className ~= 'sketches' then
-            engine.navigation:draw(-X, -Y)
+            engine.navigation:draw()
         end
+    end
+
+    local fps = getFPS()
+    if fps < 60 then
+        fontSize(12)
+        local w, h = textSize(fps)
+        textColor(colors.white)
+        textMode(CENTER)
+        text(fps, W-X-w/2, -h/2)
     end
 end
 

@@ -12,7 +12,7 @@ end
 function EventManager:mousepressed(id, x, y)
     mouse:pressed(id, x, y)
 
-    eventManager.currentObject = contains(mouse)
+    eventManager.currentObject = Engine.contains(mouse)
     if eventManager.currentObject then
         eventManager.currentObject:mousepressed(mouse)
     end

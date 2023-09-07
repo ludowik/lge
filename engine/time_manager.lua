@@ -12,4 +12,5 @@ end
 function TimeManager:update(dt)
     env.DeltaTime = dt
     env.ElapsedTime = env.ElapsedTime + dt
+    env.indexFrame = env.indexFrame + 1
 end
