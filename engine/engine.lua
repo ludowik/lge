@@ -59,7 +59,7 @@ function Engine.draw()
 
         local process = processManager:current()
         if process.__className ~= 'sketches' then
-            engine.navigation:draw()
+            engine.navigation:draw(-X, -Y)
         end
     end
 

@@ -57,31 +57,21 @@ function updatePiles()
             if num <= 3 then
                 nextpiles[x][y] = num
             else
-                nextpiles[x][y] = 0
+                nextpiles[x][y] = num - 4
             end
         end
     end
 
-    for x=1,size do
-        for y=1,size do
+    for x=2,size-1 do
+        for y=2,size-1 do
             num = sandpiles[x][y]
             if num > 3 then
-                nextpiles[x][y] = nextpiles[x][y] + num - 4
-                if nextpiles[x+1] then
-                    nextpiles[x+1][y] = nextpiles[x+1][y] + 1
-                end
+                --nextpiles[x][y] = nextpiles[x][y] + num - 4
 
-                if nextpiles[x-1] then
-                    nextpiles[x-1][y] = nextpiles[x-1][y] + 1
-                end
-
-                if nextpiles[x][y+1] then
-                    nextpiles[x][y+1] = nextpiles[x][y+1] + 1
-                end
-
-                if nextpiles[x][y-1] then
-                    nextpiles[x][y-1] = nextpiles[x][y-1] + 1
-                end
+                nextpiles[x+1][y] = nextpiles[x+1][y] + 1
+                nextpiles[x-1][y] = nextpiles[x-1][y] + 1
+                nextpiles[x][y+1] = nextpiles[x][y+1] + 1
+                nextpiles[x][y-1] = nextpiles[x][y-1] + 1
             end
         end
     end

@@ -14,10 +14,10 @@ function Parameter:initNavigation()
         {
             styles = {
                 fillColor = colors.transparent,
-                strokeColor = colors.transparent,
+                strokeColor = colors.gray,
                 textColor = colors.transparent
             },
-            fixedSize = Anchor(10):size(1, 1)
+            fixedSize = Anchor(3, 6):size(1, 1)
         })
 end
 

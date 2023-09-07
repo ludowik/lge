@@ -9,6 +9,8 @@ end
 function Graphics2d.initMode()
     if getOS() == 'ios' then
         X, Y, W, H = love.window.getSafeArea()
+        X = X + 5
+        W = W - 5*2
     else
         X, Y, W, H = 10, 20, 800*9/16, 800
         love.window.setMode(2*X+W, 2*Y+H, {
