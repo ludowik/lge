@@ -3,7 +3,7 @@ function setup()
     angle = 0
     mode = 1
 
-    parameter:link('https://easings.net')
+    parameter:link('What is...', 'https://easings.net')
 
     parameter:integer('mode', 'mode', 1, #functions, 1)
 end

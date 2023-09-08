@@ -51,6 +51,7 @@ end
 
 function UI:drawBack()
     if self.styles.strokeColor then
+        strokeSize(self.styles.strokeSize)
         stroke(self.styles.strokeColor)
     else
         noStroke()

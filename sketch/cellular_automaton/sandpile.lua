@@ -38,7 +38,7 @@ function setup()
 
     sandpiles[size/2][size/2] = 1000000
 
-    parameter:link('sandpile', 'https://www.google.com/search?q=sandpile')
+    parameter:link('What is...', 'https://www.google.com/search?q=sandpile')
 end
 
 function update()

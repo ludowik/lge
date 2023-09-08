@@ -9,7 +9,7 @@ function navigate(category)
     scene:clear()
 
     if category then
-        local link = UIButton(' -oo- ', function (self) navigate() end)
+        local link = UIButton(category, function (self) navigate() end)
         link:attrib{
             styles = {
                 fillColor = colors.gray,
@@ -76,6 +76,12 @@ function draw()
     
     scene:layout(0, dy + H/2 - scene.size.y/2)
     scene:draw()
+end
+
+function mousepressed(mouse)
+    if not scene:mousepressed(mouse) then
+        navigate()
+    end
 end
 
 function mousemoved(mouse)

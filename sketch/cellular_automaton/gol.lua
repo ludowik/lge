@@ -13,7 +13,7 @@ function setup()
 
     sizeCell = vec2(CELLS_SIZE, CELLS_SIZE)
 
-    parameter:link('https://beltoforion.de/en/game_of_life/')
+    parameter:link('What is...', 'https://beltoforion.de/en/game_of_life')
 
     parameter:action('clear', function () grid:clear() end)
     parameter:action('reset', function () grid:reset() end)

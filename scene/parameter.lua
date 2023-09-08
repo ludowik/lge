@@ -7,7 +7,7 @@ end
 function Parameter:initNavigation()
     self.layoutMode = 'left'
 
-    self:action('',
+    self:action('sketches',
         function ()
             processManager:setSketch('Sketches')
         end,
@@ -17,6 +17,25 @@ function Parameter:initNavigation()
                 strokeColor = colors.gray,
                 textColor = colors.transparent
             },
+            fixedPosition = Anchor(3, 6):pos(0, 0),
+            fixedSize = Anchor(3, 6):size(1, 1)
+        })
+
+    self:action('menu',
+        function ()
+            if engine.parameter.menu.state == 'hidden' then
+                engine.parameter:openGroup(engine.parameter.menu)
+            else
+                engine.parameter:openGroup(engine.parameter.sketchMenu)
+            end
+        end,
+        {
+            styles = {
+                fillColor = colors.transparent,
+                strokeColor = colors.gray,
+                textColor = colors.transparent
+            },
+            fixedPosition = Anchor(3, 6):pos(2, 0),
             fixedSize = Anchor(3, 6):size(1, 1)
         })
 end

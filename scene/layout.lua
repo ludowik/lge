@@ -29,7 +29,11 @@ function Layout:layout(_x, _y, align)
             end
 
             -- set position
-            item.position:set(x, y)
+            if item.fixedPosition then
+                item.position:set(item.fixedPosition.x, item.fixedPosition.y)
+            else
+                item.position:set(x, y)
+            end
 
             -- compute next y
             y = y + item.size.y + UI.innerMarge

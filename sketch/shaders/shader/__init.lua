@@ -1,5 +1,5 @@
 function setup()
-    path = 'sketch/shader'
+    path = 'sketch/shaders/shader'
 
     shaders = {
         Shader('shader', path),
