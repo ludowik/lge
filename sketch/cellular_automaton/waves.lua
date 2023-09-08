@@ -1,8 +1,8 @@
 function setup()
     scale = 0.5
 
-    sizeW = W * 0.5
-    sizeH = H * 0.5
+    sizeW = even(W * 0.5)
+    sizeH = even(H * 0.5)
 
     buf1 = Buffer('float'):resize(sizeW*sizeH)
     buf2 = Buffer('float'):resize(sizeW*sizeH)

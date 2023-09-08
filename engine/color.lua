@@ -98,6 +98,14 @@ function Color.mix(clr1, clr2, alpha)
     )
 end
 
+function Color:grayscale()
+    grayscale =
+        self.r * 0.299 +
+        self.g * 0.587 +
+        self.b * 0.114
+    return Color(grayscale)
+end
+
 function Color:__tostring()
     return self.r..', '..self.g..', '..self.b..', '..self.a
 end

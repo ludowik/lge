@@ -1,6 +1,5 @@
-if getOS() ~= 'web' then
-    local bit = require 'bit'
-
+local bit = try_require 'bit'
+if bit then
     local X = os.time()
     function setSeedValue(seed)
         X = seed or os.time()
@@ -42,14 +41,16 @@ function setup()
         }
     }
 
-    randomGeneratorList:add({
-        name = 'pseudo random',
-        seed = function (self, seed) setSeedValue(seed) end,
-        random = function (self, ...)
-            local value = getRandomValue()
-            return map(value, 0, 1, ...)
-        end,
-    })
+    if bit then
+        randomGeneratorList:add({
+            name = 'pseudo random',
+            seed = function (self, seed) setSeedValue(seed) end,
+            random = function (self, ...)
+                local value = getRandomValue()
+                return map(value, 0, 1, ...)
+            end,
+        })
+    end
 
     anchor = Anchor(12, #randomGeneratorList + 3)
 

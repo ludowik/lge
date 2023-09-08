@@ -14,6 +14,12 @@ map = math.map
 
 abs = math.abs
 
+function math.sign(value)
+    if value == 0 then return 0 end
+    return value > 0 and 1 or -1
+end
+sign = math.sign
+
 floor = math.floor
 ceil = math.ceil
 round = function (v) return math.ceil(v - 0.5) end
@@ -44,4 +50,12 @@ function getPowerOf2(value)
         n = n + 1
     end
     return n
+end
+
+function even(value)
+    return value + value % 2
+end
+
+function odd()
+    return value + value % 2 - 1
 end

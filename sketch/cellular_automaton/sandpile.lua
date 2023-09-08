@@ -1,16 +1,3 @@
-function even(value)
-    return value + value % 2
-end
-
-function odd()
-    return value + value % 2 - 1
-end
-
-function try_require(module)
-    local ok, result = pcall(function () return require(module) end)
-    return ok and result
-end
-
 local ffi = try_require 'ffi'
 
 function setup()

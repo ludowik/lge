@@ -105,7 +105,7 @@ function getFPS()
 end
 
 function exit()
-    local ffi = require 'ffi'
+    local ffi = try_require 'ffi'
     if ffi then
         ffi.cdef 'void exit(int)'
         ffi.C.exit(0)
