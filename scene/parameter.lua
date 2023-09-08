@@ -10,6 +10,7 @@ function Parameter:initNavigation()
     self:action('sketches',
         function ()
             processManager:setSketch('Sketches')
+            self:setStateForAllGroups('hidden', true)
         end,
         {
             styles = {
@@ -17,8 +18,8 @@ function Parameter:initNavigation()
                 strokeColor = colors.gray,
                 textColor = colors.transparent
             },
-            fixedPosition = Anchor(3, 6):pos(0, 0),
-            fixedSize = Anchor(3, 6):size(1, 1)
+            fixedPosition = vec2(Anchor(3, 6):pos(0, 0).x, -Y),
+            fixedSize = Anchor(3, 4):size(1.25, 1)
         })
 
     self:action('menu',
@@ -35,8 +36,8 @@ function Parameter:initNavigation()
                 strokeColor = colors.gray,
                 textColor = colors.transparent
             },
-            fixedPosition = Anchor(3, 6):pos(2, 0),
-            fixedSize = Anchor(3, 6):size(1, 1)
+            fixedPosition = vec2(Anchor(3, 6):pos(1.75, 0).x, -Y),
+            fixedSize = Anchor(3, 4):size(1.25, 1)
         })
 end
 
