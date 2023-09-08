@@ -85,12 +85,12 @@ function GolGrid:resume()
 end
 
 function GolGrid:addLife(x, y)
-    x = x or random(CELLS_COUNT.x)
-    y = y or random(CELLS_COUNT.y)
+    x = x or randomInt(CELLS_COUNT.x)
+    y = y or randomInt(CELLS_COUNT.y)
 
     for i=1,6 do
-        local dx = random(-2, 2)
-        local dy = random(-2, 2)
+        local dx = randomInt(-2, 2)
+        local dy = randomInt(-2, 2)
 
         self:set(x+dx, y+dy, true)
     end

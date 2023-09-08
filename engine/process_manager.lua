@@ -90,6 +90,6 @@ function ProcessManager:next()
 end
 
 function ProcessManager:random()
-    self:setCurrentSketch(random(#self.items))
+    self:setCurrentSketch(randomInt(#self.items))
     return self:current()
 end

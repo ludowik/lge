@@ -86,7 +86,7 @@ function Array:clone()
 end
 
 function Array:random()
-    return self[random(1, #self)]
+    return self[randomInt(1, #self)]
 end
 
 function Array:tolua()

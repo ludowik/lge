@@ -9,3 +9,4 @@ delete gol from lca.js deposit
 delete collatz from lca.js deposit
 delete schotter from lca.js deposit
 delete scribble from lca.js deposit
+delete feigenbaum from lca.js deposit

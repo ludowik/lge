@@ -171,6 +171,12 @@ function Parameter:link(label, url)
     end))
 end
 
+function Parameter:linksearch(label)
+    self.currentGroup:add(UIButton(label, function ()
+        openURL('https://www.google.com/search?q='..label)
+    end))
+end
+
 function Parameter:action(label, callback, attribs)
     local ui = UIButton(label, callback)
     if attribs then

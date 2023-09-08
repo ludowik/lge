@@ -6,8 +6,8 @@ function setup()
 end
 
 function reset()
-    local w = random(32, 128)
-    local h = random(32, 128)
+    local w = randomInt(32, 128)
+    local h = randomInt(32, 128)
 
     w = w + w % 2 - 1
     h = h + h % 2 - 1

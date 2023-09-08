@@ -18,7 +18,7 @@ function update(dt)
         step()
     end
 
-    waterDrop(random(sizeW), random(sizeH))
+    waterDrop(randomInt(sizeW), randomInt(sizeH))
 end
 
 function step()

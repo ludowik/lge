@@ -35,7 +35,7 @@ function Particle:init()
     self.clr.a = 0.8
 
     self.position = vec2()
-    self.angle = PI/13 + TAU/3 * random(1, 3)
+    self.angle = PI/13 + TAU/3 * randomInt(1, 3)
     self.speed = random(50, 150)
     self.distance = Particle.DISTANCE
     self.chanceToDie = 0.1

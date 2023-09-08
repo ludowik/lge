@@ -4,7 +4,7 @@ function string:inList(list)
 end
 
 function string:random()
-    local i = random(1, #self)
+    local i = randomInt(1, #self)
     return self:sub(i, i)
 end
 

@@ -3,13 +3,16 @@ class().setup = function ()
     math.randomseed(time())
 end
 
-seed = math.randomseed
-random = math.random
-
-local __noise__ = love.math.perlinNoise or love.math.noise
-noise = function (x, y, z)
-    x = (x or 0) + 1.23456
-    y = (y or 0) + 2.34567
-    z = (z or 0) + 3.45678
-    return __noise__(x, y, z)
+seed = love.math.setRandomSeed
+random = function (min, max)
+    if min and max then 
+        return love.math.random() * (max-min) + min
+    elseif min then         
+        return love.math.random() * min
+    else
+        return love.math.random()
+    end
 end
+randomInt = love.math.random
+
+noise = love.math.perlinNoise or love.math.noise

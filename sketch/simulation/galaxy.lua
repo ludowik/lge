@@ -38,7 +38,7 @@ function Galaxy:reset()
             random(),
         })
         
-        angle = random() * TAU
+        angle = random(TAU)
         dist = random(galaxyRadius/10)
         self.speeds:add(vec2(
             cos(angle) * dist,
