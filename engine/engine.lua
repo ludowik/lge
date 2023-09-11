@@ -41,10 +41,26 @@ function Engine.update(dt)
     updateSettings()
 end
 
-function Engine.draw()
-    love.graphics.reset()
-
+function noLoop()
     local process = processManager:current()
+    process.frames = 1
+end
+
+function redraw()
+    local process = processManager:current()
+    process.frames = (process.frames or 0) + 1
+end
+
+function Engine.draw()
+    local process = processManager:current()
+    if process.frames then
+        if process.frames == 0 then
+            return
+        end
+        process.frames = process.frames - 1
+    end
+
+    love.graphics.reset()
     do
         resetMatrix()
         resetStyle()
@@ -71,6 +87,8 @@ function Engine.draw()
         textMode(CENTER)
         text(fps, W-X-w/2, -h/2)
     end
+
+    return true
 end
 
 function toggleFused()

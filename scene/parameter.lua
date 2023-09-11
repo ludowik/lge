@@ -24,6 +24,8 @@ function Parameter:initNavigation()
 
     self:action('menu',
         function ()
+            if #engine.parameter.sketchMenu.items > 1 then return end
+
             if engine.parameter.menu.state == 'hidden' then
                 engine.parameter:openGroup(engine.parameter.menu)
             else

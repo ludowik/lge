@@ -7,16 +7,20 @@ function Graphics2d.setup()
 end
 
 function Graphics2d.initMode()
+    local fullscreen = false
     if getOS() == 'ios' then
         X, Y, W, H = love.window.getSafeArea()
         X = X + 5
         W = W - 5*2
+        fullscreen = true
     else
-        X, Y, W, H = 10, 20, 800*9/16, 800
-        love.window.setMode(2*X+W, 2*Y+H, {
-            msaa = 5
-        })
+        X, Y, W, H = 5, 51, 365, 730
     end
+
+    love.window.setMode(2*X+W, 2*Y+H, {
+        msaa = 3,
+        fullscreen = fullscreen,
+    })
 end
 
 function Graphics2d.background(clr, ...)
@@ -193,15 +197,17 @@ function Graphics2d.ellipse(x, y, rx, ry, mode)
         x, y = x-rx, y-ry
     end
 
+    local segments = 64
+
     if fill() then
         love.graphics.setColor(fill():rgba())
-        love.graphics.ellipse('fill', x, y, rx, ry)
+        love.graphics.ellipse('fill', x, y, rx, ry, segments)
     end
     if stroke() then
         local size = strokeSize()
         love.graphics.setColor(stroke():rgba())
         love.graphics.setLineWidth(size)
-        love.graphics.ellipse('line', x, y, rx-size/2, ry-size/2)
+        love.graphics.ellipse('line', x, y, rx-size/2, ry-size/2, segments)
     end
 end
 

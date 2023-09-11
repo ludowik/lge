@@ -1,6 +1,5 @@
 class().setup = function ()
-    --love.math.setRandomSeed(love.timer.time())
-    math.randomseed(time())
+    love.math.setRandomSeed(51)
 end
 
 seed = love.math.setRandomSeed
@@ -15,4 +14,4 @@ random = function (min, max)
 end
 randomInt = love.math.random
 
-noise = love.math.perlinNoise or love.math.noise
+noise = love.math.simplexNoise or love.math.noise
