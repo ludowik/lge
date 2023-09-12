@@ -10,7 +10,6 @@ impact of hihdpi on pixels rendering ? size of imageData xN ?
 
 import "math functions.lua" from lca deposit
 import "line.lua" from lca deposit
-transcode "pi.js" from lca.js deposit
 transcode "flow fields.js" from lca.js deposit
 transcode "circle packing.js" from lca.js deposit
 
@@ -20,6 +19,9 @@ delete "pi.lua" from lca deposit
 delete "density.lua" from lca deposit
 delete "fallin square.lua" from lca deposit
 delete "blend rect.js" from lca.js deposit
+delete "shader_glsl.js" from lca.js deposit
+delete "shader_js.js" from lca.js deposit
+delete "shader" directory from lca deposit
 
 update sketches menu in lca.js deposit
 

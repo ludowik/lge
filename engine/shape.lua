@@ -9,6 +9,8 @@ function Shape:init(type)
 end
 
 function Shape:draw()
+    if #self.vertices < 4 then return end
+    
     if self.type == LINES then
         for i=1,#self.vertices,4 do
             line(self.vertices[i], self.vertices[i+1], self.vertices[i+2], self.vertices[i+3])

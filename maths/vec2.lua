@@ -19,6 +19,13 @@ function vec2.fromAngle(angle)
     return vec2(cos(angle), sin(angle))
 end
 
+function vec2:rotate(angle)
+    local c, s = cos(angle), sin(angle)
+    return vec2(
+        c * self.x - s * self.y,
+        s * self.x + c * self.y)
+end
+
 function vec2:clone()
     return vec2(self.x, self.y)
 end

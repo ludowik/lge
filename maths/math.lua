@@ -25,9 +25,13 @@ ceil = math.ceil
 round = function (v) return math.ceil(v - 0.5) end
 
 sqrt = math.sqrt
+pow = math.pow
 
 sin = math.sin
 cos = math.cos
+
+tan = math.tan
+atan2 = math.atan2
 
 rad = math.rad
 deg = math.deg
@@ -58,4 +62,46 @@ end
 
 function odd()
     return value + value % 2 - 1
+end
+
+function dist(x1, y1, x2, y2)
+    local dx = x2 - x1
+    local dy = y2 - y1
+    return sqrt(dx ^ 2 + dy ^ 2)
+end
+
+function dist3d(x1, y1, z1, x2, y2, z2)
+    local dx = x2 - x1
+    local dy = y2 - y1
+    local dz = z2 - z1
+    return sqrt(dx ^ 2 + dy ^ 2 + dz ^ 2)
+end
+
+function gcd(a, b)
+    if a < b then
+        a, b = b, a
+    end
+    local m = a % b
+    if m == 0 then
+        return b
+    end
+    return gcd(b, m)
+end
+
+function coprime(a, b)
+    return gcd(a, b) == 1
+end
+
+function cofactor(a, b)
+    return gcd(a, b) ~= 1
+end
+
+function prime(a)
+    if a <= 1 then return false end
+    for i=2,sqrt(a) do
+        if a % i == 0 then
+            return false
+        end
+    end
+    return true
 end

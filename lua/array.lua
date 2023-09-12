@@ -1,6 +1,4 @@
 Array = class() : extends(table)
-Array.add = table.insert
-Array.unpack = table.unpack or unpack
 
 table.__className = 'table'
 
@@ -11,6 +9,14 @@ end
 function Array:__tostring()
     return tostring(#self)
 end
+
+Array.add = table.insert
+
+Array.push = table.insert
+Array.pop = table.remove
+Array.shift = function (t) table.remove(t, 1) end
+
+Array.unpack = table.unpack or unpack
 
 function Array:removeIfTrue(f)
     for i,v in ipairs(self, true) do

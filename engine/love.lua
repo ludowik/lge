@@ -38,40 +38,16 @@ function love.run()
 	end
 end
 
-function try(f, catch)
-	local ok, result = pcall(f)
-	if not ok then
-		catch()
-		return
-	end
-	return result
-end
-
 function love.load()
-    return try(function ()
-		return Engine.load()
-	end, function ()
-		setSettings('sketch', nil)
-		exit()
-	end)
+    Engine.load()	
 end
 
 function love.update(dt)
-    return try(function ()
-		return Engine.update(dt)
-	end, function ()
-		setSettings('sketch', nil)
-		exit()
-	end)
+    Engine.update(dt)
 end
 
 function love.draw()
-    return try(function ()
-		return Engine.draw()
-	end, function ()
-		setSettings('sketch', nil)
-		exit()
-	end)
+    return Engine.draw()
 end
 
 if getOS() == 'ios' then
