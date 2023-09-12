@@ -46,6 +46,11 @@ function noLoop()
     process.frames = 1
 end
 
+function loop()
+    local process = processManager:current()
+    process.frames = nil
+end
+
 function redraw()
     local process = processManager:current()
     process.frames = (process.frames or 0) + 1

@@ -1,53 +1,77 @@
 function love.run()
-	if love.load then love.load(love.arg.parseGameArguments(arg), arg) end
+	love.load(love.arg.parseGameArguments(arg), arg)
 
 	-- We don't want the first frame's dt to include time taken by love.load.
-	if love.timer then love.timer.step() end
+	love.timer.step()
 
 	local dt = 0
 
-	-- Main loop time.
-	return function()
-		-- Process events.
-		if love.event then
-			love.event.pump()
-			for name, a,b,c,d,e,f in love.event.poll() do
-				if name == "quit" then
-					if not love.quit or not love.quit() then
-						return a or 0
-					end
+	-- Main loop time
+	return function ()
+		-- Process events
+		love.event.pump()
+		for name, a,b,c,d,e,f in love.event.poll() do
+			if name == "quit" then
+				if not love.quit or not love.quit() then
+					return a or 0
 				end
-				love.handlers[name](a,b,c,d,e,f)
 			end
+			love.handlers[name](a,b,c,d,e,f)
 		end
 
 		-- Update dt, as we'll be passing it to update
-		if love.timer then dt = love.timer.step() end
+		dt = love.timer.step()
 
-		-- Call update and draw
-		if love.update then love.update(dt) end -- will pass 0 if love.timer is disabled
+		-- Call update
+		love.update(dt)
 
-		if love.graphics and love.graphics.isActive() then
+		-- Call draw
+		if love.graphics.isActive() then
 			love.graphics.origin()
-			if love.draw() then 
+			local needPresent = love.draw()
+			if needPresent then 
     			love.graphics.present()
             end
 		end
 
-		if love.timer then love.timer.sleep(0.001) end
+		love.timer.sleep(0.001)
 	end
 end
 
+function try(f, catch)
+	local ok, result = pcall(f)
+	if not ok then
+		catch()
+		return
+	end
+	return result
+end
+
 function love.load()
-    Engine.load()
+    return try(function ()
+		return Engine.load()
+	end, function ()
+		setSettings('sketch', nil)
+		exit()
+	end)
 end
 
 function love.update(dt)
-    Engine.update(dt)
+    return try(function ()
+		return Engine.update(dt)
+	end, function ()
+		setSettings('sketch', nil)
+		exit()
+	end)
 end
 
-function love.draw()  
-    return Engine.draw()
+function love.draw()
+    return try(function ()
+		return Engine.draw()
+	end, function ()
+		setSettings('sketch', nil)
+		exit()
+	end)
 end
 
 if getOS() == 'ios' then

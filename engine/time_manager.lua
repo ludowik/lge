@@ -10,6 +10,13 @@ function TimeManager:init()
 end
 
 function TimeManager:update(dt)
+    local process = processManager:current()
+    if process.frames then
+        if process.frames == 0 then
+            return
+        end
+    end
+    
     env.DeltaTime = dt
     env.ElapsedTime = env.ElapsedTime + dt
     env.indexFrame = env.indexFrame + 1
