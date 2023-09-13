@@ -49,17 +49,28 @@ function Sketch:updateSketch(dt)
 end
 
 function Sketch:drawSketch()
-    love.graphics.setCanvas()
-    love.graphics.setShader()
-    
-    love.graphics.clear(0.1, 0.5, 0.1, 1)
+    local processDraw = true
+    if self.frames then
+        if self.frames == 0 then
+            processDraw = false
+        else
+            self.frames = self.frames - 1
+        end
+    end
 
-    self:setContext()
+    if processDraw then
+        love.graphics.setCanvas()
+        love.graphics.setShader()
+        
+        love.graphics.clear(0.1, 0.5, 0.1, 1)
 
-    resetStyle()
-    resetMatrix()
+        self:setContext()
 
-    self:draw()
+        resetStyle()
+        resetMatrix()
+
+        self:draw()
+    end
     
     love.graphics.setCanvas()
     love.graphics.setShader()

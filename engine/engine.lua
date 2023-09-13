@@ -43,7 +43,7 @@ end
 
 function noLoop()
     local process = processManager:current()
-    process.frames = 2
+    process.frames = 1
 end
 
 function loop()
@@ -60,13 +60,7 @@ end
 
 function Engine.draw()
     local process = processManager:current()
-    if process.frames then
-        if process.frames == 0 then
-            return
-        end
-        process.frames = process.frames - 1
-    end
-
+        
     love.graphics.reset()
     do
         resetMatrix()
@@ -80,7 +74,6 @@ function Engine.draw()
 
         engine.parameter:draw()
 
-        local process = processManager:current()
         if process.__className ~= 'sketches' then
             engine.navigation:draw(-X, -Y)
         end
@@ -94,8 +87,6 @@ function Engine.draw()
         textMode(CENTER)
         text(fps, W-X-w/2, -h/2)
     end
-
-    return true
 end
 
 function toggleFused()
