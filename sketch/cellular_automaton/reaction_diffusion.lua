@@ -1,4 +1,4 @@
-ReactionDiffusion = class() : extends(Sketch)
+ReactionDiffusion = class() -- : extends(Sketch)
 
 local gridIn
 local gridOut
@@ -84,8 +84,13 @@ end
 function ReactionDiffusion:draw()
     background(51)
 
+    local dpi = floor(love.window.getDPIScale())
+    message(dpi)
+
     renderImage:getImageData()
     renderImage.imageData:mapPixel(function (x, y, r, g, b, a)
+        x = (x- x % dpi) /dpi
+        y = (y- y % dpi) /dpi
         local cellIn = gridIn[x+1][y+1]
         local c = cellIn.a - cellIn.b
         return c, c, c, 1

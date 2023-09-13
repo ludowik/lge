@@ -1,6 +1,8 @@
 function setup()
     scene = Scene()
 
+    imageData = sketch.canvas:newImageData()
+
     scene:add(UIExpression('version', 'version'))
     
     scene:add(UI())
@@ -10,7 +12,9 @@ function setup()
 
     scene:add(UI())
     scene:add(UIExpression('position', 'X..","..Y'))
-    scene:add(UIExpression('size', 'W..","..H'))    
+    scene:add(UIExpression('size', 'W..","..H'))
+    scene:add(UIExpression('data', 'imageData:getWidth()..","..imageData:getHeight()'))
+    scene:add(UIExpression('data', 'imageData:getWidth()/(2*X+W)'))
 
     scene:add(UI())
     scene:add(UIExpression('startPosition', 'mouse.startPosition'))

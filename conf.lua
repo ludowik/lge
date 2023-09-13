@@ -4,6 +4,7 @@ function love.conf(t)
     end
 
     t.highdpi = true
+    t.window.highdpi = true
     
     love.filesystem.setRequirePath('?.lua;?/init.lua;?/__init.lua')
 end
