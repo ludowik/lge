@@ -53,18 +53,14 @@ end
 
 function redraw()
     local process = processManager:current()
-    process.frames = (process.frames or 0) + 1
+    if process.frames then
+        process.frames = (process.frames or 0) + 1
+    end
 end
 
 function Engine.draw()
     local process = processManager:current()
-    if process.frames then
-        if process.frames == 0 then
-            return
-        end
-        process.frames = process.frames - 1
-    end
-
+        
     love.graphics.reset()
     do
         resetMatrix()
@@ -78,7 +74,6 @@ function Engine.draw()
 
         engine.parameter:draw()
 
-        local process = processManager:current()
         if process.__className ~= 'sketches' then
             engine.navigation:draw(-X, -Y)
         end
@@ -92,8 +87,6 @@ function Engine.draw()
         textMode(CENTER)
         text(fps, W-X-w/2, -h/2)
     end
-
-    return true
 end
 
 function toggleFused()

@@ -28,10 +28,8 @@ function love.run()
 		-- Call draw
 		if love.graphics.isActive() then
 			love.graphics.origin()
-			local needPresent = love.draw()
-			if needPresent then 
-    			love.graphics.present()
-            end
+			love.draw()
+			love.graphics.present()
 		end
 
 		love.timer.sleep(0.001)

@@ -14,9 +14,9 @@ end
 
 function update()
     if getFPS() > 58 then
-        iteration = min(iteration + 99, 50000)
+        iteration = min(iteration + 50, 50000)
     else
-        iteration = max(iteration - 99, 100)
+        iteration = max(iteration - 50, 100)
     end
 
     for i in range(iteration) do
@@ -64,7 +64,7 @@ end
 function EstimatePI:update()
     local pi = self:compute()
     self.values:push(pi)
-    if #self.values > W then
+    while #self.values > W do
         self.values:shift()
     end
 end

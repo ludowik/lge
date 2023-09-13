@@ -4,17 +4,18 @@ function setup()
 end
 
 function draw()
-    local n = 20
-    local size = H / n
+    local m = 12
+    local size = even(W/(m+1))
+    local n = round(H/size)-1
 
     rectMode(CENTER)
     circleMode(CENTER)
 
-    for x=0,n do
-        for y=0,n do
+    for x=1,m do
+        for y=1,n do
             noStroke()
             fill(Color.random())
-            rect(x * size + size / 2, y * size + size / 2, size, size)
+            rect(x * size, y * size, size, size)
 
             stroke(51)
             strokeSize(0.5)
@@ -22,9 +23,9 @@ function draw()
 
             local sizeInternal = random(0.4, 0.85) * size
             if random() < 0.5 then
-                rect(x * size + size / 2, y * size + size / 2, sizeInternal, sizeInternal)
+                rect(x * size, y * size, sizeInternal, sizeInternal)
             else
-                circle(x * size + size / 2, y * size + size / 2, sizeInternal / 2)
+                circle(x * size, y * size, sizeInternal/2)
             end
         end
     end
