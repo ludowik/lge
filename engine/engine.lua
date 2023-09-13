@@ -43,7 +43,7 @@ end
 
 function noLoop()
     local process = processManager:current()
-    process.frames = 1
+    process.frames = 2
 end
 
 function loop()
@@ -53,7 +53,9 @@ end
 
 function redraw()
     local process = processManager:current()
-    process.frames = (process.frames or 0) + 1
+    if process.frames then
+        process.frames = (process.frames or 0) + 1
+    end
 end
 
 function Engine.draw()

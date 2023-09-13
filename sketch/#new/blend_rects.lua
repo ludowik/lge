@@ -14,9 +14,6 @@ function rects()
 end
 
 function draw()
-    a = {}
-    b = a[45][12]
-
     background(colors.black)
 
     blendMode(ADD)

@@ -22,6 +22,8 @@ function navigate(category)
 
     local categories = {}
     environnementsList:foreach(function (env)
+        if env == _G.env then return end
+        
         if env.__category ~= category then
             if category == nil and env.__category and categories[env.__category] == nil then
                 categories[env.__category] = UIButton(env.__category,

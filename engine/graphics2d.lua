@@ -12,15 +12,18 @@ function Graphics2d.initMode()
         X, Y, W, H = love.window.getSafeArea()
         X = X + 5
         W = W - 5*2
-        fullscreen = true
+        local ws, hs = love.window.getMode()
+        love.window.setMode(ws, hs, {
+            msaa = 3,
+            fullscreen = true,
+        })
     else
         X, Y, W, H = 5, 51, 365, 730
+        love.window.setMode(2*X+W, 2*Y+H, {
+            msaa = 3,
+            fullscreen = false,
+        })
     end
-
-    love.window.setMode(2*X+W, 2*Y+H, {
-        msaa = 3,
-        fullscreen = fullscreen,
-    })
 end
 
 function Graphics2d.background(clr, ...)
