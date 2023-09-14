@@ -163,8 +163,7 @@ function Parameter:space()
 end
 
 function openURL(url)    
-    local cmd = getOS() == 'windows' and 'start' or 'open'
-    os.execute(cmd..' '..url)
+    love.system.openURL(url)
 end
 
 function Parameter:link(label, url)

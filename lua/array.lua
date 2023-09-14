@@ -29,7 +29,7 @@ end
 function Array:forn(n, functionOrValue)
     if type(functionOrValue) == 'function' then
         for i in range(n) do
-            self[i] = ffunctionOrValue(i)
+            self[i] = functionOrValue(i)
         end
     else
         for i in range(n) do
@@ -51,6 +51,14 @@ function Array:foreachKey(f)
         f(v, k)
     end
     return self
+end
+
+function Array:map(f)
+    local list = Array()
+    for i,v in ipairs(self) do
+        list:add(f(v, i))
+    end
+    return list
 end
 
 function Array:chainIt()

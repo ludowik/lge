@@ -19,6 +19,14 @@ function vec2.fromAngle(angle)
     return vec2(cos(angle), sin(angle))
 end
 
+function vec2.random(w, h)
+    return vec2():randomize(w, h)
+end
+
+function vec2.randomInScreen()
+    return vec2():randomize(W, H)
+end
+
 function vec2:rotate(angle)
     local c, s = cos(angle), sin(angle)
     return vec2(
@@ -90,10 +98,6 @@ function vec2.div(u, coef)
     u.x = u.x / coef
     u.y = u.y / coef
     return u
-end
-
-function vec2.random(w, h)
-    return vec2():randomize(w, h)
 end
 
 function vec2:randomize(w, h)

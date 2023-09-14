@@ -73,6 +73,10 @@ function Tween:finalize()
     self.state = 'dead'
 end
 
+tween = {
+    easing = {}
+}
+
 function animate(source, target, delay, callback)
     local tween = Tween(source, target, delay, callback)
     tween:play()
