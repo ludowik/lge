@@ -9,8 +9,13 @@ function Parameter:initNavigation()
 
     self:action('sketches',
         function ()
-            processManager:setSketch('Sketches')
-            self:setStateForAllGroups('hidden', true)
+            local process = processManager:current()
+            if process.__className ~= 'sketches' then            
+                processManager:setSketch('Sketches')
+                self:setStateForAllGroups('hidden', true)
+            else
+                process.env.navigate()
+            end
         end,
         {
             styles = {

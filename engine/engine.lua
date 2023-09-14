@@ -73,10 +73,7 @@ function Engine.draw()
         resetStyle()
 
         engine.parameter:draw()
-
-        if process.__className ~= 'sketches' then
-            engine.navigation:draw(-X, -Y)
-        end
+        engine.navigation:draw(-X, -Y)
     end
 
     local fps = getFPS()
