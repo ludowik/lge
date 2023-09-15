@@ -71,11 +71,11 @@ end
 TOP_LEFT = 'top_left'
 BOTTOM_LEFT = 'bottom_left'
 
-function Graphics2d.originMode(mode)
-    if mode then
-        env.__originMode = mode
+function Graphics2d.setOrigin(origin)
+    if origin then
+        env.__origin = origin
     end
-    return env.__originMode or TOP_LEFT
+    return env.__origin or TOP_LEFT
 end
 
 NORMAL = 'alpha'

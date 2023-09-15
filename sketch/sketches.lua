@@ -43,7 +43,7 @@ function navigate(category)
             return
         end
 
-        local link = UIButton(env.__className,
+        local link = UIButton(env.__className:gsub('_', ' '),
             function (self)
                 processManager:setSketch(env.__className)
             end)

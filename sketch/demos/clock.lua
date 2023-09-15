@@ -2,8 +2,6 @@ Horloge = class() : extends(Sketch)
 
 function Horloge:init(lieu, decalage, x, y, rayon)
     Sketch.init(self)
-    
----    originMode(BOTTOM_LEFT)
 
     self.lieu = lieu or 'Garches'
 

@@ -80,7 +80,7 @@ function Sketch:drawSketch()
 
     love.graphics.origin()
 
-    if originMode() == BOTTOM_LEFT then
+    if setOrigin() == BOTTOM_LEFT then
         love.graphics.scale(1, -1)
         love.graphics.translate(0, -(2*Y+H))
     end

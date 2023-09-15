@@ -1,6 +1,5 @@
 function setup()
-    originMode(BOTTOM_LEFT)
-
+    setOrigin(BOTTOM_LEFT)
     Functions()
 end
 
