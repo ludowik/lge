@@ -8,9 +8,6 @@ transcode "flow fields.js" from lca.js deposit
 transcode "circle packing.js" from lca.js deposit
 
 delete "blend rect.js" from lca.js deposit
-delete "shader_glsl.js" from lca.js deposit
-delete "shader_js.js" from lca.js deposit
-delete "shader" directory from lca deposit
 
 update sketches menu in lca.js deposit
 
