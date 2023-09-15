@@ -77,6 +77,8 @@ function vec2.sub(u, v)
 end
 
 function vec2.__mul(u, coef)
+    if type(u) == 'number' then u, coef = coef, u end
+    
     return vec2(
         u.x * coef,
         u.y * coef)
@@ -121,9 +123,14 @@ function vec2:len()
 end
 
 function vec2:normalize(len)
+    return vec2.clone(self):normalizeInPlace(len)
+end
+
+function vec2:normalizeInPlace(len)
     local ratio = (len or 1) / self:len()
     self.x = self.x * ratio
     self.y = self.y * ratio
+    return self
 end
 
 function vec2.scalar(u, v)

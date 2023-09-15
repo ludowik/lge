@@ -53,6 +53,12 @@ function Array:foreachKey(f)
     return self
 end
 
+function Array:indexOf(item)
+    for i,v in ipairs(self) do
+        if item == v then return i end
+    end
+end
+
 function Array:map(f)
     local list = Array()
     for i,v in ipairs(self) do

@@ -61,6 +61,15 @@ function push2globals(klass)
     end
 end
 
+function classnameof(object)
+    return attributeof('__className', object) or 'nil'
+end
+
+function attributeof(attrName, object)
+    global.__object__ = object
+    return evalExpression('global.__object__.'..attrName)
+end
+
 function classSetup()
     for name,klass in pairs(_G) do
         if type(klass) == 'table' and klass.__class then

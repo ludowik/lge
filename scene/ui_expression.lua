@@ -16,12 +16,15 @@ function UIExpression:getLabel()
 end
 
 function UIExpression:evaluateExpression()
-    local type_expression = type(self.expression)
+    local expression = self.expression
+    
+    local type_expression = type(expression)
     if type_expression == 'string' then
-        return tostring(loadstring('return ' .. self.expression)()) or ''
+        return tostring(loadstring('return ' .. expression)())
 
     elseif type_expression == 'table' then
-        return tostring(self.expression) or ''
+        return tostring(expression)
     end
+
     return 'Expression error !'
 end

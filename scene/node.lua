@@ -22,6 +22,10 @@ function Node:count()
     return #self.items
 end
 
+function Node:ipairs()
+    return ipairs(self.items)
+end
+
 function Node:foreach(f)
     return self.items:foreach(f)
 end

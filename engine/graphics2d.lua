@@ -117,6 +117,9 @@ function Graphics2d.strokeSize(size)
     return stylesSet('strokeSize', size)
 end
 
+function Graphics2d.zLevel()
+end
+
 function Graphics2d.point(x, y)
     if stroke() then
         love.graphics.setColor(stroke():rgba())

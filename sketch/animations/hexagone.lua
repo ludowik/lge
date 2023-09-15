@@ -50,7 +50,7 @@ function Particle:update(dt)
         if random() <= self.chanceToDie then
             self.state = 'dead'
         else
-            deltaPosition:normalize(self.distance)
+            deltaPosition:normalizeInPlace(self.distance)
             self.distance = Particle.DISTANCE
 
             if random() < .5 then

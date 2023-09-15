@@ -11,7 +11,7 @@ function FontManager.getFont()
     local ref = fontName..'.'..fontSize
     if not FontManager.fonts[ref] then
         if fontName ~= '' then
-            local fontPath = 'resources'..'/'..fontName..'.ttf'
+            local fontPath = 'resources/fonts/'..fontName..'.ttf'
             FontManager.fonts[ref] = love.graphics.newFont(fontPath, fontSize)
         else
             FontManager.fonts[ref] = love.graphics.newFont(fontSize)

@@ -17,7 +17,6 @@ function render(x, y, radius, level)
         translate(x, y)
         rotate(angle * (level % 2 and -1.5 or 1))
         if color then
-            print((level % 2 == 1) and (radius / (W / 2)) or (1 - radius / (W / 2)))
             fill(Color.hsl((level % 2 == 1) and (radius / (W / 2)) or (1 - radius / (W / 2)), 0.5, 0.5))
         else
             fill((level % 2 == 1) and colors.white or colors.black)
