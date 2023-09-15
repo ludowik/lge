@@ -264,7 +264,7 @@ end
 
 function hsb2rgb(hue, saturation, lightness)
     saturation = saturation or 0.5
-    lightness = lightness or 1
+    lightness = lightness or 0.5
 
     -- Adjusting hue to be in the range of 0-1
     if hue > 1 then hue = hue / 255 end
