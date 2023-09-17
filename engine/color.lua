@@ -106,6 +106,11 @@ function Color:grayscale()
     return Color(grayscale)
 end
 
+function Color:darker()
+    local h, s, l = rgb2hsl(self:rgba())
+    return hsl2rgb(h, s, l - 0.1)
+end
+
 function Color:__tostring()
     return self.r..', '..self.g..', '..self.b..', '..self.a
 end

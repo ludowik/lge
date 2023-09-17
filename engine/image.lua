@@ -50,7 +50,7 @@ end
 Image = class()
 
 function Image:init(filename, ...)
-    self.texture = love.graphics.newImage('resources/'..filename)
+    self.texture = love.graphics.newImage(filename)
 end
 
 function Image:update()

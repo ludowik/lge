@@ -31,6 +31,8 @@ function Shader:loadProgram()
 end
 
 function Shader:loadShaderCode(shader)
+    if not shader.pathFile then return false end
+
     local info = love.filesystem.getInfo(shader.pathFile)
     if not info then return false end
 
@@ -53,6 +55,13 @@ function Shader:send(name, value)
 end
 
 ShaderToy = class() : extends(Shader)
+
+function ShaderToy:init(...)
+    Shader.init(self, ...)
+
+    self.vertexShader = {}
+    self.pixelShader  = {pathFile = self.pathName..'.glsl'}
+end
 
 function ShaderToy:loadShaderCode(shader)
     local ok = Shader.loadShaderCode(self, shader)

@@ -43,7 +43,11 @@ end
 
 function Sketch:updateSketch(dt)
     self:checkReload()
-    if self.update then
+
+    local scene = self.scene or env.scene
+    if scene then
+        scene:update(dt)
+    elseif self.update then
         self:update(dt)
     end
 end

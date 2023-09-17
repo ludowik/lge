@@ -5,7 +5,7 @@ function Sketch2d:init()
     self.clr = Color.random()
     self.anchor = Anchor(15)
 
-    image = Image('rusty_metal.jpg')
+    image = Image('resources/rusty_metal.jpg')
 end
 
 function Sketch2d:draw()

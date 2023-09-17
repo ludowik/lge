@@ -1,0 +1,5 @@
+requireLib {
+    'main',
+    'emitter',
+    'particle'
+}

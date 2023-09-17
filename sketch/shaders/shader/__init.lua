@@ -1,11 +1,24 @@
 function setup()
     path = 'sketch/shaders/shader'
 
-    shaders = {
-        Shader('shader', path),
-        ShaderToy('intro', path),
-        ShaderToy('twisted_columns', path),
-        Shader('chladni_plates', path),
+    shaders = Array()
+
+    local directoryItems = love.filesystem.getDirectoryItems(path)
+    for _,itemName in ipairs(directoryItems) do
+        if itemName:contains('pixel') then 
+            local name = itemName:gsub('%.pixel.glsl', '')
+            shaders:add(Shader(name, path))
+        end
+    end
+
+    local directoryItems = love.filesystem.getDirectoryItems(path..'/shadertoy')
+    for _,itemName in ipairs(directoryItems) do
+        local name = itemName:gsub('%.glsl', '')
+        shaders:add(ShaderToy(name, path..'/shadertoy'))
+    end
+
+    shaderChannel = {
+        [0] = Image(path..'/channel/cube00_0.jpg')
     }
 
     parameter:number('SHAPE_SIZE', 'SHAPE_SIZE', 0.1, 2.5, 0.5)
@@ -15,8 +28,6 @@ function setup()
 
     parameter:integer('depth', 'z', 3)
     parameter:integer('shader', 'shaderIndex', 1, #shaders, #shaders)
-
-    image = Image('rusty_metal.jpg')
 end
 
 function update(dt)
@@ -27,7 +38,7 @@ function update(dt)
         if not paused then
             shader:send('iTime', ElapsedTime);
         end
-        shader:send('iChannel0', image.texture);
+        shader:send('iChannel0', shaderChannel[0].texture);
         shader:send('TIMESCALE', 1.);
         shader:send('SHAPE_SIZE', SHAPE_SIZE);
         shader:send('SMOOTHNESS', SMOOTHNESS);
