@@ -4,6 +4,8 @@ function setup()
     reset()
 
     minSize = min(W, H)
+
+    sketch.fb = FrameBuffer(w, h)
 end
 
 function reset()

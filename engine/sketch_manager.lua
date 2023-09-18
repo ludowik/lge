@@ -2,7 +2,7 @@ function load(reload)
     declareSketches(reload)
     loadSketches()
 
-    processManager:setSketch(getSettings('sketch'))
+    processManager:setSketch(getSettings('sketch', 'sketches'))
 end
 
 function declareSketches(reload)

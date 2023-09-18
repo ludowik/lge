@@ -45,6 +45,7 @@ function ProcessManager:setCurrentSketch(processIndex)
         engine.parameter.currentGroup.items[1],
         unpack(process.parameter.items),
     }
+
     redraw()
 end
 

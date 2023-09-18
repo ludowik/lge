@@ -87,7 +87,7 @@ function Engine.draw()
 end
 
 function toggleFused()
-    setSettings('fused', not getSettings('fused'))
+    setSettings('fused', not getSettings('fused', false))
 
     if fused() then
         engine.parameter:openGroup(engine.parameter.currentGroup)
@@ -97,7 +97,7 @@ function toggleFused()
 end
 
 function fused()
-    return getSettings('fused')
+    return getSettings('fused', false)
 end
 
 function reload(reload)

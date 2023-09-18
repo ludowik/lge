@@ -1,4 +1,6 @@
-Sketch = class() : extends(Index, State, Rect, FrameBuffer, MouseEvent, KeyboardEvent)
+Sketch = class() : extends(Index, State, Rect, MouseEvent, KeyboardEvent)
+
+local fb
 
 function Sketch:init(w, h)
     Index.init(self)
@@ -16,7 +18,10 @@ function Sketch:init(w, h)
     
     Rect.init(self, 0, 0, w, h)
 
-    FrameBuffer.init(self, w, h)
+    --FrameBuffer.init(self, w, h)
+    fb = fb or FrameBuffer(w, h)
+    self.fb = fb
+
     MouseEvent.init(self)
     KeyboardEvent.init(self)
 
@@ -68,7 +73,8 @@ function Sketch:drawSketch()
         
         love.graphics.clear(0.1, 0.5, 0.1, 1)
 
-        self:setContext()
+        --self:setContext()
+        love.graphics.setCanvas(self.fb.canvas)
 
         resetStyle()
         resetMatrix()
@@ -80,7 +86,7 @@ function Sketch:drawSketch()
     love.graphics.setShader()
 
     love.graphics.setColor(colors.white:rgba())
-    love.graphics.setBlendMode('alpha')
+    love.graphics.setBlendMode('replace')
 
     love.graphics.origin()
 
@@ -89,12 +95,12 @@ function Sketch:drawSketch()
         love.graphics.translate(0, -(2*Y+H))
     end
 
-    love.graphics.draw(self.canvas,
+    love.graphics.draw(self.fb.canvas,
         self.position.x, -- x
         self.position.y, -- y
         0, -- rotation
-        self.size.x / self.canvas:getWidth(), -- scale x
-        self.size.y / self.canvas:getHeight()) -- scale y
+        self.size.x / self.fb.canvas:getWidth(), -- scale x
+        self.size.y / self.fb.canvas:getHeight()) -- scale y
 end
 
 function Sketch:draw()

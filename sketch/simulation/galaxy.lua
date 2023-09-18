@@ -120,7 +120,7 @@ function Galaxy:step(dt)
 end
 
 function Galaxy:draw()
-    background(Color(0,0,0,0.02))
+    background(0, 0, 0, 0.05)
 
     local scaleSize = W / (2 * galaxyRadius)
 

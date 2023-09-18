@@ -18,12 +18,7 @@ function setup()
 end
 
 function draw(dt)
-    noStroke()
-
-    fill(0, 0, 0, 0.05)
-
-    rectMode(CORNER)
-    rect(0, 0, W, H)
+    background(0, 0, 0, 0.05)
 
     translate(W/2, H/2)
 
