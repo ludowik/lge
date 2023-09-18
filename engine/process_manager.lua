@@ -32,7 +32,18 @@ function ProcessManager:getSketch(name)
     end
 end
 
+function ProcessManager:saveCanvasForCurrentSketch(processIndex)
+    -- TODO
+end
+
+function ProcessManager:loadCanvasForCurrentSketch(processIndex)
+    -- TODO
+end
+
 function ProcessManager:setCurrentSketch(processIndex)
+    
+    self:saveCanvasForCurrentSketch()
+
     self.processIndex = processIndex
     _G.env = self:current().env or _G.env
     setfenv(0, _G.env)
@@ -43,6 +54,9 @@ function ProcessManager:setCurrentSketch(processIndex)
         engine.parameter.currentGroup.items[1],
         unpack(process.parameter.items),
     }
+
+    self:loadCanvasForCurrentSketch()
+
     redraw()
 end
 

@@ -54,18 +54,7 @@ function navigate(category)
             styles = {
                 fillColor = colors.transparent,
                 fontSize = 32
-            },
-            draw = function (self)
-                UIButton.draw(self)
-                local process = processManager:getSketch(env.__className)
-                if process and env.__className ~= 'sketches' then
-                    love.graphics.draw(process.canvas,
-                        self.position.x + self.size.x,
-                        self.position.y, 0,
-                        self.size.y / H,
-                        self.size.y / H)
-                end
-            end
+            }
         }
     end)
     scene.layoutMode = 'center'
