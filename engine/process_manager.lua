@@ -33,6 +33,8 @@ function ProcessManager:getSketch(name)
 end
 
 function ProcessManager:setCurrentSketch(processIndex)
+    collectgarbage('collect')
+
     self.processIndex = processIndex
     _G.env = self:current().env or _G.env
     setfenv(0, _G.env)
