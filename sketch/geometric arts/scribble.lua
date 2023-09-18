@@ -1,5 +1,6 @@
 function setup()
     renderCount = 100
+    sketch.fb = FrameBuffer(w, h)
 end
 
 function update(dt)
@@ -9,8 +10,6 @@ end
 function draw()
     local w = W / 2;
     local v = renderCount / 1000;
-
-    blendMode(NORMAL);
 
     translate(W/2, H/2);
     rotate(noise(v / 10) * TAU);

@@ -58,15 +58,9 @@ end
 function draw()
     if nextValue == 1 then
         background(0)
+    else
+        background(0, 0, 0, 0.005)
     end
-    
-    blendMode(NORMAL)
-
-    noStroke()
-    fill(0, 0, 0, 0.001)
-
-    rectMode(CORNER)
-    rect(0, 0, W, H)
     
     translate(W/2, H/2)
 

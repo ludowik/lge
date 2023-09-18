@@ -344,7 +344,7 @@ function The2048:draw()
     self.cells:removeIfTrue(function (cell) return cell.value == -1 end)
 
     if self:isGameOver() then
-        background(0, 0, 0, 0.6)
+        background(0, 0, 0, 0.5)
 
         stroke(colors.white)
         fill(colors.black)

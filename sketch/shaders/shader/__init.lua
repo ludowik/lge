@@ -51,6 +51,8 @@ function update(dt)
 end
 
 function draw()
+    background()
+    
     local shader = shaders[shaderIndex]
     
     love.graphics.clear(0, 0, 0, 1)

@@ -67,6 +67,8 @@ function updatePiles()
 end
 
 function draw()
+    background(colors.white)
+
     local column, num, clr
 
     img:getImageData()

@@ -9,8 +9,10 @@ function Pixels:init()
 
     self.pixelRatio = 4
 
-    self.imageData = love.image.newImageData(W/self.pixelRatio, H/self.pixelRatio)
-    self.pointer = ffi.cast('uint8_t*', self.imageData:getFFIPointer()) -- imageData has one byte per channel per pixel
+    self.img = FrameBuffer(W/self.pixelRatio, H/self.pixelRatio)
+
+    -- self.imageData = love.image.newImageData(W/self.pixelRatio, H/self.pixelRatio)
+    -- self.pointer = ffi.cast('uint8_t*', self.imageData:getFFIPointer()) -- imageData has one byte per channel per pixel
 
     self.parameter:integer('Noise function', 'noiseFunctionIndex', 1, #Pixels.noiseFunctions, 6)
 end
@@ -84,29 +86,19 @@ Pixels.noiseFunctions = {
 }
 
 function Pixels:draw()
+    background()
+
     seed = 56494446
 
     local fragment = Pixels.noiseFunctions[noiseFunctionIndex]
-    
-	local pointer, i = self.pointer, 0    
-    local r, g, b, a = 0, 0, 0, 0
 
-    local w, h = self.imageData:getWidth(), self.imageData:getHeight()
-    for y in index(h) do
-        for x in index(w) do
-            r, g, b, a = fragment(x, y, w, h)
+    self.img:getImageData()
+    local w, h = self.img.imageData:getWidth(), self.img.imageData:getHeight()
+    self.img.imageData:mapPixel(function (x, y)
+        local r, g, b, a = fragment(x, y, w, h)
+        return r, (g or r), (b or r), (a or 1)
+    end)
 
-            pointer[i  ] = r * 255
-            pointer[i+1] = (g or r) * 255
-            pointer[i+2] = (b or r) * 255
-            pointer[i+3] = (a or 1) * 255
-
-            i = i + 4
-        end
-	end
-
-    local image = love.graphics.newImage(self.imageData)
-    image:setFilter('nearest', 'nearest', 0)
-    
-    love.graphics.draw(image, 0, 0, 0, self.pixelRatio, self.pixelRatio)
+    scale(self.pixelRatio, self.pixelRatio)
+    sprite(self.img)
 end

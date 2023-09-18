@@ -24,14 +24,10 @@ function UI:getLabel()
     return tostring(self.label)
 end
 
-function UI:getValue()
-    local value
-    if type(self.value) == 'number' then
-        value = self.value
-    elseif type(self.value) == 'table' and self.value.get then
-        value = self.value:get()
-    else
-        value = self.value
+function UI:getValue(value)
+    value = value or self.value
+    if type(value) == 'table' and value.get then
+        value = value:get()
     end
     
     local strValue

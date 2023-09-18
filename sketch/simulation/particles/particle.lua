@@ -1,4 +1,4 @@
-class('Particle')
+Particle = class()
 
 MAX_LIFE = 350
 
@@ -44,7 +44,7 @@ function Particle.initImage(n)
     n = n or 200
     local img = FrameBuffer(n, n)
     img:setContext()
-    background(0, 0, 0, 0)
+    background(0)
     ellipseMode(CENTER)
     for i=n,1,-1 do
         noStroke()

@@ -41,16 +41,7 @@ function reset()
 end
 
 function draw()
-    noStroke()
-
-    blendMode(NORMAL)
-    
-    fill(0, 0, 0, 0.02)
-
-    rectMode(CORNER)
-    rect(0, 0, W, H)
-
-    noFill()
+    background(0, 0, 0, 0.05)
 
     local function drawLines()
         translate(3, 3)
