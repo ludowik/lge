@@ -12,7 +12,7 @@ require 'engine.shape'
 require 'engine.mesh'
 require 'engine.image'
 require 'engine.font'
---require 'engine.font_icons'
+require 'engine.font_icons'
 
 require 'engine.anchor'
 require 'engine.mouse'

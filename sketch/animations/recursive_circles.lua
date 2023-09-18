@@ -1,15 +1,15 @@
 function setup()
     angle = 0
---    colorMode(HSB, 1)
-    parameter:boolean('color', 'color', true)
+
+    parameter:boolean('color', 'color', false)
 end
 
 function update(dt)
-    angle = angle + dt
+    angle = angle + dt * (TAU / 16)
 end
 
 function render(x, y, radius, level)
-    if radius <= 3 then return end
+    if radius <= 5 then return end
     level = level or 0
 
     pushMatrix()
