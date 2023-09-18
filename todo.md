@@ -2,8 +2,6 @@ detect scripts error and execution error to change the current sketch to "sketch
 
 try random https://github.com/linux-man/randomlua/blob/master/randomlua.lua
 
-impact of hihdpi on pixels rendering ? size of imageData xN ?
-
 transcode "flow fields.js" from lca.js deposit
 transcode "circle packing.js" from lca.js deposit
 

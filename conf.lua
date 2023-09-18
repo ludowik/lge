@@ -3,8 +3,8 @@ function love.conf(t)
         t.audio.mixwithsystem = true
     end
 
-    t.highdpi = true
-    t.window.highdpi = true
+    if t.highdpi ~= nil then t.highdpi = true end
+    if t.window.highdpi ~= nil then t.window.highdpi = true end
     
     love.filesystem.setRequirePath('?.lua;?/init.lua;?/__init.lua')
 end

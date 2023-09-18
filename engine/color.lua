@@ -74,6 +74,10 @@ function Color:contrast()
     return lightness >= 0.1791 and colors.black or colors.white
 end
 
+function Color:alpha(a)
+    return Color(self.r, self.g, self.b, a)
+end
+
 function Color:setComponents(r, g, b, a)
     self.r = r or 0
     self.g = g or r or 0

@@ -78,6 +78,10 @@ function Graphics2d.setOrigin(origin)
     return env.__origin or TOP_LEFT
 end
 
+LANDSCAPE_ANY = 'landscape_any'
+function Graphics2d.supportedOrientations(orientation)
+end
+
 NORMAL = 'alpha'
 ADD = 'add'
 MULTIPLY = 'multiply'
@@ -260,6 +264,8 @@ function Graphics2d.text(str, x, y, limit, align)
     else
         love.graphics.print(str, x, y)
     end
+
+    return ws, hs
 end
 
 function Graphics2d.textSize(str, limit)

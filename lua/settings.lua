@@ -43,8 +43,8 @@ function setSettings(name, value)
     saveSettings()
 end
 
-function getSettings(name)
-    return settings[name]
+function getSettings(name, defaultValue)
+    return settings[name] or defaultValue
 end
 
 setSettings('testBoolean', true)
