@@ -23,7 +23,8 @@ end
 
 function FrameBuffer:getImageData()
     if self.imageData then return end
-    self.imageData = self.canvas:newImageData()
+    local getImageData = load.graphics.readbackTexture or self.canvas.newImageData
+    self.imageData = getImageData(self.canvas)
 end
 
 function FrameBuffer:update()
