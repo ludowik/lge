@@ -1,20 +1,31 @@
-detect scripts error and execution error to change the current sketch to "sketches"
+engine
+- detect scripts error and execution error to change the current sketch to "sketches" for the next launch
 
-try random https://github.com/linux-man/randomlua/blob/master/randomlua.lua
+easings
+- move circles with differents easings functions using animate module
 
-transcode "flow fields.js" from lca.js deposit
-transcode "circle packing.js" from lca.js deposit
+blinking circle
+- les fréquences de changement des tailles de cercles sont trop en phases
+- l'épaisseur des cercles aussi
 
-delete "blend rect.js" from lca.js deposit
+random
+- try random https://github.com/linux-man/randomlua/blob/master/randomlua.lua
 
-update sketches menu in lca.js deposit
+fonctions activables des sketches
+- 2 fingers pinch gesture => zoom up or down
+- 2 fingers swipe gesture => translate screen
+- 1 touch / release => pause / resume
 
-delete "gol" from lca.js deposit
-delete "feigenbaum" from lca.js deposit
-delete "primitives 2d\lines" from lca.js deposit
-delete "primitives 2d\primitives" from lca.js deposit
 
-zoom on sketch - via 2 fingers pinch gesture
-translate on sketch - via swipe gesture
+lca-js deposit
+- import/transcode "flow fields.js"
+- import/transcode "circle packing.js"
+- update sketches menu
+- delete "blend rect.js"
+- delete "gol"
+- delete "feigenbaum"
+- delete "primitives 2d\lines"
+- delete "primitives 2d\primitives"
 
-easings - move circles with differents easings functions using animate module
+lca deposit
+- 
