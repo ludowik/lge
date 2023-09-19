@@ -5,7 +5,7 @@ end
 
 function requireLib(modules)
     for i,module in ipairs(modules) do
-        require(scriptPath(level)..'/'..module)
+        require(scriptPath(level):gsub('/', '.')..'.'..module)
     end
 end
 

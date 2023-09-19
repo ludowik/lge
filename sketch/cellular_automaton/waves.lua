@@ -14,11 +14,11 @@ function setup()
 end
 
 function update(dt)
-    for i=1,2 do
-        step()
-    end
+    step()
 
-    waterDrop(randomInt(sizeW), randomInt(sizeH))
+    if random() > 1 then
+        waterDrop(randomInt(sizeW), randomInt(sizeH))
+    end
 end
 
 function step()
@@ -77,6 +77,6 @@ function mousereleased(touch)
 end
 
 function waterDrop(x, y, h)
-    local offset = getOffset(x, y)
+    local offset = getOffset(x/2, y/2)
     buf1[offset] = h or random(100, 1000)
 end

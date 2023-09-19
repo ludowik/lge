@@ -13,8 +13,6 @@ function UI:init(label)
         textColor = colors.white,
         fontSize = 22,
     }
-
-    self.sizeMax = vec2()
 end
 
 function UI:getLabel()
@@ -56,8 +54,7 @@ function UI:computeSize()
     self:fontSize()
 
     local w, h = textSize(self:getLabel())
-    self.size:set(max(self.sizeMax.x, w + 2 * UI.innerMarge), h)
-    self.sizeMax:set(self.size)
+    self.size:set(w + 2 * UI.innerMarge, h)
 end
 
 function UI:draw()
@@ -76,7 +73,12 @@ function UI:drawBack()
     end
 
     local r = 4
+    
     fill(self.styles.fillColor)
+    if eventManager.currentObject == self then
+        fill(colors.red:alpha(0.25))
+    end
+
     rect(self.position.x, self.position.y, self.size.x, self.size.y, r)
 end
 

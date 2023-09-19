@@ -2,7 +2,7 @@ function setup()
     scene = Scene()
 
     fb = FrameBuffer(W, H)
-    imageData = fb.canvas:newImageData()
+    imageData = fb:getImageData()
 
     scene:add(UIExpression('version', 'version'))
     

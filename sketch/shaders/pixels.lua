@@ -8,11 +8,7 @@ function Pixels:init()
     Sketch.init(self)
 
     self.pixelRatio = 4
-
     self.img = FrameBuffer(W/self.pixelRatio, H/self.pixelRatio)
-
-    -- self.imageData = love.image.newImageData(W/self.pixelRatio, H/self.pixelRatio)
-    -- self.pointer = ffi.cast('uint8_t*', self.imageData:getFFIPointer()) -- imageData has one byte per channel per pixel
 
     self.parameter:integer('Noise function', 'noiseFunctionIndex', 1, #Pixels.noiseFunctions, 6)
 end
