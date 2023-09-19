@@ -14,7 +14,7 @@ function Layout:layout(_x, _y, align)
     end
 
     for _,item in ipairs(self.items) do
-        if item.visible ~= false then
+        if item.visible then
             if item.layout then
                 item:layout(x, y, align)
             else

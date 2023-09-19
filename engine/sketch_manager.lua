@@ -123,6 +123,8 @@ function loadSketch(env)
             'setup',
             'update',
             'draw',
+            'pause',
+            'resume',
             'mousepressed',
             'mousemoved',
             'mousereleased',

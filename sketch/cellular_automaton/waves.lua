@@ -16,7 +16,7 @@ end
 function update(dt)
     step()
 
-    if random() > 1 then
+    if random() > 0.95 then
         waterDrop(randomInt(sizeW), randomInt(sizeH))
     end
 end
@@ -73,10 +73,10 @@ function draw()
 end
 
 function mousereleased(touch)
-    waterDrop(touch.position.x, touch.position.y)
+    waterDrop(touch.position.x*ratio, touch.position.y*ratio)
 end
 
 function waterDrop(x, y, h)
-    local offset = getOffset(x/2, y/2)
+    local offset = getOffset(x, y)
     buf1[offset] = h or random(100, 1000)
 end

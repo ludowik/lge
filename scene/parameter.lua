@@ -12,7 +12,7 @@ function Parameter:initNavigation()
             local process = processManager:current()
             if process.__className ~= 'sketches' then            
                 processManager:setSketch('Sketches')
-                self:setStateForAllGroups('hidden', true)
+                self:setStateForAllGroups('close', true)
             else
                 process.env.navigate()
             end
@@ -29,13 +29,8 @@ function Parameter:initNavigation()
 
     self:action('menu',
         function ()
-            if #engine.parameter.sketchMenu.items > 1 then return end
-
-            if engine.parameter.menu.state == 'hidden' then
-                engine.parameter:openGroup(engine.parameter.menu)
-            else
-                engine.parameter:openGroup(engine.parameter.sketchMenu)
-            end
+            -- if #engine.parameter.sketchMenu.items > 1 then return end
+            engine.parameter.visible = not engine.parameter.visible
         end,
         {
             styles = {
@@ -92,7 +87,7 @@ function Parameter:init()
 end
 
 function Parameter:openGroup(group)
-    self:setStateForAllGroups('hidden', false)
+    self:setStateForAllGroups('close', false)
     group.state = 'open'
     group.visible = true
 end
@@ -104,7 +99,7 @@ function Parameter:closeGroup(group)
 end
 
 function Parameter:setStateForAllGroups(state, visible)
-    state = state or 'hidden'
+    state = state
     visible = visible or false
     self:foreach(
         function(node)

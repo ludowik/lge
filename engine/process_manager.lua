@@ -33,13 +33,24 @@ function ProcessManager:getSketch(name)
 end
 
 function ProcessManager:setCurrentSketch(processIndex)
+    local process = self:current()
+    if process and process.pause then process:pause() end
+
     collectgarbage('collect')
 
     self.processIndex = processIndex
-    _G.env = self:current().env or _G.env
+    
+    process = self:current()
+    _G.env = process.env or _G.env
     setfenv(0, _G.env)
-    local process = self:current()
+    if process and process.resume then process:resume() end
+
     love.window.setTitle(process.__className)
+
+    love.graphics.setCanvas(process.canvas)
+    process.fb:background()
+    love.graphics.setCanvas()
+    
     engine.parameter.currentGroup.items[1].label = process.__className
     engine.parameter.currentGroup.items = {
         engine.parameter.currentGroup.items[1],

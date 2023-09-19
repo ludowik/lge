@@ -13,6 +13,8 @@ function UI:init(label)
         textColor = colors.white,
         fontSize = 22,
     }
+
+    self.visible = true
 end
 
 function UI:getLabel()
