@@ -95,6 +95,8 @@ function loadSketches()
     for k,env in ipairs(environnementsList) do
         loadSketch(env)
     end
+
+    --process:setCurrentSketch(#self.items)
 end
 
 function loadSketch(env)

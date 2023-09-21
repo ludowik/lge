@@ -2,6 +2,12 @@ Sketch = class() : extends(Index, State, Rect, MouseEvent, KeyboardEvent)
 
 local fb
 
+function Sketch.__index(self, key)
+    local value = rawget(self, key) or rawget(Sketch, key)
+    warning(value, key..' variable never initialized')
+    return value
+end
+
 function Sketch:init(w, h)
     Index.init(self)
     State.init(self)
@@ -68,12 +74,11 @@ function Sketch:drawSketch()
     end
 
     if processDraw then
-        love.graphics.setCanvas()
-        love.graphics.setShader()
+        -- love.graphics.setCanvas()
+        -- love.graphics.setShader()
         
-        love.graphics.clear(0.1, 0.5, 0.1, 1)
+        -- love.graphics.clear(0.1, 0.5, 0.1, 1)
 
-        --self:setContext()
         love.graphics.setCanvas(self.fb.canvas)
 
         resetStyle()

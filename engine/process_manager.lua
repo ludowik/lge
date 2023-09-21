@@ -47,9 +47,9 @@ function ProcessManager:setCurrentSketch(processIndex)
 
     love.window.setTitle(process.__className)
 
-    love.graphics.setCanvas(process.canvas)
+    process.fb:setContext()
     process.fb:background()
-    love.graphics.setCanvas()
+    resetContext()
     
     engine.parameter.currentGroup.items[1].label = process.__className
     engine.parameter.currentGroup.items = {

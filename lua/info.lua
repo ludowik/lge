@@ -1,3 +1,12 @@
+local warnings = {}
+function warning(value, message)
+    if not value then 
+        if not warnings[message] then
+            warnings[message] = true
+            print(message)
+        end
+    end
+end
 
 function info(k, v)
     print(k..' : '..v)

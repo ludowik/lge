@@ -19,12 +19,10 @@ function setup()
 end
 
 function pause()
-    print('pause app')
     status = device:stop()
 end
 
 function resume()
-    print('resume app')
     status = device:start(2048)
 end
 

@@ -41,6 +41,20 @@ function Engine.update(dt)
     updateSettings()
 end
 
+local previousCanvas
+function setContext(fb)
+    assert(fb and fb.canvas)
+    
+    previousCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(fb.canvas)
+    pushMatrix()
+end
+
+function resetContext(fb)
+    popMatrix()
+    love.graphics.setCanvas(previousCanvas)
+end
+
 function noLoop()
     local process = processManager:current()
     process.frames = 1

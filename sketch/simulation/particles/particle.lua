@@ -44,6 +44,7 @@ function Particle.initImage(n)
     n = n or 200
     local img = FrameBuffer(n, n)
     img:setContext()
+    
     background(0)
     ellipseMode(CENTER)
     for i=n,1,-1 do
@@ -52,7 +53,7 @@ function Particle.initImage(n)
         ellipse(n/2, n/2, i/2, i/2)
     end
     
-    love.graphics.setCanvas()
+    resetContext()
     
     Particle.img = img
     return img

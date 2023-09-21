@@ -1,7 +1,15 @@
+function setup()
+    pixelRatio = 2
+    logo = FrameBuffer(1024/pixelRatio, 1024/pixelRatio)
+end
+    
 function draw()
     background()
 
-    fontSize(64)
+    logo:setContext()
+    scale(1/pixelRatio, 1/pixelRatio)
+
+    fontSize(W)
 
     blendMode(NORMAL)
 
@@ -25,4 +33,8 @@ function draw()
     drawtext('LGE', colors, 100, 200)
     drawtext('CGE', colors, 100, 300)
     drawtext('Creative Coding', colors, 100, 400)
+
+    resetContext()
+
+    sprite(logo, 0, 0, 64, 64)
 end

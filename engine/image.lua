@@ -5,15 +5,14 @@ function FrameBuffer:init(w, h)
         msaa = 5
     })
 
-    local currentCanvas = love.graphics.getCanvas()
     self:setContext()
     self:background(colors.transparent)
 
-    love.graphics.setCanvas(currentCanvas)
+    resetContext()
 end
 
 function FrameBuffer:setContext()
-    love.graphics.setCanvas(self.canvas)
+    setContext(self)
 end
 
 function FrameBuffer:background(...)

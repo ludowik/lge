@@ -2,7 +2,15 @@
 	"folders": [
 		{
 			"name": "Saved data",
-			"path": "C:/Users/LMILHAU/AppData/Roaming/LOVE/lge"
+			"path": "../../../AppData/Roaming/LOVE/lge"
+		},
+		{
+			"name": "lca",
+			"path": "../lca"
+		},
+		{
+			"name": "lca.js",
+			"path": "../lca.js"
 		},
 		{
 			"name": "lge",
