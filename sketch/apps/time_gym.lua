@@ -6,7 +6,7 @@ TimeGym = class() : extends(Sketch)
 function TimeGym:init()
     Sketch.init(self)
 
-    self.sound = love.audio.newSource('resources/beep.wav', 'static')
+    self.sound = love.audio.newSource('resources/sounds/beep.wav', 'static')
 
     self.scene = Scene()
     self.anchor = Anchor(6)
