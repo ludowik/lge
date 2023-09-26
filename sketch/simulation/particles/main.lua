@@ -10,5 +10,5 @@ function setup()
 end
 
 function mousepressed(touch)
-    emitter:touched(touch)
+    emitter:mousepressed(touch)
 end

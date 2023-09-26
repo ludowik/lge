@@ -3,7 +3,7 @@ function setup()
     translation = vec2()
 end
 
-function touched(touch)
+function mousepressed(touch)
     translation = translation + vec2(touch.dx, touch.dy)
 end
 

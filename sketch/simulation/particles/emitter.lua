@@ -58,7 +58,7 @@ function Emitter:draw()
     self.particles:draw()
 end
 
-function Emitter:touched(touch)
+function Emitter:mousepressed(touch)
     self:addPointToPath(touch.position)
 end
 

@@ -4,9 +4,14 @@ function Parameter.setup()
     Parameter.innerMarge = 5
 end
 
-function Parameter:initNavigation()
-    self.layoutMode = 'left'
+function Parameter:init(layoutMode)
+    Scene.init(self)
+    self.currentGroup = self
+    self.visible = true
+    self.layoutMode = layoutMode or 'right'
+end
 
+function Parameter:initControlBar()
     self:action('sketches',
         function ()
             local process = processManager:current()
@@ -16,6 +21,7 @@ function Parameter:initNavigation()
             else
                 process.env.navigate()
             end
+            engine.parameter.visible = false
         end,
         {
             styles = {
@@ -29,7 +35,6 @@ function Parameter:initNavigation()
 
     self:action('menu',
         function ()
-            -- if #engine.parameter.sketchMenu.items > 1 then return end
             engine.parameter.visible = not engine.parameter.visible
         end,
         {
@@ -43,10 +48,8 @@ function Parameter:initNavigation()
         })
 end
 
-function Parameter:initMenu()
-    self.layoutMode = 'right'
-
-    self.menu = self:group('menu')
+function Parameter:addMainMenu()
+    self.menu = self:group('main')
 
     self:action('update from git', function ()
         updateScripts(true)
@@ -59,31 +62,42 @@ function Parameter:initMenu()
     self:action('reload', reload)
     self:action('restart', restart)
     self:action('exit', exit)
+end
 
-    self:space()
-    self:action('info', function ()
-        processManager:setSketch('Info')
-        self:openGroup(self.sketchMenu)
-    end)
-
-    self:action('sketches', function ()
-        processManager:setSketch('Sketches')        
-        self:openGroup(self.sketchMenu)
-    end)
+function Parameter:addNavigationMenu()
+    self:group('navigation')
     
-    self:space()
     self:action('fused', function () toggleFused() end)
     self:action('next', function () processManager:next() end)
     self:action('previous', function () processManager:previous() end)
     self:action('random', function () processManager:random() end)
     self:action('loop', function () processManager:loop() end)
-
-    self.sketchMenu = self:group('sketch', true)
 end
 
-function Parameter:init()
-    Scene.init(self)
-    self.currentGroup = self
+function Parameter:addCaptureMenu()
+    self:group('capture')
+
+    self:action('pause', noLoop)
+    self:action('frame', redraw)
+    self:action('resume', loop)
+    self:action('capture', function ()
+        engine.parameter.visible = false
+        love.graphics.captureScreenshot(function (imageData)
+            imageData:encode('png', env.__name..'.png')
+            engine.parameter.visible = true
+        end)
+    end)
+end
+
+function Parameter:addAppsMenu()
+    self:group('apps')
+    self:action('info', function ()
+        processManager:setSketch('Info')
+    end)
+
+    self:action('sketches', function ()
+        processManager:setSketch('Sketches')
+    end)
 end
 
 function Parameter:openGroup(group)
@@ -120,32 +134,28 @@ function Parameter:group(label, open)
         newGroup.visible = true
     end
 
-    local newButton = UIButton(label, function ()
-        if fused() then return end
-
-        if newGroup.state == 'close' then
-            self:openGroup(newGroup)
-        else
-            if newGroup == self.items[1] then
-                self:openGroup(self.items[2])
+    if label then
+        local newButton = UIButton(label, function ()
+            if newGroup.state == 'close' then
+                self:openGroup(newGroup)
             else
-                self:openGroup(self.items[1])
+                self:closeGroup(newGroup)
             end
-        end
-    end)
+        end)
 
-    newButton:attrib {
-        parent = newGroup,
-        styles = {
-            fillColor = colors.blue,
-            textColor = colors.white,
-        },
-        mousereleased = function (...)
-            MouseEvent.mousereleased(...)
-        end,
-    }
+        newButton:attrib {
+            parent = newGroup,
+            styles = {
+                fillColor = colors.blue,
+                textColor = colors.white,
+            },
+            mousereleased = function (...)
+                MouseEvent.mousereleased(...)
+            end,
+        }
 
-    newGroup:add(newButton)
+        newGroup:add(newButton)
+    end
 
     self.currentGroup = newGroup
     self:add(self.currentGroup)

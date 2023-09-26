@@ -3,6 +3,7 @@ Hexagone = class() : extends(Sketch)
 function Hexagone:init()
     Sketch.init(self)
 
+    self.parameter:addCaptureMenu()
     self.particles = Node()
 end
 
