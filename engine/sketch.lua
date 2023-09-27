@@ -41,7 +41,8 @@ function Sketch:__tostring()
 end
 
 function Sketch:initMenu()
-    self.parameter = Parameter()
+    self.parameter = Parameter('right')
+    self.parameter:group(nil, true)
 end
 
 function Sketch:checkReload()
@@ -53,12 +54,14 @@ function Sketch:checkReload()
 end
 
 function Sketch:updateSketch(dt)
+    if self.frames and self.frames == 0 then return end
     self:checkReload()
 
     local scene = self.scene or env.scene
     if scene then
         scene:update(dt)
-    elseif self.update then
+    end
+    if self.update then
         self:update(dt)
     end
 end

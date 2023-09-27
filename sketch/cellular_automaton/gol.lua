@@ -34,24 +34,26 @@ function draw()
     grid:draw()
 end
 
-function touched(touch)
-    if menu:contains(touch) then
-        menu:touched(touch)
-    else
-        if touch.state == PRESSED and grid.status == 'active' then
-            grid.status = 'suspended'
-            
-        elseif touch.state == RELEASED and grid.status == 'suspended' then
-            grid.status = 'active'
-        end
-        
-        local cell = grid:cellFromPosition(touch.x, touch.y)
-        if cell then
-            if grid.status ~= 'paused' then
-                grid:addLife(cell.x, cell.y)
-            else
-                grid:setLife(cell.x, cell.y)
-            end
+function mousepressed(touch)
+    mousemoved(touch)
+    if grid.status == 'active' then
+        grid.status = 'suspended'
+    end
+end
+
+function mousereleased(touch)
+    if grid.status == 'suspended' then
+        grid.status = 'active'
+    end
+end
+
+function mousemoved(touch)
+    local cell, i,j = grid:cellFromPosition(touch.position.x, touch.position.y)
+    if cell then
+        if grid.status ~= 'paused' then
+            grid:addLife(i, j)
+        else
+            grid:setLife(i, j)
         end
     end
 end
@@ -197,7 +199,7 @@ function GolGrid:cellFromPosition(x, y)
     if x >= 0 and y >= 0 and x < self.size.x and y < self.size.y then
         local i = math.ceil(x / (sizeCell.x * self.scale))
         local j = math.ceil(y / (sizeCell.y * self.scale))
-        return self:cell(i, j)
+        return self:getCell(i, j), i, j
     end
 end
 

@@ -1,27 +1,22 @@
 {
-	"folders": [
-		{
-			"name": "Saved data",
-			"path": "../../../AppData/Roaming/LOVE/lge"
-		},
-		{
-			"name": "lca",
-			"path": "../lca"
-		},
-		{
-			"name": "lca.js",
-			"path": "../lca.js"
-		},
-		{
-			"name": "lge",
-			"path": "."
-		}
-	],
-	"settings": {
-		"debug.console.fontSize": 14,
-		"debug.autoExpandLazyVariables": true,
-		"Lua.diagnostics.disable": [
-			"lowercase-global"
-		]
-	}
+    "folders": [
+        {
+            "name": "Saved data",
+            "path": "/Users/ludo/Library/Application Support/LOVE/lge",
+            "windows": {
+                "path": "../../../AppData/Roaming/LOVE/lge"
+            }
+        },
+        {
+            "name": "lge",
+            "path": "."
+        }
+    ],
+    "settings": {
+        "debug.console.fontSize": 14,
+        "debug.autoExpandLazyVariables": true,
+        "Lua.diagnostics.disable": [
+            "lowercase-global"
+        ]
+    }
 }

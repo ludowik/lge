@@ -12,13 +12,18 @@ function Engine.load()
     engine.components:add(timeManager)
     engine.components:add(tweenManager)
     engine.components:add(eventManager)
-    engine.components:add(processManager)    
+    engine.components:add(processManager)
 
-    engine.parameter = Parameter()
-    engine.parameter:initMenu()
+    engine.parameter = Parameter('right')
+    engine.parameter:addMainMenu()
+    engine.parameter:addNavigationMenu()
+    engine.parameter:addCaptureMenu()
+--    engine.parameter:addAppsMenu()
+    engine.parameter:group('sketch', true)
+    engine.parameter.visible = false
 
-    engine.navigation = Parameter()
-    engine.navigation:initNavigation()
+    engine.navigation = Parameter('left')
+    engine.navigation:initControlBar()
 
     reload()
 end
@@ -101,13 +106,8 @@ function Engine.draw()
 end
 
 function toggleFused()
-    setSettings('fused', not getSettings('fused', false))
-
-    if fused() then
-        engine.parameter:openGroup(engine.parameter.currentGroup)
-    else
-        engine.parameter:closeGroup(engine.parameter.currentGroup)
-    end
+    setSettings('fused', not fused())
+    engine.parameter.visible = not fused()
 end
 
 function fused()

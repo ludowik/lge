@@ -50,12 +50,9 @@ function ProcessManager:setCurrentSketch(processIndex)
     process.fb:setContext()
     process.fb:background()
     resetContext()
-    
-    engine.parameter.currentGroup.items[1].label = process.__className
-    engine.parameter.currentGroup.items = {
-        engine.parameter.currentGroup.items[1],
-        unpack(process.parameter.items),
-    }
+
+    engine.parameter.items[#engine.parameter.items].items[1].label = process.__className
+    engine.parameter.items[#engine.parameter.items].items[2] = process.parameter.items[1]
 
     redraw()
 end
