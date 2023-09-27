@@ -63,7 +63,7 @@ end
 function ProcessManager:loop()
     self.loopOverProcess = not self.loopOverProcess
     self.loopLastProcess = self:current()
-    self.loopIterProcess = 20
+    self.loopIterProcess = 5
 end
 
 function ProcessManager:update(dt)

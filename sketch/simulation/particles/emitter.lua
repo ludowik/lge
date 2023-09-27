@@ -37,7 +37,7 @@ function Emitter:update(dt)
             local distance = self.absolutePosition:dist(point)
             local speed = distance / 500
             self.tween = animate(self.absolutePosition, point, speed, 
-                    --tween.easing.linear,
+                    tween.easing.linear,
                     function ()
                         self.tween = nil
                     end)

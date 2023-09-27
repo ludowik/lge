@@ -17,7 +17,7 @@ function reset()
             vertices[i],
             vec2.randomInScreen(),
             random(0.5, 1.3),
-            --tween.easing[easing],
+            tween.easing[easing],
             function ()
                 nextPosition(i)
             end)
@@ -28,7 +28,7 @@ function reset()
             colors[i],
             Color.random(),
             random(0.8, 1.5),
-            --tween.easing[easing],
+            tween.easing[easing],
             function ()
                 nextColor(i)
             end)

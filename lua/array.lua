@@ -59,6 +59,12 @@ function Array:indexOf(item)
     end
 end
 
+function Array:keyOf(item)
+    for k,v in pairs(self) do
+        if item == v then return k end
+    end
+end
+
 function Array:map(f)
     local list = Array()
     for i,v in ipairs(self) do
