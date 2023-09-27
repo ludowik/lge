@@ -69,10 +69,10 @@ function Deck:push(card)
         card.nextPosition:set(self.position.x, self.position.y)
     else
         local lastCard = self.cards[#self.cards]
-        card.nextPosition:set(lastCard.nextPosition.x, lastCard.nextPosition.y + Card.wtext)
+        card.nextPosition:set(lastCard.nextPosition.x, lastCard.nextPosition.y + Card.wtext + Card.margin)
     end
 
-    animate(card.position, card.nextPosition, 1)
+    animate(card.position, card.nextPosition, 1, tween.easing.quadOut)
 
     self.cards:push(card)
 end

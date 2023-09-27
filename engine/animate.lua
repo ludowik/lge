@@ -14,8 +14,14 @@ Tween = class()
 tween = Array{
     easing = Array{
         linear = function (x) return x end,
-        inSin = function (x) return 1 - cos(x * PI / 2) end,        
-        outSin = function (x) return sin(x * PI / 2) end,
+        sinIn = function (x) return 1-cos(x*PI/2) end,        
+        sinOut = function (x) return sin(x*PI/2) end,
+        sinInOut = function (x) return -(cos(PI*x)-1)/2 end,
+        quadIn = function (x) return x^2 end,
+        quadOut = function (x) return 1 - (1-x)^2 end,
+        quadInOut = function (x) return x < 0.5 and (2*x^2) or (1-(-2*x+2)^2/2) end,
+        cubicIn = function (x) return x^3 end,
+        cubicOut = function (x) return 1-(1-x)^3 end
     }
 }
 
