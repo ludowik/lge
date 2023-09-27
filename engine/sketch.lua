@@ -60,7 +60,8 @@ function Sketch:updateSketch(dt)
     local scene = self.scene or env.scene
     if scene then
         scene:update(dt)
-    elseif self.update then
+    end
+    if self.update then
         self:update(dt)
     end
 end
