@@ -4,28 +4,44 @@ function Solitaire:init()
     Sketch.init(self)
     Card.setup()
 
-    self.deck = Deck()
+    self.deck = Deck(0, 0)
     self.deck.position:set(60, 10)
     self.deck:create()
     self.deck:shuffle()
 
-    self.pile = Deck()
-    self.pile.position:set(120, 10)
+    self.piles = Node()
+    self.piles.index = 1
+    self.piles.nextStartIndex = 1
+
+    for i in range(7) do
+        local deck = Deck(0, Card.wtext + Card.margin)
+        self.piles:add(deck)
+        deck.position:set((i-1)*Card.wcard+i*Card.margin/2, 120)
+    end
     
     self.parameter:watch('Cards', '#sketch.deck.cards')
 
     self.scene = Scene()
     self.scene:add(self.deck)
-    self.scene:add(self.pile)
+    self.scene:add(self.piles)
 end
 
 function Solitaire:mousepressed()
     self.move = not self.move
 end
 
-function Solitaire:update(dt)
+function Solitaire:update(dt)    
     if self.move and #self.deck.cards > 0 then
-        self.pile:push(self.deck.cards:pop())
+        self.piles.items[self.piles.index]:push(self.deck.cards:pop())
+        if self.piles.index == #self.piles.items then
+            self.piles.nextStartIndex = self.piles.nextStartIndex + 1
+            self.piles.index = self.piles.nextStartIndex
+            if self.piles.nextStartIndex > #self.piles.items then
+                self.move = false
+            end
+        else
+            self.piles.index = self.piles.index + 1
+        end
     end
 end
 
@@ -36,15 +52,17 @@ end
 
 Deck = class() : extends(Rect)
 
--- coeur / heart
--- carreau / diamond
--- pique / spade
--- trefle / club
-
-function Deck:init(nb)
+function Deck:init(dx, dy)
     Rect.init(self)
     self.cards = Array()
+    self.dx = dx
+    self.dy = dy
 end
+
+-- coeur / heart
+-- carreau / diamond
+-- trefle / club
+-- pique / spade
 
 function Deck:create()
     for _,clr in ipairs{'coeur', 'carreau', 'trefle', 'pique'} do
@@ -69,7 +87,9 @@ function Deck:push(card)
         card.nextPosition:set(self.position.x, self.position.y)
     else
         local lastCard = self.cards[#self.cards]
-        card.nextPosition:set(lastCard.nextPosition.x, lastCard.nextPosition.y + Card.wtext + Card.margin)
+        card.nextPosition:set(
+            lastCard.nextPosition.x + self.dx,
+            lastCard.nextPosition.y + self.dy)
     end
 
     animate(card.position, card.nextPosition, 1, tween.easing.quadOut)
