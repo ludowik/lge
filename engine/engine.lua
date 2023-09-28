@@ -10,7 +10,7 @@ function Engine.load()
 
     engine.components = Node()
     engine.components:add(timeManager)
-    engine.components:add(tweenManager)
+    --engine.components:add(tweenManager)
     engine.components:add(eventManager)
     engine.components:add(processManager)
 

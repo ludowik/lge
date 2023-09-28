@@ -30,7 +30,7 @@ function Parameter:initControlBar()
                 textColor = colors.transparent,
             },
             fixedPosition = vec2(Anchor(3, 6):pos(0, 0).x, -Y),
-            fixedSize = Anchor(3, 4):size(1.25, 1)
+            fixedSize = Anchor(3, 8):size(1.25, 1)
         })
 
     self:action('menu',
@@ -44,7 +44,7 @@ function Parameter:initControlBar()
                 textColor = colors.transparent,
             },
             fixedPosition = vec2(Anchor(3, 6):pos(1.75, 0).x, -Y),
-            fixedSize = Anchor(3, 4):size(1.25, 1)
+            fixedSize = Anchor(3, 8):size(1.25, 1)
         })
 end
 

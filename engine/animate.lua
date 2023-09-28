@@ -1,7 +1,6 @@
 TweenManager = class() : extends(Node)
 
 function TweenManager.setup()
-    tweenManager = TweenManager()
 end
 
 function TweenManager:update(dt)
@@ -26,7 +25,9 @@ tween = Array{
 }
 
 function Tween:init(source, target, delay, easing, callback)
-    tweenManager:add(self)
+    if env and env.sketch then
+        env.sketch.tweenManager:add(self)
+    end
 
     self.origin = Array.clone(source)
     
@@ -34,7 +35,7 @@ function Tween:init(source, target, delay, easing, callback)
     self.target = target
 
     if type(delay) == 'table' then
-        self.delayBeforeStart = delay.delayBeforeStart
+        self.delayBeforeStart = delay.delayBeforeStart or 0
         self.delay = delay.delay
     else
         self.delayBeforeStart = 0

@@ -2,47 +2,74 @@ Solitaire = class() : extends(Sketch)
 
 function Solitaire:init()
     Sketch.init(self)
+
     Card.setup()
 
     self.deck = Deck(0, 0)
-    self.deck.position:set(60, 10)
+    self.deck.position:set(W-Card.wcard-Card.margin, Card.hcard)
+
+    self.rows = Node()
+    for i in range(7) do
+        local deck = Deck(0, Card.wtext + Card.margin)
+        self.rows:add(deck)
+        deck.position:set((i-1)*Card.wcard+i*Card.margin/2, Card.hcard*2+Card.margin)
+    end
+
+    self.piles = Node()
+    for i in range(4) do
+        local deck = Deck(0, 0)
+        self.piles:add(deck)
+        deck.position:set((i-1)*Card.wcard+i*Card.margin/2, Card.hcard)
+    end
+    
+    self.parameter:action('Nouvelle donne', function () self:newGame() end)
+
+    self.scene = Scene()
+    self.scene:add(self.rows)
+    self.scene:add(self.piles)    
+    self.scene:add(self.deck)
+end
+
+function Solitaire:resetGame()
+    self.deck:reset()
+    for i in range(7) do
+        self.rows.items[i]:reset()
+    end
+end
+
+function Solitaire:newGame()
+    self:resetGame()
+
     self.deck:create()
     self.deck:shuffle()
 
-    self.piles = Node()
-    self.piles.index = 1
-    self.piles.nextStartIndex = 1
+    local index = 1
+    local countCard = 0
+    local nextStartIndex = 1
 
-    for i in range(7) do
-        local deck = Deck(0, Card.wtext + Card.margin)
-        self.piles:add(deck)
-        deck.position:set((i-1)*Card.wcard+i*Card.margin/2, 120)
+    while not (countCard == 28) do -- 7+6+5+4+3+2+1
+        local card = self.deck.items:last()
+        card:move2(self.rows.items[index], countCard)
+
+        if index == #self.rows.items[index].items then
+            card.visible = true
+        end
+
+        if index == 7 then -- #self.rows.items
+            nextStartIndex = nextStartIndex + 1
+            index = nextStartIndex
+        else
+            index = index + 1
+        end
+        countCard = countCard + 1        
     end
-    
-    self.parameter:watch('Cards', '#sketch.deck.cards')
-
-    self.scene = Scene()
-    self.scene:add(self.deck)
-    self.scene:add(self.piles)
 end
 
-function Solitaire:mousepressed()
-    self.move = not self.move
-end
+-- function Solitaire:mousepressed()
+--     self:newGame()
+-- end
 
 function Solitaire:update(dt)    
-    if self.move and #self.deck.cards > 0 then
-        self.piles.items[self.piles.index]:push(self.deck.cards:pop())
-        if self.piles.index == #self.piles.items then
-            self.piles.nextStartIndex = self.piles.nextStartIndex + 1
-            self.piles.index = self.piles.nextStartIndex
-            if self.piles.nextStartIndex > #self.piles.items then
-                self.move = false
-            end
-        else
-            self.piles.index = self.piles.index + 1
-        end
-    end
 end
 
 function Solitaire:draw()
@@ -50,13 +77,19 @@ function Solitaire:draw()
     self.scene:draw()
 end
 
-Deck = class() : extends(Rect)
+Deck = class() : extends(Node)
 
 function Deck:init(dx, dy)
-    Rect.init(self)
-    self.cards = Array()
+    Node.init(self)
+    
     self.dx = dx
     self.dy = dy
+
+    self:reset()
+end
+
+function Deck:reset()
+    self.items = Array()
 end
 
 -- coeur / heart
@@ -67,34 +100,46 @@ end
 function Deck:create()
     for _,clr in ipairs{'coeur', 'carreau', 'trefle', 'pique'} do
         for value in range(13) do
-            self:push(Card(clr, value, true))
+            self:push(Card(clr, value, false))
         end
     end
 end
 
 function Deck:shuffle()
-    local cards = self.cards
-    self.cards = Array()
-    for _ in range(#cards) do
-        local i = randomInt(1, #cards)
-        self:push(cards:remove(i))
+    local items = self.items
+    self.items = Array()
+    for _ in range(#items) do
+        local i = randomInt(1, #items)
+        self:push(items:remove(i))
     end
 end
 
-function Deck:push(card)
+function Deck:push(card, count)
+    count = count or 0
+
+    -- compute next position
+    if card.position == vec2() then
+        card.position:set(self.position)
+    end
+
     card.nextPosition = vec2()
-    if #self.cards == 0 then
+    if #self.items == 0 then
         card.nextPosition:set(self.position.x, self.position.y)
     else
-        local lastCard = self.cards[#self.cards]
+        local lastCard = self.items[#self.items]
         card.nextPosition:set(
             lastCard.nextPosition.x + self.dx,
             lastCard.nextPosition.y + self.dy)
     end
 
-    animate(card.position, card.nextPosition, 1, tween.easing.quadOut)
+    -- init animation
+    animate(card.position, card.nextPosition, {
+        delayBeforeStart = count/60,
+        delay = 30/60
+    }, tween.easing.quadOut)
 
-    self.cards:push(card)
+    self.items:push(card)
+    card.deck = self
 end
 
 function Deck:draw()
@@ -103,7 +148,7 @@ function Deck:draw()
     strokeSize(1)
     rect(self.position.x, self.position.y, Card.wcard, Card.hcard, Card.margin)
 
-    for _,card in ipairs(self.cards) do
+    for _,card in ipairs(self.items) do
         card:draw()
     end
 end
@@ -123,11 +168,11 @@ function Card.setup()
 end
 
 function Card:init(clr, value, visible)
-    Rect.init(self)
+    Rect.init(self, 0, 0, Card.wcard, Card.hcard)
 
     self.clr = clr
     self.value = value
-    self.visible = visible or false
+    self.visible = visible
     self.img = Image('resources/images/'..clr..'.png')
 end
 
@@ -172,4 +217,15 @@ function Card:draw()
         rectMode(CORNER)
         rect(x, y, wcard, hcard, Card.margin)
     end
+end
+
+function Card:click()
+    -- find first available move
+    local sketch = env.sketch
+    self:move2(sketch.piles.items[1])
+end
+
+function Card:move2(newDeck, countCard)
+    self.deck.items:pop()
+    newDeck:push(self, countCard)
 end

@@ -59,6 +59,10 @@ function Array:indexOf(item)
     end
 end
 
+function Array:last()
+    return self[#self]
+end
+
 function Array:keyOf(item)
     for k,v in pairs(self) do
         if item == v then return k end

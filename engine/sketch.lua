@@ -31,6 +31,8 @@ function Sketch:init(w, h)
     MouseEvent.init(self)
     KeyboardEvent.init(self)
 
+    self.tweenManager = TweenManager()
+
     self:initMenu()
 
     processManager:add(self)
@@ -56,6 +58,8 @@ end
 function Sketch:updateSketch(dt)
     if self.frames and self.frames == 0 then return end
     self:checkReload()
+    
+    self.tweenManager:update(dt)
 
     local scene = self.scene or env.scene
     if scene then
