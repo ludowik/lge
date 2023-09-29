@@ -14,7 +14,7 @@ Array.add = table.insert
 
 Array.push = table.insert
 Array.pop = table.remove
-Array.shift = function (t) table.remove(t, 1) end
+Array.shift = function (t) return table.remove(t, 1) end
 
 Array.unpack = table.unpack or unpack
 
@@ -57,6 +57,10 @@ function Array:indexOf(item)
     for i,v in ipairs(self) do
         if item == v then return i end
     end
+end
+
+function Array:first()
+    return self[1]
 end
 
 function Array:last()

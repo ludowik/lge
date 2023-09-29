@@ -14,13 +14,7 @@ end
 function Parameter:initControlBar()
     self:action('sketches',
         function ()
-            local process = processManager:current()
-            if process.__className ~= 'sketches' then            
-                processManager:setSketch('Sketches')
-                self:setStateForAllGroups('close', true)
-            else
-                process.env.navigate()
-            end
+            openSketches()
             engine.parameter.visible = false
         end,
         {
@@ -96,7 +90,7 @@ function Parameter:addAppsMenu()
     end)
 
     self:action('sketches', function ()
-        processManager:setSketch('Sketches')
+        openSketches()
     end)
 end
 

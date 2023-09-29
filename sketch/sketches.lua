@@ -1,3 +1,13 @@
+function _G.openSketches()
+    local process = processManager:current()
+    if process.__className ~= 'sketches' then            
+        processManager:setSketch('Sketches')
+        self:setStateForAllGroups('close', true)
+    else
+        process.env.navigate()
+    end
+end
+
 function setup()
     scene = Scene()
     navigate(getSettings('category'))

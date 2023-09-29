@@ -20,12 +20,17 @@ function Engine.load()
     engine.parameter:addCaptureMenu()
 --    engine.parameter:addAppsMenu()
     engine.parameter:group('sketch', true)
-    engine.parameter.visible = false
+    engine.parameter.visible = getSettings('showParameter', false)
 
     engine.navigation = Parameter('left')
     engine.navigation:initControlBar()
 
     reload()
+end
+
+function Engine.quit()
+    setSettings('showParameter', engine.parameter.visible)
+    quit()
 end
 
 function Engine.contains(mouse)

@@ -53,7 +53,7 @@ function EventManager:keypressed(key, scancode, isrepeat)
         processManager:setSketch('info')
 
     elseif key == 's' then
-        processManager:setSketch('sketches')
+        openSketches()
 
     elseif key == 'l' then
         processManager:loop()
@@ -62,7 +62,7 @@ function EventManager:keypressed(key, scancode, isrepeat)
         toggleFused()
     
     elseif key == 'escape' then
-        quit()
+        Engine.quit()
     
     elseif key == 'pageup' then
         processManager:previous()

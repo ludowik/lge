@@ -65,6 +65,8 @@ function Graphics2d.resetStyle()
     
     textMode(CORNER)
     textColor(colors.white)
+
+    fontName('arial')
     fontSize(22)
 end
 

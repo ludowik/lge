@@ -1,25 +1,34 @@
 Solitaire = class() : extends(Sketch)
 
+-- TODO : trouver un autre moyen pour pointer globalement sur le jeu (à la place de env.sketch)
+-- TODO : trouver un autre moyen pour adresser items (count and last)
+
 function Solitaire:init()
     Sketch.init(self)
 
     Card.setup()
 
     self.deck = Deck(0, 0)
-    self.deck.position:set(W-Card.wcard-Card.margin, Card.hcard)
+    self.deck.position:set(6*Card.wcard+7*Card.margin, Card.hcard*1.5)
 
-    self.rows = Node()
-    for i in range(7) do
-        local deck = Deck(0, Card.wtext + Card.margin)
-        self.rows:add(deck)
-        deck.position:set((i-1)*Card.wcard+i*Card.margin/2, Card.hcard*2+Card.margin)
-    end
+    self.wast = Deck(Card.wcard/3, 0)
+    self.wast.isMoveable = wast_isMoveable
+    self.wast.position:set(4*Card.wcard+7*Card.margin, Card.hcard*1.5)
 
     self.piles = Node()
     for i in range(4) do
         local deck = Deck(0, 0)
+        deck.isValidMove = pile_isValidMove
         self.piles:add(deck)
-        deck.position:set((i-1)*Card.wcard+i*Card.margin/2, Card.hcard)
+        deck.position:set((i-1)*Card.wcard+i*Card.margin, Card.hcard*1.5)
+    end
+
+    self.rows = Node()
+    for i in range(7) do
+        local deck = Deck(0, Card.wtext + Card.margin)
+        deck.isValidMove = row_isValidMove
+        self.rows:add(deck)
+        deck.position:set((i-1)*Card.wcard+i*Card.margin, Card.hcard*2.5+2*Card.margin)
     end
     
     self.parameter:action('Nouvelle donne', function () self:newGame() end)
@@ -27,12 +36,17 @@ function Solitaire:init()
     self.scene = Scene()
     self.scene:add(self.rows)
     self.scene:add(self.piles)    
+    self.scene:add(self.wast)
     self.scene:add(self.deck)
 end
 
 function Solitaire:resetGame()
     self.deck:reset()
-    for i in range(7) do
+    self.wast:reset()
+    for i in range(self.piles:count()) do
+        self.piles.items[i]:reset()
+    end
+    for i in range(self.rows:count()) do
         self.rows.items[i]:reset()
     end
 end
@@ -41,7 +55,7 @@ function Solitaire:newGame()
     self:resetGame()
 
     self.deck:create()
-    self.deck:shuffle()
+    --self.deck:shuffle()
 
     local index = 1
     local countCard = 0
@@ -52,7 +66,7 @@ function Solitaire:newGame()
         card:move2(self.rows.items[index], countCard)
 
         if index == #self.rows.items[index].items then
-            card.visible = true
+            card.faceUp = true
         end
 
         if index == 7 then -- #self.rows.items
@@ -64,10 +78,6 @@ function Solitaire:newGame()
         countCard = countCard + 1        
     end
 end
-
--- function Solitaire:mousepressed()
---     self:newGame()
--- end
 
 function Solitaire:update(dt)    
 end
@@ -81,6 +91,8 @@ Deck = class() : extends(Node)
 
 function Deck:init(dx, dy)
     Node.init(self)
+
+    self.reverseSearch = true
     
     self.dx = dx
     self.dy = dy
@@ -96,11 +108,22 @@ end
 -- carreau / diamond
 -- trefle / club
 -- pique / spade
+AS = 1
+VALET = 11
+QUEEN = 12
+KING = 13
+
+suits = {
+    {name = 'coeur', color = 'red'},
+    {name = 'carreau', color = 'red'},
+    {name = 'trefle', color = 'black'},
+    {name = 'pique', color = 'black'}
+}
 
 function Deck:create()
-    for _,clr in ipairs{'coeur', 'carreau', 'trefle', 'pique'} do
+    for _,suit in ipairs(suits) do
         for value in range(13) do
-            self:push(Card(clr, value, false))
+            self:push(Card(value, suit, false))
         end
     end
 end
@@ -112,6 +135,14 @@ function Deck:shuffle()
         local i = randomInt(1, #items)
         self:push(items:remove(i))
     end
+end
+
+function Deck:isMoveable(self, card)
+    return true
+end
+
+function wast_isMoveable(self, card)
+    return card == self.items:last()
 end
 
 function Deck:push(card, count)
@@ -132,8 +163,12 @@ function Deck:push(card, count)
             lastCard.nextPosition.y + self.dy)
     end
 
+    if card.tween then
+        card.tween:finalize()
+    end
+    
     -- init animation
-    animate(card.position, card.nextPosition, {
+    card.tween = animate(card.position, card.nextPosition, {
         delayBeforeStart = count/60,
         delay = 30/60
     }, tween.easing.quadOut)
@@ -161,22 +196,26 @@ function Card.setup()
 
     Card.margin = 4
 
-    Card.wcard = floor(Card.size.x * 0.95)
-    Card.hcard = floor(Card.size.y * 0.95)
+    Card.wcard = Card.size.x - 2*Card.margin
+    Card.hcard = Card.size.y - 2*Card.margin
 
     Card.wtext = floor(Card.wcard * 0.4)
 end
 
-function Card:init(clr, value, visible)
+function Card:init(value, suit, faceUp)
     Rect.init(self, 0, 0, Card.wcard, Card.hcard)
 
-    self.clr = clr
     self.value = value
-    self.visible = visible
-    self.img = Image('resources/images/'..clr..'.png')
+    self.suit = suit.name
+    self.color = suit.color
+
+    self.faceUp = faceUp
+
+    self.img = Image('resources/images/'..self.suit..'.png')
 end
 
 local labels = {'A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K'}
+
 function Card:draw()
     local x, y = self.position.x, self.position.y
 
@@ -186,7 +225,7 @@ function Card:draw()
     local hcard = Card.hcard
     local wtext = Card.wtext
     
-    if self.visible then
+    if self.faceUp then
         strokeSize(0.5)
         stroke(colors.black)
         fill(colors.white)
@@ -221,11 +260,101 @@ end
 
 function Card:click()
     -- find first available move
-    local sketch = env.sketch
-    self:move2(sketch.piles.items[1])
+    if self.tween and self.tween.state == 'running' then return end
+    if not self.deck:isMoveable(self) then return end
+
+    if self.deck == env.sketch.deck then
+        for i in range(#env.sketch.wast.items) do
+            local card = env.sketch.wast.items:first()
+            card.faceUp = false
+            card:move2bottom(env.sketch.deck)            
+        end
+        for i in range(3) do
+            local card = env.sketch.deck.items:last()
+            card.faceUp = true
+            card:move2(env.sketch.wast)            
+        end
+        return
+    end
+
+    local toDeck = getFirstValidMove(self)
+    if toDeck then
+        self:move2(toDeck)
+        for _i,row in ipairs(env.sketch.rows.items) do
+            if #row.items > 0 then
+                row.items:last().faceUp = true
+            end
+        end
+    end
 end
 
 function Card:move2(newDeck, countCard)
-    self.deck.items:pop()
+    assert(self.deck.items:pop() == self)
     newDeck:push(self, countCard)
+
+    print('move2Over '..labels[self.value]..' '..self.suit..' : '..tostring(self.faceUp))
+end
+
+function Card:move2bottom(newDeck, countCard)
+    assert(self.deck.items:shift() == self)
+    self.faceUp = false
+
+    if self.tween then
+        self.tween:finalize()
+    end
+
+    self.position:set(newDeck.position)
+    newDeck.items:insert(1, self)
+    self.deck = newDeck
+
+    print('move2Bottom '..labels[self.value]..' '..self.suit..' : '..tostring(self.faceUp))
+end
+
+function getFirstValidMove(card)
+    return getValidMoves(card)[1]
+end
+
+function getValidMoves(card)
+    local self  = env.sketch
+
+    local validMoves = Array()
+    for _i,row in ipairs(self.rows.items) do
+        if row:isValidMove(card, row) then
+            validMoves:add(row)
+        end
+    end
+    for _i,pile in ipairs(self.piles.items) do
+        if pile:isValidMove(card, pile) then
+            validMoves:add(pile)
+        end
+    end
+    return validMoves
+end
+
+function row_isValidMove(fromDeck, card, toDeck)
+    if not card.faceUp then return false end
+    if #toDeck.items == 0 then
+        if card.value == KING then
+            return true
+        end
+    else
+        local last = toDeck.items:last()
+        if card.value == last.value - 1 and card.color ~= last.color then
+            return true
+        end
+    end
+end
+
+function pile_isValidMove(fromDeck, card, toDeck)
+    if not card.faceUp then return false end
+    if #toDeck.items == 0 then
+        if card.value == AS then
+            return true
+        end
+    else
+        local last = toDeck.items:last()
+        if card.value == last.value + 1 then
+            return true
+        end
+    end
 end

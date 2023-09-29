@@ -24,8 +24,8 @@ function ipairsReverse(t)
     end
 end
 
-function ipairs(t, reverse)
-    if reverse then
+function ipairs(t, reverseIteration)
+    if reverseIteration then
         return ipairsReverse(t)
     else
         return __ipairs(t)

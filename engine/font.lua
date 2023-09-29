@@ -2,6 +2,7 @@ FontManager = class()
 
 function FontManager.setup()
     FontManager.fonts = Array()
+    FontManager.path = 'resources/fonts'
 end
 
 function FontManager.getFont()
@@ -11,7 +12,7 @@ function FontManager.getFont()
     local ref = fontName..'.'..fontSize
     if not FontManager.fonts[ref] then
         if fontName ~= '' then
-            local fontPath = 'resources/fonts/'..fontName..'.ttf'
+            local fontPath = FontManager.path..'/'..fontName..'.ttf'
             FontManager.fonts[ref] = love.graphics.newFont(fontPath, fontSize)
         else
             FontManager.fonts[ref] = love.graphics.newFont(fontSize)
@@ -24,10 +25,12 @@ function fontName(name)
     if name then
         FontManager.fontName = name
     end
+    return FontManager.fontName
 end
 
 function fontSize(size)
     if size then
         FontManager.fontSize = size
     end
+    return FontManager.fontSize
 end
