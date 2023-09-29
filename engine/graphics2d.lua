@@ -65,6 +65,7 @@ function Graphics2d.resetStyle()
     
     textMode(CORNER)
     textColor(colors.white)
+    textPosition(0)
 
     fontName('arial')
     fontSize(22)
@@ -236,6 +237,10 @@ function Graphics2d.textMode(mode)
     return stylesSet('textMode', mode)
 end
 
+function Graphics2d.textPosition(y)
+    return stylesSet('textPosition', y)
+end
+
 function Graphics2d.text(str, x, y, limit, align)
     if Graphics2d.textColor() == nil then return end
 
@@ -266,6 +271,8 @@ function Graphics2d.text(str, x, y, limit, align)
     else
         love.graphics.print(str, x, y)
     end
+
+    textPosition(textPosition() + hs)
 
     return ws, hs
 end
