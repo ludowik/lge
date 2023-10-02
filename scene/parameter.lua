@@ -66,6 +66,8 @@ function Parameter:addNavigationMenu()
     self:action('previous', function () processManager:previous() end)
     self:action('random', function () processManager:random() end)
     self:action('loop', function () processManager:loop() end)
+
+    self:link('web version', 'https://ludowik.github.io/lge/build/lovejs/lge-lovejs/lge')
 end
 
 function Parameter:addCaptureMenu()
