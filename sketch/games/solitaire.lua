@@ -47,6 +47,7 @@ end
 function Solitaire:resetGame()
     self.deck:reset()
     self.wast:reset()
+
     for i in range(self.piles:count()) do
         self.piles.items[i]:reset()
     end
@@ -90,7 +91,17 @@ end
 function Solitaire:loadGame()
 end
 
-function Solitaire:update(dt)    
+function Solitaire:update(dt)
+    for i in range(self.rows:count()) do
+        local lastCard = self.rows.items[i].items:last()
+        if lastCard then
+            local validMoves = Array()
+            getValidMovesFor(validMoves, lastCard, self.piles.items)
+            if #validMoves == 1 then
+                lastCard:move2(validMoves[1])
+            end
+        end
+    end
 end
 
 function Solitaire:draw()
@@ -295,11 +306,6 @@ function Card:click()
         local toDeck = getFirstValidMove(self)
         if toDeck then
             self:move2(toDeck)
-            for _i,row in ipairs(env.sketch.rows.items) do
-                if #row.items > 0 then
-                    row.items:last().faceUp = true
-                end
-            end
         end
     end
 
@@ -312,6 +318,12 @@ function Card:move2(newDeck, countCard)
     
     while index <= #currentDeck.items do
         newDeck:push(currentDeck.items:remove(index), countCard)
+    end
+    
+    for _,row in ipairs(env.sketch.rows.items) do
+        if row == currentDeck and #currentDeck.items > 0 then
+            currentDeck.items:last().faceUp = true
+        end
     end
 
     -- print('move2Over '..labels[self.value]..' '..self.suit..' : '..tostring(self.faceUp))
@@ -337,21 +349,21 @@ function getFirstValidMove(card)
     return getValidMoves(card)[1]
 end
 
+function getValidMovesFor(validMoves, card, items)
+    for _,item in ipairs(items) do
+        if item:isValidMove(card, item) then
+            validMoves:add(item)
+        end
+    end
+end
+
 function getValidMoves(card)
     local self  = env.sketch
 
     local validMoves = Array()
 
-    function getValidMovesFor(items)
-        for _,item in ipairs(items) do
-            if item:isValidMove(card, item) then
-                validMoves:add(item)
-            end
-        end
-    end
-
-    getValidMovesFor(self.piles.items)
-    getValidMovesFor(self.rows.items)    
+    getValidMovesFor(validMoves, card, self.piles.items)
+    getValidMovesFor(validMoves, card, self.rows.items)    
 
     return validMoves
 end
