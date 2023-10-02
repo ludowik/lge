@@ -140,8 +140,17 @@ function Sketch:mousepressed(mouse)
 end
 
 function Sketch:mousemoved(mouse)
+    local scene = self.scene or env.scene
+    if scene then
+        return scene:mousemoved(mouse)
+    end
 end
 
 function Sketch:mousereleased(mouse)
     self.active = false
+
+    local scene = self.scene or env.scene
+    if scene then
+        return scene:mousereleased(mouse)
+    end
 end

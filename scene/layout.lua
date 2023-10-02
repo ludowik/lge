@@ -2,7 +2,7 @@ Layout = class()
 
 function Layout:layout(_x, _y, align)
     local x = _x or 0
-    local y = _y or UI.innerMarge
+    local y = _y or 0
 
     align = align or self.layoutMode or 'left'
 

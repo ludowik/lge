@@ -10,7 +10,6 @@ function Engine.load()
 
     engine.components = Node()
     engine.components:add(timeManager)
-    --engine.components:add(tweenManager)
     engine.components:add(eventManager)
     engine.components:add(processManager)
 
@@ -18,9 +17,7 @@ function Engine.load()
     engine.parameter:addMainMenu()
     engine.parameter:addNavigationMenu()
     engine.parameter:addCaptureMenu()
---    engine.parameter:addAppsMenu()
     engine.parameter:group('sketch', true)
-    engine.parameter.visible = getSettings('showParameter', false)
 
     engine.navigation = Parameter('left')
     engine.navigation:initControlBar()
@@ -29,7 +26,6 @@ function Engine.load()
 end
 
 function Engine.quit()
-    setSettings('showParameter', engine.parameter.visible)
     quit()
 end
 
@@ -102,11 +98,12 @@ function Engine.draw()
 
     local fps = getFPS()
     if fps < 60 then
-        fontSize(12)
+        fontName('arial')
+        fontSize(18)
         local w, h = textSize(fps)
-        textColor(colors.white)
+        textColor(colors.red)
         textMode(CENTER)
-        text(fps, W-X-w/2, -h/2)
+        text(fps, W-w/2-UI.innerMarge, -Y/2)
     end
 end
 

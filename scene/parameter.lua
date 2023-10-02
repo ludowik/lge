@@ -83,17 +83,6 @@ function Parameter:addCaptureMenu()
     end)
 end
 
-function Parameter:addAppsMenu()
-    self:group('apps')
-    self:action('info', function ()
-        processManager:setSketch('Info')
-    end)
-
-    self:action('sketches', function ()
-        openSketches()
-    end)
-end
-
 function Parameter:openGroup(group)
     self:setStateForAllGroups('close', false)
     group.state = 'open'
@@ -124,8 +113,7 @@ function Parameter:group(label, open)
     if open then
         self:openGroup(newGroup)
     else
-        newGroup.state = 'close'
-        newGroup.visible = true
+        self:closeGroup(newGroup)
     end
 
     if label then
@@ -142,6 +130,7 @@ function Parameter:group(label, open)
             styles = {
                 fillColor = colors.blue,
                 textColor = colors.white,
+                fontSize = 28
             },
             mousereleased = function (...)
                 MouseEvent.mousereleased(...)

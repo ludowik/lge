@@ -353,7 +353,7 @@ function pile_isValidMove(fromDeck, card, toDeck)
         end
     else
         local last = toDeck.items:last()
-        if card.value == last.value + 1 then
+        if card.value == last.value + 1 and card.suit == last.suit then
             return true
         end
     end

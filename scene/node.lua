@@ -85,7 +85,6 @@ end
 function Node:mousepressed(mouse)
     local result = self:contains(mouse.position)
     if result then
-        result:click()
         return true
     end
 end
@@ -93,5 +92,7 @@ end
 function Node:mousereleased(mouse)
     local result = self:contains(mouse.position)
     if result then
+        result:click()
+        return true
     end
 end

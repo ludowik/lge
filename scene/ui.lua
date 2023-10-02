@@ -40,11 +40,7 @@ function UI:getValue(value)
 end
 
 function UI:fontSize()
-    if self.parent then
-        fontSize(self.parent.state == 'open' and 26 or 20)
-    else
-        fontSize(self.styles.fontSize)
-    end
+    fontSize(self.styles.fontSize)
 end
 
 function UI:computeSize()

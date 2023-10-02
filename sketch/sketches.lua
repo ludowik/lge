@@ -2,7 +2,7 @@ function _G.openSketches()
     local process = processManager:current()
     if process.__className ~= 'sketches' then            
         processManager:setSketch('Sketches')
-        self:setStateForAllGroups('close', true)
+        engine.parameter.visible = false
     else
         process.env.navigate()
     end
@@ -56,6 +56,7 @@ function navigate(category)
         local link = UIButton(env.__className:gsub('_', ' '),
             function (self)
                 processManager:setSketch(env.__className)
+                engine.parameter.visible = true
             end)
 
         scene:add(link)
@@ -80,8 +81,8 @@ function draw()
     scene:draw()
 end
 
-function mousepressed(mouse)
-    if not scene:mousepressed(mouse) then
+function mousereleased(mouse)
+    if not scene:mousereleased(mouse) then
         navigate()
     end
 end
