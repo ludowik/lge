@@ -18,6 +18,7 @@ function Solitaire:init()
     self.piles = Node()
     for i in range(4) do
         local deck = Deck(0, 0)
+        deck.isMoveable = pile_isMoveable
         deck.isValidMove = pile_isValidMove
         self.piles:add(deck)
         deck.position:set((i-1)*Card.wcard+i*Card.margin, Card.hcard*1.5)
@@ -26,6 +27,7 @@ function Solitaire:init()
     self.rows = Node()
     for i in range(7) do
         local deck = Deck(0, Card.wtext + Card.margin)
+        deck.isMoveable = row_isMoveable
         deck.isValidMove = row_isValidMove
         self.rows:add(deck)
         deck.position:set((i-1)*Card.wcard+i*Card.margin, Card.hcard*2.5+2*Card.margin)
@@ -79,6 +81,12 @@ function Solitaire:newGame()
     end
 end
 
+function Solitaire:saveGame()
+end
+
+function Solitaire:loadGame()
+end
+
 function Solitaire:update(dt)    
 end
 
@@ -104,24 +112,20 @@ function Deck:reset()
     self.items = Array()
 end
 
--- coeur / heart
--- carreau / diamond
--- trefle / club
--- pique / spade
 AS = 1
 VALET = 11
 QUEEN = 12
 KING = 13
 
 suits = {
-    {name = 'coeur', color = 'red'},
-    {name = 'carreau', color = 'red'},
-    {name = 'trefle', color = 'black'},
-    {name = 'pique', color = 'black'}
+    heart = {name = 'coeur', color = 'red'},
+    diamond = {name = 'carreau', color = 'red'},
+    club = {name = 'trefle', color = 'black'},
+    spade = {name = 'pique', color = 'black'}
 }
 
 function Deck:create()
-    for _,suit in ipairs(suits) do
+    for _,suit in pairs(suits) do
         for value in range(13) do
             self:push(Card(value, suit, false))
         end
@@ -143,6 +147,14 @@ end
 
 function wast_isMoveable(self, card)
     return card == self.items:last()
+end
+
+function pile_isMoveable(self, card)
+    return card == self.items:last()
+end
+
+function row_isMoveable(self, card)
+    return card.faceUp
 end
 
 function Deck:push(card, count)
@@ -289,14 +301,19 @@ function Card:click()
 end
 
 function Card:move2(newDeck, countCard)
-    assert(self.deck.items:pop() == self)
-    newDeck:push(self, countCard)
+    local currentDeck = self.deck
+    local index = currentDeck.items:indexOf(self)
+    
+    while index <= #currentDeck.items do
+        newDeck:push(currentDeck.items:remove(index), countCard)
+    end
 
     print('move2Over '..labels[self.value]..' '..self.suit..' : '..tostring(self.faceUp))
 end
 
 function Card:move2bottom(newDeck, countCard)
     assert(self.deck.items:shift() == self)
+
     self.faceUp = false
 
     if self.tween then
