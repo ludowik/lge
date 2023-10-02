@@ -3,6 +3,8 @@ Solitaire = class() : extends(Sketch)
 -- TODO : trouver un autre moyen pour pointer globalement sur le jeu (à la place de env.sketch)
 -- TODO : trouver un autre moyen pour adresser items (count and last)
 
+-- TODO : vérifier qu'une suite ne peut pas être ajoutée sur une pile
+
 function Solitaire:init()
     Sketch.init(self)
 
@@ -82,6 +84,7 @@ function Solitaire:newGame()
 end
 
 function Solitaire:saveGame()
+    print(Array.tolua(self.piles))
 end
 
 function Solitaire:loadGame()
@@ -117,6 +120,7 @@ VALET = 11
 QUEEN = 12
 KING = 13
 
+-- TODO : un ordre des suites existe t'il pour un paquet trié
 suits = {
     heart = {name = 'coeur', color = 'red'},
     diamond = {name = 'carreau', color = 'red'},
@@ -125,9 +129,9 @@ suits = {
 }
 
 function Deck:create()
-    for _,suit in pairs(suits) do
+    for _,suitName in ipairs{'heart', 'diamond', 'club', 'spade'} do
         for value in range(13) do
-            self:push(Card(value, suit, false))
+            self:push(Card(value, suits[suitName], false))
         end
     end
 end
@@ -286,18 +290,20 @@ function Card:click()
             card.faceUp = true
             card:move2(env.sketch.wast)            
         end
-        return
-    end
 
-    local toDeck = getFirstValidMove(self)
-    if toDeck then
-        self:move2(toDeck)
-        for _i,row in ipairs(env.sketch.rows.items) do
-            if #row.items > 0 then
-                row.items:last().faceUp = true
+    else
+        local toDeck = getFirstValidMove(self)
+        if toDeck then
+            self:move2(toDeck)
+            for _i,row in ipairs(env.sketch.rows.items) do
+                if #row.items > 0 then
+                    row.items:last().faceUp = true
+                end
             end
         end
     end
+
+    env.sketch:saveGame()
 end
 
 function Card:move2(newDeck, countCard)
@@ -308,7 +314,7 @@ function Card:move2(newDeck, countCard)
         newDeck:push(currentDeck.items:remove(index), countCard)
     end
 
-    print('move2Over '..labels[self.value]..' '..self.suit..' : '..tostring(self.faceUp))
+    -- print('move2Over '..labels[self.value]..' '..self.suit..' : '..tostring(self.faceUp))
 end
 
 function Card:move2bottom(newDeck, countCard)
@@ -324,7 +330,7 @@ function Card:move2bottom(newDeck, countCard)
     newDeck.items:insert(1, self)
     self.deck = newDeck
 
-    print('move2Bottom '..labels[self.value]..' '..self.suit..' : '..tostring(self.faceUp))
+    -- print('move2Bottom '..labels[self.value]..' '..self.suit..' : '..tostring(self.faceUp))
 end
 
 function getFirstValidMove(card)
@@ -335,20 +341,22 @@ function getValidMoves(card)
     local self  = env.sketch
 
     local validMoves = Array()
-    for _i,row in ipairs(self.rows.items) do
-        if row:isValidMove(card, row) then
-            validMoves:add(row)
+
+    function getValidMovesFor(items)
+        for _,item in ipairs(items) do
+            if item:isValidMove(card, item) then
+                validMoves:add(item)
+            end
         end
     end
-    for _i,pile in ipairs(self.piles.items) do
-        if pile:isValidMove(card, pile) then
-            validMoves:add(pile)
-        end
-    end
+
+    getValidMovesFor(self.piles.items)
+    getValidMovesFor(self.rows.items)    
+
     return validMoves
 end
 
-function row_isValidMove(fromDeck, card, toDeck)
+function row_isValidMove(_, card, toDeck)
     if not card.faceUp then return false end
     if #toDeck.items == 0 then
         if card.value == KING then
@@ -362,7 +370,7 @@ function row_isValidMove(fromDeck, card, toDeck)
     end
 end
 
-function pile_isValidMove(fromDeck, card, toDeck)
+function pile_isValidMove(_, card, toDeck)
     if not card.faceUp then return false end
     if #toDeck.items == 0 then
         if card.value == AS then
@@ -370,7 +378,7 @@ function pile_isValidMove(fromDeck, card, toDeck)
         end
     else
         local last = toDeck.items:last()
-        if card.value == last.value + 1 and card.suit == last.suit then
+        if card.value == last.value + 1 and card.suit == last.suit and card == card.deck.items:last() then
             return true
         end
     end

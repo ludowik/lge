@@ -103,11 +103,12 @@ function Array:max()
 end
 
 local __cloningObjects = {}
-
 function Array:clone()
     if __cloningObjects[self] then return __cloningObjects[self] end
+
     local t = Array()
     __cloningObjects[self] = t
+
     Array.foreachKey(self, function(v, k)
         if type(v) == 'table' then
             t[k] = Array.clone(v)
@@ -115,6 +116,7 @@ function Array:clone()
             t[k] = v
         end
     end)
+
     __cloningObjects[self] = nil
     return t
 end
@@ -127,7 +129,11 @@ function Array:tolua()
     return Array.__tolua(self, '')
 end
 
+local __serializeObjects = {}
 function Array:__tolua(tab)
+    if __serializeObjects[self] then return '#ref' end
+    __serializeObjects[self] = self
+
     local serializeTypes = {
         boolean = tostring,
         number = tostring,
@@ -149,6 +155,8 @@ function Array:__tolua(tab)
             code = code..','
         end
     end
+
+    __serializeObjects[self] = nil
 
     code = code..'\n'..tab..'}'
     return code

@@ -4,8 +4,12 @@
             "name": "Saved data",
             "path": "/Users/ludo/Library/Application Support/LOVE/lge",
             "windows": {
-                "path": "../../../AppData/Roaming/LOVE/lge"
+                "path": "C:/Users/LMILHAU/AppData/Roaming/LOVE/lge"
             }
+        },
+        {
+            "name": "Saved data - Windows",
+            "path": "C:/Users/LMILHAU/AppData/Roaming/LOVE/lge"
         },
         {
             "name": "lge",
