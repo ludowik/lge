@@ -10,16 +10,21 @@ function Solitaire:init()
 
     Card.setup()
 
+    self.deckList = Array()
+
     self.deck = Deck(0, 0)
+    self.deckList:push(self.deck)
     self.deck.position:set(6*Card.wcard+7*Card.margin, Card.hcard*1.5)
 
     self.wast = Deck(Card.wcard/3, 0)
+    self.deckList:push(self.wast)
     self.wast.isMoveable = wast_isMoveable
     self.wast.position:set(4*Card.wcard+7*Card.margin, Card.hcard*1.5)
 
     self.piles = Node()
     for i in range(4) do
         local deck = Deck(0, 0)
+        self.deckList:push(deck)
         deck.isMoveable = pile_isMoveable
         deck.isValidMove = pile_isValidMove
         self.piles:add(deck)
@@ -29,12 +34,14 @@ function Solitaire:init()
     self.rows = Node()
     for i in range(7) do
         local deck = Deck(0, Card.wtext + Card.margin)
+        self.deckList:push(deck)
         deck.isMoveable = row_isMoveable
         deck.isValidMove = row_isValidMove
         self.rows:add(deck)
         deck.position:set((i-1)*Card.wcard+i*Card.margin, Card.hcard*2.5+2*Card.margin)
     end
     
+    self.parameter:watch('env.sketch.tweenManager')
     self.parameter:action('Nouvelle donne', function () self:newGame() end)
 
     self.scene = Scene()
@@ -42,6 +49,8 @@ function Solitaire:init()
     self.scene:add(self.piles)    
     self.scene:add(self.wast)
     self.scene:add(self.deck)
+
+    self:loadGame()
 end
 
 function Solitaire:resetGame()
@@ -84,21 +93,42 @@ function Solitaire:newGame()
     end
 end
 
+function Solitaire:serialize()
+    return {
+        deck = self.deck:serialize(),
+        piles = {
+            self.piles.items[1]:serialize(),
+            self.piles.items[2]:serialize(),
+            self.piles.items[3]:serialize(),
+            self.piles.items[4]:serialize(),
+        }
+    }
+end
+
 function Solitaire:saveGame()
-    print(Array.tolua(self.piles))
+    saveFile('solitaire', self:serialize())
 end
 
 function Solitaire:loadGame()
+    local data = loadFile('solitaire')
+    if data then
+        self:resetGame()
+        table.foreach(data.deck, function (card)
+            self.deck:push(Card(card.value, card.suit, card.faceUp))
+        end)
+    end
 end
 
 function Solitaire:update(dt)
-    for i in range(self.rows:count()) do
-        local lastCard = self.rows.items[i].items:last()
-        if lastCard then
-            local validMoves = Array()
-            getValidMovesFor(validMoves, lastCard, self.piles.items)
-            if #validMoves == 1 then
-                lastCard:move2(validMoves[1])
+    if #self.tweenManager == 0 then
+        for i in range(self.rows:count()) do
+            local lastCard = self.rows.items[i].items:last()
+            if lastCard then
+                local validMoves = Array()
+                getValidMovesFor(validMoves, lastCard, self.piles.items)
+                if #validMoves == 1 then
+                    lastCard:move2(validMoves[1])
+                end
             end
         end
     end
@@ -106,7 +136,28 @@ end
 
 function Solitaire:draw()
     background(colors.white)
-    self.scene:draw()
+    --self.scene:draw()
+
+    local cards = Array()
+
+    self.deckList:foreach(function (deck)
+        deck:draw()
+        for _,card in ipairs(deck.items) do
+            if not card.tween then
+                cards:add(card)
+            end
+        end
+    end)
+
+    self.deckList:foreach(function (deck)
+        for _,card in ipairs(deck.items) do
+            if card.tween then
+                cards:add(card)
+            end
+        end
+    end)
+
+    cards:foreach(function (card) card:draw() end)
 end
 
 Deck = class() : extends(Node)
@@ -138,6 +189,18 @@ suits = {
     club = {name = 'trefle', color = 'black'},
     spade = {name = 'pique', color = 'black'}
 }
+
+function Deck:serialize()
+    local data = Array()
+    self.items:foreach(function (_, card)
+        data:push({
+            value = card.value,
+            suit = card.suit,
+            faceUp = card.faceUp,
+        })
+    end)
+    return data
+end
 
 function Deck:create()
     for _,suitName in ipairs{'heart', 'diamond', 'club', 'spade'} do
@@ -198,7 +261,7 @@ function Deck:push(card, count)
     card.tween = animate(card.position, card.nextPosition, {
         delayBeforeStart = count/60,
         delay = 30/60
-    }, tween.easing.quadOut)
+    }, tween.easing.quadOut, function () card.tween = nil end)
 
     self.items:push(card)
     card.deck = self
@@ -209,10 +272,6 @@ function Deck:draw()
     stroke(colors.gray)
     strokeSize(1)
     rect(self.position.x, self.position.y, Card.wcard, Card.hcard, Card.margin)
-
-    for _,card in ipairs(self.items) do
-        card:draw()
-    end
 end
 
 Card = class() : extends(Rect)
@@ -233,12 +292,11 @@ function Card:init(value, suit, faceUp)
     Rect.init(self, 0, 0, Card.wcard, Card.hcard)
 
     self.value = value
-    self.suit = suit.name
-    self.color = suit.color
+    self.suit = suit
 
     self.faceUp = faceUp
 
-    self.img = Image('resources/images/'..self.suit..'.png')
+    self.img = Image('resources/images/'..self.suit.name..'.png')
 end
 
 local labels = {'A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K'}
@@ -326,7 +384,7 @@ function Card:move2(newDeck, countCard)
         end
     end
 
-    -- print('move2Over '..labels[self.value]..' '..self.suit..' : '..tostring(self.faceUp))
+    -- print('move2Over '..labels[self.value]..' '..self.suit.name..' : '..tostring(self.faceUp))
 end
 
 function Card:move2bottom(newDeck, countCard)
@@ -342,7 +400,7 @@ function Card:move2bottom(newDeck, countCard)
     newDeck.items:insert(1, self)
     self.deck = newDeck
 
-    -- print('move2Bottom '..labels[self.value]..' '..self.suit..' : '..tostring(self.faceUp))
+    -- print('move2Bottom '..labels[self.value]..' '..self.suit.name..' : '..tostring(self.faceUp))
 end
 
 function getFirstValidMove(card)
@@ -376,7 +434,7 @@ function row_isValidMove(_, card, toDeck)
         end
     else
         local last = toDeck.items:last()
-        if card.value == last.value - 1 and card.color ~= last.color then
+        if card.value == last.value - 1 and card.suit.color ~= last.suit.color then
             return true
         end
     end
@@ -390,7 +448,7 @@ function pile_isValidMove(_, card, toDeck)
         end
     else
         local last = toDeck.items:last()
-        if card.value == last.value + 1 and card.suit == last.suit and card == card.deck.items:last() then
+        if card.value == last.value + 1 and card.suit.name == last.suit.name and card == card.deck.items:last() then
             return true
         end
     end

@@ -51,7 +51,7 @@ function The2048:__loadGame()
     self.animations = Array()
 
     -- load data
-    local data = readFile('2048')
+    local data = loadFile('2048')
     if not data or not data.cells then return false end
 
     -- use data to restore the game

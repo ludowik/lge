@@ -13,12 +13,12 @@ end
 function loadSettings()
     if getOS() == 'web' then return {} end
 
-    return readFile(settingsFileName) or {
+    return loadFile(settingsFileName) or {
         sketch = 'Hexagone'
     }
 end
 
-function readFile(fileName)
+function loadFile(fileName)
     local ok, f = pcall(function () return love.filesystem.load(fileName) end)
     if ok and type(f) == 'function' then
         return f()
