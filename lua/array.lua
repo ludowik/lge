@@ -147,12 +147,22 @@ function Array:__tolua(tab)
     
     local code = '{'
 
-    for k,v in pairs(self) do
-        if serializeTypes[type(v)] then
-            code = code..'\n'                
-            code = code..tab..'\t'..name(k)..' = '
-            code = code..serializeTypes[type(v)](v)
-            code = code..','
+    if #self > 0 then
+        for k,v in ipairs(self) do
+            if serializeTypes[type(v)] then
+                code = code..'\n'
+                code = code..serializeTypes[type(v)](v)
+                code = code..','
+            end
+        end
+    else
+        for k,v in pairs(self) do
+            if serializeTypes[type(v)] then
+                code = code..'\n'
+                code = code..tab..'\t'..name(k)..' = '
+                code = code..serializeTypes[type(v)](v)
+                code = code..','
+            end
         end
     end
 

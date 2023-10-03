@@ -3,8 +3,6 @@ Solitaire = class() : extends(Sketch)
 -- TODO : trouver un autre moyen pour pointer globalement sur le jeu (à la place de env.sketch)
 -- TODO : trouver un autre moyen pour adresser items (count and last)
 
--- TODO : vérifier qu'une suite ne peut pas être ajoutée sur une pile
-
 function Solitaire:init()
     Sketch.init(self)
 
@@ -41,7 +39,7 @@ function Solitaire:init()
         deck.position:set((i-1)*Card.wcard+i*Card.margin, Card.hcard*2.5+2*Card.margin)
     end
     
-    self.parameter:watch('env.sketch.tweenManager')
+    self.parameter:boolean('auto', Bind(self, 'autoPlay'), true)
     self.parameter:action('Nouvelle donne', function () self:newGame() end)
 
     self.scene = Scene()
@@ -96,6 +94,16 @@ end
 function Solitaire:serialize()
     return {
         deck = self.deck:serialize(),
+        wast = self.wast:serialize(),
+        rows = {
+            self.rows.items[1]:serialize(),
+            self.rows.items[2]:serialize(),
+            self.rows.items[3]:serialize(),
+            self.rows.items[4]:serialize(),
+            self.rows.items[5]:serialize(),
+            self.rows.items[6]:serialize(),
+            self.rows.items[7]:serialize(),
+        },
         piles = {
             self.piles.items[1]:serialize(),
             self.piles.items[2]:serialize(),
@@ -111,16 +119,29 @@ end
 
 function Solitaire:loadGame()
     local data = loadFile('solitaire')
-    if data then
+    if data and data.rows and data.piles then
         self:resetGame()
-        table.foreach(data.deck, function (card)
+        Array.foreach(data.deck, function (card)
             self.deck:push(Card(card.value, card.suit, card.faceUp))
+        end)
+        Array.foreach(data.wast, function (card)
+            self.wast:push(Card(card.value, card.suit, card.faceUp))
+        end)
+        Array.foreach(data.rows, function (row, i)
+            Array.foreach(row, function (card)
+                self.rows.items[i]:push(Card(card.value, card.suit, card.faceUp))
+            end)
+        end)
+        Array.foreach(data.piles, function (pile, i)
+            Array.foreach(pile, function (card)
+                self.piles.items[i]:push(Card(card.value, card.suit, card.faceUp))
+            end)
         end)
     end
 end
 
 function Solitaire:update(dt)
-    if #self.tweenManager == 0 then
+    if #self.tweenManager == 0 and self.autoPlay then
         for i in range(self.rows:count()) do
             local lastCard = self.rows.items[i].items:last()
             if lastCard then
@@ -192,7 +213,7 @@ suits = {
 
 function Deck:serialize()
     local data = Array()
-    self.items:foreach(function (_, card)
+    self.items:foreach(function (card)
         data:push({
             value = card.value,
             suit = card.suit,

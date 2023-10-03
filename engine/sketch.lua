@@ -9,6 +9,8 @@ function Sketch.__index(self, key)
 end
 
 function Sketch:init(w, h)
+    env.sketch = self
+    
     Index.init(self)
     State.init(self)
 
