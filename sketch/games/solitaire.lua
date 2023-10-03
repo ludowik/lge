@@ -67,7 +67,7 @@ function Solitaire:newGame()
     self:resetGame()
 
     self.deck:create()
-    --self.deck:shuffle()
+    self.deck:shuffle()
 
     local index = 1
     local countCard = 0
