@@ -343,8 +343,8 @@ function Card:draw()
         textMode(CENTER)
         textColor(colors.black)
         text(labels[self.value],
-            x + wtext/2 + margin,
-            y + wtext/2 + margin)
+            x + wtext/2,
+            y + wtext/2)
 
         spriteMode(CENTER)
         sprite(self.img,
