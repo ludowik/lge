@@ -3,6 +3,7 @@ Solitaire = class() : extends(Sketch)
 -- TODO : trouver un autre moyen pour pointer globalement sur le jeu (à la place de env.sketch)
 -- TODO : trouver un autre moyen pour adresser items (count and last)
 
+
 function Solitaire:init()
     Sketch.init(self)
 
@@ -343,8 +344,8 @@ function Card:draw()
         textMode(CENTER)
         textColor(colors.black)
         text(labels[self.value],
-            x + wtext/2,
-            y + wtext/2)
+            x + wtext/2 + margin,
+            y + wtext/2 + margin)
 
         spriteMode(CENTER)
         sprite(self.img,
