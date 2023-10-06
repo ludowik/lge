@@ -19,7 +19,10 @@ function loadSettings()
 end
 
 function loadFile(fileName)
-    local ok, f = pcall(function () return love.filesystem.load(fileName) end)
+    local ok, f = pcall(
+        function ()
+            return love.filesystem.load(fileName)
+        end)
     if ok and type(f) == 'function' then
         return f()
     end

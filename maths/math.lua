@@ -48,6 +48,8 @@ PI = math.pi
 TAU = math.TAU
 
 function getPowerOf2(value)
+    value = round(value)
+    
     local n = 0
     while value >= 2 and floor(value) == value do
         value = value / 2
@@ -57,10 +59,12 @@ function getPowerOf2(value)
 end
 
 function even(value)
+    value = round(value)
     return value + value % 2
 end
 
 function odd()
+    value = round(value)
     return value + value % 2 - 1
 end
 

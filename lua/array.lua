@@ -26,6 +26,10 @@ function Array:removeIfTrue(f)
     end
 end
 
+function Array:random()
+    return self[randomInt(1, #self)]
+end
+
 function Array:forn(n, functionOrValue)
     if type(functionOrValue) == 'function' then
         for i in range(n) do
@@ -35,6 +39,24 @@ function Array:forn(n, functionOrValue)
         for i in range(n) do
             self[i] = functionOrValue
         end
+    end
+    return self
+end
+
+function Array:update(dt)
+    for i,v in ipairs(self) do
+        if v.update then
+           v:update(dt)
+        end 
+    end
+    return self
+end
+
+function Array:draw(dt)
+    for i,v in ipairs(self) do
+        if v.draw then
+           v:draw()
+        end 
     end
     return self
 end
@@ -59,18 +81,18 @@ function Array:indexOf(item)
     end
 end
 
+function Array:keyOf(item)
+    for k,v in pairs(self) do
+        if item == v then return k end
+    end
+end
+
 function Array:first()
     return self[1]
 end
 
 function Array:last()
     return self[#self]
-end
-
-function Array:keyOf(item)
-    for k,v in pairs(self) do
-        if item == v then return k end
-    end
 end
 
 function Array:map(f)
@@ -119,10 +141,6 @@ function Array:clone()
 
     __cloningObjects[self] = nil
     return t
-end
-
-function Array:random()
-    return self[randomInt(1, #self)]
 end
 
 function Array:tolua()

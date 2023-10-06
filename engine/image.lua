@@ -9,6 +9,9 @@ function FrameBuffer:init(w, h)
     self:background(colors.transparent)
 
     resetContext()
+
+    self.width = w
+    self.height = h
 end
 
 function FrameBuffer:setContext()
@@ -52,6 +55,8 @@ Image = class()
 
 function Image:init(filename, ...)
     self.texture = love.graphics.newImage(filename)
+    self.width = self.texture:getWidth()
+    self.height = self.texture:getHeight()
 end
 
 function Image:update()

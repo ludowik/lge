@@ -6,6 +6,7 @@ if arg[#arg] == "vsc_debug" then
     lldebugger.start()
 
     debugMode = true
+    
     local run = love.run
     function love.run(...)
         local f = lldebugger.call(run, false, ...)

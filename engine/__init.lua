@@ -3,6 +3,7 @@ require 'maths'
 require 'lib'
 
 require 'engine.love'
+require 'lua.debug'
 require 'engine.id'
 require 'engine.color'
 require 'engine.transform'

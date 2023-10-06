@@ -10,3 +10,9 @@ function Buffer:resize(size)
     end
     return self
 end
+
+function Buffer:reset()
+    for i in range(#self) do
+        self[i] = nil
+    end
+end

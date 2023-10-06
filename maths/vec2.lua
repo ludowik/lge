@@ -27,6 +27,10 @@ function vec2.randomInScreen()
     return vec2():randomize(W, H)
 end
 
+function vec2.randomAngle(angle)
+    return vec2(1, 0):rotate(random(angle or TAU))
+end
+
 function vec2:rotate(angle)
     local c, s = cos(angle), sin(angle)
     return vec2(
@@ -58,9 +62,10 @@ function vec2.__add(u, v)
         u.y + v.y)
 end
 
-function vec2.add(u, v)
-    u.x = u.x + v.x
-    u.y = u.y + v.y
+function vec2.add(u, v, factor)
+    factor = factor or 1
+    u.x = u.x + v.x * factor
+    u.y = u.y + v.y * factor
     return u
 end
 
@@ -70,9 +75,10 @@ function vec2.__sub(u, v)
         u.y - v.y)
 end
 
-function vec2.sub(u, v)
-    u.x = u.x - v.x
-    u.y = u.y - v.y
+function vec2.sub(u, v, factor)
+    factor = factor or 1
+    u.x = u.x - v.x * factor
+    u.y = u.y - v.y * factor
     return u
 end
 

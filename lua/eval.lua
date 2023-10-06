@@ -12,9 +12,9 @@ function evalCode(source)
 
     local f, err = loadstring(source)
     if f then
-        local status, res = pcall(f)
-        if status then
-            return res
+        local ok, result = pcall(f)
+        if ok then
+            return result
         end
     else
         print(err)

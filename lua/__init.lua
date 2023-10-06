@@ -1,4 +1,4 @@
-require 'lua.debug'
+--require 'lua.debug'
 require 'lua.info'
 require 'lua.os'
 require 'lua.require'
