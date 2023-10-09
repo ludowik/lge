@@ -22,6 +22,7 @@ function Graphics2d.initMode()
         love.window.setMode(2*X+W, 2*Y+H, {
             msaa = 3,
             fullscreen = false,
+            highdpi = true,
         })
     end
 end

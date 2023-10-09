@@ -205,10 +205,17 @@ KING = 13
 
 -- TODO : un ordre des suites existe t'il pour un paquet trié
 suits = {
-    heart = {name = 'coeur', color = 'red'},
-    diamond = {name = 'carreau', color = 'red'},
-    club = {name = 'trefle', color = 'black'},
-    spade = {name = 'pique', color = 'black'}
+    spade = {name = 'pique', color = 'black', char=9824+3},
+    heart = {name = 'coeur', color = 'red', char=9824+3},
+    diamond = {name = 'carreau', color = 'red', char=9824+3},
+    club = {name = 'trefle', color = 'black', char=9824+3},
+}
+
+suitsChar= {
+    pique = 9824+0,
+    coeur = 9824+5,
+    carreau = 9824+6,
+    trefle = 9824+3,
 }
 
 function Deck:serialize()
@@ -306,7 +313,7 @@ function Card.setup()
     Card.wcard = Card.size.x - 2*Card.margin
     Card.hcard = Card.size.y - 2*Card.margin
 
-    Card.wtext = floor(Card.wcard * 0.4)
+    Card.wtext = floor(Card.wcard * 0.45)
 end
 
 function Card:init(value, suit, faceUp)
@@ -338,22 +345,32 @@ function Card:draw()
         rectMode(CORNER)
         rect(x, y, wcard, hcard, Card.margin)
 
-        fontSize(wtext)
         fontName('arial')
+        fontSize(wtext)
+
         textMode(CENTER)
         textColor(colors.black)
         text(labels[self.value],
-            x + wtext/2,
-            y + wtext/2)
+            x + wtext/2 + margin,
+            y + wtext/2 + margin)
 
-        spriteMode(CENTER)
-        sprite(self.img,
+        textColor(self.suit.color == 'red' and colors.red or colors.black)
+
+        -- spriteMode(CENTER)
+        -- sprite(self.img,
+        fontSize(wtext*1.35)
+        text(utf8.char(suitsChar[self.suit.name]),
             x + wcard - wtext/2 - margin,
-            y + wtext/2 + margin, wtext, wtext)
+            y + wtext/2 + margin)
 
-        sprite(self.img,
+        fontSize(wcard*1.2)
+        text(utf8.char(suitsChar[self.suit.name]),
             x + wcard/2,
-            y + hcard - wcard/2 - margin, wcard*.7, wcard*.7)
+            y + hcard - wcard/2 - margin)
+
+        -- sprite(self.img,
+        --     x + wcard/2,
+        --     y + hcard - wcard/2 - margin, wcard*.7, wcard*.7)
     
     else
         strokeSize(0.5)

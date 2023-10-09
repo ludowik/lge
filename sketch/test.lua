@@ -22,21 +22,24 @@ function draw()
         end
     end 
 
-    -- local str = ''
-    -- for i in index(8) do
-    --     str = str..utf8.char(9824+i)
-    -- end
+    translate(0, 350)
 
-    -- fontName('system/arial')
+    local str = 'Suite '
+    str = str..utf8.char(9824+0)
+    ..utf8.char(9824+3)
+    ..utf8.char(9824+5)
+    ..utf8.char(9824+6)
 
-    -- fontSize(64)
-    -- textColor(colors.red)
-    -- text(fontName())
+    fontName('arial')
 
-    -- fontSize(64)
-    -- textColor(colors.red)
-    -- text(str, 0, 100)
+    fontSize(64)
+    textColor(colors.red)
+    text(fontName())
 
-    -- textColor(colors.black)
-    -- text(str, 0, 200)
+    fontSize(64)
+    textColor(colors.red)
+    text(str, 0, 100)
+
+    textColor(colors.black)
+    text(str, 0, 200)
 end
