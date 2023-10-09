@@ -62,7 +62,7 @@ function setup()
 end
 
 function defineCharactersSet()
-    fontName('Arial')
+    fontName('arial')
     fontSize(20)
 
     local sw, sh = 0, 0
