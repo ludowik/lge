@@ -1,6 +1,6 @@
 name = "lge"
 default_targets = ["lovejs"]
-build_directory = "build"
+build_directory = "./build"
 love_version = "11.4"
 
 love_files = [
@@ -17,7 +17,7 @@ love_files = [
 
 [hooks]
 postbuild = [
-    '"c:/Program Files/Git/usr/bin/unzip" -o {build_directory}/lovejs/lge-lovejs.zip -d {build_directory}/lovejs/lge-lovejs',
+    '"zip" -o {build_directory}/lovejs/lge-lovejs.zip -d {build_directory}/lovejs/lge-lovejs',
 ]
 
 [lovejs]

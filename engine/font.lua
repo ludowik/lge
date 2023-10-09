@@ -23,7 +23,7 @@ end
 
 function fontName(name)
     if name then
-        FontManager.fontName = lower(name)
+        FontManager.fontName = name:lower()
     end
     return FontManager.fontName
 end

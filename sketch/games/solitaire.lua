@@ -353,21 +353,16 @@ function Card:draw()
 
         textColor(self.suit.color == 'red' and colors.red or colors.black)
 
-        -- spriteMode(CENTER)
-        -- sprite(self.img,
-        fontSize(wtext*1.35)
-        text(utf8.char(suitsChar[self.suit.name]),
+        spriteMode(CENTER)
+        sprite(self.img,
             x + wcard - wtext/2 - margin,
-            y + wtext/2 + margin)
+            y + wtext/2 + margin,
+            wtext, wtext)
 
-        fontSize(wcard*1.2)
-        text(utf8.char(suitsChar[self.suit.name]),
+        sprite(self.img,
             x + wcard/2,
-            y + hcard - wcard/2 - margin)
-
-        -- sprite(self.img,
-        --     x + wcard/2,
-        --     y + hcard - wcard/2 - margin, wcard*.7, wcard*.7)
+            y + hcard - wcard/2 - margin,
+            wcard*.7, wcard*.7)
     
     else
         strokeSize(0.5)
