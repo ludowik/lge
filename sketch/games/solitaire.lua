@@ -3,6 +3,11 @@ Solitaire = class() : extends(Sketch)
 -- TODO : trouver un autre moyen pour pointer globalement sur le jeu (à la place de env.sketch)
 -- TODO : trouver un autre moyen pour adresser items (count and last)
 
+-- TODO : dériver des classes spécifiques pour chaque tas
+-- TODO : pouvoir revenir en arrière
+-- TODO : gérér un décalage entre les cartes sur tous les déplacements (du tas vers le awst, en mode auto...)
+-- TODO : trouver d'autres icônes sans fioritures sur les couleurs
+
 function Solitaire:init()
     Sketch.init(self)
 
@@ -203,19 +208,11 @@ VALET = 11
 QUEEN = 12
 KING = 13
 
--- TODO : un ordre des suites existe t'il pour un paquet trié
 suits = {
-    spade = {name = 'pique', color = 'black', char=9824+3},
-    heart = {name = 'coeur', color = 'red', char=9824+3},
-    diamond = {name = 'carreau', color = 'red', char=9824+3},
-    club = {name = 'trefle', color = 'black', char=9824+3},
-}
-
-suitsChar= {
-    pique = 9824+0,
-    coeur = 9824+5,
-    carreau = 9824+6,
-    trefle = 9824+3,
+    spade = {name = 'pique', color = 'black'},
+    heart = {name = 'coeur', color = 'red'},
+    diamond = {name = 'carreau', color = 'red'},
+    club = {name = 'trefle', color = 'black'},    
 }
 
 function Deck:serialize()

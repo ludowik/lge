@@ -11,6 +11,16 @@ function Parameter:init(layoutMode)
     self.layoutMode = layoutMode or 'right'
 end
 
+function Parameter:randomizeParameter()
+    for _,ui in ipairs(self.items) do
+        if ui.items then
+            Parameter.randomizeParameter(ui)
+        else
+            ui:set(random(ui.minValue, ui.maxValue))
+        end
+    end
+end
+
 function Parameter:initControlBar()
     self:action('sketches',
         function ()
@@ -148,9 +158,10 @@ function Parameter:group(label, open)
     return newGroup
 end
 
-function Parameter:declareParameter(varName, initValue)
+function Parameter:declareParameter(varName, initValue, callback)
     if type(varName) == 'string' and env[varName] == null then
         env[varName] = initValue
+        if callback then callback() end
     end
 end
 function Parameter:space()
@@ -186,12 +197,12 @@ function Parameter:watch(label, expression)
 end
 
 function Parameter:boolean(label, varName, initValue, callback)
-    self:declareParameter(varName, initValue)
+    self:declareParameter(varName, initValue, callback)
     self.currentGroup:add(UICheck(label, varName, callback))
 end
 
 function Parameter:integer(label, varName, min, max, initValue, callback)
-    self:declareParameter(varName, initValue or min)
+    self:declareParameter(varName, initValue or min, callback)
     local ui = UISlider(label, varName, min, max, callback)
     ui.intValue = true
     ui.incrementValue = 1
@@ -200,7 +211,7 @@ function Parameter:integer(label, varName, min, max, initValue, callback)
 end
 
 function Parameter:number(label, varName, min, max, initValue, callback)
-    self:declareParameter(varName, initValue or min)
+    self:declareParameter(varName, initValue or min, callback)
     local ui = UISlider(label, varName, min, max, callback)
     ui.intValue = false
     ui.incrementValue = 0.2

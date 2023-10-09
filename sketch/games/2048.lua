@@ -38,7 +38,11 @@ function The2048:initGame()
 end
 
 function The2048:loadGame()
-    local status, result = xpcall(function () return self:__loadGame() end, nilf)
+    local status, result = xpcall(
+        function ()
+            return self:__loadGame()
+        end, nilf)
+        
     if status then
         return result
     end

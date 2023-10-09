@@ -18,11 +18,14 @@ function Shader:loadProgram()
     if vs or ps then
         self.errorMsg = nil
         
-        local status, result = xpcall(function () return love.graphics.newShader(self.pixelShader.code, self.vertexShader.code) end,
-        function (msg)
-            print(msg)
-            self.errorMsg = msg
-        end)
+        local status, result = xpcall(
+            function ()
+                return love.graphics.newShader(self.pixelShader.code, self.vertexShader.code)
+            end,
+            function (msg)
+                print(msg)
+                self.errorMsg = msg
+            end)
 
         if status then
             self.program = result

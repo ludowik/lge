@@ -315,6 +315,8 @@ function Graphics2d.sprite(image, x, y, w, h)
         x, y = x-w/2, y-h/2
     end
 
-    love.graphics.setColor(Graphics2d.tint():rgba())
+    if Graphics2d.tint() then
+        love.graphics.setColor(Graphics2d.tint():rgba())
+    end
     love.graphics.draw(texture, x, y, 0, w/texture:getWidth(), h/texture:getHeight())
 end

@@ -6,10 +6,14 @@ CLOSE = 'close'
 function Shape:init(type)
     self.vertices = Array()
     self.type = type
+    self.scaleFactor = 1
 end
 
 function Shape:draw()
     if #self.vertices < 4 then return end
+
+    pushMatrix()
+    scale(self.scaleFactor)
     
     if self.type == LINES then
         for i=1,#self.vertices,4 do
@@ -20,6 +24,8 @@ function Shape:draw()
     else
         polyline(self.vertices)
     end
+
+    popMatrix()
 end
 
 local shape
@@ -37,4 +43,8 @@ function endShape(mode)
     shape.mode = mode     
     shape:draw()
     return shape
+end
+
+function scaleShape(scaleFactor)
+    shape.scaleFactor = scaleFactor
 end

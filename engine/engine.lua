@@ -22,6 +22,9 @@ function Engine.load()
     engine.navigation = Parameter('left')
     engine.navigation:initControlBar()
 
+    resetMatrix()
+    resetStyle()    
+
     reload()
 end
 
@@ -49,6 +52,7 @@ end
 
 local previousCanvas
 function setContext(fb)
+    if fb == nil then return resetContext() end
     assert(fb and fb.canvas)
     
     previousCanvas = love.graphics.getCanvas()
@@ -59,6 +63,17 @@ end
 function resetContext(fb)
     popMatrix()
     love.graphics.setCanvas(previousCanvas)
+end
+
+function render2context(f, context)
+    assert(context)
+
+    setContext(context)
+    resetMatrix(true)
+
+    f()
+    
+    resetContext()
 end
 
 function noLoop()
