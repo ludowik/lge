@@ -131,6 +131,7 @@ function loadSketch(env)
             'mousemoved',
             'mousereleased',
             'keypressed',
+            'wheelmoved',
         }) do
             encapsulate(fname)
         end

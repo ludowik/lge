@@ -7,7 +7,8 @@ function setup()
         'resources/images/wikipedia.png',
     }
 
---    baseImageList = dirr('res/images')
+--    baseImageList = dirr('resources/images')
+    baseImageList = love.filesystem.getDirectoryItems('resources/images')
 
 --    baseImageList:sort(
 --        function (a, b)
@@ -15,18 +16,28 @@ function setup()
 --        end)
 
     local function getSource()
-        local baseImage = Image(baseImageList[baseImageIndex])
+        local baseImage = Image('resources/images/'..baseImageList[baseImageIndex])
 
-        local w = even(min(W/2, H/2))
-        local scaleFactor = w / max(baseImage.width, baseImage.height)
+        local size, ratio, ws, hs
+        if W < H then
+            size = even(W/2)
+            ratio = baseImage.width / baseImage.height
+            hs = size
+            ws = hs * ratio
+        else
+            size = even(H/2)
+            ratio = baseImage.height / baseImage.width
+            ws = size
+            hs = ws * ratio
+        end
 
-        local source = FrameBuffer(w, w)
+        local source = FrameBuffer(size, size)
 
         render2context(
             function ()
                 background(colors.white)
                 spriteMode(CENTER)
-                sprite(baseImage, w/2, w/2, 1/scaleFactor, 1/scaleFactor)
+                sprite(baseImage, size/2, size/2, ws, hs)
             end,
             source)
 

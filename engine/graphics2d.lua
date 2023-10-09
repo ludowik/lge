@@ -9,16 +9,17 @@ end
 function Graphics2d.initMode()
     local fullscreen = false
     if getOS() == 'ios' then
+        local margeExtension = 5
         X, Y, W, H = love.window.getSafeArea()
-        X = X + 5
-        W = W - 5*2
+        X = X + margeExtension
+        W = W - margeExtension*2
         local ws, hs = love.window.getMode()
         love.window.setMode(ws, hs, {
             msaa = 3,
             fullscreen = true,
         })
     else
-        X, Y, W, H = 5, 51, 365, 730
+        X, Y, W, H = 5, 51, 400, 800
         love.window.setMode(2*X+W, 2*Y+H, {
             msaa = 3,
             fullscreen = false,

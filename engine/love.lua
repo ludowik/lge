@@ -73,6 +73,10 @@ else
     function love.mousereleased(x, y, button, istouch, presses)
         eventManager:mousereleased(button, x, y)
     end
+
+	function love.wheelmoved(x, y)
+		eventManager:wheelmoved(x, y)
+	end
 end
 
 function love.keypressed(key, scancode, isrepeat)

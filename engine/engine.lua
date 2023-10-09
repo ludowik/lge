@@ -69,7 +69,7 @@ function render2context(f, context)
     assert(context)
 
     setContext(context)
-    resetMatrix(true)
+    love.graphics.origin()
 
     f()
     

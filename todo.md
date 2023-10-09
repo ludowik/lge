@@ -16,7 +16,6 @@ fonctions activables des sketches
 - 2 fingers swipe gesture => translate screen
 - 1 touch / release => pause / resume
 
-
 lca-js deposit
 - import/transcode "flow fields.js"
 - import/transcode "circle packing.js"

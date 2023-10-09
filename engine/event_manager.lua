@@ -40,6 +40,12 @@ function EventManager:mousereleased(id, x, y)
     end
 end
 
+function EventManager:wheelmoved(x, y)
+    if _G.env.sketch.wheelmoved then
+        _G.env.sketch:wheelmoved(x, y)
+    end
+end
+
 function EventManager:keypressed(key, scancode, isrepeat)
     processManager:current():keypressed(key, scancode, isrepeat)
     

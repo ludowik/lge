@@ -156,3 +156,6 @@ function Sketch:mousereleased(mouse)
         return scene:mousereleased(mouse)
     end
 end
+
+function Sketch:wheelmoved(x, y)
+end

@@ -24,6 +24,14 @@ function UI:getLabel()
     return tostring(self.label)
 end
 
+function UI:formatValue(value)
+    if self.intValue then
+        return string.format('%.0f', value)
+    else
+        return string.format('%.2f', value)
+    end
+end
+
 function UI:getValue(value)
     value = value or self.value
     if type(value) == 'table' and value.get then
@@ -32,7 +40,7 @@ function UI:getValue(value)
     
     local strValue
     if type(value) == 'number' then
-        strValue = string.format('%.2f', value)
+        strValue = self:formatValue(value)
     else
         strValue = tostring(value)
     end

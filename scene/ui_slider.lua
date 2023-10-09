@@ -37,7 +37,8 @@ function UISlider:draw()
 
     local dx = (self.value:get() - self.minValue) / (self.maxValue - self.minValue)
     local x = self.size.y + dx * (self.size.x - 2*self.size.y)
-    stroke(colors.blue)
+    strokeSize(2)
+    stroke(colors.red)
     line(x, 0, x, self.size.y)
     
     fontSize(self.styles.fontSize*.7)
