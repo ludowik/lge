@@ -7,13 +7,7 @@ function setup()
         'resources/images/wikipedia.png',
     }
 
---    baseImageList = dirr('resources/images')
     baseImageList = love.filesystem.getDirectoryItems('resources/images')
-
---    baseImageList:sort(
---        function (a, b)
---            return love.filesystem.getInfo(a).size > love.filesystem.getInfo(b).size
---        end)
 
     local function getSource()
         local baseImage = Image('resources/images/'..baseImageList[baseImageIndex])
@@ -37,6 +31,7 @@ function setup()
             function ()
                 background(colors.white)
                 spriteMode(CENTER)
+                scale(1/devicePixelRatio)
                 sprite(baseImage, size/2, size/2, ws, hs)
             end,
             source)

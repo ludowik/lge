@@ -26,6 +26,8 @@ function Graphics2d.initMode()
             highdpi = true,
         })
     end
+
+    devicePixelRatio = love.window.getDPIScale()
 end
 
 function Graphics2d.background(clr, ...)
