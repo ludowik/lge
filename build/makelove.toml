@@ -17,7 +17,7 @@ love_files = [
 
 [hooks]
 postbuild = [
-    '"zip" -o {build_directory}/lovejs/lge-lovejs.zip -d {build_directory}/lovejs/lge-lovejs',
+    '"c:/Program Files/Git/usr/bin/unzip" -o {build_directory}/lovejs/lge-lovejs.zip -d {build_directory}/lovejs/lge-lovejs',
 ]
 
 [lovejs]
