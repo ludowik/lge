@@ -28,16 +28,17 @@ function loadFile(fileName)
     end
 end
 
-function updateSettings()
-    local needUpdate = false
-    if settings.sketch ~= processManager:current().__className then
-        settings.sketch = processManager:current().__className
-        needUpdate = true
-    end
-    if needUpdate then
-        saveSettings()
-    end
-end
+-- TODEL
+-- function updateSettings()
+--     local needUpdate = false
+--     if settings.sketch ~= processManager:current().__className then
+--         settings.sketch = processManager:current().__className
+--         needUpdate = true
+--     end
+--     if needUpdate then
+--         saveSettings()
+--     end
+-- end
 
 settings = loadSettings()
 
@@ -55,3 +56,21 @@ setSettings('testNumber', 12.12)
 setSettings('testString', 'valeur')
 setSettings('testTable', {a = 'a'})
 setSettings('testNil', nil)
+
+assert(getSettings('testBoolean') == true)
+assert(getSettings('testNumber') == 12.12)
+assert(getSettings('testString') == 'valeur')
+assert(getSettings('testTable').a == 'a')
+assert(getSettings('testNil') == nil)
+
+setSettings('testBoolean', nil)
+setSettings('testNumber', nil)
+setSettings('testString', nil)
+setSettings('testTable', nil)
+setSettings('testNil', nil)
+
+assert(not setSettings('testBoolean'))
+assert(not setSettings('testNumber'))
+assert(not setSettings('testString'))
+assert(not setSettings('testTable'))
+assert(not setSettings('testNil'))

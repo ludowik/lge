@@ -47,7 +47,9 @@ end
 
 function Engine.update(dt)
     engine.components:update(dt)
-    updateSettings()
+
+    -- TODEL
+    --updateSettings()
 end
 
 local previousCanvas

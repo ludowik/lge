@@ -164,6 +164,7 @@ function Parameter:declareParameter(varName, initValue, callback)
         if callback then callback() end
     end
 end
+
 function Parameter:space()
     self.currentGroup:add(UI())
 end

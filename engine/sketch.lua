@@ -4,7 +4,9 @@ local fb
 
 function Sketch.__index(self, key)
     local value = rawget(self, key) or rawget(Sketch, key)
-    warning(value, key..' variable never initialized')
+    if not value then
+        warning(false, key..' variable never initialized')
+    end
     return value
 end
 
@@ -38,10 +40,21 @@ function Sketch:init(w, h)
     self:initMenu()
 
     processManager:add(self)
+
+    self.scene = nil
 end
 
 function Sketch:__tostring()
     return self.__className
+end
+
+function Sketch:setup()
+end
+
+function Sketch:update()
+end
+
+function Sketch:callback()
 end
 
 function Sketch:initMenu()

@@ -16,6 +16,7 @@ function ProcessManager:setSketch(name)
     for i,process in ipairs(self.items) do
         if process.__className == name then
             self:setCurrentSketch(i)
+            setSettings('sketch', name)
             break
         end        
     end
