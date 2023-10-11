@@ -1,4 +1,4 @@
-ReactionDiffusion = class() -- : extends(Sketch)
+ReactionDiffusion = class() : extends(Sketch)
 
 local gridIn
 local gridOut
@@ -84,8 +84,7 @@ end
 function ReactionDiffusion:draw()
     background(51)
 
-    local dpi = floor(love.window.getDPIScale())
-    message(dpi)
+    local dpi = devicePixelRatio
 
     renderImage:getImageData()
     renderImage.imageData:mapPixel(function (x, y, r, g, b, a)

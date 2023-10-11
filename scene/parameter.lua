@@ -162,6 +162,9 @@ function Parameter:declareParameter(varName, initValue, callback)
     if type(varName) == 'string' and env[varName] == null then
         env[varName] = initValue
         if callback then callback() end
+    elseif classnameof(varName) == 'Bind' and varName:get() == null then
+        varName:set(initValue)
+        if callback then callback() end
     end
 end
 

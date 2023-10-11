@@ -1,9 +1,12 @@
 function load(reload)
     declareSketches(reload)
-    loadSketches()
+    --loadSketches()
 
     processManager:setSketch(getSettings('sketch', 'sketches'))
 end
+
+local environnements = Array()
+environnementsList = nil
 
 function declareSketches(reload)
     local function scan(path, category)
@@ -27,6 +30,14 @@ function declareSketches(reload)
         end
     end
     scan('sketch')
+
+    environnementsList = Array()
+    for k,env in pairs(environnements) do
+        environnementsList:add(env)
+    end
+    environnementsList:sort(function (a, b)
+        return (a.__category or '')..'.'..a.__name < (b.__category or '')..'.'..b.__name
+    end)
 end
 
 Environnement = class()
@@ -50,8 +61,6 @@ function Environnement:init(name, itemPath, category)
     self.indexFrame = 0
 end
  
-local environnements = Array()
-environnementsList = nil
 function declareSketch(name, itemPath, category, reload)    
     if reload then
         local requirePath = itemPath:gsub('%/', '%.'):gsub('%.lua', '')
@@ -75,6 +84,8 @@ function declareSketch(name, itemPath, category, reload)
     if env.__sketch or env.setup or env.draw then
         environnements[name] = env
     end
+
+    processManager:add(env)
 end
 
 function isSketch(klass)
@@ -84,22 +95,14 @@ function isSketch(klass)
 end
 
 function loadSketches()
-    environnementsList = Array()
-    for k,env in pairs(environnements) do
-        environnementsList:add(env)
-    end
-    environnementsList:sort(function (a, b)
-        return (a.__category or '')..'.'..a.__name < (b.__category or '')..'.'..b.__name
-    end)
-
     for k,env in ipairs(environnementsList) do
         loadSketch(env)
     end
-
-    --process:setCurrentSketch(#self.items)
 end
 
 function loadSketch(env)
+    if env.sketch then return end
+
     _G.env = env
     env.env = env
 

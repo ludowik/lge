@@ -28,18 +28,6 @@ function loadFile(fileName)
     end
 end
 
--- TODEL
--- function updateSettings()
---     local needUpdate = false
---     if settings.sketch ~= processManager:current().__className then
---         settings.sketch = processManager:current().__className
---         needUpdate = true
---     end
---     if needUpdate then
---         saveSettings()
---     end
--- end
-
 settings = loadSettings()
 
 function setSettings(name, value)

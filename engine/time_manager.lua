@@ -11,6 +11,8 @@ end
 
 function TimeManager:update(dt)
     local process = processManager:current()
+    if not process then return end
+    
     if process.frames then
         if process.frames == 0 then
             return

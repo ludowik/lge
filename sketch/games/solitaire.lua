@@ -147,13 +147,15 @@ end
 
 function Solitaire:update(dt)
     if #self.tweenManager == 0 and self.autoPlay then
+        local countCard = 0
         for i in range(self.rows:count()) do
             local lastCard = self.rows.items[i].items:last()
             if lastCard then
                 local validMoves = Array()
                 getValidMovesFor(validMoves, lastCard, self.piles.items)
                 if #validMoves == 1 then
-                    lastCard:move2(validMoves[1])
+                    lastCard:move2(validMoves[1], countCard)
+                    countCard = countCard + 1
                 end
             end
         end

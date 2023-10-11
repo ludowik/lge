@@ -4,17 +4,21 @@ function ProcessManager.setup()
     processManager = ProcessManager()
 end
 
-function ProcessManager:add(sketch)
-    Node.add(self, sketch)
-    self:setCurrentSketch(#self.items)
+function ProcessManager:init()
+    self.processIndex = 1
+end
+
+function ProcessManager:add(env)
+    Node.add(self, env)
+--    self:setCurrentSketch(#self.items)
 end
 
 function ProcessManager:setSketch(name)
     if not name then return end
-    
+
     name = name:lower()
-    for i,process in ipairs(self.items) do
-        if process.__className == name then
+    for i,env in ipairs(self.items) do
+        if env.__className == name then
             self:setCurrentSketch(i)
             setSettings('sketch', name)
             break
@@ -26,9 +30,9 @@ function ProcessManager:getSketch(name)
     if not name then return end
     
     name = name:lower()
-    for i,process in ipairs(self.items) do
-        if process.__className == name then
-            return process
+    for i,env in ipairs(self.items) do
+        if env.__className == name then
+            return env.sketch
         end        
     end
 end
@@ -41,10 +45,14 @@ function ProcessManager:setCurrentSketch(processIndex)
 
     self.processIndex = processIndex
     
-    process = self:current()
+    if self.processIndex == 16 then lldebugger.requestBreak() end
+
+    loadSketch(self.items[self.processIndex])
+    local process = self:current()
+        
     _G.env = process.env or _G.env
     setfenv(0, _G.env)
-    if process and process.resume then process:resume() end
+    if process.resume then process:resume() end
 
     love.window.setTitle(process.__className)
 
@@ -65,6 +73,9 @@ function ProcessManager:loop()
 end
 
 function ProcessManager:update(dt)
+    -- TODO
+    if not self:current() then return end
+
     if self.loopOverProcess then
         self.loopIterProcess = self.loopIterProcess - 1
         if self.loopIterProcess <= 0 then
@@ -81,7 +92,7 @@ function ProcessManager:update(dt)
 end
 
 function ProcessManager:current()
-    return self.items[self.processIndex]
+    return self.items[self.processIndex].sketch
 end
 
 function ProcessManager:previous()

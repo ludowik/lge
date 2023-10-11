@@ -32,15 +32,17 @@ function Engine.quit()
     quit()
 end
 
-function Engine.contains(mouse)
-    local process = processManager:current()
-    
+function Engine.contains(mouse)    
     local object = engine.parameter:contains(mouse.position)
     if object then return object end
 
     local object = not fused() and engine.navigation:contains(mouse.position)
     if object then return object end
 
+    local process = processManager:current()
+    -- TODO
+    if not process then return end
+    
     local object = process:contains(mouse.position)
     if object then return object end
 end
@@ -80,16 +82,25 @@ end
 
 function noLoop()
     local process = processManager:current()
+    -- TODO
+    if not process then return end
+
     process.frames = 1
 end
 
 function loop()
     local process = processManager:current()
+    -- TODO
+    if not process then return end
+
     process.frames = nil
 end
 
 function redraw()
     local process = processManager:current()
+    -- TODO
+    if not process then return end
+    
     if process.frames then
         process.frames = (process.frames or 0) + 1
     end
@@ -97,6 +108,8 @@ end
 
 function Engine.draw()
     local process = processManager:current()
+    -- TODO
+    if not process then return end
         
     love.graphics.reset()
     do

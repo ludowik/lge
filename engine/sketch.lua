@@ -39,8 +39,6 @@ function Sketch:init(w, h)
 
     self:initMenu()
 
-    processManager:add(self)
-
     self.scene = nil
 end
 
