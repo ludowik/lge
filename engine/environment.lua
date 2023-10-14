@@ -11,14 +11,14 @@ end
 
 function Environment.__index(self, key)
     local alias = rawget(self, 'alias')
-    key = alias and alias[key] or key
+    key = (alias and alias[key]) or key
     return rawget(self, key) or rawget(_G, key)
 end
 
 function Environment:init(name, itemPath, category)
     setmetatable(self, {
         __newindex = Environment.__newindex,
-        __index = Environment.__index,
+        __index = _G,
     })
 
     setfenv(0, self)
