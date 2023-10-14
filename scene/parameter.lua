@@ -200,12 +200,20 @@ function Parameter:watch(label, expression)
     self.currentGroup:add(UIExpression(label, expression))
 end
 
+local function isVarName(varName)
+    if type(varName) == 'string' or classnameof(varName) == 'Bind' then return true end
+end
+
 function Parameter:boolean(label, varName, initValue, callback)
+    if not isVarName(varName) then varName, initValue, callback = label, varName, initValue end
+
     self:declareParameter(varName, initValue, callback)
     self.currentGroup:add(UICheck(label, varName, callback))
 end
 
 function Parameter:integer(label, varName, min, max, initValue, callback)
+    if not isVarName(varName) then varName, min, max, initValue, callback = label, varName, min, max, initValue end
+
     self:declareParameter(varName, initValue or min, callback)
     local ui = UISlider(label, varName, min, max, callback)
     ui.intValue = true
@@ -215,6 +223,8 @@ function Parameter:integer(label, varName, min, max, initValue, callback)
 end
 
 function Parameter:number(label, varName, min, max, initValue, callback)
+    if not isVarName(varName) then varName, min, max, initValue, callback = label, varName, min, max, initValue end
+
     self:declareParameter(varName, initValue or min, callback)
     local ui = UISlider(label, varName, min, max, callback)
     ui.intValue = false

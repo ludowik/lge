@@ -16,7 +16,8 @@ Array.push = table.insert
 Array.pop = table.remove
 Array.shift = function (t) return table.remove(t, 1) end
 
-Array.unpack = table.unpack or unpack
+table.unpack = table.unpack or unpack
+Array.unpack = table.unpack
 
 function Array:removeIfTrue(f)
     for i,v in ipairs(self, true) do

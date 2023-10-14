@@ -22,6 +22,8 @@ function setup()
     scene:add(UIExpression('startPosition', 'mouse.startPosition'))
     scene:add(UIExpression('position', 'mouse.position'))
     scene:add(UIExpression('previousPosition', 'mouse.previousPosition'))
+    scene:add(UIExpression('deltaPos', 'mouse.deltaPos'))
+    scene:add(UIExpression('previousPosition', 'mouse.previousPosition'))
     scene:add(UIExpression('move', 'mouse.move'))
     scene:add(UIExpression('delay', 'mouse.elapsedTime'))
 

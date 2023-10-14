@@ -16,3 +16,7 @@ function Buffer:reset()
         self[i] = nil
     end
 end
+
+function Buffer:add(...)
+    return table.insert(self, ...)
+end

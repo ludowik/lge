@@ -87,14 +87,14 @@ function play()
     end
 end
 
-function drawCell(cell, x, y)
+function drawCell(cell, i, j)
     local w = cells.cellSize / 3
     local value = cell.value
 
     pushMatrix()
     do
-        local x = (x - 1) * cells.cellSize + cells.position.x
-        local y = (y - 1) * cells.cellSize + cells.position.y
+        local x = (i - 1) * cells.cellSize + cells.position.x
+        local y = (j - 1) * cells.cellSize + cells.position.y
 
         translate(x, y)
 
@@ -103,8 +103,17 @@ function drawCell(cell, x, y)
 
         noFill()
 
-        rectMode(CENTER)
-        rect(0, 0, cells.cellSize, cells.cellSize)
+        --rectMode(CENTER)
+        --rect(0, 0, cells.cellSize, cells.cellSize)
+        pushMatrix()
+        do
+            translate(-cells.cellSize/2, -cells.cellSize/2)
+            if j == 2 then line(0, 0, cells.cellSize, 0) end
+            if i == 2 then line(0, 0, 0, cells.cellSize) end
+            if j == 2 then line(0, cells.cellSize, cells.cellSize, cells.cellSize) end
+            if i == 2 then line(cells.cellSize, 0, cells.cellSize, cells.cellSize) end
+        end
+        popMatrix()
 
         strokeSize(8)
 

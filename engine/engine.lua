@@ -50,6 +50,8 @@ end
 function Engine.update(dt)
     engine.components:update(dt)
 
+    mouse:update(dt)
+
     -- TODEL
     --updateSettings()
 end

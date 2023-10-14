@@ -10,7 +10,6 @@ end
 
 function ProcessManager:add(env)
     Node.add(self, env)
---    self:setCurrentSketch(#self.items)
 end
 
 function ProcessManager:setSketch(name)
