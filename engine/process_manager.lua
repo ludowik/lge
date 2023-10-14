@@ -44,8 +44,6 @@ function ProcessManager:setCurrentSketch(processIndex)
     collectgarbage('collect')
 
     self.processIndex = processIndex
-    
-    if self.processIndex == 16 then lldebugger.requestBreak() end
 
     loadSketch(self.items[self.processIndex])
     local process = self:current()
