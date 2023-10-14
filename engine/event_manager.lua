@@ -52,6 +52,9 @@ function EventManager:keypressed(key, scancode, isrepeat)
     if key == 'r' then
         reload(true)
 
+    elseif key == 't' then
+        env.__autotest = not env.__autotest
+    
     elseif key == 'z' then
         makezip()
     

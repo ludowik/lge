@@ -31,7 +31,7 @@ function navigate(category)
     end
 
     local categories = {}
-    environnementsList:foreach(function (env)
+    environmentsList:foreach(function (env)
         if env == _G.env then return end
         
         if env.__category ~= category then

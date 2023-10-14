@@ -47,12 +47,18 @@ function Mouse:moved(id, x, y)
     self.previousPosition:set(mouse.position)
     self.position:set(x-X, y-Y)
 
-    self.endPosition:set(mouse.position)
-    self.move:set(mouse.endPosition - mouse.startPosition)
-    self.deltaPos:set(mouse.endPosition - mouse.previousPosition)
+    if love.mouse.isDown(1) then
+        self.endPosition:set(mouse.position)
+        self.move:set(mouse.endPosition - mouse.startPosition)
+        self.deltaPos:set(mouse.endPosition - mouse.previousPosition)
+    end
 
     self.endTime = time()
     self.elapsedTime = self.endTime - self.startTime
+end
+
+function Mouse:update(dt)
+    self:moved(self.id, self.position.x+X, self.position.y+Y)
 end
 
 function Mouse:released(id, x, y)

@@ -10,7 +10,6 @@ end
 
 function ProcessManager:add(env)
     Node.add(self, env)
---    self:setCurrentSketch(#self.items)
 end
 
 function ProcessManager:setSketch(name)
@@ -44,8 +43,6 @@ function ProcessManager:setCurrentSketch(processIndex)
     collectgarbage('collect')
 
     self.processIndex = processIndex
-    
-    if self.processIndex == 16 then lldebugger.requestBreak() end
 
     loadSketch(self.items[self.processIndex])
     local process = self:current()

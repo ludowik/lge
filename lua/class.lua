@@ -1,5 +1,11 @@
 local classList = {}
 function class(__className)
+    local __inheritsFrom = nil
+    if type(__className) == 'table' then 
+        __inheritsFrom = __className
+        __className = ''
+    end
+
     assert(__className == nil or type(__className) == 'string')
 
     local info = debug.getinfo(2, "Sl")
@@ -30,6 +36,10 @@ function class(__className)
 
     if __className then
         _G[__className] = klass
+    end
+
+    if __inheritsFrom then 
+        klass:extends(__inheritsFrom)
     end
 
     return klass

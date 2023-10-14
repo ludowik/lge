@@ -5,8 +5,8 @@ function load(reload)
     processManager:setSketch(getSettings('sketch', 'sketches'))
 end
 
-local environnements = Array()
-environnementsList = nil
+local environments = nil
+environmentsList = nil
 
 function declareSketches(reload)
     local function scan(path, category)
@@ -29,48 +29,30 @@ function declareSketches(reload)
             end
         end
     end
+    
+    environments = Array()
+    
     scan('sketch')
 
-    environnementsList = Array()
-    for k,env in pairs(environnements) do
-        environnementsList:add(env)
+    environmentsList = Array()
+    for k,env in pairs(environments) do
+        environmentsList:add(env)
     end
-    environnementsList:sort(function (a, b)
+    environmentsList:sort(function (a, b)
         return (a.__category or '')..'.'..a.__name < (b.__category or '')..'.'..b.__name
     end)
 end
 
-Environnement = class()
-
-function Environnement:init(name, itemPath, category)
-    setmetatable(self, {__index = _G})
-    setfenv(0, self)
-    
-    local requirePath = itemPath:gsub('%/', '%.'):gsub('%.lua', '')
-    require(requirePath)
-
-    self.__name = name
-    self.__className = name:gsub('sketch%.', '')
-    self.__category = category
-
-    self.__sourceFile = itemPath
-    self.__modtime = love.filesystem.getInfo(itemPath).modtime
-
-    self.DeltaTime = 0
-    self.ElapsedTime = 0
-    self.indexFrame = 0
-end
- 
 function declareSketch(name, itemPath, category, reload)    
     if reload then
         local requirePath = itemPath:gsub('%/', '%.'):gsub('%.lua', '')
-        environnements[requirePath] = nil
+        environments[requirePath] = nil
         package.loaded[requirePath] = nil
     end
     
-    if environnements[name] then return environnements[name] end
+    if environments[name] then return environments[name] end
 
-    local env = Environnement(name, itemPath, category)
+    local env = Environment(name, itemPath, category)
     
     for k,v in pairs(env) do
         if isSketch(v) then
@@ -82,7 +64,7 @@ function declareSketch(name, itemPath, category, reload)
     end
 
     if env.__sketch or env.setup or env.draw then
-        environnements[name] = env
+        environments[name] = env
     end
 
     processManager:add(env)
@@ -95,7 +77,7 @@ function isSketch(klass)
 end
 
 function loadSketches()
-    for k,env in ipairs(environnementsList) do
+    for k,env in ipairs(environmentsList) do
         loadSketch(env)
     end
 end

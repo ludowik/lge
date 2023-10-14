@@ -276,7 +276,7 @@ function Graphics2d.text(str, x, y, limit, align)
         love.graphics.print(str, x, y)
     end
 
-    textPosition(textPosition() + hs)
+    textPosition(y + hs)
 
     return ws, hs
 end
@@ -284,9 +284,10 @@ end
 function Graphics2d.textSize(str, limit)
     str = tostring(str)
 
-    local font, w, h = FontManager.getFont()
+    local font = FontManager.getFont()    
     love.graphics.setFont(font)
-    
+
+    local w, h    
     if limit then
         local wrappedtext
         w, wrappedtext = font:getWrap(str, limit or W)
@@ -300,6 +301,12 @@ end
 
 function Graphics2d.spriteMode(mode)
     return stylesSet('spriteMode', mode)
+end
+
+
+function Graphics2d.spriteSize(image)
+    local texture = image.texture or image.canvas
+    return texture:getWidth(), texture:getHeight()
 end
 
 function Graphics2d.sprite(image, x, y, w, h)
