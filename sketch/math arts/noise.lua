@@ -20,6 +20,7 @@ end
 
 function generateImg()
     if img.width ~= W then
+        img:release()
         img = FrameBuffer(W, H)
     end
     

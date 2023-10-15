@@ -3,7 +3,11 @@ UISlider = class() : extends(UIButton)
 function UISlider:init(label, varName, minValue, maxValue, callback)
     UIButton.init(self, label, callback)
 
-    self.value = Bind(varName)
+    if classnameof(varName) == 'Bind' then
+        self.value = varName
+    else
+        self.value = Bind(varName)
+    end
 
     self.minValue = minValue or 0
     self.maxValue = maxValue or 100

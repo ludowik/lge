@@ -309,7 +309,7 @@ function Graphics2d.spriteSize(image)
     return texture:getWidth(), texture:getHeight()
 end
 
-function Graphics2d.sprite(image, x, y, w, h)
+function Graphics2d.sprite(image, x, y, w, h, ox, oy, ow, oh)
     x = x or 0
     y = y or 0
 
@@ -321,6 +321,9 @@ function Graphics2d.sprite(image, x, y, w, h)
     w = w or texture:getWidth()
     h = h or texture:getHeight()
 
+    ow = ow or texture:getWidth()
+    oh = oh or texture:getHeight()
+
     if mode == CENTER then
         x, y = x-w/2, y-h/2
     end
@@ -328,5 +331,8 @@ function Graphics2d.sprite(image, x, y, w, h)
     if Graphics2d.tint() then
         love.graphics.setColor(Graphics2d.tint():rgba())
     end
-    love.graphics.draw(texture, x, y, 0, w/texture:getWidth(), h/texture:getHeight())
+    love.graphics.draw(texture,
+        x, y, 0,
+        w/ow, h/oh,
+        ox, oy)
 end

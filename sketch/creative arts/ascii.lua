@@ -27,14 +27,13 @@ function setup()
 
         local source = FrameBuffer(size, size)
 
-        render2context(
+        render2context(source,
             function ()
                 background(colors.white)
                 spriteMode(CENTER)
                 scale(1/devicePixelRatio)
                 sprite(baseImage, size/2, size/2, ws, hs)
-            end,
-            source)
+            end)
 
         return source
     end
@@ -128,6 +127,8 @@ function defineCharactersSet()
 
     assert(characters:sub(1,1) == ' ')
     print(characters)
+
+    img:release()
 
     return characters
 end

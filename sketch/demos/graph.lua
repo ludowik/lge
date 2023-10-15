@@ -45,7 +45,7 @@ function draw()
     scene:draw()
 end
 
-function keyboard(key)
+function keypressed(key)
     if key == 'return' then
         reset()
     end

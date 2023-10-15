@@ -14,6 +14,11 @@ function FrameBuffer:init(w, h)
     self.height = h
 end
 
+function FrameBuffer:release()
+    self.imageData:release()
+    self.canvas:release()
+end
+
 function FrameBuffer:setContext()
     setContext(self)
 end

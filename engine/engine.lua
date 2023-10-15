@@ -71,7 +71,7 @@ function resetContext(fb)
     love.graphics.setCanvas(previousCanvas)
 end
 
-function render2context(f, context)
+function render2context(context, f)
     assert(context)
 
     setContext(context)
