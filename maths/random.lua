@@ -15,3 +15,4 @@ end
 randomInt = love.math.random
 
 noise = love.math.simplexNoise or love.math.noise
+noiseSeed = love.math.setRandomSeed
