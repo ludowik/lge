@@ -3,13 +3,13 @@ function setup()
     translation = vec2()
 end
 
-function mousepressed(touch)
-    translation = translation + vec2(touch.dx, touch.dy)
+function mousemoved(touch)
+    translation = translation + vec2(touch.deltaPos.x, touch.deltaPos.y)
 end
 
 function wheelmoved(dx, dy)
-    zoom = zoom + dy    
-    zoom = max(1, zoom)
+    zoom = zoom + dy/10
+    zoom = clamp(zoom, 0.25, 5)
 end
 
 function draw()
@@ -60,6 +60,8 @@ function draw()
     
     local pos = (vec2(mouse) + translation) * zoom
 
+    local globalX, globalY = love.graphics.inverseTransformPoint(mouse.position.x, mouse.position.y)
+
     row, col = 0, 0
     for k,v in pairs(iconsFont) do
         if col >= ncol then
@@ -67,10 +69,10 @@ function draw()
             col = 0
         end
 
-        if (mouse.position.x > col*wMax and 
-            mouse.position.x < col*wMax+wMax and 
-            mouse.position.y > row*hMax and 
-            mouse.position.y < row*hMax + hMax)
+        if (globalX > col*wMax and 
+            globalX < col*wMax+wMax and 
+            globalY < row*hMax and 
+            globalY > row*hMax - hMax)
         then
             textColor(colors.red)
         else

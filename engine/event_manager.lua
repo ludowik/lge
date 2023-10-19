@@ -28,7 +28,7 @@ end
 
 function EventManager:mousereleased(id, x, y)
     if mouse:getDirection(H*.75) == 'down' then
-        toggleFused()
+        --toggleFused()
         return
     end
 
