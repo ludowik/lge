@@ -28,7 +28,6 @@ function Sketch:init(w, h)
     
     Rect.init(self, 0, 0, w, h)
 
-    --FrameBuffer.init(self, w, h)
     fb = fb or FrameBuffer(w, h)
     self.fb = fb
 
@@ -64,7 +63,7 @@ function Sketch:checkReload()
     local fileInfo = love.filesystem.getInfo(env.__sourceFile)
     if fileInfo.modtime > env.__modtime then
         env.__modtime = fileInfo.modtime
-        reload(true)
+        engine.reload(true)
     end
 end
 
@@ -131,6 +130,10 @@ end
 function Sketch:draw()
     background()
 
+    if env.zoom then
+        scale(env.zoom)
+    end
+
     local scene = self.scene or env.scene
     if scene then
         scene:layout()
@@ -168,5 +171,13 @@ function Sketch:mousereleased(mouse)
     end
 end
 
-function Sketch:wheelmoved(x, y)
+function Sketch:wheelmoved(dx, dy)
+    if not env.zoom then return end
+
+    local ratio = 1.2
+    if dy > 0 then
+        env.zoom = env.zoom * ratio
+    else
+        env.zoom = env.zoom / ratio
+    end
 end

@@ -12,6 +12,7 @@ end
 function Rect:randomize()
     self.size:randomize(W, H)
     self.position:randomize(W-self.size.x, H-self.size.y)
+    return self
 end
 
 function Rect:contains(position)

@@ -13,19 +13,34 @@ function Engine.load()
     engine.components:add(eventManager)
     engine.components:add(processManager)
 
-    engine.parameter = Parameter('right')
-    engine.parameter:addMainMenu()
-    engine.parameter:addNavigationMenu()
-    engine.parameter:addCaptureMenu()
-    engine.parameter:group('sketch', true)
-
-    engine.navigation = Parameter('left')
-    engine.navigation:initControlBar()
-
     resetMatrix()
     resetStyle()    
 
-    reload()
+    engine.reload()
+end
+
+function Engine.initParameter()
+    engine.parameter = Parameter('right')
+
+    if fused() then
+        engine.parameter:addUnfusedMenu()
+    else
+        engine.parameter:addMainMenu()
+        engine.parameter:addNavigationMenu()
+        engine.parameter:addCaptureMenu()
+
+        engine.navigation = Parameter('left')
+        engine.navigation:initControlBar()
+    end
+
+    engine.parameter:group('sketch', true)
+end
+
+function Engine.reload(reload)
+    engine.initParameter()
+
+    processManager:clear()
+    return load(reload)
 end
 
 function Engine.quit()
@@ -40,11 +55,10 @@ function Engine.contains(mouse)
     if object then return object end
 
     local process = processManager:current()
-    -- TODO
-    if not process then return end
-    
-    local object = process:contains(mouse.position)
-    if object then return object end
+    if process then
+        local object = process:contains(mouse.position)
+        if object then return object end
+    end
 end
 
 function Engine.update(dt)
@@ -120,11 +134,11 @@ function Engine.draw()
         process:drawSketch()
     end  
     
-    if not fused() then
-        resetMatrix()
-        resetStyle()
+    resetMatrix()
+    resetStyle()
+    engine.parameter:draw()
 
-        engine.parameter:draw()
+    if not fused() then
         engine.navigation:draw(-X, -Y)
     end
 
@@ -141,16 +155,11 @@ end
 
 function toggleFused()
     setSettings('fused', not fused())
-    engine.parameter.visible = not fused()
+    engine.reload(true)
 end
 
 function fused()
     return getSettings('fused', false)
-end
-
-function reload(reload)
-    processManager:clear()
-    return load(reload)
 end
 
 function restart()

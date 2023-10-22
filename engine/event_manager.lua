@@ -27,17 +27,15 @@ function EventManager:mousemoved(id, x, y)
 end
 
 function EventManager:mousereleased(id, x, y)
-    if mouse:getDirection(H*.75) == 'down' then
-        --toggleFused()
-        return
-    end
-
     mouse:released(id, x, y)
     
     if eventManager.currentObject then        
         eventManager.currentObject:mousereleased(mouse)
         eventManager.currentObject = nil
     end
+end
+
+function EventManager:click(presses)
 end
 
 function EventManager:wheelmoved(x, y)
@@ -50,7 +48,7 @@ function EventManager:keypressed(key, scancode, isrepeat)
     processManager:current():keypressed(key, scancode, isrepeat)
     
     if key == 'r' then
-        reload(true)
+        engine.reload(true)
 
     elseif key == 't' then
         env.__autotest = not env.__autotest

@@ -1,4 +1,4 @@
-function love.run()
+function love.runProc()
 	love.load(love.arg.parseGameArguments(arg), arg)
 
 	-- We don't want the first frame's dt to include time taken by love.load.
@@ -71,7 +71,11 @@ else
     end
 
     function love.mousereleased(x, y, button, istouch, presses)
-        eventManager:mousereleased(button, x, y)
+        if presses > 1 then
+            eventManager:click(presses)
+        else
+            eventManager:mousereleased(button, x, y)
+        end
     end
 
 	function love.wheelmoved(x, y)

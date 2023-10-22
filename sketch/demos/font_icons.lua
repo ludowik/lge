@@ -7,11 +7,6 @@ function mousemoved(touch)
     translation = translation + vec2(touch.deltaPos.x, touch.deltaPos.y)
 end
 
-function wheelmoved(dx, dy)
-    zoom = zoom + dy/10
-    zoom = clamp(zoom, 0.25, 5)
-end
-
 function draw()
     background()
 
@@ -35,7 +30,9 @@ function draw()
     local nrow = floor(n/ncol)
 
     translate(W/2, H/2)
+    
     scale(zoom)
+
     translate(translation.x, translation.y)
     translate(-ncol*wMax/2, -nrow*hMax/2)    
 

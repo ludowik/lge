@@ -43,7 +43,8 @@ end
 function draw()
     background()
     
-    scale(zoom, zoom)
+    scale(zoom)
+    
     translate(position.x, position.y)    
     
     scale(W/scalex, W/scalex)
@@ -58,15 +59,6 @@ end
 
 function mousemoved(touch)
     position:add(vec2(touch.deltaPos.x, touch.deltaPos.y))
-end
-
-function wheelmoved(dx, dy)
-    local ratio = 1.2
-    if dy > 0 then
-        zoom = zoom * ratio
-    else
-        zoom = zoom / ratio
-    end
 end
 
 function latLonToOffsets(latitude, longitude, mapWidth, mapHeight)

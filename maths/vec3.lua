@@ -20,6 +20,25 @@ function vec3:clone()
     return vec3(self.x, self.y, self.z)
 end
 
+function vec3.random(w, h, d)
+    return vec3():randomize(w, h, d)
+end
+
+function vec3:randomize(w, h, d)
+    if w then
+        h = h or w
+        d = d or w
+        self.x = random(w)
+        self.y = random(h)
+        self.z = random(d)
+    else
+        self.x = random()
+        self.y = random()
+        self.z = random()
+    end
+    return self
+end
+
 function vec3:dist(v)
     return (v-self):len()
 end

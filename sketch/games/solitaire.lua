@@ -3,9 +3,8 @@ Solitaire = class() : extends(Sketch)
 -- TODO : trouver un autre moyen pour pointer globalement sur le jeu (à la place de env.sketch)
 -- TODO : trouver un autre moyen pour adresser items (count and last)
 
--- TODO : dériver des classes spécifiques pour chaque tas
 -- TODO : pouvoir revenir en arrière
--- TODO : gérér un décalage entre les cartes sur tous les déplacements (du tas vers le awst, en mode auto...)
+-- TODO : gérér un décalage entre les cartes sur tous les déplacements (du tas vers le wast, en mode auto...)
 -- TODO : trouver d'autres icônes sans fioritures sur les couleurs
 
 function Solitaire:init()
@@ -19,27 +18,22 @@ function Solitaire:init()
     self.deckList:push(self.deck)
     self.deck.position:set(6*Card.wcard+7*Card.margin, Card.hcard*1.5)
 
-    self.wast = Deck(Card.wcard/3, 0)
+    self.wast = Wast(Card.wcard/3, 0)
     self.deckList:push(self.wast)
-    self.wast.isMoveable = wast_isMoveable
     self.wast.position:set(4*Card.wcard+7*Card.margin, Card.hcard*1.5)
 
     self.piles = Node()
     for i in range(4) do
-        local deck = Deck(0, 0)
+        local deck = Pile(0, 0)
         self.deckList:push(deck)
-        deck.isMoveable = pile_isMoveable
-        deck.isValidMove = pile_isValidMove
         self.piles:add(deck)
         deck.position:set((i-1)*Card.wcard+i*Card.margin, Card.hcard*1.5)
     end
 
     self.rows = Node()
     for i in range(7) do
-        local deck = Deck(0, Card.wtext + Card.margin)
+        local deck = Row(0, Card.wtext + Card.margin)
         self.deckList:push(deck)
-        deck.isMoveable = row_isMoveable
-        deck.isValidMove = row_isValidMove
         self.rows:add(deck)
         deck.position:set((i-1)*Card.wcard+i*Card.margin, Card.hcard*2.5+2*Card.margin)
     end
@@ -94,6 +88,8 @@ function Solitaire:newGame()
         end
         countCard = countCard + 1        
     end
+
+    self:saveGame()
 end
 
 function Solitaire:serialize()
@@ -124,8 +120,9 @@ end
 
 function Solitaire:loadGame()
     local data = loadFile('solitaire')
-    if data and data.rows and data.piles then
+    if data and data.deck and data.wast and data.rows and data.piles then
         self:resetGame()
+
         Array.foreach(data.deck, function (card)
             self.deck:push(Card(card.value, card.suit, card.faceUp))
         end)
@@ -176,10 +173,18 @@ function Solitaire:draw()
             end
         end
     end)
+    
+    self.deckList:foreach(function (deck)
+        for _,card in ipairs(deck.items) do
+            if card.tween and not card.faceUp then
+                cards:add(card)
+            end
+        end
+    end)
 
     self.deckList:foreach(function (deck)
         for _,card in ipairs(deck.items) do
-            if card.tween then
+            if card.tween and card.faceUp then
                 cards:add(card)
             end
         end
@@ -246,20 +251,8 @@ function Deck:shuffle()
     end
 end
 
-function Deck:isMoveable(self, card)
+function Deck:isMoveable(card)
     return true
-end
-
-function wast_isMoveable(self, card)
-    return card == self.items:last()
-end
-
-function pile_isMoveable(self, card)
-    return card == self.items:last()
-end
-
-function row_isMoveable(self, card)
-    return card.faceUp
 end
 
 function Deck:push(card, count)
@@ -301,16 +294,64 @@ function Deck:draw()
     rect(self.position.x, self.position.y, Card.wcard, Card.hcard, Card.margin)
 end
 
+Wast = class() : extends(Deck)
+
+function Wast:isMoveable(card)
+    return card == self.items:last()
+end
+
+Pile = class() : extends(Deck)
+
+function Pile:isMoveable(card)
+    return card == self.items:last()
+end
+
+function Pile:isValidMove(card, toDeck)
+    if not card.faceUp then return false end
+    if #toDeck.items == 0 then
+        if card.value == AS then
+            return true
+        end
+    else
+        local last = toDeck.items:last()
+        if card.value == last.value + 1 and card.suit.name == last.suit.name and card == card.deck.items:last() then
+            return true
+        end
+    end
+end
+
+Row = class() : extends(Deck)
+
+function Row:isMoveable(card)
+    return card.faceUp
+end
+
+function Row:isValidMove(card, toDeck)
+    if not card.faceUp then return false end
+
+    if #toDeck.items == 0 then
+        if card.value == KING then
+            return true
+        end
+    else
+        local last = toDeck.items:last()
+        if card.value == last.value - 1 and card.suit.color ~= last.suit.color then
+            return true
+        end
+    end
+end
+
 Card = class() : extends(Rect)
 
 function Card.setup()
     Card.size = Anchor(7):size(1, 1):floor()
     Card.size.y = floor(Card.size.x * 1.5)
 
-    Card.margin = 4
+    Card.margin = 3
+    Card.radius = 5
 
-    Card.wcard = Card.size.x - 2*Card.margin
-    Card.hcard = Card.size.y - 2*Card.margin
+    Card.wcard = Card.size.x - Card.margin
+    Card.hcard = Card.size.y - Card.margin
 
     Card.wtext = floor(Card.wcard * 0.45)
 end
@@ -332,7 +373,10 @@ function Card:draw()
     local x, y = self.position.x, self.position.y
 
     local size = Card.size
+    
     local margin = Card.margin
+    local radius = Card.radius
+
     local wcard = Card.wcard
     local hcard = Card.hcard
     local wtext = Card.wtext
@@ -342,7 +386,7 @@ function Card:draw()
         stroke(colors.black)
         fill(colors.white)
         rectMode(CORNER)
-        rect(x, y, wcard, hcard, Card.margin)
+        rect(x, y, wcard, hcard, Card.radius)
 
         fontName('arial')
         fontSize(wtext)
@@ -371,7 +415,7 @@ function Card:draw()
         stroke(colors.black)
         fill(colors.blue)
         rectMode(CORNER)
-        rect(x, y, wcard, hcard, Card.margin)
+        rect(x, y, wcard, hcard, Card.radius)
     end
 end
 
@@ -384,12 +428,15 @@ function Card:click()
         for i in range(#env.sketch.wast.items) do
             local card = env.sketch.wast.items:first()
             card.faceUp = false
-            card:move2bottom(env.sketch.deck)            
+            card:move2bottom(env.sketch.deck, i)
         end
-        for i in range(3) do
+
+        local nCardsInDeck = #env.sketch.deck.items
+        local nCardsToMove = min(3, nCardsInDeck)
+        for i in range(nCardsToMove) do
             local card = env.sketch.deck.items:last()
             card.faceUp = true
-            card:move2(env.sketch.wast)            
+            card:move2(env.sketch.wast, i)
         end
 
     else
@@ -415,8 +462,6 @@ function Card:move2(newDeck, countCard)
             currentDeck.items:last().faceUp = true
         end
     end
-
-    -- print('move2Over '..labels[self.value]..' '..self.suit.name..' : '..tostring(self.faceUp))
 end
 
 function Card:move2bottom(newDeck, countCard)
@@ -431,8 +476,6 @@ function Card:move2bottom(newDeck, countCard)
     self.position:set(newDeck.position)
     newDeck.items:insert(1, self)
     self.deck = newDeck
-
-    -- print('move2Bottom '..labels[self.value]..' '..self.suit.name..' : '..tostring(self.faceUp))
 end
 
 function getFirstValidMove(card)
@@ -456,32 +499,4 @@ function getValidMoves(card)
     getValidMovesFor(validMoves, card, self.rows.items)    
 
     return validMoves
-end
-
-function row_isValidMove(_, card, toDeck)
-    if not card.faceUp then return false end
-    if #toDeck.items == 0 then
-        if card.value == KING then
-            return true
-        end
-    else
-        local last = toDeck.items:last()
-        if card.value == last.value - 1 and card.suit.color ~= last.suit.color then
-            return true
-        end
-    end
-end
-
-function pile_isValidMove(_, card, toDeck)
-    if not card.faceUp then return false end
-    if #toDeck.items == 0 then
-        if card.value == AS then
-            return true
-        end
-    else
-        local last = toDeck.items:last()
-        if card.value == last.value + 1 and card.suit.name == last.suit.name and card == card.deck.items:last() then
-            return true
-        end
-    end
 end

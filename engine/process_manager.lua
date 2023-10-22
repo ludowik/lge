@@ -19,7 +19,6 @@ function ProcessManager:setSketch(name)
     for i,env in ipairs(self.items) do
         if env.__className == name then
             self:setCurrentSketch(i)
-            setSettings('sketch', name)
             break
         end        
     end
@@ -51,13 +50,15 @@ function ProcessManager:setCurrentSketch(processIndex)
     setfenv(0, _G.env)
     if process.resume then process:resume() end
 
+    setSettings('sketch', process.__className)
+
     love.window.setTitle(process.__className)
 
     process.fb:setContext()
     process.fb:background()
     resetContext()
 
-    engine.parameter.items[#engine.parameter.items].items[1].label = process.__className
+    engine.parameter.items[#engine.parameter.items].items[1].label = process.__className:gsub('_', ' ')
     engine.parameter.items[#engine.parameter.items].items[2] = process.parameter.items[1]
 
     redraw()
