@@ -62,6 +62,10 @@ function Array:draw(dt)
     return self
 end
 
+function Array:ipairs()
+    return ipairs(self)
+end
+
 function Array:foreach(f)
     for i,v in ipairs(self) do
         f(v, i)
@@ -78,11 +82,14 @@ end
 
 function Array:cross(f)
     local n = #self
+    
+    self.comparaison = 0
     for i=1,n-1 do
         local v1 = self[i]
         for j=i+1,n do
             local v2 = self[j]
             f(v1, v2, i, j)
+            self.comparaison = self.comparaison + 1
         end
     end
     return self

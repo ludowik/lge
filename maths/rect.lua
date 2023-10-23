@@ -5,13 +5,18 @@ function Rect:init(x, y, w, h)
     self.size = vec2(w, h)
 end
 
-function Rect.random()
-    return Rect():randomize()
+function Rect.random(pw, ph, sw, sh)
+    return Rect():randomize(pw, ph, sw, sh)
 end
 
-function Rect:randomize()
-    self.size:randomize(W, H)
-    self.position:randomize(W-self.size.x, H-self.size.y)
+function Rect:randomize(pw, ph, sw, sh)
+    pw = pw or W 
+    ph = ph or H
+    self.position:randomize(pw, ph)
+
+    sw = sw or (W-self.position.x)
+    sh = (sh or sw) or (H-self.position.y)
+    self.size:randomize(sw, sh)
     return self
 end
 
@@ -23,4 +28,21 @@ function Rect:contains(position)
     then
         return self
     end
+end
+
+function Rect.intersect(r1, r2)
+    if (r1.position.x > r2.position.x + r2.size.x or        
+        r2.position.x > r1.position.x + r1.size.x or
+        r1.position.y > r2.position.y + r2.size.y or
+        r2.position.y > r1.position.y + r1.size.y)
+    then
+        return false
+    else
+        return true
+    end
+end
+
+function Rect:draw()
+    stroke(self.clr or colors.white)
+    rect(self.position.x, self.position.y, self.size.x, self.size.y)
 end

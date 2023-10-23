@@ -106,7 +106,10 @@ function drawEllipse(x, y, w, h)
 
     noStroke()
     fill(colors.red)
-    ellipse(x+w/2, y+h, w/2)
+    pushMatrix()
+    translate(x+w/2, y+h)
+    ellipse(0, 0, w/2)
+    popMatrix()
 
     strokeSize(10)
     stroke(colors.green)
