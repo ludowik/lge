@@ -22,5 +22,6 @@ end
 
 function scale(x, y, z)
     assert(not z)
+    y = y or x
     love.graphics.scale(x, y)
 end

@@ -28,7 +28,6 @@ function Sketch:init(w, h)
     
     Rect.init(self, 0, 0, w, h)
 
-    --FrameBuffer.init(self, w, h)
     fb = fb or FrameBuffer(w, h)
     self.fb = fb
 
@@ -94,11 +93,6 @@ function Sketch:drawSketch()
     end
 
     if processDraw then
-        -- love.graphics.setCanvas()
-        -- love.graphics.setShader()
-        
-        -- love.graphics.clear(0.1, 0.5, 0.1, 1)
-
         love.graphics.setCanvas(self.fb.canvas)
 
         resetStyle()
@@ -130,6 +124,10 @@ end
 
 function Sketch:draw()
     background()
+
+    if env.zoom then
+        scale(env.zoom)
+    end
 
     local scene = self.scene or env.scene
     if scene then
@@ -168,5 +166,13 @@ function Sketch:mousereleased(mouse)
     end
 end
 
-function Sketch:wheelmoved(x, y)
+function Sketch:wheelmoved(dx, dy)
+    if env.zoom then
+        local ratio = 1.2
+        if dy > 0 then
+            env.zoom = env.zoom * ratio
+        else
+            env.zoom = env.zoom / ratio
+        end
+    end
 end
