@@ -30,6 +30,10 @@ function Node:foreach(f)
     return self.items:foreach(f)
 end
 
+function Node:cross(f)
+    return self.items:cross(f)
+end
+
 function Node:removeIfTrue(f)
     return self.items:removeIfTrue(f)
 end

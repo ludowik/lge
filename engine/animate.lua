@@ -1,6 +1,9 @@
 TweenManager = class() : extends(Node)
 
 function TweenManager.setup()
+    for k,v in pairs(tween.easing) do
+        tween.easing:add(v)
+    end
 end
 
 function TweenManager:update(dt)

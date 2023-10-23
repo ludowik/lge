@@ -19,7 +19,6 @@ function ProcessManager:setSketch(name)
     for i,env in ipairs(self.items) do
         if env.__className == name then
             self:setCurrentSketch(i)
-            setSettings('sketch', name)
             break
         end        
     end
@@ -50,6 +49,8 @@ function ProcessManager:setCurrentSketch(processIndex)
     _G.env = process.env or _G.env
     setfenv(0, _G.env)
     if process.resume then process:resume() end
+
+    setSettings('sketch', process.__className)
 
     love.window.setTitle(process.__className)
 

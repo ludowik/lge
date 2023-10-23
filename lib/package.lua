@@ -15,11 +15,11 @@ function updateScripts(github)
         url = 'http://192.168.1.13:8080'
     end
 
-    url = url..'/build/lca.love'
+    url = url..'/build/lge.love'
 
     request(url,
         function (result, code, headers)
-            local data = love.filesystem.write('lca.love', result)
+            local data = love.filesystem.write('lge.love', result)
         end,
         function (result, code, headers)
             print(result, code, headers)

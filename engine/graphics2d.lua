@@ -228,6 +228,20 @@ function Graphics2d.ellipse(x, y, rx, ry, mode)
     end
 end
 
+function Graphics2d.arc(x, y, rx, ry, a1, a2)
+    local segments = 64
+
+    if fill() then
+        love.graphics.setColor(fill():rgba())
+        love.graphics.arc('fill', x, y, rx, a1, a2, segments)
+    else
+        local size = strokeSize()
+        love.graphics.setColor(stroke():rgba())
+        love.graphics.setLineWidth(size)
+        love.graphics.arc('line', x, y, rx, a1, a2, segments)
+    end
+end
+
 CENTER = 'center'
 CORNER = 'corner'
 RIGHT_CORNER = 'righ_corner'

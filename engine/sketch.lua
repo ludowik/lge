@@ -63,7 +63,7 @@ function Sketch:checkReload()
     local fileInfo = love.filesystem.getInfo(env.__sourceFile)
     if fileInfo.modtime > env.__modtime then
         env.__modtime = fileInfo.modtime
-        reload(true)
+        engine.reload(true)
     end
 end
 

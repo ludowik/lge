@@ -43,6 +43,8 @@ end
 function draw()
     background()
     
+    scale(zoom)
+    
     translate(position.x, position.y)    
     
     scale(W/scalex, W/scalex)

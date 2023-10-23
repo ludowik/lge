@@ -76,6 +76,18 @@ function Array:foreachKey(f)
     return self
 end
 
+function Array:cross(f)
+    local n = #self
+    for i=1,n-1 do
+        local v1 = self[i]
+        for j=i+1,n do
+            local v2 = self[j]
+            f(v1, v2, i, j)
+        end
+    end
+    return self
+end
+
 function Array:indexOf(item)
     for i,v in ipairs(self) do
         if item == v then return i end
@@ -170,7 +182,7 @@ function Array:__tolua(tab)
         for k,v in ipairs(self) do
             if serializeTypes[type(v)] then
                 code = code..'\n'
-                code = code..serializeTypes[type(v)](v)
+                code = code..tab..'\t'..serializeTypes[type(v)](v)
                 code = code..','
             end
         end
@@ -178,8 +190,7 @@ function Array:__tolua(tab)
         for k,v in pairs(self) do
             if serializeTypes[type(v)] then
                 code = code..'\n'
-                code = code..tab..'\t'..name(k)..' = '
-                code = code..serializeTypes[type(v)](v)
+                code = code..tab..'\t'..name(k)..' = '..serializeTypes[type(v)](v)
                 code = code..','
             end
         end

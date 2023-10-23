@@ -52,6 +52,11 @@ function Parameter:initControlBar()
         })
 end
 
+function Parameter:addUnfusedMenu()
+    self.menu = self:group('main')
+    self:action('fused', function () toggleFused() end)
+end
+
 function Parameter:addMainMenu()
     self.menu = self:group('main')
 

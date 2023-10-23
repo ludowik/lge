@@ -31,7 +31,7 @@ function draw()
 
     translate(W/2, H/2)
     
-    scale(zoom, zoom)
+    scale(zoom)
 
     translate(translation.x, translation.y)
     translate(-ncol*wMax/2, -nrow*hMax/2)    

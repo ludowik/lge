@@ -26,8 +26,8 @@ function collatz()
         nextValue = nextValue + 1
         value = nextValue
 
-        clr = Color(random(), 0.1)
-        clr.a = 0.1
+        -- clr = Color.random()
+        -- clr.a = 0.05
 
         angle = 0
         x1, y1, x2, y2 = 0, 0, 0, 0

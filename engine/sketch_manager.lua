@@ -66,7 +66,6 @@ function declareSketch(name, itemPath, category, reload)
     if env.__sketch or env.setup or env.draw then
         environments[name] = env
     end
-
     processManager:add(env)
 end
 
