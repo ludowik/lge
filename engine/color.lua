@@ -49,10 +49,10 @@ function Color.hexa(hexa)
     local r, g, b
 
     r = hexa % 256
-    hexa = (hexa - r) / 255
+    hexa = (hexa - r) / 256
 
     g = hexa % 256
-    hexa = (hexa - g) / 255
+    hexa = (hexa - g) / 256
 
     b = hexa % 256
 
@@ -350,4 +350,7 @@ function Color.unitTest()
 
     assert(colors.black.r == 0)
     assert(colors.white.r == 1)
+
+    assert(Color.hexa(0x000000) == colors.black)
+    assert(Color.hexa(0xFFFFFF) == colors.white)
 end

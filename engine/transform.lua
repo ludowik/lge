@@ -3,8 +3,6 @@ local stack = Array()
 local useDefaultSystem = false
 
 function resetMatrix()
-    print(useDefaultSystem)
-
     if useDefaultSystem then
         love.graphics.origin()
         love.graphics.translate(X, Y)

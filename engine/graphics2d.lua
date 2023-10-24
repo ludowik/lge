@@ -131,6 +131,14 @@ end
 function Graphics2d.zLevel()
 end
 
+function Graphics2d.axes2d()
+    stroke(colors.gray)
+    strokeSize(0.5)
+
+    line(0, H / 2, W, H / 2)
+    line(W / 2, 0, W / 2, H)
+end
+
 function Graphics2d.point(x, y)
     if stroke() then
         love.graphics.setColor(stroke():rgba())

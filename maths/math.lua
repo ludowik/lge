@@ -22,7 +22,19 @@ sign = math.sign
 
 floor = math.floor
 ceil = math.ceil
-round = function (v) return math.ceil(v - 0.5) end
+
+function math.round(v, decimal)
+    if not decimal then
+        return math.ceil(v - 0.5)
+    end
+    return math.floor(v*10^decimal)/10^decimal
+end
+round = math.round
+
+function math.fract(v)
+    return v - floor(v)
+end
+fract = math.fract
 
 sqrt = math.sqrt
 pow = math.pow

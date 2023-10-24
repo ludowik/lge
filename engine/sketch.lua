@@ -120,6 +120,11 @@ function Sketch:drawSketch()
         0, -- rotation
         self.size.x / self.fb.canvas:getWidth(), -- scale x
         self.size.y / self.fb.canvas:getHeight()) -- scale y
+
+
+    -- TODO : gérer un zoom
+    -- TODO : gérer une translation
+    -- TODO : gérer un pixelRatio
 end
 
 function Sketch:draw()

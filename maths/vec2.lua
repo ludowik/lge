@@ -31,6 +31,12 @@ function vec2.randomAngle(angle)
     return vec2(1, 0):rotate(random(angle or TAU))
 end
 
+function vec2:rotateInPlace(angle)
+    local c, s = cos(angle), sin(angle)
+    self.x, self.y = c * self.x - s * self.y, s * self.x + c * self.y
+    return self
+end
+
 function vec2:rotate(angle)
     local c, s = cos(angle), sin(angle)
     return vec2(
@@ -146,8 +152,22 @@ end
 function vec2:floor()
     self.x = floor(self.x)
     self.y = floor(self.y)
-
     return self
+end
+
+function vec2:setHeading(angle)
+    self:rotateInPlace(angle - self:heading())
+    return self
+end
+
+function vec2:heading()
+    return self:angleBetween(vec2(1, 0))
+end
+
+function vec2:angleBetween(v)
+    local alpha1 = atan2(self.y, self.x)
+    local alpha2 = atan2(v.y, v.x)
+    return alpha2 - alpha1
 end
 
 function vec2.unitTest()
@@ -158,4 +178,7 @@ function vec2.unitTest()
     assert(vec2.random(1, 1) ~= vec2.random(1, 1))
     assert(vec2():len() == 0)
     assert(vec2(1,2):scalar(vec2(2,2)) == 6)
+
+    assert(vec2(1,2):rotateInPlace(12) == vec2(1,2):rotate(12))
+    assert(round(vec2(1,2):angleBetween(vec2(1,2):rotateInPlace(0.34)), 2) == 0.34)
 end
