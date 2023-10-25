@@ -10,7 +10,10 @@ function resetMatrix()
     end
 
     __modelMatrix = love.math.newTransform()
+    __projectionMatrix = love.math.newTransform()
+
     translate(X, Y)
+
     stack = Array()
 end
 
@@ -30,7 +33,9 @@ function popMatrix()
     end
 
     __modelMatrix = stack:pop()
-    love.graphics.replaceTransform(__modelMatrix)
+
+    -- love.graphics.replaceTransform(__modelMatrix)
+    setTransformation()
 end
 
 function translate(x, y, z)    
@@ -47,7 +52,8 @@ function translate(x, y, z)
         0, 0, 0, 1)
     __modelMatrix:apply(translate)
 
-    love.graphics.replaceTransform(__modelMatrix)
+    -- love.graphics.replaceTransform(__modelMatrix)
+    setTransformation()
 end
 
 function rotate(angle, x, y, z)
@@ -97,7 +103,8 @@ function rotate(angle, x, y, z)
         __modelMatrix:apply(rotate)
     end
 
-    love.graphics.replaceTransform(__modelMatrix)
+    -- love.graphics.replaceTransform(__modelMatrix)
+    setTransformation()
 end
 
 function scale(sx, sy, sz)
@@ -117,5 +124,44 @@ function scale(sx, sy, sz)
         0,  0,  0, 1)
     __modelMatrix:apply(scale)
 
-    love.graphics.replaceTransform(__modelMatrix)
+    -- love.graphics.replaceTransform(__modelMatrix)
+    setTransformation()
+end
+
+function perspective(fovy, aspect, near, far)
+    local w = W or 400
+    local h = H or 400
+
+    fovy = fovy or 45    
+
+    aspect = aspect or (w / h)
+
+    near = near or 0.1
+    far = far or 100000
+
+    local range = __tan(__rad(fovy*0.5)) * near
+
+    local left = -range * aspect
+    local right = range * aspect
+
+    local bottom = -range
+    local top = range
+
+    __projectionMatrix:setMatrix(
+        (2 * near) / (right - left), 0, (right + left)/(right - left), 0,
+        0, (2 * near) / (top - bottom), (top + bottom)/(top - bottom), 0,
+        0, 0, - (far + near) / (far - near), - (2 * far * near) / (far - near),
+        0, 0, - 1, 0)
+
+    
+    setTransformation()
+end
+
+function setTransformation()
+--    love.graphics.replaceTransform(scale_matrix(nil, (W)/2, (H)/2, 1))
+--    love.graphics.applyTransform(translate_matrix(nil, 1, 1, 0))
+
+    love.graphics.applyTransform(__projectionMatrix)
+    -- love.graphics.applyTransform(viewMatrix())
+    love.graphics.applyTransform(__modelMatrix)
 end

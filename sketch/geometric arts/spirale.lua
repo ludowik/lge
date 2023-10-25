@@ -47,7 +47,7 @@ function Spirale:draw()
     background(0)
 
     -- TODO
-    -- perspective()
+    perspective()
 
     -- TODO
     -- camera()
