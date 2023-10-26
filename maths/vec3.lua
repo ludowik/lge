@@ -16,6 +16,22 @@ function vec3:set(x, y, z)
     return self
 end
 
+function vec3:add(v, factor)
+    factor = factor or 1
+    self.x = self.x + v.x * factor
+    self.y = self.y + v.y * factor
+    self.z = self.z + v.z * factor
+    return self
+end
+
+function vec3:sub(v, factor)
+    factor = factor or 1
+    self.x = self.x - v.x * factor
+    self.y = self.y - v.y * factor
+    self.z = self.z - v.z * factor
+    return self
+end
+
 function vec3:clone()
     return vec3(self.x, self.y, self.z)
 end

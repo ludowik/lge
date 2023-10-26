@@ -13,8 +13,8 @@ function Engine.load()
     engine.components:add(eventManager)
     engine.components:add(processManager)
 
-    resetMatrix()
-    resetStyle()    
+    resetMatrix(true)
+    resetStyle()
 
     engine.reload()
 end
