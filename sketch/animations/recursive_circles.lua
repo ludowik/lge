@@ -1,7 +1,7 @@
 function setup()
     angle = 0
 
-    parameter:boolean('color', 'color', false)
+    parameter:boolean('color', false)
 end
 
 function update(dt)

@@ -7,27 +7,27 @@ function setup()
 
     model = models[1]
 
-    parameter:integer('shape_size', 'shape_size', 0, 50, 50)
+    parameter:integer('shape_size', 0, 50, 50)
 
-    parameter:number('a', 'a', 0, 25, 2)
-    parameter:number('b', 'b', 0, 25, 2)
+    parameter:number('a', 0, 25, 2)
+    parameter:number('b', 0, 25, 2)
 
-    parameter:number('m', 'm', 0, 30, model.m)
+    parameter:number('m', 0, 30, model.m)
 
-    parameter:number('na', 'na', 0, 20, model.na)
-    parameter:number('nb', 'nb', 0, 20, model.nb)
+    parameter:number('na', 0, 20, model.na)
+    parameter:number('nb', 0, 20, model.nb)
 
-    parameter:number('n', 'n', 2, 15, model.n)
+    parameter:number('n', 2, 15, model.n)
 
     array = Buffer('vec3')
-    parameter:integer('parts', 'parts', 2, 128, 16, function () array:reset() end)
+    parameter:integer('parts', 2, 128, 16, function () array:reset() end)
 
     seed(time())
     parameter:randomizeParameter()
     
-    parameter:boolean('scale_shape', 'scale_shape', true)
+    parameter:boolean('scale_shape', true)
 
-    parameter:boolean('_3d', '_3d', false)
+    parameter:boolean('_3d', false)
 end
 
 function draw()

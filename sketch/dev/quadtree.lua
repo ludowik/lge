@@ -1,6 +1,6 @@
 function setup()
     parameter:boolean('fixed / dynamic', 'fixed', false)
-    parameter:integer('areaSize', 1, 1000, 30)
+    parameter:integer('areaSize', 2, W, W/100)
 
     comparaison = 0
     parameter:watch('comparaison')

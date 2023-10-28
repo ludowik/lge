@@ -170,6 +170,20 @@ function vec2:angleBetween(v)
     return alpha2 - alpha1
 end
 
+function vec2:cross(v)
+    return self:clone():crossInPlace(v)
+end
+
+function vec2:crossInPlace(v)
+    local x = self.y * v.z - self.z * v.y
+    local y = self.z * v.x - self.x * v.z
+
+    self.x = x
+    self.y = y
+
+    return self
+end
+
 function vec2.unitTest()
     assert(vec2(1,2) == vec2(1,2))
     assert(vec2():set(1,2) == vec2(1,2))

@@ -13,7 +13,7 @@ function Galaxy:init()
             incrementValue = 50,
         }
 
-    self.parameter:integer('step', 'step', 10, 100)
+    self.parameter:integer('step', 10, 100)
         :attrib{
             incrementValue = 10,
         }

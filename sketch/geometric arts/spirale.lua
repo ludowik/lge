@@ -47,23 +47,22 @@ function Spirale:draw()
     background(0)
 
     -- TODO
-    --perspective()
+    perspective()
 
     -- TODO
-    --camera()
+    camera()
 
     fill(colors.white)
     
-    axes2d()
-
-    translate(W/2, H/2)
+    --axes2d()
+    --translate(W/2, H/2)
 
     -- TODO
-    -- translate(0, 0, 100)
-    -- rect(-100, -100, 200, 200)
+    translate(0, 0, 100)
+    rect(-100, -100, 200, 200)
 
-    -- translate(0, 0, -200)
-    -- rect(-100, -100, 200, 200)
+    translate(0, 0, -200)
+    rect(-100, -100, 200, 200)
 
     local angle = 0
 
@@ -93,11 +92,11 @@ function Spirale:draw()
         vertex(x, y, z)
         vertex(0, y, 0)
 
-        --  if (px) {
+        --  if px then
         --      strokeSize(2)
         --      vertex(0, y, 0, 0, py, 0)
         --      vertex(x, y, z, px, py, pz)
-        --  }
+        --  end
 
         angle = angle + n * rad(self.params.deltaAngle)
 

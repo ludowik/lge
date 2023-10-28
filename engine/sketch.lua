@@ -48,6 +48,10 @@ end
 function Sketch:setup()
 end
 
+function Sketch:autotest()
+    self.parameter:randomizeParameter()
+end
+
 function Sketch:update()
 end
 
@@ -71,6 +75,10 @@ function Sketch:updateSketch(dt)
     if self.frames and self.frames == 0 then return end
     self:checkReload()
     
+    if env.__autotest and self.autotest then
+        self:autotest()
+    end
+
     self.tweenManager:update(dt)
 
     local scene = self.scene or env.scene
@@ -95,8 +103,8 @@ function Sketch:drawSketch()
     if processDraw then
         love.graphics.setCanvas(self.fb.canvas)
 
-        resetStyle()
         resetMatrix()
+        resetStyle(getOrigin())        
 
         self:draw()
     end
@@ -109,7 +117,7 @@ function Sketch:drawSketch()
 
     love.graphics.origin()
 
-    if setOrigin() == BOTTOM_LEFT then
+    if getOrigin() == BOTTOM_LEFT then
         love.graphics.scale(1, -1)
         love.graphics.translate(0, -(2*Y+H))
     end
@@ -180,4 +188,12 @@ function Sketch:wheelmoved(dx, dy)
             env.zoom = env.zoom / ratio
         end
     end
+end
+
+function setOrigin(origin)
+    env.__origin = origin or TOP_LEFT
+end
+
+function getOrigin(origin)
+    return env.__origin or TOP_LEFT
 end

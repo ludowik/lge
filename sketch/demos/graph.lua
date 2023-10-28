@@ -24,11 +24,11 @@ function setup()
     end
 
     parameter:action('restart', reset)
-    parameter:number('pivot', 'pivot', 1, 1000, 75)
-    parameter:number('attraction', 'attraction', 1, 2500, 1250)
-    parameter:number('damping', 'damping', 0, 1, 0.9)
+    parameter:number('pivot', 1, 1000, 75)
+    parameter:number('attraction', 1, 2500, 1250)
+    parameter:number('damping', 0, 1, 0.9)
     
-    parameter:number('dt_ratio', 'dt_ratio', 1, 10, 1)
+    parameter:number('dt_ratio', 1, 10, 1)
 end
 
 function update(dt)

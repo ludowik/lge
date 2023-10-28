@@ -15,7 +15,7 @@ function setup()
     parameter:watch('#buffer')
     
     mode = 2
-    parameter:integer('mode', 'mode', 1, 2, 1)
+    parameter:integer('mode', 1, 2, 1)
 end
 
 function pause()

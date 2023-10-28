@@ -1,6 +1,6 @@
 function setup()
     parameter:linksearch('feigenbaum')
-    parameter:number('py', 'py', 0, 1, 0.5, reset)
+    parameter:number('py', 0, 1, 0.5, reset)
     reset()
 
     minSize = min(W, H)

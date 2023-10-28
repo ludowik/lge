@@ -128,11 +128,7 @@ function Engine.draw()
     if not process then return end
         
     love.graphics.reset()
-    do
-        resetMatrix()
-        resetStyle()
-        process:drawSketch()
-    end  
+    process:drawSketch()
     
     resetMatrix()
     resetStyle()

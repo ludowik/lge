@@ -7,8 +7,8 @@ function setup()
     vertices = Array()
 
     parameter:watch('vertices')
-    parameter:integer('series', 'series', 1, 3, 1)
-    parameter:integer('N', 'N', 1, 100, 5)
+    parameter:integer('series', 1, 3, 1)
+    parameter:integer('N', 1, 100, 5)
 end
 
 function update(dt)

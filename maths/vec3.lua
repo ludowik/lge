@@ -24,6 +24,14 @@ function vec3:add(v, factor)
     return self
 end
 
+function vec3:__sub(v, factor)
+    factor = factor or 1
+    return vec3(
+        self.x - v.x * factor,
+        self.y - v.y * factor,
+        self.z - v.z * factor)
+end
+
 function vec3:sub(v, factor)
     factor = factor or 1
     self.x = self.x - v.x * factor
@@ -73,4 +81,28 @@ function vec3:normalizeInPlace(len)
     self.y = self.y * ratio
     self.z = self.z * ratio
     return self
+end
+
+function vec3.cross(a, b)
+    return vec3(
+        a.y * b.z - a.z * b.y,
+        a.z * b.x - a.x * b.z,
+        a.x * b.y - a.y * b.x)
+end
+
+function vec3.crossInPlace(a, b)    
+    local x = a.y * b.z - a.z * b.y
+    local y = a.z * b.x - a.x * b.z
+    local z = a.x * b.y - a.y * b.x
+    
+    a.x, a.y, a.z = x, y, z
+    
+    return a
+end
+
+function vec3.dot(a, b)
+    return (
+        a.x * b.x +
+        a.y * b.y +
+        a.z * b.z)        
 end

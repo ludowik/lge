@@ -1,6 +1,6 @@
 function setup()
     parameter:action('reset', reset)    
-    parameter:integer('branches', 'branches', 2, 6, 2, reset)
+    parameter:integer('branches', 2, 6, 2, reset)
 end
 
 function reset()

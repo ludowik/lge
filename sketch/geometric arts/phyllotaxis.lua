@@ -1,8 +1,8 @@
 function setup()    
     parameter:link('CodingChallenges #30', 'https://thecodingtrain.com/tracks/algorithmic-botany/30-phyllotaxis')    
 
-    parameter:integer('spacing', 'spacing', 2, 20, 4)
-    parameter:number('theta', 'theta', 130, 145, 137.5)
+    parameter:integer('spacing', 2, 20, 4)
+    parameter:number('theta', 130, 145, 137.5)
 
     local function setTheta(ui)
         theta = tonumber(ui.label)

@@ -34,7 +34,7 @@ function setup()
     parameter:boolean('auto test', '__autotest', false)
 
     depth = 5 -- enough to win
-    parameter:integer('depth', 'depth', 1, 10, depth)
+    parameter:integer('depth', 1, 10, depth)
 
     minimax = Minimax(cells)
 end

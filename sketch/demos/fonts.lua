@@ -27,10 +27,6 @@ function autotest()
     fontIndex = randomInt(#fonts)
 end
 
-function update(dt)
-    if __autotest and autotest then autotest() end
-end
-
 function draw()
     background(colors.white)
 

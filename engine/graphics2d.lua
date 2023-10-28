@@ -52,7 +52,7 @@ function stylesReset(name)
     styles[name] = nil
 end
 
-function Graphics2d.resetStyle()
+function Graphics2d.resetStyle(origin)
     blendMode(NORMAL)
 
     stroke(colors.white)
@@ -73,17 +73,12 @@ function Graphics2d.resetStyle()
 
     fontName('arial')
     fontSize(22)
+
+    styles.origin = origin or TOP_LEFT
 end
 
 TOP_LEFT = 'top_left'
 BOTTOM_LEFT = 'bottom_left'
-
-function Graphics2d.setOrigin(origin)
-    if origin then
-        env.__origin = origin
-    end
-    return env.__origin or TOP_LEFT
-end
 
 LANDSCAPE_ANY = 'landscape_any'
 function Graphics2d.supportedOrientations(orientation)
@@ -292,10 +287,11 @@ function Graphics2d.text(str, x, y, limit, align)
         x = x-ws
     end
 
+    local sx, sy = 1, styles.origin == BOTTOM_LEFT and -1 or 1
     if limit then
-        love.graphics.printf(str, x, y, limit, align)
+        love.graphics.printf(str, x, y, limit, align, 0, sx, sy)
     else
-        love.graphics.print(str, x, y)
+        love.graphics.print(str, x, y, 0, sx, sy)
     end
 
     textPosition(y + hs)

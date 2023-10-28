@@ -43,13 +43,13 @@ function setup()
     end
 
     parameter:watch('characters')
-    parameter:integer('baseImageIndex', 'baseImageIndex', 1, #baseImageList, 1, setSource)
-    parameter:integer('tileSize', 'tileSize', 0, 5, 1)
-    parameter:boolean('standardCharactersSet', 'standardCharactersSet', false,
+    parameter:integer('baseImageIndex', 1, #baseImageList, 1, setSource)
+    parameter:integer('tileSize', 0, 5, 1)
+    parameter:boolean('standardCharactersSet', false,
         function ()
             characters = defineCharactersSet()
         end)
-    parameter:boolean('grayScale', 'grayScale', true,
+    parameter:boolean('grayScale', true,
         function ()
             characters = defineCharactersSet()
         end)

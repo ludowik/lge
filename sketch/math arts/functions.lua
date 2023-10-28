@@ -73,12 +73,12 @@ Functions.functions = Array{
 }
 
 function Functions:init()
-    parameter:integer('current', 'current', 1, #Functions.functions, 1)
+    parameter:integer('current', 1, #Functions.functions, 1)
 
-    parameter:number('dx', 'dx', 0.001, 0.1, 0.01, function () Functions.needUpdate = true end)
+    parameter:number('dx', 0.001, 0.1, 0.01, function () Functions.needUpdate = true end)
 
-    parameter:number('a', 'a', -10, 10, 2.0, function () Functions.needUpdate = true end)
-    parameter:number('b', 'b', -10, 10, 0.5, function () Functions.needUpdate = true end)
+    parameter:number('a', -10, 10, 2.0, function () Functions.needUpdate = true end)
+    parameter:number('b', -10, 10, 0.5, function () Functions.needUpdate = true end)
 
     for name,f in pairs(tween.easing) do
         Functions.functions:add({

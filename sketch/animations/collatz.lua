@@ -12,11 +12,11 @@ function setup()
     clr = Color.random()
     clr.a = 0.1
 
-    parameter:number('rotation', 'rotation', 0, TAU, rotation, function (value)
+    parameter:number('rotation', 0, TAU, rotation, function (value)
             nextValue = 1
         end)
 
-    parameter:integer('len', 'len', 1, 100, 10, function ()
+    parameter:integer('len', 1, 100, 10, function ()
             nextValue = 1
         end)
 end

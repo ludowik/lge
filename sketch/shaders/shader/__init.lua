@@ -21,10 +21,10 @@ function setup()
         [0] = Image(path..'/channel/cube00_0.jpg')
     }
 
-    parameter:number('SHAPE_SIZE', 'SHAPE_SIZE', 0.1, 2.5, 0.5)
-    parameter:number('SMOOTHNESS', 'SMOOTHNESS', 0, 1, 0.5)
+    parameter:number('SHAPE_SIZE', 0.1, 2.5, 0.5)
+    parameter:number('SMOOTHNESS', 0, 1, 0.5)
 
-    parameter:boolean('paused', 'paused', false)
+    parameter:boolean('paused', false)
 
     parameter:integer('depth', 'z', 3)
     parameter:integer('shader', 'shaderIndex', 1, #shaders, #shaders)

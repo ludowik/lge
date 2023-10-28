@@ -14,7 +14,7 @@ function setup()
         }
     end
 
-    parameter:number('speed', 'speed', 0, 50, 20)
+    parameter:number('speed', 0, 50, 20)
 end
 
 function draw(dt)

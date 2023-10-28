@@ -1,9 +1,9 @@
 function setup()
-    parameter:integer('configuration', 'configuration', 1, #confs, 1, function ()
+    parameter:integer('configuration', 1, #confs, 1, function ()
             newConf = configuration
         end)
 
-    parameter:boolean('rotation', 'rotation', false) 
+    parameter:boolean('rotation', false) 
 
     newConf = 1
     reset(newConf)

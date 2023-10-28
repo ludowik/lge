@@ -108,6 +108,7 @@ function loadSketch(env)
         for _,fname in ipairs({
             'setup',
             'update',
+            'autotest',
             'draw',
             'pause',
             'resume',

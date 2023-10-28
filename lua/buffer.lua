@@ -20,3 +20,7 @@ end
 function Buffer:add(...)
     return table.insert(self, ...)
 end
+
+function Buffer:insert(...)
+    return table.insert(self, ...)
+end
