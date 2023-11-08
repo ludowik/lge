@@ -24,16 +24,35 @@ tween = Array{
         quadInOut = function (x) return x < 0.5 and (2*x^2) or (1-(-2*x+2)^2/2) end,
         cubicIn = function (x) return x^3 end,
         cubicOut = function (x) return 1-(1-x)^3 end
+    },
+
+    loop = Array{
+        once = 'once',
+        pingpong = 'pingpong',
     }
 }
 
-function Tween:init(source, target, delay, easing, callback)
+function Tween:init(source, target, delay, easingOrOptions, callback)
     if env and env.sketch then
         env.sketch.tweenManager:add(self)
     end
 
-    self.origin = Array.clone(source)
+    local easing
+    local loop
     
+    if type(easingOrOptions) == 'table' then
+        easing = easingOrOptions.easing
+        loop = easingOrOptions.loop
+    else
+        easing = easingOrOptions
+        loop = tween.loop.once
+    end
+
+    if tween.easing:keyOf(easing) == nil then
+        callback = easing
+        easing = tween.easing.linear
+    end
+
     self.source = source
     self.target = target
 
@@ -42,12 +61,13 @@ function Tween:init(source, target, delay, easing, callback)
         self.delay = delay.delay
     else
         self.delayBeforeStart = 0
-        self.delay = delay
+        self.delay = delay or 1
     end
 
     self.elapsed = 0
 
     self.easing = easing
+    self.loop = loop
 
     self.callback = callback or nilf
 
@@ -78,6 +98,7 @@ function Tween:update(dt)
 end
 
 function Tween:play()
+    self.origin = Array.clone(self.source)
     self.state = 'running'
 end
 
@@ -96,15 +117,17 @@ end
 
 function Tween:finalize()
     self.callback(self)
-    self.state = 'dead'
+
+    if self.loop == tween.loop.pingpong then
+        self.target = self.origin
+        self.elapsed = 0
+        self:play()
+    else
+        self.state = 'dead'
+    end
 end
 
 function animate(source, target, delay, easing, callback)
-    if tween.easing:keyOf(easing) == nil then
-        callback = easing
-        easing = tween.easing.linear
-    end
-
     local tween = Tween(source, target, delay, easing, callback)
     tween:play()
     return tween

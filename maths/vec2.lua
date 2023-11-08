@@ -15,6 +15,10 @@ function vec2:set(x, y)
     return self
 end
 
+function vec2:draw()
+    circle(self.x, self.y, 5)
+end
+
 function vec2.fromAngle(angle)
     return vec2(cos(angle), sin(angle))
 end
