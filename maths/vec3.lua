@@ -10,8 +10,8 @@ function vec3:set(x, y, z)
     end
     
     self.x = x or 0
-    self.y = y or 0
-    self.z = z or 0
+    self.y = y or self.x
+    self.z = z or self.x
 
     return self
 end

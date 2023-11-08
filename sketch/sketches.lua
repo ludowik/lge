@@ -1,6 +1,6 @@
 function _G.openSketches()
     local process = processManager:current()
-    if process.__className ~= 'sketches' then            
+    if not process or process.__className ~= 'sketches' then            
         processManager:setSketch('Sketches')
         engine.parameter.visible = false
     else
@@ -53,7 +53,7 @@ function navigate(category)
             return
         end
 
-        local link = UIButton(env.__className:gsub('_', ' '),
+        local link = UIButton(env.__className,
             function (self)
                 processManager:setSketch(env.__className)
                 engine.parameter.visible = true

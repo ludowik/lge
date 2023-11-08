@@ -6,7 +6,7 @@ if arg[#arg] == "vsc_debug" then
     lldebugger.start()
 
     debugMode = true
-    
+
     --local run = love.run
     function love.run(...)
         local f = lldebugger.call(love.runProc, false, ...)
@@ -14,9 +14,7 @@ if arg[#arg] == "vsc_debug" then
             return lldebugger.call(f, false, ...)
         end
     end
-end
-
-if arg[#arg] == "-debug" then
+elseif arg[#arg] == "-debug" then
     local mobdebug = require "mobdebug"
     mobdebug.start()
 

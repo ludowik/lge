@@ -31,7 +31,19 @@ end
 function FrameBuffer:getImageData()
     if self.imageData then return end
     local getImageData = love.graphics.readbackTexture or self.canvas.newImageData
+
+    local restoreCanvas = false
+    if love.graphics.getCanvas() == self.canvas then
+        restoreCanvas = true
+        love.graphics.setCanvas()
+    end
+
     self.imageData = getImageData(self.canvas)
+
+    if restoreCanvas then
+        love.graphics.setCanvas(self.canvas)
+    end
+
     return self.imageData
 end
 
@@ -54,7 +66,6 @@ end
 function FrameBuffer:get(x, y)
     return self.imageData:getPixel(x, y)
 end
-
 
 Image = class()
 

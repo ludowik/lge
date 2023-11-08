@@ -1,4 +1,4 @@
-Solitaire = class() : extends(Sketch)
+Solitaire = class():extends(Sketch)
 
 -- TODO : trouver un autre moyen pour pointer globalement sur le jeu (à la place de env.sketch)
 -- TODO : trouver un autre moyen pour adresser items (count and last)
@@ -16,18 +16,18 @@ function Solitaire:init()
 
     self.deck = Deck(0, 0)
     self.deckList:push(self.deck)
-    self.deck.position:set(6*Card.wcard+7*Card.margin, Card.hcard*1.5)
+    self.deck.position:set(6 * Card.wcard + 7 * Card.margin, Card.hcard * 1.5)
 
-    self.wast = Wast(Card.wcard/3, 0)
+    self.wast = Wast(Card.wcard / 3, 0)
     self.deckList:push(self.wast)
-    self.wast.position:set(4*Card.wcard+7*Card.margin, Card.hcard*1.5)
+    self.wast.position:set(4 * Card.wcard + 7 * Card.margin, Card.hcard * 1.5)
 
     self.piles = Node()
     for i in range(4) do
         local deck = Pile(0, 0)
         self.deckList:push(deck)
         self.piles:add(deck)
-        deck.position:set((i-1)*Card.wcard+i*Card.margin, Card.hcard*1.5)
+        deck.position:set((i - 1) * Card.wcard + i * Card.margin, Card.hcard * 1.5)
     end
 
     self.rows = Node()
@@ -35,15 +35,15 @@ function Solitaire:init()
         local deck = Row(0, Card.wtext + Card.margin)
         self.deckList:push(deck)
         self.rows:add(deck)
-        deck.position:set((i-1)*Card.wcard+i*Card.margin, Card.hcard*2.5+2*Card.margin)
+        deck.position:set((i - 1) * Card.wcard + i * Card.margin, Card.hcard * 2.5 + 2 * Card.margin)
     end
-    
+
     self.parameter:boolean('auto', Bind(self, 'autoPlay'), true)
-    self.parameter:action('Nouvelle donne', function () self:newGame() end)
+    self.parameter:action('Nouvelle donne', function() self:newGame() end)
 
     self.scene = Scene()
     self.scene:add(self.rows)
-    self.scene:add(self.piles)    
+    self.scene:add(self.piles)
     self.scene:add(self.wast)
     self.scene:add(self.deck)
 
@@ -86,7 +86,7 @@ function Solitaire:newGame()
         else
             index = index + 1
         end
-        countCard = countCard + 1        
+        countCard = countCard + 1
     end
 
     self:saveGame()
@@ -123,19 +123,19 @@ function Solitaire:loadGame()
     if data and data.deck and data.wast and data.rows and data.piles then
         self:resetGame()
 
-        Array.foreach(data.deck, function (card)
+        Array.foreach(data.deck, function(card)
             self.deck:push(Card(card.value, card.suit, card.faceUp))
         end)
-        Array.foreach(data.wast, function (card)
+        Array.foreach(data.wast, function(card)
             self.wast:push(Card(card.value, card.suit, card.faceUp))
         end)
-        Array.foreach(data.rows, function (row, i)
-            Array.foreach(row, function (card)
+        Array.foreach(data.rows, function(row, i)
+            Array.foreach(row, function(card)
                 self.rows.items[i]:push(Card(card.value, card.suit, card.faceUp))
             end)
         end)
-        Array.foreach(data.piles, function (pile, i)
-            Array.foreach(pile, function (card)
+        Array.foreach(data.piles, function(pile, i)
+            Array.foreach(pile, function(card)
                 self.piles.items[i]:push(Card(card.value, card.suit, card.faceUp))
             end)
         end)
@@ -160,46 +160,45 @@ function Solitaire:update(dt)
 end
 
 function Solitaire:draw()
-    background(colors.white)
-    --self.scene:draw()
+    background(colors.gray)
 
     local cards = Array()
 
-    self.deckList:foreach(function (deck)
+    self.deckList:foreach(function(deck)
         deck:draw()
-        for _,card in ipairs(deck.items) do
+        for _, card in ipairs(deck.items) do
             if not card.tween then
                 cards:add(card)
             end
         end
     end)
-    
-    self.deckList:foreach(function (deck)
-        for _,card in ipairs(deck.items) do
+
+    self.deckList:foreach(function(deck)
+        for _, card in ipairs(deck.items) do
             if card.tween and not card.faceUp then
                 cards:add(card)
             end
         end
     end)
 
-    self.deckList:foreach(function (deck)
-        for _,card in ipairs(deck.items) do
+    self.deckList:foreach(function(deck)
+        for _, card in ipairs(deck.items) do
             if card.tween and card.faceUp then
                 cards:add(card)
             end
         end
     end)
 
-    cards:foreach(function (card) card:draw() end)
+    cards:foreach(function(card) card:draw() end)
 end
 
-Deck = class() : extends(Node)
+Deck = class():extends(Node)
 
 function Deck:init(dx, dy)
     Node.init(self)
 
     self.reverseSearch = true
-    
+
     self.dx = dx
     self.dy = dy
 
@@ -216,15 +215,15 @@ QUEEN = 12
 KING = 13
 
 suits = {
-    spade = {name = 'pique', color = 'black'},
-    heart = {name = 'coeur', color = 'red'},
-    diamond = {name = 'carreau', color = 'red'},
-    club = {name = 'trefle', color = 'black'},    
+    spade = { name = 'pique', color = 'black' },
+    heart = { name = 'coeur', color = 'red' },
+    diamond = { name = 'carreau', color = 'red' },
+    club = { name = 'trefle', color = 'black' },
 }
 
 function Deck:serialize()
     local data = Array()
-    self.items:foreach(function (card)
+    self.items:foreach(function(card)
         data:push({
             value = card.value,
             suit = card.suit,
@@ -235,7 +234,7 @@ function Deck:serialize()
 end
 
 function Deck:create()
-    for _,suitName in ipairs{'heart', 'diamond', 'club', 'spade'} do
+    for _, suitName in ipairs { 'heart', 'diamond', 'club', 'spade' } do
         for value in range(13) do
             self:push(Card(value, suits[suitName], false))
         end
@@ -276,31 +275,31 @@ function Deck:push(card, count)
     if card.tween then
         card.tween:finalize()
     end
-    
+
     -- init animation
     card.tween = animate(card.position, card.nextPosition, {
-        delayBeforeStart = count/60,
-        delay = 30/60
-    }, tween.easing.quadOut, function () card.tween = nil end)
+        delayBeforeStart = count / 60,
+        delay = 30 / 60
+    }, tween.easing.quadOut, function() card.tween = nil end)
 
     self.items:push(card)
     card.deck = self
 end
 
 function Deck:draw()
-    noFill()
-    stroke(colors.gray)
+    fill(Color(1, 1, 1, 0.2))
+    stroke(Color(1, 1, 1))
     strokeSize(1)
     rect(self.position.x, self.position.y, Card.wcard, Card.hcard, Card.margin)
 end
 
-Wast = class() : extends(Deck)
+Wast = class():extends(Deck)
 
 function Wast:isMoveable(card)
     return card == self.items:last()
 end
 
-Pile = class() : extends(Deck)
+Pile = class():extends(Deck)
 
 function Pile:isMoveable(card)
     return card == self.items:last()
@@ -320,7 +319,7 @@ function Pile:isValidMove(card, toDeck)
     end
 end
 
-Row = class() : extends(Deck)
+Row = class():extends(Deck)
 
 function Row:isMoveable(card)
     return card.faceUp
@@ -341,7 +340,7 @@ function Row:isValidMove(card, toDeck)
     end
 end
 
-Card = class() : extends(Rect)
+Card = class():extends(Rect)
 
 function Card.setup()
     Card.size = Anchor(7):size(1, 1):floor()
@@ -364,23 +363,23 @@ function Card:init(value, suit, faceUp)
 
     self.faceUp = faceUp
 
-    self.img = Image('resources/images/'..self.suit.name..'.png')
+    self.img = Image('resources/images/' .. self.suit.name .. '.png')
 end
 
-local labels = {'A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K'}
+local labels = { 'A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K' }
 
 function Card:draw()
     local x, y = self.position.x, self.position.y
 
     local size = Card.size
-    
+
     local margin = Card.margin
     local radius = Card.radius
 
     local wcard = Card.wcard
     local hcard = Card.hcard
     local wtext = Card.wtext
-    
+
     if self.faceUp then
         strokeSize(0.5)
         stroke(colors.black)
@@ -388,28 +387,27 @@ function Card:draw()
         rectMode(CORNER)
         rect(x, y, wcard, hcard, Card.radius)
 
-        fontName('arial')
+        fontName('comic')
         fontSize(wtext)
 
         textMode(CENTER)
         textColor(colors.black)
         text(labels[self.value],
-            x + wtext/2 + margin,
-            y + wtext/2 + margin)
+            x + wtext / 2 + margin,
+            y + wtext / 2 + margin)
 
         textColor(self.suit.color == 'red' and colors.red or colors.black)
 
         spriteMode(CENTER)
         sprite(self.img,
-            x + wcard - wtext/2 - margin,
-            y + wtext/2 + margin,
+            x + wcard - wtext / 2 - margin,
+            y + wtext / 2 + margin,
             wtext, wtext)
 
         sprite(self.img,
-            x + wcard/2,
-            y + hcard - wcard/2 - margin,
-            wcard*.7, wcard*.7)
-    
+            x + wcard / 2,
+            y + hcard - wcard / 2 - margin,
+            wcard * .7, wcard * .7)
     else
         strokeSize(0.5)
         stroke(colors.black)
@@ -438,7 +436,6 @@ function Card:click()
             card.faceUp = true
             card:move2(env.sketch.wast, i)
         end
-
     else
         local toDeck = getFirstValidMove(self)
         if toDeck then
@@ -452,12 +449,12 @@ end
 function Card:move2(newDeck, countCard)
     local currentDeck = self.deck
     local index = currentDeck.items:indexOf(self)
-    
+
     while index <= #currentDeck.items do
         newDeck:push(currentDeck.items:remove(index), countCard)
     end
-    
-    for _,row in ipairs(env.sketch.rows.items) do
+
+    for _, row in ipairs(env.sketch.rows.items) do
         if row == currentDeck and #currentDeck.items > 0 then
             currentDeck.items:last().faceUp = true
         end
@@ -483,7 +480,7 @@ function getFirstValidMove(card)
 end
 
 function getValidMovesFor(validMoves, card, items)
-    for _,item in ipairs(items) do
+    for _, item in ipairs(items) do
         if item:isValidMove(card, item) then
             validMoves:add(item)
         end
@@ -491,12 +488,12 @@ function getValidMovesFor(validMoves, card, items)
 end
 
 function getValidMoves(card)
-    local self  = env.sketch
+    local self       = env.sketch
 
     local validMoves = Array()
 
     getValidMovesFor(validMoves, card, self.piles.items)
-    getValidMovesFor(validMoves, card, self.rows.items)    
+    getValidMovesFor(validMoves, card, self.rows.items)
 
     return validMoves
 end

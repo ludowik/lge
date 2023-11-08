@@ -1,4 +1,6 @@
 function love.conf(t)
+    t.console = false
+    
     t.modules.audio = true
     if t.audio then
         t.audio.mixwithsystem = true

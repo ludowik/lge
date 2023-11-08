@@ -4,14 +4,14 @@ function Color.setup()
     colors = {
         black = Color(0),
         white = Color(1),
-        
+
         lightgray = Color(0.75, 0.75, 0.75),
         gray = Color(0.5, 0.5, 0.5),
         darkgray = Color(0.25, 0.25, 0.25),
 
-        red = Color(210, 70, 50), -- 1, 0, 0),
+        red = Color(210, 70, 50),    -- 1, 0, 0),
         green = Color(50, 170, 120), -- 0, 1, 0),
-        blue = Color(50, 120, 170), -- 0, 0, 1),
+        blue = Color(50, 120, 170),  -- 0, 0, 1),
 
         yellow = Color(245, 225, 50),
         magenta = Color(1, 0, 1),
@@ -19,7 +19,7 @@ function Color.setup()
         orange = Color(1, 165, 0),
         purple = Color(0.5, 0, 0.5),
 
-        brown = Color(165,  42,  42),
+        brown = Color(165, 42, 42),
         beige = Color(245, 245, 220),
         azure = Color(240, 255, 255),
 
@@ -56,7 +56,7 @@ function Color.hexa(hexa)
 
     b = hexa % 256
 
-    return Color(r/255, g/255, b/255)
+    return Color(r / 255, g / 255, b / 255)
 end
 
 function Color.hsl(h, s, l, a)
@@ -97,9 +97,13 @@ function Color:setComponents(r, g, b, a)
     return self
 end
 
+function Color.__add(clr1, clr2)
+    return Color.mix(clr1, clr2, 0.5) 
+end
+
 function Color.mix(clr1, clr2, alpha)
     local a1 = alpha or clr1.a
-    local a2 = alpha and (1-a1) or clr2.a
+    local a2 = alpha and (1 - a1) or clr2.a
     local k = a1 + a2
     return Color(
         (clr1.r * a1 + clr2.r * a2) / k,
@@ -117,13 +121,20 @@ function Color:grayscale()
     return Color(grayscale)
 end
 
-function Color:darker()
-    local h, s, l = rgb2hsl(self:rgba())
-    return hsl2rgb(h, s, l - 0.1)
+function Color.darken(clr, pct)
+    pct = pct or 50
+    return Color.lighten(clr, -pct)
+end
+
+function Color.lighten(clr, pct)
+    pct = pct or 50
+    local h, s, l, a = rgb2hsl(clr.r, clr.g, clr.b, clr.a)
+    l = l + l * pct / 100
+    return Color.hsl(h, s, l, a)
 end
 
 function Color:__tostring()
-    return self.r..', '..self.g..', '..self.b..', '..self.a
+    return self.r .. ', ' .. self.g .. ', ' .. self.b .. ', ' .. self.a
 end
 
 function Color:rgba()
@@ -202,7 +213,6 @@ function hsl2rgb(hue, saturation, lightness)
         -- If saturation is 0, it's a shade of gray
         local grayValue = lightness
         return grayValue, grayValue, grayValue
-
     else
         local q
         if lightness < 0.5 then
@@ -219,16 +229,13 @@ function hsl2rgb(hue, saturation, lightness)
             elseif t > 1 then
                 t = t - 1
             end
-            
-            if t < 1/6 then
+
+            if t < 1 / 6 then
                 return p + (q - p) * 6 * t
-
-            elseif t < 1/2 then
+            elseif t < 1 / 2 then
                 return q
-
-            elseif t < 2/3 then
-                return p + (q - p) * (2/3 - t) * 6
-
+            elseif t < 2 / 3 then
+                return p + (q - p) * (2 / 3 - t) * 6
             else
                 return p
             end
@@ -293,7 +300,6 @@ function hsb2rgb(hue, saturation, lightness)
     if saturation == 0 then
         -- If saturation is 0, it's a shade of gray
         return lightness, lightness, lightness
-
     else
         local q
         if lightness < 0.5 then
@@ -311,23 +317,20 @@ function hsb2rgb(hue, saturation, lightness)
                 t = t - 1
             end
 
-            if t < 1/6 then
+            if t < 1 / 6 then
                 return p + (q - p) * 6 * t
-
-            elseif t < 1/2 then
+            elseif t < 1 / 2 then
                 return q
-
-            elseif t < 2/3 then
-                return p + (q - p) * (2/3 - t) * 6
-
+            elseif t < 2 / 3 then
+                return p + (q - p) * (2 / 3 - t) * 6
             else
                 return p
             end
         end
 
-        local r = hueToRGB(hue + 1/3)
+        local r = hueToRGB(hue + 1 / 3)
         local g = hueToRGB(hue)
-        local b = hueToRGB(hue - 1/3)
+        local b = hueToRGB(hue - 1 / 3)
 
         return r, g, b
     end

@@ -3,7 +3,7 @@ local __tan, __atan, __rad, __deg, __sqrt, __cos, __sin = math.tan, math.atan, m
 local stack = Array()
 local useDefaultSystem = false
 
-function resetMatrix()
+function resetMatrix(resetStack)
     if useDefaultSystem then
         love.graphics.origin()
         love.graphics.translate(X, Y)
@@ -17,7 +17,9 @@ function resetMatrix()
     ortho()
     translate(X, Y)
 
-    stack = Array()
+    if resetStack then
+        stack = Array()
+    end
 end
 
 function pushMatrix()
@@ -251,5 +253,4 @@ function setTransformation()
     love.graphics.applyTransform(__projectionMatrix)
     love.graphics.applyTransform(__viewMatrix)
     love.graphics.applyTransform(__modelMatrix)
-    --love.graphics.replaceTransform(__modelMatrix)
 end

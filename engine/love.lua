@@ -49,21 +49,36 @@ function love.draw()
 end
 
 if getOS() == 'ios' then
+    local touches = {}
+
     function love.touchpressed(id, x, y, dx, dy, pressure)
-        eventManager:mousepressed(id, x, y)
+        touches[id] = {
+            moved = false
+        }
+
+        eventManager:mousepressed(id, x, y, 0)
     end
 
     function love.touchmoved(id, x, y, dx, dy, pressure)
+        touches[id].moved = true
+
         eventManager:mousemoved(id, x, y)
     end
 
     function love.touchreleased(id, x, y, dx, dy, pressure)
-        eventManager:mousereleased(id, x, y)
+        touches[id].presses = (touches[id].moved == false) and 1 or 0
+
+        if touches[id].presses > 0 then
+            eventManager:click(id, x, y, touches[id].presses)
+        end
+        eventManager:mousereleased(id, x, y, touches[id].presses)
+
+        touches[id] = nil
     end
 
 else
     function love.mousepressed(x, y, button, istouch, presses)
-        eventManager:mousepressed(button, x, y)
+        eventManager:mousepressed(button, x, y, presses)
     end
 
     function love.mousemoved(x, y, dx, dy, istouch)
@@ -71,11 +86,10 @@ else
     end
 
     function love.mousereleased(x, y, button, istouch, presses)
-        if presses > 1 then
-            eventManager:click(presses)
-        else
-            eventManager:mousereleased(button, x, y)
+        if presses > 0 then
+            eventManager:click(button, x, y, presses)
         end
+        eventManager:mousereleased(button, x, y, presses)
     end
 
 	function love.wheelmoved(x, y)

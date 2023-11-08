@@ -9,8 +9,8 @@ function EventManager:init()
     self.currentObject = nil
 end
 
-function EventManager:mousepressed(id, x, y)
-    mouse:pressed(id, x, y)
+function EventManager:mousepressed(id, x, y, presses)
+    mouse:pressed(id, x, y, presses)
 
     eventManager.currentObject = Engine.contains(mouse)
     if eventManager.currentObject then
@@ -21,21 +21,27 @@ end
 function EventManager:mousemoved(id, x, y)
     mouse:moved(id, x, y)
     
-    if eventManager.currentObject then        
+    if eventManager.currentObject then
         eventManager.currentObject:mousemoved(mouse)
     end
 end
 
-function EventManager:mousereleased(id, x, y)
-    mouse:released(id, x, y)
+function EventManager:mousereleased(id, x, y, presses)
+    mouse:released(id, x, y, presses)
     
-    if eventManager.currentObject then        
+    if eventManager.currentObject then
         eventManager.currentObject:mousereleased(mouse)
         eventManager.currentObject = nil
     end
 end
 
-function EventManager:click(presses)
+function EventManager:click(id, x, y, presses)
+    mouse:released(id, x, y, presses)
+
+    if eventManager.currentObject then
+        eventManager.currentObject:click(mouse)
+        eventManager.currentObject = nil
+    end
 end
 
 function EventManager:wheelmoved(x, y)
@@ -45,13 +51,16 @@ function EventManager:wheelmoved(x, y)
 end
 
 function EventManager:keypressed(key, scancode, isrepeat)
-    processManager:current():keypressed(key, scancode, isrepeat)
-    
+    if processManager:current() then
+        processManager:current():keypressed(key, scancode, isrepeat)
+    end
+
     if key == 'r' then
         engine.reload(true)
 
     elseif key == 't' then
         env.__autotest = not env.__autotest
+        love.window.setVSync(env.__autotest and 0 or 1)
     
     elseif key == 'z' then
         makezip()
@@ -62,8 +71,8 @@ function EventManager:keypressed(key, scancode, isrepeat)
     elseif key == 's' then
         openSketches()
 
-    elseif key == 'l' then
-        processManager:loop()
+    elseif key == 'l' or key == 'kpenter' then
+        processManager:loopProcesses()
     
     elseif key == 'f' then
         toggleFused()
@@ -77,7 +86,5 @@ function EventManager:keypressed(key, scancode, isrepeat)
     elseif key == 'pagedown' then
         processManager:next()
     
-    elseif key == 'kpenter' then
-        processManager:loop()
     end
 end

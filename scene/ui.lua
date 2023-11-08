@@ -1,4 +1,4 @@
-UI = class() : extends(Rect, MouseEvent, KeyboardEvent)
+UI = class():extends(Rect, MouseEvent, KeyboardEvent)
 
 UI.innerMarge = 8
 
@@ -8,7 +8,7 @@ function UI:init(label)
 
     self.label = label
 
-    self.styles = Array{
+    self.styles = Array {
         fillColor = colors.gray,
         textColor = colors.white,
         fontSize = 22,
@@ -18,10 +18,11 @@ function UI:init(label)
 end
 
 function UI:getLabel()
+    local label = tostring(self.label):replace('_', ' '):proper()
     if self.value then
-        return tostring(self.label)..' = '..self:getValue()
+        return label .. ' = ' .. self:getValue()
     end
-    return tostring(self.label)
+    return label
 end
 
 function UI:formatValue(value)
@@ -37,7 +38,7 @@ function UI:getValue(value)
     if type(value) == 'table' and value.get then
         value = value:get()
     end
-    
+
     local strValue
     if type(value) == 'number' then
         strValue = self:formatValue(value)
@@ -65,7 +66,7 @@ end
 
 function UI:draw()
     if not self.label then return end
-    
+
     self:drawBack()
     self:drawFront()
 end
@@ -79,7 +80,7 @@ function UI:drawBack()
     end
 
     local r = 4
-    
+
     fill(self.styles.fillColor)
     if eventManager.currentObject == self then
         fill(colors.red:alpha(0.25))
@@ -102,7 +103,7 @@ function UI:drawFront()
 
     if self.styles.mode == CENTER then
         textMode(CENTER)
-        text(self:getLabel(), self.position.x + self.size.x/2, self.position.y + self.size.y/2, wrapSize, wrapAlign)
+        text(self:getLabel(), self.position.x + self.size.x / 2, self.position.y + self.size.y / 2, wrapSize, wrapAlign)
     else
         textMode(CORNER)
         text(self:getLabel(), self.position.x + UI.innerMarge, self.position.y, wrapSize, wrapAlign)

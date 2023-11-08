@@ -17,7 +17,8 @@ function class(__className)
         __init = function(instance, ...)
         end,
         extends = extends,
-        attrib = attrib
+        attrib = attrib,
+        clone = table.clone,
     }
     klass.__index = klass
 
@@ -80,12 +81,15 @@ function attributeof(attrName, object)
     return evalExpression('global.__object__.'..attrName)
 end
 
-function classSetup()
-    for name,klass in pairs(_G) do
+function classSetup(env)
+    env = env or _G
+
+    for name,klass in pairs(env) do
         if type(klass) == 'table' and klass.__class then
             klass.__className = name
         end
     end
+
     for name,klass in pairs(classList) do
         if klass.setup then
             klass.setup()

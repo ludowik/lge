@@ -1,4 +1,4 @@
-Array = class() : extends(table)
+Array = class():extends(table)
 
 table.__className = 'table'
 
@@ -14,13 +14,15 @@ Array.add = table.insert
 
 Array.push = table.insert
 Array.pop = table.remove
-Array.shift = function (t) return table.remove(t, 1) end
+Array.shift = function(t) return table.remove(t, 1) end
 
 table.unpack = table.unpack or unpack
 Array.unpack = table.unpack
 
+Array.clone = table.clone
+
 function Array:removeIfTrue(f)
-    for i,v in ipairs(self, true) do
+    for i, v in ipairs(self, true) do
         if f(v) then
             table.remove(self, i)
         end
@@ -45,19 +47,19 @@ function Array:forn(n, functionOrValue)
 end
 
 function Array:update(dt)
-    for i,v in ipairs(self) do
+    for i, v in ipairs(self) do
         if v.update then
-           v:update(dt)
-        end 
+            v:update(dt)
+        end
     end
     return self
 end
 
-function Array:draw(dt)
-    for i,v in ipairs(self) do
+function Array:draw(dt, ...)
+    for i, v in ipairs(self) do
         if v.draw then
-           v:draw()
-        end 
+            v:draw(...)
+        end
     end
     return self
 end
@@ -66,29 +68,29 @@ function Array:ipairs()
     return ipairs(self)
 end
 
-function Array:foreach(f)
-    for i,v in ipairs(self) do
-        f(v, i)
+function Array:foreach(f, ...)
+    for i, v in ipairs(self) do
+        f(v, i, ...)
     end
     return self
 end
 
-function Array:foreachKey(f)
-    for k,v in pairs(self) do
-        f(v, k)
+function Array:foreachKey(f, ...)
+    for k, v in pairs(self) do
+        f(v, k, ...)
     end
     return self
 end
 
-function Array:cross(f)
+function Array:cross(f, ...)
     local n = #self
-    
+
     self.comparaison = 0
-    for i=1,n-1 do
+    for i = 1, n - 1 do
         local v1 = self[i]
-        for j=i+1,n do
+        for j = i + 1, n do
             local v2 = self[j]
-            f(v1, v2, i, j)
+            f(v1, v2, i, j, ...)
             self.comparaison = self.comparaison + 1
         end
     end
@@ -96,13 +98,13 @@ function Array:cross(f)
 end
 
 function Array:indexOf(item)
-    for i,v in ipairs(self) do
+    for i, v in ipairs(self) do
         if item == v then return i end
     end
 end
 
 function Array:keyOf(item)
-    for k,v in pairs(self) do
+    for k, v in pairs(self) do
         if item == v then return k end
     end
 end
@@ -117,7 +119,7 @@ end
 
 function Array:map(f)
     local list = Array()
-    for i,v in ipairs(self) do
+    for i, v in ipairs(self) do
         list:add(f(v, i))
     end
     return list
@@ -128,9 +130,9 @@ function Array:chainIt()
     self[1].__previous = self[n]
     self[n].__next = self[1]
 
-    for i=1,n-1 do
-        self[i].__next = self[i+1]
-        self[i+1].__previous = self[i]
+    for i = 1, n - 1 do
+        self[i].__next = self[i + 1]
+        self[i + 1].__previous = self[i]
     end
 end
 
@@ -138,29 +140,10 @@ function Array:max()
     if #self == 0 then return end
 
     local maxValue = math.mininteger
-    for i,v in ipairs(self) do
+    for i, v in ipairs(self) do
         maxValue = max(maxValue, v)
     end
     return maxValue
-end
-
-local __cloningObjects = {}
-function Array:clone()
-    if __cloningObjects[self] then return __cloningObjects[self] end
-
-    local t = Array()
-    __cloningObjects[self] = t
-
-    Array.foreachKey(self, function(v, k)
-        if type(v) == 'table' then
-            t[k] = Array.clone(v)
-        else
-            t[k] = v
-        end
-    end)
-
-    __cloningObjects[self] = nil
-    return t
 end
 
 function Array:tolua()
@@ -175,44 +158,44 @@ function Array:__tolua(tab)
     local serializeTypes = {
         boolean = tostring,
         number = tostring,
-        string = function (s) return '"'..s..'"' end,
-        table = function (t) return Array.__tolua(t, tab..'\t') end, 
+        string = function(s) return '"' .. s .. '"' end,
+        table = function(t) return Array.__tolua(t, tab .. '\t') end,
     }
 
     local function name(k)
-        return type(k) == 'number' and '['..k..']' or k
+        return type(k) == 'number' and '[' .. k .. ']' or k
     end
-    
+
     local code = '{'
 
     if #self > 0 then
-        for k,v in ipairs(self) do
+        for k, v in ipairs(self) do
             if serializeTypes[type(v)] then
-                code = code..'\n'
-                code = code..tab..'\t'..serializeTypes[type(v)](v)
-                code = code..','
+                code = code .. '\n'
+                code = code .. tab .. '\t' .. serializeTypes[type(v)](v)
+                code = code .. ','
             end
         end
     else
-        for k,v in pairs(self) do
+        for k, v in pairs(self) do
             if serializeTypes[type(v)] then
-                code = code..'\n'
-                code = code..tab..'\t'..name(k)..' = '..serializeTypes[type(v)](v)
-                code = code..','
+                code = code .. '\n'
+                code = code .. tab .. '\t' .. name(k) .. ' = ' .. serializeTypes[type(v)](v)
+                code = code .. ','
             end
         end
     end
 
     __serializeObjects[self] = nil
 
-    code = code..'\n'..tab..'}'
+    code = code .. '\n' .. tab .. '}'
     return code
 end
 
 function Array:unitTest()
     local t = Array()
     t:add('element')
-    
+
     assert(t[1] == 'element')
     assert(#t == 1)
 

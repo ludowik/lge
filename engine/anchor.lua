@@ -8,6 +8,9 @@ function Anchor:init(ni, nj)
 end
 
 function Anchor:pos(i, j)
+    i = i or 1
+    j = j or i
+
     if i < 0 then i = self.ni + i end
     if j < 0 then j = self.nj + j end
     return vec2(
@@ -16,6 +19,9 @@ function Anchor:pos(i, j)
 end
 
 function Anchor:size(i, j)
+    i = i or 1
+    j = j or i
+
     return vec2(
         floor(i*(W/self.ni)),
         floor(j*(H/self.nj)))

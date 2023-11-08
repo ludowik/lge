@@ -80,7 +80,7 @@ function Parameter:addNavigationMenu()
     self:action('next', function () processManager:next() end)
     self:action('previous', function () processManager:previous() end)
     self:action('random', function () processManager:random() end)
-    self:action('loop', function () processManager:loop() end)
+    self:action('loop', function() processManager:loopProcesses() end)
 
     self:link('web version', 'https://ludowik.github.io/lge/build/lovejs/lge-lovejs/lge')
 end
@@ -89,12 +89,10 @@ function Parameter:addCaptureMenu()
     self:group('capture')
 
     self:action('pause', noLoop)
-    
     self:action('frame', redraw)
-    
     self:action('resume', loop)
 
-    self:action('capture', function ()
+    self:action('capture image', function ()
         engine.parameter.visible = false
         love.graphics.captureScreenshot(function (imageData)
             love.filesystem.createDirectory('capture')
@@ -103,11 +101,12 @@ function Parameter:addCaptureMenu()
         end)
     end)
 
-    self:action('logo', function ()
-        local fb = FrameBuffer(1024/devicePixelRatio, 1024/devicePixelRatio)
+    self:action('capture logo', function ()
+        local size = 1024 / devicePixelRatio
+        local fb = FrameBuffer(size, size)
         render2context(fb,
             function ()
-                sprite(env.sketch.fb, 0, 0, 1024/devicePixelRatio, 1024/devicePixelRatio, 0, (H-W)/2, W, W)
+                sprite(env.sketch.fb, 0, 0, size, size, 0, (H-W)/2, W, W)
             end)
         love.filesystem.createDirectory('logo')
         fb:getImageData():encode('png', 'logo/'..env.__name..'.png')

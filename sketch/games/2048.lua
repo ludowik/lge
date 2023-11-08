@@ -283,20 +283,21 @@ function The2048:fusion(i, j, di, dj)
     return 0
 end
 
-function The2048:keypressed(key)
-    if self:isGameOver() then
-        self:initGame()
-    else
-        if #self.actions <= 0 then
-            self.actions:add(key)
-        end
-    end
-end
-
 function The2048:mousemoved(mouse)
     local direction = mouse:getDirection()
     if direction then
         self:keypressed(direction)
+    end
+end
+
+function The2048:keypressed(key)
+    if self:isGameOver() then
+        self:initGame()
+        return
+    end
+    
+    if #self.actions <= 0 then
+        self.actions:add(key)
     end
 end
 
@@ -348,20 +349,7 @@ function The2048:draw()
     self.cells:removeIfTrue(function (cell) return cell.value == -1 end)
 
     if self:isGameOver() then
-        background(0, 0, 0, 0.5)
-
-        stroke(colors.white)
-        fill(colors.black)
-
-        fontSize(50)
-        local gameOver = 'Game Over'
-        local w, h = textSize(gameOver)
-
-        rectMode(CENTER)
-        rect(W/2, H/2, w*1.2, h*1.2, 20)
-
-        textMode(CENTER)
-        text(gameOver, W/2, H/2)
+        self:drawGameOver()
     end
 end
 

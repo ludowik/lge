@@ -27,7 +27,7 @@
                 "class"
             ],
             "scriptRoots": [
-                "."
+                "./"
             ],
             "scriptFiles": [
                 "./*.lua"

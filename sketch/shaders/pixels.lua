@@ -89,6 +89,7 @@ function Pixels:draw()
     local fragment = Pixels.noiseFunctions[noiseFunctionIndex]
 
     self.img:getImageData()
+    
     local w, h = self.img.imageData:getWidth(), self.img.imageData:getHeight()
     self.img.imageData:mapPixel(function (x, y)
         local r, g, b, a = fragment(x, y, w, h)

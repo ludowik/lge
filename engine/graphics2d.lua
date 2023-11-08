@@ -8,32 +8,58 @@ end
 
 function Graphics2d.initMode()
     local fullscreen = false
+
+    love.window.setVSync(1)
+
+    local ws, hs, flags = love.window.getMode()
+
     if getOS() == 'ios' then
         local margeExtension = 5
+        
         X, Y, W, H = love.window.getSafeArea()
+        
         X = X + margeExtension
-        W = W - margeExtension*2
-        local ws, hs = love.window.getMode()
+        W = W - margeExtension * 2
+        
         love.window.setMode(ws, hs, {
             msaa = 3,
             fullscreen = true,
         })
+
     else
         X, Y, W, H = 5, 51, 400, 800
-        love.window.setMode(2*X+W, 2*Y+H, {
+
+        love.window.setMode(2 * X + W, 2 * Y + H, {
             msaa = 3,
             fullscreen = false,
             highdpi = true,
         })
     end
 
+    refreshRate = flags.refreshrate * 2
     devicePixelRatio = love.window.getDPIScale()
 end
 
 function Graphics2d.background(clr, ...)
     clr = Color.fromParam(clr, ...) or colors.black
     love.graphics.setColor(clr.r, clr.g, clr.b, clr.a)
-    love.graphics.rectangle('fill', -X, -Y, 2*X+W, 2*Y+H)
+    love.graphics.rectangle('fill', -X, -Y, 2 * X + W, 2 * Y + H)
+end
+
+function Graphics2d.noLoop()
+    local process = processManager:current()
+    -- TODO
+    if not process then return end
+
+    process.frames = 1
+end
+
+function Graphics2d.loop()
+    local process = processManager:current()
+    -- TODO
+    if not process then return end
+
+    process.frames = nil
 end
 
 local styles = {}
@@ -56,7 +82,7 @@ function Graphics2d.resetStyle(origin)
     blendMode(NORMAL)
 
     stroke(colors.white)
-    strokeSize(1)	
+    strokeSize(1)
 
     noFill()
 
@@ -66,12 +92,12 @@ function Graphics2d.resetStyle(origin)
 
     circleMode(CENTER)
     ellipseMode(CENTER)
-    
+
     textMode(CORNER)
     textColor(colors.white)
     textPosition(0)
 
-    fontName('arial')
+    fontName('comic')
     fontSize(22)
 
     styles.origin = origin or TOP_LEFT
@@ -127,11 +153,16 @@ function Graphics2d.zLevel()
 end
 
 function Graphics2d.axes2d()
+    pushMatrix()
+    resetMatrix()
+
     stroke(colors.gray)
     strokeSize(0.5)
 
     line(0, H / 2, W, H / 2)
     line(W / 2, 0, W / 2, H)
+
+    popMatrix()
 end
 
 function Graphics2d.point(x, y)
@@ -139,7 +170,7 @@ function Graphics2d.point(x, y)
         love.graphics.setColor(stroke():rgba())
     end
 
-    love.graphics.ellipse('fill', x, y, strokeSize()/2, strokeSize()/2)
+    love.graphics.ellipse('fill', x, y, strokeSize() / 2, strokeSize() / 2)
 end
 
 function Graphics2d.points(...)
@@ -180,9 +211,9 @@ end
 
 function Graphics2d.rect(x, y, w, h, radius)
     local mode = rectMode()
-    
+
     if mode == CENTER then
-        x, y = x-w/2, y-h/2
+        x, y = x - w / 2, y - h / 2
     end
 
     if fill() then
@@ -193,7 +224,7 @@ function Graphics2d.rect(x, y, w, h, radius)
         local width = strokeSize()
         love.graphics.setColor(stroke():rgba())
         love.graphics.setLineWidth(width)
-        love.graphics.rectangle('line', x+width/2, y+width/2, w-width, h-width, radius)
+        love.graphics.rectangle('line', x + width / 2, y + width / 2, w - width, h - width, radius)
     end
 end
 
@@ -214,7 +245,7 @@ function Graphics2d.ellipse(x, y, rx, ry, mode)
     mode = mode or ellipseMode()
 
     if mode == CORNER then
-        x, y = x-rx, y-ry
+        x, y = x - rx, y - ry
     end
 
     local segments = 64
@@ -227,7 +258,7 @@ function Graphics2d.ellipse(x, y, rx, ry, mode)
         local size = strokeSize()
         love.graphics.setColor(stroke():rgba())
         love.graphics.setLineWidth(size)
-        love.graphics.ellipse('line', x, y, rx-size/2, ry-size/2, segments)
+        love.graphics.ellipse('line', x, y, rx - size / 2, ry - size / 2, segments)
     end
 end
 
@@ -266,25 +297,27 @@ function Graphics2d.text(str, x, y, limit, align)
     if Graphics2d.textColor() == nil then return end
 
     str = tostring(str)
-    
+
     x = x or 0
     y = y or 0
 
     if limit then
         align = align or 'left'
     end
-    
+
     local mode = textMode()
     local ws, hs = textSize(str, limit)
 
-    love.graphics.setColor(Graphics2d.textColor():rgba())
+    textPosition(y + hs)
     
+    love.graphics.setColor(Graphics2d.textColor():rgba())
+
     if mode == CENTER then
-        x, y = x-ws/2, y-hs/2
+        x, y = x - ws / 2, y - hs / 2
     end
 
     if not limit and align == 'right' then
-        x = x-ws
+        x = x - ws
     end
 
     local sx, sy = 1, styles.origin == BOTTOM_LEFT and -1 or 1
@@ -294,18 +327,16 @@ function Graphics2d.text(str, x, y, limit, align)
         love.graphics.print(str, x, y, 0, sx, sy)
     end
 
-    textPosition(y + hs)
-
     return ws, hs
 end
 
 function Graphics2d.textSize(str, limit)
     str = tostring(str)
 
-    local font = FontManager.getFont()    
+    local font = FontManager.getFont()
     love.graphics.setFont(font)
 
-    local w, h    
+    local w, h
     if limit then
         local wrappedtext
         w, wrappedtext = font:getWrap(str, limit or W)
@@ -320,7 +351,6 @@ end
 function Graphics2d.spriteMode(mode)
     return stylesSet('spriteMode', mode)
 end
-
 
 function Graphics2d.spriteSize(image)
     local texture = image.texture or image.canvas
@@ -343,7 +373,7 @@ function Graphics2d.sprite(image, x, y, w, h, ox, oy, ow, oh)
     oh = oh or texture:getHeight()
 
     if mode == CENTER then
-        x, y = x-w/2, y-h/2
+        x, y = x - w / 2, y - h / 2
     end
 
     if Graphics2d.tint() then
@@ -351,6 +381,6 @@ function Graphics2d.sprite(image, x, y, w, h, ox, oy, ow, oh)
     end
     love.graphics.draw(texture,
         x, y, 0,
-        w/ow, h/oh,
+        w / ow, h / oh,
         ox, oy)
 end

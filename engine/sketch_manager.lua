@@ -88,6 +88,10 @@ function loadSketch(env)
     env.env = env
 
     if env.__sketch then
+        if env.__sketch.setup then 
+            env.__sketch.setup()
+        end
+        
         env.sketch = env.__sketch()
         env.sketch.env = env
 

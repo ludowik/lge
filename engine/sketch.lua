@@ -5,14 +5,14 @@ local fb
 function Sketch.__index(self, key)
     local value = rawget(self, key) or rawget(Sketch, key)
     if not value then
-        warning(false, key..' variable never initialized')
+        warning(false, key .. ' variable never initialized')
     end
     return value
 end
 
 function Sketch:init(w, h)
     env.sketch = self
-    
+
     Index.init(self)
     State.init(self)
 
@@ -20,12 +20,12 @@ function Sketch:init(w, h)
 
     if w then
         ws, hs = w, h
-    else 
-        w = w or (2*X+W)
-        h = h or (2*Y+H)
-        ws, hs = w/3, h/3
+    else
+        w = w or (2 * X + W)
+        h = h or (2 * Y + H)
+        ws, hs = w / 3, h / 3
     end
-    
+
     Rect.init(self, 0, 0, w, h)
 
     fb = fb or FrameBuffer(w, h)
@@ -74,7 +74,7 @@ end
 function Sketch:updateSketch(dt)
     if self.frames and self.frames == 0 then return end
     self:checkReload()
-    
+
     if env.__autotest and self.autotest then
         self:autotest()
     end
@@ -90,7 +90,7 @@ function Sketch:updateSketch(dt)
     end
 end
 
-function Sketch:drawSketch()
+function Sketch:drawSketch(force)
     local processDraw = true
     if self.frames then
         if self.frames == 0 then
@@ -103,12 +103,12 @@ function Sketch:drawSketch()
     if processDraw then
         love.graphics.setCanvas(self.fb.canvas)
 
-        resetMatrix()
-        resetStyle(getOrigin())        
+        resetMatrix(true)
+        resetStyle(getOrigin())
 
         self:draw()
     end
-    
+
     love.graphics.setCanvas()
     love.graphics.setShader()
 
@@ -119,20 +119,32 @@ function Sketch:drawSketch()
 
     if getOrigin() == BOTTOM_LEFT then
         love.graphics.scale(1, -1)
-        love.graphics.translate(0, -(2*Y+H))
+        love.graphics.translate(0, -(2 * Y + H))
+    end
+
+    local sx = self.size.x / self.fb.canvas:getWidth()
+    local sy = self.size.y / self.fb.canvas:getHeight()
+
+    if self.sketchPixelRatio then
+        love.graphics.translate(X, Y)
+        love.graphics.scale(self.sketchPixelRatio, self.sketchPixelRatio)
+        love.graphics.translate(-X, -Y)
     end
 
     love.graphics.draw(self.fb.canvas,
         self.position.x, -- x
         self.position.y, -- y
-        0, -- rotation
-        self.size.x / self.fb.canvas:getWidth(), -- scale x
-        self.size.y / self.fb.canvas:getHeight()) -- scale y
-
+        0,               -- rotation
+        sx,              -- scale x
+        sy)              -- scale y
 
     -- TODO : gérer un zoom
     -- TODO : gérer une translation
     -- TODO : gérer un pixelRatio
+
+    if force then
+        love.graphics.present()
+    end
 end
 
 function Sketch:draw()
@@ -147,11 +159,30 @@ function Sketch:draw()
         scene:layout()
         scene:draw()
     else
-        fontSize(W/4)
+        fontSize(W / 4)
 
         textMode(CENTER)
-        text(self.__className, self.size.x/2, self.size.y/2)
+        text(self.__className, self.size.x / 2, self.size.y / 2)
     end
+end
+
+function Sketch:drawGameOver()
+    resetMatrix()
+
+    background(0, 0, 0, 0.5)
+
+    stroke(colors.white)
+    fill(colors.black)
+
+    fontSize(50)
+    local gameOver = 'Game Over'
+    local w, h = textSize(gameOver)
+
+    rectMode(CENTER)
+    rect(W/2, H/2, w*1.2, h*1.2, 20)
+
+    textMode(CENTER)
+    text(gameOver, W/2, H/2)    
 end
 
 function Sketch:mousepressed(mouse)

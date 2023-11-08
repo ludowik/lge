@@ -18,9 +18,10 @@ function Mouse:init()
     self.startTime = 0
     self.endTime = 0
     self.elapsedTime = 0
+    self.presses = 0
 end
 
-function Mouse:pressed(id, x, y)
+function Mouse:pressed(id, x, y, presses)
     self.state = PRESSED
     self.id = id
     
@@ -38,6 +39,8 @@ function Mouse:pressed(id, x, y)
     self.startTime = time()
     self.endTime = self.startTime
     self.elapsedTime = 0
+
+    self.presses = presses
 end
 
 function Mouse:moved(id, x, y)
@@ -61,7 +64,7 @@ function Mouse:update(dt)
     self:moved(self.id, self.position.x+X, self.position.y+Y)
 end
 
-function Mouse:released(id, x, y)
+function Mouse:released(id, x, y, presses)
     self.state = RELEASED
     self.id = id
     
@@ -74,6 +77,8 @@ function Mouse:released(id, x, y)
 
     self.endTime = time()
     self.elapsedTime = self.endTime - self.startTime
+
+    self.presses = presses
 end
 
 function Mouse:getDirection(minLen)

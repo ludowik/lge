@@ -1,4 +1,4 @@
-ProcessManager = class() : extends(Node)
+ProcessManager = class():extends(Node)
 
 function ProcessManager.setup()
     processManager = ProcessManager()
@@ -16,22 +16,22 @@ function ProcessManager:setSketch(name)
     if not name then return end
 
     name = name:lower()
-    for i,env in ipairs(self.items) do
+    for i, env in ipairs(self.items) do
         if env.__className == name then
             self:setCurrentSketch(i)
             break
-        end        
+        end
     end
 end
 
 function ProcessManager:getSketch(name)
     if not name then return end
-    
+
     name = name:lower()
-    for i,env in ipairs(self.items) do
+    for i, env in ipairs(self.items) do
         if env.__className == name then
             return env.sketch
-        end        
+        end
     end
 end
 
@@ -45,7 +45,7 @@ function ProcessManager:setCurrentSketch(processIndex)
 
     loadSketch(self.items[self.processIndex])
     local process = self:current()
-        
+
     _G.env = process.env or _G.env
     setfenv(0, _G.env)
     if process.resume then process:resume() end
@@ -58,30 +58,43 @@ function ProcessManager:setCurrentSketch(processIndex)
     process.fb:background()
     resetContext()
 
-    engine.parameter.items[#engine.parameter.items].items[1].label = process.__className:gsub('_', ' ')
+    engine.parameter.items[#engine.parameter.items].items[1].label = process.__className
     engine.parameter.items[#engine.parameter.items].items[2] = process.parameter.items[1]
 
     redraw()
 end
 
-function ProcessManager:loop()
-    self.loopOverProcess = not self.loopOverProcess
-    self.loopLastProcess = self:current()
-    self.loopIterProcess = 5
+LOOP_ITER_PROCESS = 1
+
+function ProcessManager:loopProcesses()
+    if self.__loopProcesses then
+        self.__loopProcesses = nil
+    else
+        self.__loopProcesses = {
+            startProcess = self:current(),
+            frames = LOOP_ITER_PROCESS
+        }
+    end
 end
 
 function ProcessManager:update(dt)
     -- TODO
     if not self:current() then return end
 
-    if self.loopOverProcess then
-        self.loopIterProcess = self.loopIterProcess - 1
-        if self.loopIterProcess <= 0 then
+    if self.__loopProcesses then
+        self.__loopProcesses.frames = self.__loopProcesses.frames - 1
+        if self.__loopProcesses.frames <= 0 then
             self:next()
-            self.loopIterProcess = 20
+            self.__loopProcesses.frames = LOOP_ITER_PROCESS
 
-            if self:current() == self.loopLastProcess then
-                self.loopOverProcess = false
+            for i in range(10) do
+                self:current():updateSketch(dt)
+                self:current():drawSketch()
+                love.graphics.present()
+            end
+
+            if self:current() == self.__loopProcesses.startProcess then
+                self.__loopProcesses = nil
             end
         end
     end

@@ -1,4 +1,4 @@
-function setup()    
+function setup()
     cells = Grid(3, 3)
 
     cells.state = 'play'
@@ -16,8 +16,8 @@ function setup()
     player = 'x'
 
     players = {
-        x = {type='player'},
-        o = {type='ia'}
+        x = { type = 'player' },
+        o = { type = 'ia' }
     }
 
     scores = {
@@ -63,22 +63,18 @@ function play()
         if winner then
             cells.state = 'win'
             scores[winner] = scores[winner] + 1
-
         else
             if minimax:gameEnd(cells) then
                 cells.state = 'end'
                 scores['draw'] = scores['draw'] + 1
-
             elseif players[player].type == 'ia' then
                 local cell = minimax:gamePlay(cells, player)
                 cell.value = player
                 player = minimax:nextPlayer(player)
             end
         end
-
     elseif cells.state == 'end' or cells.state == 'win' then
         cells.state = 'new game'
-    
     elseif cells.state == 'new game' then
         if env.__autotest then
             cells:clear()
@@ -107,7 +103,7 @@ function drawCell(cell, i, j)
         --rect(0, 0, cells.cellSize, cells.cellSize)
         pushMatrix()
         do
-            translate(-cells.cellSize/2, -cells.cellSize/2)
+            translate(-cells.cellSize / 2, -cells.cellSize / 2)
             if j == 2 then line(0, 0, cells.cellSize, 0) end
             if i == 2 then line(0, 0, 0, cells.cellSize) end
             if j == 2 then line(0, cells.cellSize, cells.cellSize, cells.cellSize) end
@@ -119,9 +115,8 @@ function drawCell(cell, i, j)
 
         if value == 'x' then
             stroke(colors.red)
-            line(-w, -w,  w,  w)
-            line(-w,  w,  w, -w)
-
+            line(-w, -w, w, w)
+            line(-w, w, w, -w)
         elseif value == 'o' then
             stroke(colors.green)
             circleMode(CENTER)
@@ -137,7 +132,6 @@ function mousereleased(touch)
     if cells.state == 'new game' then
         cells:clear()
         cells.state = 'play'
-
     elseif players[player].type == 'player' then
         if cells.state == 'play' then
             local x = cells.position.x - cells.cellSize / 2
@@ -165,16 +159,16 @@ function Minimax:init(grid)
 
     self.lines = Array()
 
-    for i=1,grid.w do
-        self.lines:add({i, 1, 0, 1})
+    for i = 1, grid.w do
+        self.lines:add({ i, 1, 0, 1 })
     end
 
-    for i=1,grid.h do
-        self.lines:add({1, i, 1, 0})
+    for i = 1, grid.h do
+        self.lines:add({ 1, i, 1, 0 })
     end
 
-    self.lines:add({1, 1, 1, 1})
-    self.lines:add({1, grid.w, 1, -1})
+    self.lines:add({ 1, 1, 1, 1 })
+    self.lines:add({ 1, grid.w, 1, -1 })
 end
 
 function Minimax:nextPlayer(player)
@@ -193,7 +187,7 @@ function Minimax:minimax(grid, depth, maximizingPlayer, currentPlayer, alpha, be
     local n = #moves
 
     if depth == 0 or n == 0 then
-        return random(self.WIN_VALUE/10) * (maximizingPlayer and -1 or 1)
+        return random(self.WIN_VALUE / 10) * (maximizingPlayer and -1 or 1)
     end
 
     local move, op, bestValue
@@ -205,12 +199,12 @@ function Minimax:minimax(grid, depth, maximizingPlayer, currentPlayer, alpha, be
         op = math.min
     end
 
-    for i=1,n do
+    for i = 1, n do
         move = moves[i]
 
         grid:set(move.x, move.y, currentPlayer)
 
-        local value = self:minimax(grid, depth-1, not maximizingPlayer, self:nextPlayer(currentPlayer), alpha, beta)
+        local value = self:minimax(grid, depth - 1, not maximizingPlayer, self:nextPlayer(currentPlayer), alpha, beta)
 
         if op(value, bestValue) == value then
             bestValue = value
@@ -239,7 +233,7 @@ function Minimax:gamePlay(grid, player)
     local bestMove
 
     local bestValue = MIN
-    for i=1,n do
+    for i = 1, n do
         move = moves[i]
 
         grid:set(move.x, move.y, player)
@@ -258,11 +252,11 @@ end
 
 function Minimax:gameMoves(grid)
     local moves = Array()
-    grid:foreach(function (cell, x, y)
-            if not cell.value then 
-                moves:add({x=x, y=y})
-            end
-        end)
+    grid:foreach(function(cell, x, y)
+        if not cell.value then
+            moves:add({ x = x, y = y })
+        end
+    end)
     return moves
 end
 
@@ -283,9 +277,9 @@ local function testLine(grid, line)
         cell = grid:getCell(x, y)
 
         if cell and (
-            cell.value == nil or
-            cell.value ~= value
-        )
+                cell.value == nil or
+                cell.value ~= value
+            )
         then
             return false
         end
@@ -294,8 +288,8 @@ local function testLine(grid, line)
     return value
 end
 
-function Minimax:gameWin(grid)    
-    for _,line in ipairs(self.lines) do
+function Minimax:gameWin(grid)
+    for _, line in ipairs(self.lines) do
         local winner = testLine(grid, line)
         if winner then
             return winner

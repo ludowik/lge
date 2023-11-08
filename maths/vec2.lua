@@ -10,7 +10,7 @@ function vec2:set(x, y)
     end
     
     self.x = x or 0
-    self.y = y or 0
+    self.y = y or self.x
 
     return self
 end
@@ -152,6 +152,12 @@ end
 function vec2:floor()
     self.x = floor(self.x)
     self.y = floor(self.y)
+    return self
+end
+
+function vec2:ceil()
+    self.x = ceil(self.x)
+    self.y = ceil(self.y)
     return self
 end
 

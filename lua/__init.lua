@@ -1,4 +1,4 @@
---require 'lua.debug'
+require 'lua.table'
 require 'lua.info'
 require 'lua.os'
 require 'lua.require'
@@ -15,6 +15,7 @@ require 'lua.grid'
 require 'lua.function'
 require 'lua.datetime'
 require 'lua.eval'
+require 'lua.argument'
 
 function message(msg)
     love.window.showMessageBox('message', msg, {'OK'})

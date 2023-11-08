@@ -94,7 +94,7 @@ function defineCharactersSet()
             background(colors.black)
             text(character, cx, cy)
         end
-        setContext()
+        resetContext()
 
         img:getImageData()
 

@@ -33,8 +33,8 @@ end
 function Grid:offset(x, y)
     if (1 <= x and x <= self.w and
         1 <= y and y <= self.h)
-    then 
-        return x + (y-1) * self.w
+    then
+        return x + (y - 1) * self.w
     else
         return -1
     end
@@ -42,16 +42,16 @@ end
 
 function Grid:setCell(x, y, cell)
     local offset = self:offset(x, y)
-    if offset == -1 then 
-        return 
+    if offset == -1 then
+        return
     end
     self.items[offset] = cell
 end
 
 function Grid:getCell(x, y)
     local offset = self:offset(x, y)
-    if offset == -1 then 
-        return 
+    if offset == -1 then
+        return
     end
     if self.items[offset] == nil then
         self.items[offset] = self:newCell()
@@ -61,16 +61,16 @@ end
 
 function Grid:set(x, y, value)
     local offset = self:offset(x, y)
-    if offset == -1 then 
-        return 
+    if offset == -1 then
+        return
     end
     self:getCell(x, y).value = value
 end
 
 function Grid:get(x, y)
     local offset = self:offset(x, y)
-    if offset == -1 then 
-        return 
+    if offset == -1 then
+        return
     end
     return self:getCell(x, y).value
 end
@@ -79,9 +79,9 @@ function Grid:foreach(f)
     for x in range(self.w) do
         for y in range(self.h) do
             local cell = self:getCell(x, y)
-            if cell then
-                f(cell, x, y)
-            end
+            if not cell then return end
+            local result = f(cell, x, y)
+            if result == -1 then return end
         end
     end
 end
@@ -97,4 +97,57 @@ function Grid:countCellsWithNoValue()
         end
     end
     return count
+end
+
+function Grid:rotate(clockwise)
+    clockwise = argument(clockwise, true)
+
+    local grid = getmetatable(getmetatable(self)):__call(self.h, self.w)
+    for i=1,grid.w do
+        for j=1,grid.h do
+            if clockwise then
+                grid:set(i, j, self:get(j, self.h-i+1))
+            else
+                grid:set(i, j, self:get(self.w-j+1, i))
+            end
+        end
+    end
+    return grid
+end
+
+function Grid:draw(x, y, drawCellFunction)
+    if not self.size then
+        self.size = Anchor(self.w + 2):size(1, 1).x
+    end
+
+    local size = self.size
+    
+    x = x or 0
+    y = y or 0
+
+    strokeSize(0.2)
+    stroke(Color(1, 1, 1, 0.25))
+    noFill()
+    
+    if not drawCellFunction then
+        for i in range(self.w) do
+            for j in range(self.h) do
+                local cell = self:getCell(i, j)
+                rect(x + (i-1) * size, y + (j-1) * size, size, size)
+            end
+        end
+    end
+
+    for i in range(self.w) do
+        for j in range(self.h) do
+            local cell = self:getCell(i, j)
+            if cell then
+                if cell.draw then
+                    cell:draw(i, j)
+                elseif drawCellFunction then
+                    drawCellFunction(cell, i, j)
+                end
+            end
+        end
+    end
 end

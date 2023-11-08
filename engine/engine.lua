@@ -9,6 +9,7 @@ function Engine.load()
     classUnitTesting()
 
     engine.components = Node()
+    engine.components:add(mouse)
     engine.components:add(timeManager)
     engine.components:add(eventManager)
     engine.components:add(processManager)
@@ -47,7 +48,7 @@ function Engine.quit()
     quit()
 end
 
-function Engine.contains(mouse)    
+function Engine.contains(mouse)
     local object = engine.parameter:contains(mouse.position)
     if object then return object end
 
@@ -63,60 +64,15 @@ end
 
 function Engine.update(dt)
     engine.components:update(dt)
-
-    mouse:update(dt)
-
-    -- TODEL
-    --updateSettings()
 end
 
-local previousCanvas
-function setContext(fb)
-    if fb == nil then return resetContext() end
-    assert(fb and fb.canvas)
-    
-    previousCanvas = love.graphics.getCanvas()
-    love.graphics.setCanvas(fb.canvas)
-    pushMatrix()
-end
 
-function resetContext(fb)
-    popMatrix()
-    love.graphics.setCanvas(previousCanvas)
-end
-
-function render2context(context, f)
-    assert(context)
-
-    setContext(context)
-    love.graphics.origin()
-
-    f()
-    
-    resetContext()
-end
-
-function noLoop()
-    local process = processManager:current()
-    -- TODO
-    if not process then return end
-
-    process.frames = 1
-end
-
-function loop()
-    local process = processManager:current()
-    -- TODO
-    if not process then return end
-
-    process.frames = nil
-end
 
 function redraw()
     local process = processManager:current()
     -- TODO
     if not process then return end
-    
+
     if process.frames then
         process.frames = (process.frames or 0) + 1
     end
@@ -126,26 +82,27 @@ function Engine.draw()
     local process = processManager:current()
     -- TODO
     if not process then return end
-        
+
     love.graphics.reset()
     process:drawSketch()
-    
-    resetMatrix()
+
+    resetMatrix(true)
     resetStyle()
+    
     engine.parameter:draw()
 
     if not fused() then
         engine.navigation:draw(-X, -Y)
     end
-
+    
     local fps = getFPS()
-    if fps < 60 then
+    if fps < refreshRate * 0.95 or fps > refreshRate * 1.05 then
         fontName('arial')
         fontSize(18)
         local w, h = textSize(fps)
         textColor(colors.red)
         textMode(CENTER)
-        text(fps, W-w/2-UI.innerMarge, -Y/2)
+        text(fps, W - w / 2 - UI.innerMarge, -Y / 2)
     end
 end
 
