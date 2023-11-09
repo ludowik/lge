@@ -60,6 +60,10 @@ function vec2:__tostring()
     end
 end
 
+function vec2:__unm()
+    return vec2(-self.x, -self.y)
+end
+
 function vec2.__eq(u, v)
     return
         (u.x == v.x) and

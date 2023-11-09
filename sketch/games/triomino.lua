@@ -31,7 +31,7 @@ end
 
 function Triomino:initGame()
     self.grid = TriominoGrid(10, 10)
-    self.grid.position = self.anchor:pos(2, 2))
+    self.grid.position = self.anchor:pos(2, 2)
     
     self.stack = Node()
     self.stack:add(Node())

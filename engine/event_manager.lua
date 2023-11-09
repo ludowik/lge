@@ -40,7 +40,7 @@ function EventManager:click(id, x, y, presses)
 
     if eventManager.currentObject then
         eventManager.currentObject:click(mouse)
-        eventManager.currentObject = nil
+        -- eventManager.currentObject = nil
     end
 end
 
