@@ -23,7 +23,7 @@ function Shader:loadProgram()
                 return love.graphics.newShader(self.pixelShader.code, self.vertexShader.code)
             end,
             function (msg)
-                print(msg)
+                log(msg)
                 self.errorMsg = msg
             end)
 

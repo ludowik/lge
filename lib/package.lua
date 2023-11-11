@@ -1,12 +1,3 @@
-function makezip()
-    if getOS() == 'windows' then
-        os.execute('.vscode\\build.cmd')
-        
-    else
-        os.execute('.vscode/build.sh')
-    end
-end
-
 function updateScripts(github)
     local url 
     if github then
@@ -22,6 +13,6 @@ function updateScripts(github)
             local data = love.filesystem.write('lge.love', result)
         end,
         function (result, code, headers)
-            print(result, code, headers)
+            log(result, code, headers)
         end)
 end

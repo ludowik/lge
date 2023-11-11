@@ -17,6 +17,6 @@ function evalCode(source)
             return result
         end
     else
-        print(err)
+        log(err)
     end
 end

@@ -4,12 +4,17 @@ function setup()
     N = 0
 end
 
-function draw()
-    noStroke()
-    fill(0, 0, 0, 0.02)
 
-    rectMode(CORNER)
-    rect(0, 0, W, H)
+
+
+
+
+
+
+
+
+function draw()
+    screenBlur(0.05)
 
     noFill()
 

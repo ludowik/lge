@@ -13,7 +13,7 @@ end
 function loadSettings()
     if getOS() == 'web' then return {} end
 
-    return loadFile(settingsFileName) or {
+        return loadFile(settingsFileName) or {
         sketch = 'Hexagone'
     }
 end

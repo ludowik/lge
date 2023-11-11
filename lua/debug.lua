@@ -14,6 +14,7 @@ if arg[#arg] == "vsc_debug" then
             return lldebugger.call(f, false, ...)
         end
     end
+
 elseif arg[#arg] == "-debug" then
     local mobdebug = require "mobdebug"
     mobdebug.start()

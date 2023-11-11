@@ -8,16 +8,19 @@ function Engine.load()
     classSetup()
     classUnitTesting()
 
-    engine.components = Node()
-    engine.components:add(mouse)
-    engine.components:add(timeManager)
-    engine.components:add(eventManager)
-    engine.components:add(processManager)
-
     resetMatrix(true)
     resetStyle()
 
     engine.reload()
+
+    instrument = Instrument()
+
+    engine.components = Array()
+    engine.components:add(mouse)
+    engine.components:add(timeManager)
+    engine.components:add(eventManager)
+    engine.components:add(processManager)
+    engine.components:add(instrument)
 end
 
 function Engine.initParameter()
@@ -45,6 +48,7 @@ function Engine.reload(reload)
 end
 
 function Engine.quit()
+    engine.components:release()
     quit()
 end
 
@@ -66,13 +70,12 @@ function Engine.update(dt)
     engine.components:update(dt)
 end
 
-
-
 function redraw()
     local process = processManager:current()
     -- TODO
     if not process then return end
 
+    process.frames = nil
     if process.frames then
         process.frames = (process.frames or 0) + 1
     end
@@ -90,6 +93,10 @@ function Engine.draw()
     resetStyle()
     
     engine.parameter:draw()
+
+    if instrument.active then
+        instrument:draw()
+    end
 
     if not fused() then
         engine.navigation:draw(-X, -Y)

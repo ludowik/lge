@@ -2,7 +2,7 @@ TweenManager = class() : extends(Node)
 
 function TweenManager.setup()
     for k,v in pairs(tween.easing) do
-        tween.easing:add(v)
+        tween.easingFunctions:add(v)
     end
 end
 
@@ -14,6 +14,7 @@ end
 Tween = class()
 
 tween = Array{
+    easingFunctions = Array{},
     easing = Array{
         linear = function (x) return x end,
         sinIn = function (x) return 1-cos(x*PI/2) end,        
@@ -93,7 +94,7 @@ function Tween:update(dt)
             self.source[k] = self.target[k]
         end
 
-        self:finalize()
+        self:finalize(self.elapsed - self.delay)
     end
 end
 
@@ -115,13 +116,18 @@ function Tween:reset()
     self.elapsed = 0
 end
 
-function Tween:finalize()
+function Tween:finalize(dt)
     self.callback(self)
 
     if self.loop == tween.loop.pingpong then
         self.target = self.origin
         self.elapsed = 0
+
         self:play()
+
+        if dt and dt > 0 then
+            self:update(dt)
+        end
     else
         self.state = 'dead'
     end

@@ -34,8 +34,6 @@ function setup()
     scaley = (maxy - miny)
     
     position = vec2()
-    
-    print(minx, miny, maxx, maxy, scalex, scaley)
 
     zoom = 1
 end

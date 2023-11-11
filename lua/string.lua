@@ -94,11 +94,11 @@ function string.split(s, delimiter_, trim)
     return result
 end
 
-function string.join(tab, delimiter)
+function string.join(t, delimiter)
     local result = ''
-    for i, s in ipairs(tab) do
+    for i, s in ipairs(t) do
         result = result .. tostring(s)
-        if i < #tab then
+        if i < #t then
             result = result .. delimiter
         end
     end

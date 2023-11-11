@@ -281,7 +281,7 @@ function MeshRender:sendUniform(shader, uniformName, uniform, baseName)
             end
 
         else
-            log('send unknown uniform '..uniformName:quote()..' to shader '..shader.name:quote())
+            log('Send unknown uniform '..uniformName:quote()..' to shader '..shader.name:quote())
         end
     end
 end

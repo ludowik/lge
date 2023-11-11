@@ -1,8 +1,8 @@
 require 'lua.table'
-require 'lua.info'
+require 'lua.string'
+require 'lua.log'
 require 'lua.os'
 require 'lua.require'
-require 'lua.string'
 require 'lua.iter'
 require 'lua.attrib'
 require 'lua.class'
@@ -16,7 +16,4 @@ require 'lua.function'
 require 'lua.datetime'
 require 'lua.eval'
 require 'lua.argument'
-
-function message(msg)
-    love.window.showMessageBox('message', msg, {'OK'})
-end
+require 'lua.instrument'

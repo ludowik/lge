@@ -8,12 +8,10 @@ function class(__className)
 
     assert(__className == nil or type(__className) == 'string')
 
-    local info = debug.getinfo(2, "Sl")
-
     local klass = {
         __class = true,
-        __className = __className or info.source:gfind('.+/(.*)%.lua$')(),
-        __classInfo = info.source:gsub('@', './')..':'..info.currentline,
+        __className = __className or scriptName(3),
+        __classInfo = scriptLink(3),
         __init = function(instance, ...)
         end,
         extends = extends,

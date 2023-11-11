@@ -62,11 +62,11 @@ function EventManager:keypressed(key, scancode, isrepeat)
         env.__autotest = not env.__autotest
         love.window.setVSync(env.__autotest and 0 or 1)
     
-    elseif key == 'z' then
-        makezip()
-    
     elseif key == 'i' then
         processManager:setSketch('info')
+
+    elseif key == 'p' then
+        instrument.active = not instrument.active 
 
     elseif key == 's' then
         openSketches()

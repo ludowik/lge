@@ -1,15 +1,8 @@
 local __tan, __atan, __rad, __deg, __sqrt, __cos, __sin = math.tan, math.atan, math.rad, math.deg, math.sqrt, math.cos, math.sin
 
 local stack = Array()
-local useDefaultSystem = false
 
 function resetMatrix(resetStack)
-    if useDefaultSystem then
-        love.graphics.origin()
-        love.graphics.translate(X, Y)
-        return
-    end
-
     __modelMatrix = love.math.newTransform()
     __projectionMatrix = love.math.newTransform()
     __viewMatrix = love.math.newTransform()
@@ -23,22 +16,12 @@ function resetMatrix(resetStack)
 end
 
 function pushMatrix()
-    if useDefaultSystem then
-        love.graphics.push()
-        return
-    end
-
     stack:push(__modelMatrix:clone())
     stack:push(__projectionMatrix:clone())
     stack:push(__viewMatrix:clone())
 end
 
 function popMatrix()
-    if useDefaultSystem then
-        love.graphics.pop()
-        return
-    end
-
     __viewMatrix = stack:pop()
     __projectionMatrix = stack:pop()
     __modelMatrix = stack:pop()
@@ -47,18 +30,13 @@ function popMatrix()
 end
 
 function translate(x, y, z)
-    if useDefaultSystem then
-        love.graphics.translate(x, y)
-        return
-    end
-
     translate_matrix(__modelMatrix, x, y, z)
     setTransformation()
 end
 
+local __tm = love.math.newTransform()
 function translate_matrix(m, x, y, z)
-    local translate = love.math.newTransform()
-    translate:setMatrix(
+    __tm:setMatrix(
         1, 0, 0, x,
         0, 1, 0, y,
         0, 0, 1, z or 0,
@@ -66,23 +44,19 @@ function translate_matrix(m, x, y, z)
 
     m = m or love.math.newTransform()
     if m then
-        m:apply(translate)
+        m:apply(__tm)
         return m
     else
-        return translate
+        return __tm
     end
 end
 
 function rotate(angle, x, y, z)
-    if useDefaultSystem then
-        love.graphics.rotate(angle)
-        return
-    end
-
     rotate_matrix(__modelMatrix, angle, x, y, z)
     setTransformation()
 end
 
+local __rm = love.math.newTransform()    
 function rotate_matrix(m, angle, x, y, z)
     x = x or 0
     y = y or 0
@@ -95,23 +69,22 @@ function rotate_matrix(m, angle, x, y, z)
     c, s = cos(angle), sin(angle)
     -- end
 
-    local rotate = love.math.newTransform()
     if x == 1 then        
-        rotate:setMatrix(
+        __rm:setMatrix(
             1, 0, 0, 0,
             0, c,-s, 0,
             0, s, c, 0,
             0, 0, 0, 1)
     
     elseif y == 1 then
-        rotate:setMatrix(
+        __rm:setMatrix(
             c, 0, s, 0,
             0, 1, 0, 0,
             -s, 0, c, 0,
             0, 0, 0, 1)
     
     else --if z == 1 then -- default
-        rotate:setMatrix(
+        __rm:setMatrix(
             c,-s, 0, 0,
             s, c, 0, 0,
             0, 0, 1, 0,
@@ -120,29 +93,24 @@ function rotate_matrix(m, angle, x, y, z)
 
     m = m or love.math.newTransform()
     if m then
-        m:apply(rotate)
+        m:apply(__rm)
         return m
     else
-        return rotate
+        return __rm
     end
 end
 
-function scale(sx, sy, sz)
-    if useDefaultSystem then
-        love.graphics.scale(sx, sy)
-        return
-    end
-    
+function scale(sx, sy, sz)    
     scale_matrix(__modelMatrix, sx, sy, sz)
     setTransformation()
 end
 
+local __sm = love.math.newTransform()
 function scale_matrix(m, sx, sy, sz)
     sy = sy or sx
     sz = sz or sx
 
-    local scale = love.math.newTransform()
-    scale:setMatrix(
+    __sm:setMatrix(
         sx, 0,  0, 0,
         0, sy,  0, 0,
         0,  0, sz, 0,
@@ -150,10 +118,10 @@ function scale_matrix(m, sx, sy, sz)
 
     m = m or love.math.newTransform()    
     if m then
-        m:apply(scale)
+        m:apply(__sm)
         return m
     else
-        return scale
+        return __sm
     end
 end
 

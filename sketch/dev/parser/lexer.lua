@@ -107,5 +107,4 @@ function lexer(source)
             table.insert(list, token.token)
         end
     end
-    print(table.concat(list))
 end

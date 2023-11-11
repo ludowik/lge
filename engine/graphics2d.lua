@@ -36,7 +36,12 @@ function Graphics2d.initMode()
         })
     end
 
-    refreshRate = flags.refreshrate * 2
+    if getOS() == 'macos' then
+        refreshRate = flags.refreshrate * 2
+    else
+        refreshRate = flags.refreshrate
+    end
+
     devicePixelRatio = love.window.getDPIScale()
 end
 
@@ -44,6 +49,21 @@ function Graphics2d.background(clr, ...)
     clr = Color.fromParam(clr, ...) or colors.black
     love.graphics.setColor(clr.r, clr.g, clr.b, clr.a)
     love.graphics.rectangle('fill', -X, -Y, 2 * X + W, 2 * Y + H)
+end
+
+function Graphics2d.screenBlur(alpha)
+    pushMatrix()
+    resetMatrix()
+
+    alpha = alpha or 0.05
+
+    noStroke()
+    fill(0, 0, 0, alpha)
+
+    rectMode(CORNER)
+    rect(0, 0, W, H)
+
+    popMatrix()
 end
 
 function Graphics2d.noLoop()

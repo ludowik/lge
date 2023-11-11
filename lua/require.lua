@@ -18,6 +18,13 @@ function scriptPath(level)
     return source:match("[@]*(.+)[/\\][#_%w]+%.lua$")
 end
 
+function scriptLink(level)
+    level = level or 3
+    local info = debug.getinfo(level, "Sl")
+    local source = info.source:gsub('@', './')..':'..info.currentline
+    return source
+end
+
 function scriptName(level)
     level = level or 3
     local source = debug.getinfo(level, "S").source

@@ -29,6 +29,16 @@ function Array:removeIfTrue(f)
     end
 end
 
+function Array:count(f)
+    local count = 0
+    for i, v in ipairs(self) do
+        if f(v) then
+            count = count + 1
+        end
+    end
+    return count
+end
+
 function Array:random()
     return self[randomInt(1, #self)]
 end
@@ -41,6 +51,15 @@ function Array:forn(n, functionOrValue)
     else
         for i in range(n) do
             self[i] = functionOrValue
+        end
+    end
+    return self
+end
+
+function Array:release()
+    for i, v in ipairs(self) do
+        if v.release then
+            v:release()
         end
     end
     return self

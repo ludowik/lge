@@ -58,6 +58,10 @@ function ProcessManager:setCurrentSketch(processIndex)
     process.fb:background()
     resetContext()
 
+    if instrument then
+        instrument:reset()
+    end
+
     engine.parameter.items[#engine.parameter.items].items[1].label = process.__className
     engine.parameter.items[#engine.parameter.items].items[2] = process.parameter.items[1]
 
@@ -72,7 +76,7 @@ function ProcessManager:loopProcesses()
     else
         self.__loopProcesses = {
             startProcess = self:current(),
-            frames = LOOP_ITER_PROCESS
+            famesToDraw = LOOP_ITER_PROCESS
         }
     end
 end
@@ -82,10 +86,10 @@ function ProcessManager:update(dt)
     if not self:current() then return end
 
     if self.__loopProcesses then
-        self.__loopProcesses.frames = self.__loopProcesses.frames - 1
-        if self.__loopProcesses.frames <= 0 then
+        self.__loopProcesses.famesToDraw = self.__loopProcesses.famesToDraw - 1
+        if self.__loopProcesses.famesToDraw <= 0 then
             self:next()
-            self.__loopProcesses.frames = LOOP_ITER_PROCESS
+            self.__loopProcesses.famesToDraw = LOOP_ITER_PROCESS
 
             for i in range(10) do
                 self:current():updateSketch(dt)

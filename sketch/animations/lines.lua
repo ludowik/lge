@@ -12,23 +12,24 @@ function reset()
     end
 
     function nextPosition(i)
-        local easing = randomInt(1, #tween.easing)
+        local easing = randomInt(1, #tween.easingFunctions)
         animate(
             vertices[i],
             vec2.randomInScreen(),
             random(0.5, 1.3),
-            tween.easing[easing],
+            tween.easingFunctions[easing],
             function ()
                 nextPosition(i)
             end)
     end
 
     function nextColor(i)
+        local easing = randomInt(1, #tween.easingFunctions)
         animate(
             colors[i],
             Color.random(),
             random(0.8, 1.5),
-            tween.easing[easing],
+            tween.easingFunctions[easing],
             function ()
                 nextColor(i)
             end)

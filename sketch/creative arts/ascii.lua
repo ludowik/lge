@@ -126,7 +126,6 @@ function defineCharactersSet()
     characters = characters:concat()
 
     assert(characters:sub(1,1) == ' ')
-    print(characters)
 
     img:release()
 

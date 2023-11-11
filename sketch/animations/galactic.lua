@@ -14,12 +14,7 @@ function setup()
 end
 
 function draw()
-    noStroke()
-
-    fill(0, 0, 0, 0.05)
-
-    rectMode(CORNER)
-    rect(0, 0, W, H)
+    screenBlur(0.05)
 
     translate(W/2, H/2)
 

@@ -13,7 +13,7 @@ end
 
 function localGlobalOrBuiltin()
     local local_min = math.min
-    info('local min', runningTime(function () local min = local_min end))
-    info('global min', runningTime(function () local min = min end))
-    info('math.min', runningTime(function () local min = math.min end))
+    log('local min', runningTime(function () local min = local_min end))
+    log('global min', runningTime(function () local min = min end))
+    log('math.min', runningTime(function () local min = math.min end))
 end
