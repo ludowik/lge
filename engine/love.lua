@@ -69,7 +69,10 @@ if getOS() == 'ios' then
         touches[id].presses = (touches[id].moved == false) and 1 or 0
 
         if touches[id].presses > 0 then
-            eventManager:click(id, x, y, touches[id].presses)
+            if eventManager:click(id, x, y, touches[id].presses) then
+                touches[id] = nil
+                return true
+            end
         end
         eventManager:mousereleased(id, x, y, touches[id].presses)
 
@@ -87,7 +90,9 @@ else
 
     function love.mousereleased(x, y, button, istouch, presses)
         if presses > 0 then
-            eventManager:click(button, x, y, presses)
+            if eventManager:click(button, x, y, presses) then
+                return true
+            end
         end
         eventManager:mousereleased(button, x, y, presses)
     end

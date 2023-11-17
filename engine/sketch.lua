@@ -47,9 +47,6 @@ end
 function Sketch:update()
 end
 
-function Sketch:callback()
-end
-
 function Sketch:initMenu()
     self.parameter = Parameter('right')
     self.parameter:group(nil, true)

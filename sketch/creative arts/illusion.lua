@@ -1,6 +1,6 @@
 function setup()
     count = 48
-    distance = W/3
+    distance = W/2 - 2*X
     step = 0.0
     delta = 0.05/count
 end
@@ -11,7 +11,7 @@ function draw()
     translate(W/2, H/2)
 
     noStroke()
-    fill(colors.white)
+    fill(Color.hsb(ElapsedTime/10))
 
     for i=0,count-1 do
         a = (i/count)*TAU

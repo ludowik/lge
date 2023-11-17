@@ -1,89 +1,84 @@
 Instrument = class()
 
 function Instrument:init()
-    self.objects = Array{
-        [love] = true,
-        [love.graphics] = true,
-        [love.timer] = true,
-        [love.font] = true,
-        [lldebugger] = true,
-        [debug] = true,
-        [Instrument] = true,
-        [self] = true,
-        [coroutine] = true,
-        [io] = true,
-        [string] = true,
-        [table] = true,
-    }
-
-    self.functions = Array{
-    }
-
-    self:scanFunctions(_G, '_G')
-    --self:instrumentFunctions(_G)
-
-    log('Instrumented functions', #self.functions)
+    self:avoidReferences()
+    self:scanFunctions()
+    self:instrumentFunctions(_G)
 
     self.level = 0
     self.columnSize = 0
-    self.calls = {}
 end
 
-function Instrument:scanFunctions(t, tname)
-    if self.objects[t] then return end
-    self.objects[t] = true
+function Instrument:scanFunctions()
+    self.functions = Array()
+    self:scanFunctionsProc(_G, '_G', {})
+end
 
-    for k,v in pairs(t) do
-        if self:isFunction(tname, k) then
-            if type(v) == 'function' then
-                local ref = {
-                    parent = t,
-                    parentName = tname,
-                    name = k,
-                    func = v,
-                }
-                self:resetFunction(ref)
-                
-                self.functions:add(ref)
+function Instrument:scanFunctionsProc(t, tname, objects)
+    if objects[t] then return end
+    objects[t] = true
 
-            elseif type(v) == 'table' then
-                self:scanFunctions(v, k)
+    for k,ref in pairs(t) do
+        if self:isAvailableReference(t, k, ref) then
+            if type(ref) == 'function' then
+                self.functions:add(Instrument.Function(t, tname, k, ref))
+
+            elseif type(ref) == 'table' then
+                self:scanFunctionsProc(ref, k, objects)
             end
         end
     end
 end
 
-function Instrument:resetFunction(ref)
-    ref.frames = 0
-    ref.countByFrame = 0
-    ref.countByFrameAvg = 0
-    ref.countTotal = 0
-    ref.elapsedTimeByFrame = 0
-    ref.elapsedTimeByFrameAvg = 0
-    ref.elapsedTime = 0
-    ref.elapsedTimeTotal = 0
-    ref.deltaTime = 0
-    ref.deltaTimeAvg = 0
+Instrument.Function = class()
+
+function Instrument.Function:init(t, tname, k, v)
+    self.parent = t
+    self.parentName = tname
+    self.name = k
+    self.func = v
+
+    self:reset()
 end
 
-function Instrument:isFunction(tname, name)
-    return type(name) == 'string' and
-        not (name):inList(Instrument.systemfunctions) and
-        not (tname..'.'..name):inList(Instrument.systemfunctions)
+function Instrument.Function:reset()
+    self.frames = 0
+    self.countByFrame = 0
+    self.countByFrameAvg = 0
+    self.countTotal = 0
+    self.elapsedTimeByFrame = 0
+    self.elapsedTimeByFrameAvg = 0
+    self.elapsedTime = 0
+    self.elapsedTimeTotal = 0
+    self.deltaTime = 0
+    self.deltaTimeAvg = 0
+end
+
+function Instrument:isAvailableReference(t, k, f)
+    return (
+            type(k) == 'string' and
+        not Instrument.avoidModules[t] and
+        not Instrument.avoidFunctions[f])
 end
 
 function Instrument:instrumentFunctions(t)
+    local ipairs, insert, unpack, getTime = ipairs, table.insert, table.unpack, love.timer.getTime
+
+    self.calls = {}
+
     for _,ref in ipairs(self.functions) do
+
         ref.parent[ref.name] = function (...)
             -- log(string.tab(self.level)..scriptLink(3), ref.parentName..'.'..ref.name)
             -- self.level = self.level + 1
-            local startTime, endTime, innerTime, results, calls
+            local startTime, innerTime, endTime, results, push_calls
 
+            startTime = getTime()
             innerTime = 0
-            startTime = love.timer.getTime()
-            do 
-                table.insert(self.calls, ref)
-                calls = self.calls
+
+            do
+                insert(self.calls, ref)
+                push_calls = self.calls
                 self.calls = {}
 
                 results = { ref.func(...) }
@@ -91,11 +86,12 @@ function Instrument:instrumentFunctions(t)
                 for _,v in ipairs(self.calls) do
                     innerTime = innerTime + v.elapsedTime
                 end
-                self.calls = calls                
+                self.calls = push_calls                
 
                 ref.countByFrame = ref.countByFrame + 1
             end
-            endTime = love.timer.getTime()
+
+            endTime = getTime()
 
             ref.elapsedTime = endTime - startTime - innerTime
             ref.elapsedTimeByFrame = ref.elapsedTimeByFrame + ref.elapsedTime
@@ -128,29 +124,12 @@ end
 
 function Instrument:reset()
     for _,ref in ipairs(self.functions) do
-        self:resetFunction(ref)
-    end
-end
-
-function Instrument:release()
-    self:reports()
-end
-
-function Instrument:reports()
-    self.functions:sort(function (a, b)    
-        return a.elapsedTimeByFrameAvg > b.elapsedTimeByFrameAvg
-    end)
-
-    log('Called Functions', self.functions:count(function (a) return a.countTotal > 0 end))
-
-    for i=1,10 do
-        local ref = self.functions[i]
-        log(ref.parentName..'.'..ref.name, string.format('{deltaTimeAvg} * {countByFrameAvg} = {elapsedTimeByFrameAvg}', self.functions[i]))
+        ref:reset()
     end
 end
 
 function Instrument:draw()
-    screenBlur(0.75)
+    screenBlur(0.5)
 
     fontName('arial')
     fontSize(15)
@@ -176,41 +155,53 @@ function Instrument:draw()
     end
 end
 
-Instrument.systemfunctions = {
-    'loaders',
-    'assert',
-    'error',
-    'warning',
-    'log',
-    'setmetatable',
-    'getmetatable',
-    'require',
-    'requireLib',
-    'scriptLink',
-    'scriptPath',
-    'scriptName',
-    'setfenv',
-    'class',
-    'type',
-    'pairs',
-    'ipairs',
-    'unpack',
-    'tonumber',
-    'tostring',
-    'print',
-    'getTime',
-    'sleep',
-    'xpcall',
-    'present',
-    'setup',
-    'initMode',
-    'setMode',
-    'load',
-    'reload',
-    'declareSketches',
-    'declareSketch',
-    'setSketch',
-    'setCurrentSketch',
-    'Engine.update',
-    'Engine.draw',
+Instrument.avoidFunctions = {
+    print, log, message, warning, error,
+    class, setmetatable, getmetatable, setfenv,
+    ipairs, pairs,
+    unpack,
+    assert,
+    type, tonumber, tostring,
+    require, requireLib,
+    xpcall,
 }
+
+Instrument.avoidModules = {
+    Instrument,
+    Instrument.Function,
+    love,
+    lldebugger, debug,
+    coroutine,
+}
+
+function Instrument:avoidReferences()
+    for i=1,#Instrument.avoidFunctions do
+        local func = Instrument.avoidFunctions[i]
+        if func then
+            Instrument.avoidFunctions[func] = true
+        end
+    end
+    
+    for i=1,#Instrument.avoidModules do
+        local module = Instrument.avoidModules[i]
+        if module then
+            Instrument.avoidModules[module] = true
+
+            local function scanModule(module, objects)
+                if objects[module] then return end
+                objects[module] = true
+                
+                for _,f in pairs(module) do
+                    if type(f) == 'function' then
+                        Instrument.avoidFunctions[f] = true
+
+                    elseif type(f) == 'table' then
+                        scanModule(f, objects)
+                    end
+                end
+            end
+
+            scanModule(module, {})
+        end
+    end
+end

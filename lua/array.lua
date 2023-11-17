@@ -14,6 +14,7 @@ Array.add = table.insert
 
 Array.push = table.insert
 Array.pop = table.remove
+
 Array.shift = function(t) return table.remove(t, 1) end
 
 table.unpack = table.unpack or unpack

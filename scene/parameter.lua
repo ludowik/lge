@@ -60,6 +60,11 @@ end
 function Parameter:addMainMenu()
     self.menu = self:group('main')
 
+    self:action('instrument', function ()
+        instrument:instrumentFunctions()
+        instrument.active = not instrument.active
+    end)
+
     self:action('update from git', function ()
         updateScripts(true)
         quit()
