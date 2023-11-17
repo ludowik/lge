@@ -8,10 +8,6 @@ function ProcessManager:init()
     self.processIndex = 1
 end
 
-function ProcessManager:add(env)
-    Node.add(self, env)
-end
-
 function ProcessManager:setSketch(name)
     if not name then return end
 
@@ -24,13 +20,18 @@ function ProcessManager:setSketch(name)
     end
 end
 
-function ProcessManager:getSketch(name)
-    if not name then return end
+function ProcessManager:getSketch(nameOrIndex)
+    if not nameOrIndex then return end
 
-    name = name:lower()
-    for i, env in ipairs(self.items) do
-        if env.__className == name then
-            return env.sketch
+    if type(nameOrIndex) == 'number' then
+        return self.items[nameOrIndex]
+        
+    else
+        nameOrIndex = nameOrIndex:lower()
+        for i, env in ipairs(self.items) do
+            if env.__className == nameOrIndex then
+                return env.sketch
+            end
         end
     end
 end
