@@ -39,8 +39,10 @@ function EventManager:click(id, x, y, presses)
     mouse:released(id, x, y, presses)
 
     if eventManager.currentObject then
-        eventManager.currentObject:click(mouse)
-        -- eventManager.currentObject = nil
+        if eventManager.currentObject:click(mouse) then
+            eventManager.currentObject = nil
+            return true
+        end
     end
 end
 
