@@ -15,9 +15,11 @@ function setup()
 
     parameter:link('What is...', 'https://beltoforion.de/en/game_of_life')
 
+    parameter:action('draw mod', function () grid:switchDrawMode() end)
     parameter:action('clear', function () grid:clear() end)
     parameter:action('reset', function () grid:reset() end)
     parameter:action('pause', function () grid:pause() end)
+    parameter:action('frame', function () grid:frame() end)
     parameter:action('resume', function () grid:resume() end)
 end
 
@@ -62,13 +64,20 @@ class 'GolGrid' : extends(Grid)
 
 function GolGrid:init(...)
     Grid.init(self, ...)
-    self.status = 'active'
+
+    self.status = 'paused'
+    self.drawDelete = true
+end
+
+function GolGrid:switchDrawMode()
+    self.drawDelete = not self.drawDelete
+    print(self.drawDelete)
 end
 
 function GolGrid:reset()
     self:clear()
 
-    self:loadSchema(schemas.gun)
+    self:loadSchema(schemas.repliqua)
 
     -- for i=1,CELLS_COUNT.x do
     --     self:addLife()
@@ -80,6 +89,10 @@ end
 
 function GolGrid:pause()
     self.status = 'paused'
+end
+
+function GolGrid:frame()
+    self.status = 'frame'
 end
 
 function GolGrid:resume()
@@ -106,7 +119,11 @@ function GolGrid:setLife(x, y)
 end
 
 function GolGrid:update(dt)
-    if self.status ~= 'active' then return end
+    if self.status ~= 'active' and self.status ~= 'frame' then return end
+
+    if self.status == 'frame' then
+        self.status = 'paused'
+    end
 
     delay = delay + dt
 
@@ -179,11 +196,13 @@ function GolGrid:draw()
     rectMode(CORNER)
 
     self:foreach(function (cell, i, j)
-        if cell.value or cell.lastDelete then
+        if cell.value or (cell.lastDelete and self.drawDelete) then
             if cell.lastDelete then
                 fill(colors.red)
+
             elseif cell.lastCreate then
                 fill(colors.blue)
+
             else
                 fill(colors.black)
             end
@@ -233,5 +252,13 @@ schemas = {
         {0, 1, 0, 1, 0, 0},
         {0, 0, 1, 1, 0, 0},
         {0, 0, 0, 0, 0, 0},
+    },
+    repliqua = {
+        {0, 1, 0, 0},
+        {1, 1, 1, 0},
+        {1, 0, 0, 0},
+        {0, 0, 1, 1},
+        {1, 1, 0, 0},
+        {0, 1, 0, 0},
     }
 }

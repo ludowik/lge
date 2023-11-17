@@ -14,5 +14,8 @@ random = function (min, max)
 end
 randomInt = love.math.random
 
-noise = love.math.simplexNoise or love.math.noise
+noise = love.math.simplexNoise or love.math.perlinNoise or love.math.noise
 noiseSeed = love.math.setRandomSeed
+
+simplexNoise = love.math.simplexNoise
+perlinNoise = love.math.perlinNoise
