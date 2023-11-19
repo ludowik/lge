@@ -11,9 +11,9 @@ function UICheck:init(label, object, callback)
     end
 end
 
-function UICheck:click()
+function UICheck:click(mouse)
     self.value:toggle()
-    MouseEvent.click(self)
+    MouseEvent.click(self, mouse)
 end
 
 function UICheck:getLabel()

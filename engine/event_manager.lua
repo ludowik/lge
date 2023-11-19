@@ -10,7 +10,7 @@ function EventManager:init()
 end
 
 function EventManager:mousepressed(id, x, y, presses)
-    mouse:pressed(id, x, y, presses)
+    mouse:pressed(id, x, y, 0)
 
     eventManager.currentObject = Engine.contains(mouse)
     if eventManager.currentObject then
@@ -27,22 +27,19 @@ function EventManager:mousemoved(id, x, y)
 end
 
 function EventManager:mousereleased(id, x, y, presses)
-    mouse:released(id, x, y, presses)
+    mouse:released(id, x, y, 0)
     
     if eventManager.currentObject then
+        if mouse.elapsedTime < 0.15 and mouse.move:len() <= 1 then
+            mouse.presses = 1
+            if eventManager.currentObject:click(mouse) then
+                eventManager.currentObject = nil
+                return
+            end
+        end
+        
         eventManager.currentObject:mousereleased(mouse)
         eventManager.currentObject = nil
-    end
-end
-
-function EventManager:click(id, x, y, presses)
-    mouse:released(id, x, y, presses)
-
-    if eventManager.currentObject then
-        if eventManager.currentObject:click(mouse) then
-            eventManager.currentObject = nil
-            return true
-        end
     end
 end
 
@@ -68,7 +65,7 @@ function EventManager:keypressed(key, scancode, isrepeat)
         processManager:setSketch('info')
 
     elseif key == 'p' then
-        instrument.active = not instrument.active 
+        instrument:toggleState()
 
     elseif key == 's' then
         openSketches()

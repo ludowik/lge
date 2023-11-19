@@ -23,7 +23,7 @@ function navigate(category)
         link:attrib{
             styles = {
                 fillColor = colors.gray,
-                fontSize = 32
+                fontSize = 28
             }
         }
 
@@ -44,7 +44,7 @@ function navigate(category)
                 categories[env.__category]:attrib{
                     styles = {
                         fillColor = colors.gray,
-                        fontSize = 32
+                        fontSize = 28
                     }
                 }
 
@@ -64,7 +64,7 @@ function navigate(category)
         link:attrib{
             styles = {
                 fillColor = colors.transparent,
-                fontSize = 32
+                fontSize = 28
             }
         }
     end)

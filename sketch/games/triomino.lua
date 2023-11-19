@@ -3,8 +3,10 @@ Triomino = class() : extends(Sketch)
 function Triomino:init()
     Sketch.init(self)
 
-    self.anchor = Anchor(14)
+    self.anchor = Anchor(12)
+
     SIZE = self.anchor:size(1).x
+    SCALE = 0.7
 
     self.minos = Array{
         Mino("1, 1"),
@@ -27,11 +29,14 @@ function Triomino:init()
     }
 
     self:initGame()
+
+    self.parameter:watch('Lines', Bind(self, 'lines'))
+    self.parameter:watch('Score', Bind(self, 'score'))
 end
 
 function Triomino:initGame()
     self.grid = TriominoGrid(10, 10)
-    self.grid.position = self.anchor:pos(2, 2)
+    self.grid.position = self.anchor:pos(1, (self.anchor.nj-10)/2)
     
     self.stack = Node()
     self.stack:add(Node())
@@ -39,8 +44,13 @@ function Triomino:initGame()
     self.stack:add(Node())
 
     for i,v in self.stack:ipairs() do
-        v.position = self.anchor:pos(2+(i-1)*10/3, self.anchor.nj-(self.anchor.nj-10)/4)
+        v.position = self.anchor:pos(
+            i*12/4,
+            10+3/4*(self.anchor.nj-10))
     end
+
+    self.lines = 0
+    self.score = 0 
 
     self:completeStack()
 end
@@ -49,48 +59,56 @@ function Triomino:completeStack()
     for i,v in self.stack:ipairs() do
         if v:count() == 0 then 
             local mino = self.minos:random():clone()
-            v:add(mino)
+            mino.node = v
 
-            mino.grid.size = mino.size
+            v:add(mino)
         end
     end
 end
 
-function Triomino:keypressed()
-end
-
 function Triomino:click(mouse)
-    local mino = self.stack:contains(mouse.position)
-    if mino then
-        mino.grid = mino.grid:rotate()
+    self.mino = self.stack:contains(mouse.position)
+    if self.mino then
+        self.mino.grid = self.mino.grid:rotate(mouse.id == 1)
+        self.mino.grid.rotation = (mouse.id == 1 and -1 or 1) * PI/2
+        animate(self.mino.grid, {rotation = 0}, 1/6)
+        self:updateShadow(self.mino)
     end
 end
 
 function Triomino:mousepressed(mouse)
     self.mino = self.stack:contains(mouse.position)
     if self.mino then
-        self.mino.oldPosition = self.mino.position:clone()
+        self.mino.node.oldPosition = self.mino.node.position:clone()
     end
 end
 
 function Triomino:mousemoved(mouse)
     if self.mino then
-        self.mino.position:add(mouse.deltaPos)
+        self.mino.node.position:add(mouse.deltaPos)
+        self.mino.grid.scale = 1
 
-        local cellPosition = self:getAvailableMove(self.mino)
-        if cellPosition then
-            self.shadow = self.mino:clone()
-            self.shadow.position:set(cellPosition*SIZE + (self.grid.position - vec2(5*SIZE)))
-        else
-            self.shadow = nil
-        end
+        self:updateShadow(self.mino)
     end
 end
 
 function Triomino:mousereleased(mouse)
     if self.mino then
-        self.mino.position = self.mino.oldPosition
+        local cellPosition = self:getAvailableMove(self.mino)
+        
+        if cellPosition then
+            self:pushMino(self.mino)
+            self:deleteLinesAndRows()
+
+            self.mino.node:clear()
+        end
+        
+        self.mino.node.position = self.mino.node.oldPosition
+        self.mino.grid.scale = SCALE
+
         self.shadow = nil
+
+        self:completeStack()
     end
 end
 
@@ -100,7 +118,7 @@ function Triomino:getAvailableMove(mino)
     local grid = mino.grid
     local position = mino.position
 
-    local cellPosition = ((position - self.grid.position) / SIZE):ceil()
+    local cellPosition = ((position - self.grid.position) / SIZE):ceil() - vec2(1, 1)
     local x, y = cellPosition.x, cellPosition.y
 
     local availableMove = true
@@ -120,18 +138,106 @@ function Triomino:getAvailableMove(mino)
     return availableMove and cellPosition
 end
 
+function Triomino:updateShadow(mino)
+    local cellPosition = self:getAvailableMove(mino)
+    if cellPosition then
+        self.shadow = mino:clone()
+        self.shadow.node = nil
+        self.shadow.scale = 1
+        self.shadow.rotation = 0
+        self.shadow.position:set(self.grid.position + cellPosition*SIZE)
+        self.shadow.grid.clr = colors.gray
+    else
+        self.shadow = nil
+    end
+end
+
+function Triomino:pushMino(mino)
+    local grid = mino.grid
+    local position = mino.position
+
+    local cellPosition = ((position - self.grid.position) / SIZE):ceil() - vec2(1, 1)
+    local x, y = cellPosition.x, cellPosition.y
+
+    grid:foreach(function (block, i, j)
+        if not block.value then return end
+        self.grid:set(x+i, y+j, block.value)
+    end)
+end
+
+function Triomino:deleteLinesAndRows()
+    local lines = 0
+    
+    local j = self.grid.h
+    while j > 0 do
+        if self:hasLine(j) then
+            self:deleteLine(j)
+            lines = lines + 1
+        else
+            j = j - 1
+        end
+    end
+
+    local i = self.grid.w
+    while i > 0 do
+        if self:hasRow(i) then
+            self:deleteRow(i)
+            lines = lines + 1
+        else
+            i = i - 1
+        end
+    end
+
+    if lines > 0 then
+        self.lines = self.lines + lines
+        self.score = self.score + 1
+    end
+end
+
+function Triomino:hasLine(j)
+    local n = 0
+    for i in range(self.grid.w) do
+        if self.grid:get(i, j) then
+            n = n + 1
+        end
+    end
+    return n == self.grid.w
+end
+
+function Triomino:hasRow(i)
+    local n = 0
+    for j in range(self.grid.h) do
+        if self.grid:get(i, j) then
+            n = n + 1
+        end
+    end
+    return n == self.grid.h
+end
+
+function Triomino:deleteLine(j)
+    for i in range(self.grid.w) do
+        self.grid:set(i, j, nil)
+    end
+end
+
+function Triomino:deleteRow(i)
+    for j in range(self.grid.h) do
+        self.grid:set(i, j, nil)
+    end
+end
+
 function Triomino:draw()
     background()
 
-    self.grid:draw(true)
-
-    self.stack:draw()
+    self.grid:draw(true, self.grid.position)
 
     if self.shadow then
-        self.shadow:draw()
+        self.shadow:draw(false, self.shadow.position)
     end
+    
+    self.stack:draw()
 
-    axes2d()
+    grid2d(SIZE)
 end
 
 Mino = class() : extends(Rect)
@@ -151,6 +257,9 @@ function Mino:init(init)
     local r = 1
     
     self.grid = TriominoGrid(m, n)
+
+    self.grid.scale = SCALE
+    self.grid.rotation = 0
     
     self.clr = Color.random()
 
@@ -162,52 +271,61 @@ function Mino:init(init)
         end
         r = r + 1
     end
-
-    self.size:set(3*SIZE, 3*SIZE)
 end
 
-function Mino:draw()
-    pushMatrix()
-    translate(self.position.x, self.position.y)
+function Mino:draw()    
+    if self.node then
+        self.size = self.grid.size * (self.grid.scale or 1)
+        self.position = self.node.position - self.size / 2
+    end
 
-    self.grid:draw()
-
-    popMatrix()
+    self.grid:draw(false, self.position, self.size)
 end
 
 TriominoGrid = class() : extends(Grid)
 
 function TriominoGrid:init(...)
     Grid.init(self, ...)
-
-    self.size = vec2(3*SIZE, 3*SIZE)
+    self.size = vec2(self.w*SIZE, self.h*SIZE)
 end
 
-function TriominoGrid:draw(border, position)
+function TriominoGrid:draw(border, position, size)
     pushMatrix()
-    if position then
-        translate(self.position.x, self.position.y)
+
+    position = position or self.position
+    size = size or self.size
+
+    translate(position.x, position.y)
+    translate(size.x/2, size.y/2)
+
+    if self.scale then
+        scale(self.scale)
     end
 
-    -- if self.size then
-    --     local n = max(self.w, self.h)
-    --     translate(n*SIZE/2, n*SIZE/2)
-    -- end
+    if self.rotation then
+        rotate(self.rotation)
+    end
+    
+    local w, h, marge = self.w, self.h, 0
 
     Grid.draw(self, 0, 0, function(cell, i, j)
         if cell.value then
             noStroke()
-            fill(cell.value)
+            fill(self.clr or cell.value)
+
         else
             if not border then return end
 
             stroke(colors.gray)
             strokeSize(1)
             noFill()
+
+            marge = 1
         end
 
         circleMode(CENTER)
-        circle((i-0.5-self.w/2)*SIZE, (j-0.5-self.h/2)*SIZE, SIZE/2-1)
+
+        circle((i-(self.w+1)/2)*SIZE, (j-(self.h+1)/2)*SIZE, SIZE/2-marge)
     end)
 
     popMatrix()

@@ -70,15 +70,6 @@ function push2globals(klass)
     end
 end
 
-function classnameof(object)
-    return attributeof('__className', object) or 'nil'
-end
-
-function attributeof(attrName, object)
-    global.__object__ = object
-    return evalExpression('global.__object__.'..attrName)
-end
-
 function classSetup(env)
     env = env or _G
 
@@ -103,16 +94,18 @@ function classUnitTesting()
     end
 end
 
-function composition(klass)
-    if klass and klass.__className then
-        if klass.__inheritsFrom then
-            return klass.__className..' <= '..composition(klass.__inheritsFrom[1])
-        else
-            return klass.__className
-        end
-    end
+function classnameof(object)
+    return attributeof('__className', object) or type(object)
+end
+
+function attributeof(attrName, object)
+    if not object or type(object) ~= 'table' then return end
+    return object[attrName]
+    -- global.__object__ = object
+    -- return evalExpression('global.__object__.'..attrName)
 end
 
 class().unitTest = function () 
     assert(true)
+    assert(classnameof({}) == 'table')
 end

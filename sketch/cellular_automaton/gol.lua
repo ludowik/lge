@@ -11,16 +11,20 @@ function setup()
 
     grid:reset()
 
+    state = 'paused'
+    drawDelete = true
+
     sizeCell = vec2(CELLS_SIZE, CELLS_SIZE)
 
     parameter:link('What is...', 'https://beltoforion.de/en/game_of_life')
 
-    parameter:action('draw mod', function () grid:switchDrawMode() end)
+    parameter:watch('grid.status')
+
+    parameter:action('draw life', function () grid:switchDrawMode() end)
     parameter:action('clear', function () grid:clear() end)
     parameter:action('reset', function () grid:reset() end)
-    parameter:action('pause', function () grid:pause() end)
-    parameter:action('frame', function () grid:frame() end)
-    parameter:action('resume', function () grid:resume() end)
+    parameter:action('pause/resume', function () grid:switchState() end)
+    parameter:action('next frame', function () grid:nextFrame() end)    
 end
 
 function cell2screen(i, j)
@@ -64,14 +68,10 @@ class 'GolGrid' : extends(Grid)
 
 function GolGrid:init(...)
     Grid.init(self, ...)
-
-    self.status = 'paused'
-    self.drawDelete = true
 end
 
 function GolGrid:switchDrawMode()
-    self.drawDelete = not self.drawDelete
-    print(self.drawDelete)
+    drawDelete = not drawDelete
 end
 
 function GolGrid:reset()
@@ -87,16 +87,16 @@ function GolGrid:reset()
     self.position = vec2()
 end
 
-function GolGrid:pause()
-    self.status = 'paused'
+function GolGrid:switchState()
+    if state == 'active' then
+        state = 'paused'
+    else
+        state = 'active'
+    end
 end
 
-function GolGrid:frame()
-    self.status = 'frame'
-end
-
-function GolGrid:resume()
-    self.status = 'active'
+function GolGrid:nextFrame()
+    state = 'frame'
 end
 
 function GolGrid:addLife(x, y)
@@ -119,10 +119,10 @@ function GolGrid:setLife(x, y)
 end
 
 function GolGrid:update(dt)
-    if self.status ~= 'active' and self.status ~= 'frame' then return end
+    if state ~= 'active' and state ~= 'frame' then return end
 
-    if self.status == 'frame' then
-        self.status = 'paused'
+    if state == 'frame' then
+        state = 'paused'
     end
 
     delay = delay + dt
@@ -196,7 +196,7 @@ function GolGrid:draw()
     rectMode(CORNER)
 
     self:foreach(function (cell, i, j)
-        if cell.value or (cell.lastDelete and self.drawDelete) then
+        if cell.value or (cell.lastDelete and drawDelete) then
             if cell.lastDelete then
                 fill(colors.red)
 

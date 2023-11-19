@@ -96,7 +96,7 @@ end
 function Node:mousereleased(mouse)
     local result = self:contains(mouse.position)
     if result then
-        result:click()
+        result:click(mouse)
         return true
     end
 end

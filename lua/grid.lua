@@ -115,12 +115,11 @@ function Grid:rotate(clockwise)
     return grid
 end
 
-function Grid:draw(x, y, drawCellFunction)
-    if not self.size then
-        self.size = Anchor(self.w + 2):size(1, 1).x
-    end
-
-    local size = self.size
+function Grid:draw(x, y, drawCellFunction)    
+    local size =
+        (type(self.size) == 'number' and self.size) or
+        (type(self.size) == 'table' and self.size.x) or
+        (Anchor(self.w + 2):size(1, 1).x)
     
     x = x or 0
     y = y or 0

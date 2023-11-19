@@ -56,28 +56,36 @@ function UISlider:draw()
     text(strValue, self.size.x - w - self.size.y, 0)
 end
 
-function UISlider:mousemoved(mouse)
-    local rx = mouse.deltaPos.x / self.size.x
-
-    local deltaValue = rx * (self.maxValue - self.minValue)
-    local newValue = self.value:get() + deltaValue
-    self:set(newValue)
-end
-
-function UISlider:mousepressed(mouse)
+function UISlider:click(mouse)
     local dx_left = mouse.position.x - self.position.x
     local dx_right = self.size.x - dx_left
 
     if dx_left < self.size.y then
         self:incrementOrDecrement(-1)
+    
     elseif dx_right < self.size.y then
         self:incrementOrDecrement(1)
+        
+    else
+        local rx = (mouse.position.x - self.position.x - self.size.y) / (self.size.x - 2*self.size.y)
+        local newValue = rx * (self.maxValue - self.minValue)
+
+        self:set(newValue)
     end
+end
+
+function UISlider:mousemoved(mouse)
+    local rx = mouse.deltaPos.x / (self.size.x - 2*self.size.y)
+    local deltaValue = rx * (self.maxValue - self.minValue)
+    local newValue = self.value:get() + deltaValue
+
+    self:set(newValue)
 end
 
 function UISlider:incrementOrDecrement(incrementOrDecrement)
     local deltaValue = incrementOrDecrement * self.incrementValue
     local newValue = self.value:get() + deltaValue
+
     self:set(newValue)
 end
 
@@ -86,6 +94,7 @@ function UISlider:set(newValue)
     if self.intValue then
         newValue = round(newValue)
     end
+
     self.value:set(newValue)
-    self:click()
+    self:callback()
 end

@@ -128,16 +128,16 @@ function Tetris:keypressed(key)
     end
 
     if key == 'left' then
-        self:makeMove(LEFT)
+        self:makeTranslation(self.current, LEFT)
 
     elseif key == 'right' then
-        self:makeMove(RIGHT)
+        self:makeTranslation(self.current, RIGHT)
 
     elseif key == 'down' then
-        self:makeMove(DOWN)
+        self:makeTranslation(self.current, DOWN)
     
     elseif key == 'up' then
-        self:makeRotation(false)
+        self:makeRotation(self.current, false)
     
     elseif key == 'space' then
         self:playTetrimino()
@@ -164,14 +164,14 @@ function Tetris:mousemoved(mouse)
     if abs(dx) >= SIZE then
         self.startPosition = vec2(mouse.position.x, mouse.position.y)
         if dx > 0 then
-            self:makeMove(RIGHT)
+            self:makeTranslation(self.current, RIGHT)
         else
-            self:makeMove(LEFT)
+            self:makeTranslation(self.current, LEFT)
         end
 
     elseif dy >= SIZE then
         self.startPosition = vec2(mouse.position.x, mouse.position.y)
-        self:makeMove(DOWN)
+        self:makeTranslation(self.current, DOWN)
     end
 end
 
@@ -184,13 +184,13 @@ function Tetris:mousereleased(mouse)
         if mouse.position.x < 2*SIZE then
             self:playTetrimino()
         else
-            self:makeRotation(true)
+            self:makeRotation(self.current, true)
         end
     end
 end
 
 function Tetris:playTetrimino()
-    while self:makeMove(DOWN) do end
+    while self:makeTranslation(self.current, DOWN) do end
     self:pushTetrimino()
     self:hasLines()
     self:nextTetrimino()
@@ -216,7 +216,7 @@ function Tetris:nextTetrimino()
 
     self:completeStack()
 
-    if not self:isAvailableMove('move', DOWN) then
+    if not self:isAvailableMove(self.current, {translation=DOWN}) then
         self.current = nil
         self.__isGameOver = true
     end
@@ -224,18 +224,26 @@ end
 
 function Tetris:updateShadow()
     self.shadow = self.current:clone()
-    while self:isAvailableMove('move', DOWN, self.shadow) do
+    while self:isAvailableMove(self.shadow, {translation=DOWN}) do
         self.shadow.position:add(DOWN)
     end
 end
 
-function Tetris:makeMove(move, tetrimino)
-    tetrimino = tetrimino or self.current
-    if self:isAvailableMove('move', move, tetrimino) then
-        self.lastMove = 'move'
-        tetrimino.position:add(move)
+function Tetris:makeMove(tetrimino, move)
+    if move.translation ~= nil then
+        tetrimino:makeTranslation(tetrimino, move.translation)
+    end
+    if move.rotation ~= nil then
+        tetrimino:makeTranslation(tetrimino, move.rotation)
+    end
+end
+
+function Tetris:makeTranslation(tetrimino, translation)
+    if self:isAvailableMove(tetrimino, {translation=translation}) then
+        self.lastMove = 'translation'
+        tetrimino.position:add(translation)
         self:updateShadow()
-        if move == DOWN then
+        if translation == DOWN then
             self.distance = 0
         end
         return true
@@ -243,29 +251,39 @@ function Tetris:makeMove(move, tetrimino)
     return false
 end
 
-function Tetris:makeRotation(clockwise, tetrimino)
-    tetrimino = tetrimino or self.current
-    if self:isAvailableMove('rotation', clockwise, tetrimino) then
+function Tetris:makeRotation(tetrimino, clockwise)
+    if self:isAvailableMove(tetrimino, {rotation=clockwise}) then
         self.lastMove = 'rotation'
         tetrimino:rotate(clockwise)
         self:updateShadow()
         return true
     end
+
+    local translations = {DOWN}
+
+    for _,translation in ipairs(translations) do
+        if self:isAvailableMove(tetrimino, {translation=translation, rotation=clockwise}) then
+            self.lastMove = 'rotation'
+            tetrimino.position:add(translation)
+            tetrimino:rotate(clockwise)
+            self:updateShadow()
+            return true
+        end
+    end
+
     return false
 end
 
-function Tetris:isAvailableMove(type, moveOrRotation, tetrimino)
-    tetrimino = tetrimino or self.current
-
+function Tetris:isAvailableMove(tetrimino, move)
     local grid = tetrimino.grid
     local position = tetrimino.position
     
-    if type == 'move' then
-        position = tetrimino.position + moveOrRotation
+    if move.translation ~= nil then
+        position = tetrimino.position + move.translation
     end
     
-    if type == 'rotation'  then
-        grid = grid:rotate(moveOrRotation)
+    if move.rotation ~= nil then
+        grid = grid:rotate(move.rotation)
     end
 
     local x, y = position.x, position.y
@@ -274,7 +292,7 @@ function Tetris:isAvailableMove(type, moveOrRotation, tetrimino)
     grid:foreach(function (block, i, j)
         if not block.value then return end
         if (x + i < 1 or
-            --y + j < 1 or
+            y + j < 1 or
             x + i > self.grid.w or
             y + j > self.grid.h or
             self.grid:get(x+i, y+j))
@@ -348,7 +366,7 @@ function Tetris:update(dt)
     self.distance = self.distance + dt * self.gravity * 60 -- 60 fps
 
     if self.distance >= 1 then
-        if not self:makeMove(DOWN) then
+        if not self:makeTranslation(self.current, DOWN) then
             self:playTetrimino()
         end
     end

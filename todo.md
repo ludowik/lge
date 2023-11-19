@@ -1,16 +1,13 @@
 engine
 - detect scripts error and execution error to change the current sketch to "sketches" for the next launch
+- fusion of sketch and process manager (a process is a sketch)
 
-triomino
+triomino    
 - align position and drawing
 - progress in the implementation : push triomino on the grid
 
 easings
 - complete easing functions
-
-blinking circle
-- les fréquences de changement des tailles de cercles sont trop en phases
-- l'épaisseur des cercles aussi
 
 random
 - try random https://github.com/linux-man/randomlua/blob/master/randomlua.lua

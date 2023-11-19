@@ -1,6 +1,7 @@
 MouseEvent = class()
 
 function MouseEvent:init()
+    self.callback = nilf
 end
 
 function MouseEvent:mousepressed(mouse)
@@ -10,11 +11,11 @@ function MouseEvent:mousemoved(mouse)
 end
 
 function MouseEvent:mousereleased(mouse)
-    self:click()
+    --return self:click(mouse)
 end
 
-function MouseEvent:click()
-    if self.callback then
+function MouseEvent:click(mouse)
+    if self.callback and self.callback ~= nilf then
         self:callback()
         return true
     end    
@@ -26,5 +27,5 @@ function KeyboardEvent:init()
 end
 
 function KeyboardEvent:keypressed(key, scancode, isrepeat)
-    self:click()
+    self:click(mouse)
 end

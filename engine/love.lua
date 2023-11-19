@@ -66,14 +66,14 @@ if getOS() == 'ios' then
     end
 
     function love.touchreleased(id, x, y, dx, dy, pressure)
-        touches[id].presses = (touches[id].moved == false) and 1 or 0
+        -- touches[id].presses = (touches[id].moved == false) and 1 or 0
 
-        if touches[id].presses > 0 then
-            if eventManager:click(id, x, y, touches[id].presses) then
-                touches[id] = nil
-                return true
-            end
-        end
+        -- if touches[id].presses > 0 then
+        --     if eventManager:click(id, x, y, touches[id].presses) then
+        --         touches[id] = nil
+        --         return true
+        --     end
+        -- end
         eventManager:mousereleased(id, x, y, touches[id].presses)
 
         touches[id] = nil
@@ -89,11 +89,11 @@ else
     end
 
     function love.mousereleased(x, y, button, istouch, presses)
-        if presses > 0 then
-            if eventManager:click(button, x, y, presses) then
-                return true
-            end
-        end
+        -- if presses > 0 then
+        --     if eventManager:click(button, x, y, presses) then
+        --         return true
+        --     end
+        -- end
         eventManager:mousereleased(button, x, y, presses)
     end
 

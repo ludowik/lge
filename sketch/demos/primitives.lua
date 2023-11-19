@@ -14,7 +14,7 @@ end
 
 
 function draw()
-    screenBlur(0.05)
+    screenBlur(0, 0, 0, 0.05)
 
     noFill()
 

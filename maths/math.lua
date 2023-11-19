@@ -32,7 +32,7 @@ end
 round = math.round
 
 function math.fract(v)
-    return v - floor(v)
+    return math.fmod(v, 1)
 end
 fract = math.fract
 

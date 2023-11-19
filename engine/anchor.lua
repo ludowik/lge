@@ -1,10 +1,18 @@
 Anchor = class()
 
 function Anchor:init(ni, nj)
-    self.ni = ni or 10
-    self.nj = nj or math.ceil(H/(W/self.ni))
+    if ni then
+        self.ni = ni
+        self.nj = nj or math.ceil(H/(W/self.ni))
 
-    self.clr = Color(1, 1, 1, 0.25)
+    elseif nj then
+        self.nj = nj
+        self.ni = ni or math.ceil(W/(H/self.nj))
+
+    else
+        self.ni = 12
+        self.nj = axe2dmath.ceil(H/(W/self.ni))
+    end
 end
 
 function Anchor:pos(i, j)
@@ -28,7 +36,7 @@ function Anchor:size(i, j)
 end
 
 function Anchor:draw(clr)
-    stroke(clr or self.clr)
+    stroke(clr or self.clr or colors.red)
     strokeSize(0.5)
 
     for j in index(self.nj+1) do

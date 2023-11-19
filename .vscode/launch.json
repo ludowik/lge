@@ -24,7 +24,7 @@
                 "vsc_debug"
             ],
             "ignorePatterns": [
-                "_class",
+                "class",
                 "_instrument"
             ],
             "scriptRoots": [

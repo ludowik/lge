@@ -6,9 +6,9 @@ function Array:init(...)
     return ...
 end
 
-function Array:__tostring()
-    return tostring(#self)
-end
+-- function Array:__tostring()
+--     return tostring(#self)
+-- end
 
 Array.add = table.insert
 
@@ -32,7 +32,8 @@ end
 
 function Array:count(f)
     local count = 0
-    for i, v in ipairs(self) do
+    for i=1,#self do
+        local v = self[i]
         if f(v) then
             count = count + 1
         end
@@ -58,7 +59,8 @@ function Array:forn(n, functionOrValue)
 end
 
 function Array:release()
-    for i, v in ipairs(self) do
+    for i=1,#self do
+        local v = self[i]
         if v.release then
             v:release()
         end
@@ -67,7 +69,8 @@ function Array:release()
 end
 
 function Array:update(dt)
-    for i, v in ipairs(self) do
+    for i=1,#self do
+        local v = self[i]
         if v.update then
             v:update(dt)
         end
@@ -76,7 +79,8 @@ function Array:update(dt)
 end
 
 function Array:draw(dt, ...)
-    for i, v in ipairs(self) do
+    for i=1,#self do
+        local v = self[i]
         if v.draw then
             v:draw(...)
         end
@@ -89,7 +93,8 @@ function Array:ipairs()
 end
 
 function Array:foreach(f, ...)
-    for i, v in ipairs(self) do
+    for i=1,#self do
+        local v = self[i]
         f(v, i, ...)
     end
     return self
@@ -118,7 +123,8 @@ function Array:cross(f, ...)
 end
 
 function Array:indexOf(item)
-    for i, v in ipairs(self) do
+    for i=1,#self do
+        local v = self[i]
         if item == v then return i end
     end
 end
@@ -139,7 +145,8 @@ end
 
 function Array:map(f)
     local list = Array()
-    for i, v in ipairs(self) do
+    for i=1,#self do
+        local v = self[i]
         list:add(f(v, i))
     end
     return list
@@ -160,7 +167,8 @@ function Array:max()
     if #self == 0 then return end
 
     local maxValue = math.mininteger
-    for i, v in ipairs(self) do
+    for i=1,#self do
+        local v = self[i]
         maxValue = max(maxValue, v)
     end
     return maxValue

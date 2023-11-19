@@ -3,7 +3,7 @@ Sketch2d = class() : extends(Sketch)
 function Sketch2d:init()
     Sketch.init(self)
     self.clr = Color.random()
-    self.anchor = Anchor(15)
+    self.anchor = Anchor(16)
 
     image = Image('resources/images/rusty_metal.jpg')
 end
@@ -24,8 +24,9 @@ function Sketch2d:draw()
 
     self.anchor:draw()
 
+    local pos = self.anchor:pos(1, 1)
     local size = self.anchor:size(1, 1)
-    local x, y, w, h = size.x, size.y, size.x, size.y
+    local x, y, w, h = pos.x, pos.y, size.x, size.y
     
     for _,f in ipairs{
         drawPoint,
