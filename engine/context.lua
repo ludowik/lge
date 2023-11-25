@@ -20,7 +20,7 @@ function render2context(context, f)
     assert(context)
 
     setContext(context)
-    love.graphics.origin()
+    resetMatrixContext()
 
     f()
 

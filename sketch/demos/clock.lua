@@ -16,12 +16,6 @@ end
 function Horloge:draw()
     background(51)
 
-    -- if config.projectionMode == 'perspective' then
-    --     ortho3D()
-    -- else
-    --     ortho()
-    -- end
-
     self:graduation(self.x, self.y, self.rayon, 15,  4, 5, false, colors.red)
     self:graduation(self.x, self.y, self.rayon,  8, 12, 3, true , colors.green)
     self:graduation(self.x, self.y, self.rayon,  4, 60, 1, false, colors.blue)

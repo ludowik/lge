@@ -30,5 +30,4 @@ function draw()
             circle(x, y, 5)
         end
     end
-    
 end

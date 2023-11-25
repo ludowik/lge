@@ -40,13 +40,15 @@ end
 
 function draw()
     background()
+
+    translate(W/2, H/2)
     
     scale(zoom)
     
-    translate(position.x, position.y)    
+    translate(position.x, position.y)
     
     scale(W/scalex, W/scalex)
-    translate(-minx, -miny)
+    translate(-minx-scalex/2, -miny-scaley/2)
     
     strokeSize(scalex/W/zoom)
     

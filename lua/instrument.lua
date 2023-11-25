@@ -159,7 +159,7 @@ end
 function Instrument:draw()
     self.behindInstrument = true
 
-    screenBlur(0.5)
+    screenBlur(0, 0.5)
 
     stroke(colors.white)
     textColor(colors.white)
@@ -171,7 +171,7 @@ function Instrument:draw()
         return a.elapsedTimeByFrameAvg > b.elapsedTimeByFrameAvg
     end)
 
-    textPosition(engine.parameter.items[4].items[1].size.y*2)
+    textPosition(32)
 
     self.functions[1].viewDetail = true
 

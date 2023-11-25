@@ -75,7 +75,6 @@ function redraw()
     -- TODO
     if not process then return end
 
-    process.frames = nil
     if process.frames then
         process.frames = (process.frames or 0) + 1
     end
@@ -92,7 +91,7 @@ function Engine.draw()
     resetMatrix(true)
     resetStyle()
     
-    engine.parameter:draw()
+    engine.parameter:draw(0, -Y)
 
     if instrument.active then
         instrument:draw()
@@ -103,7 +102,7 @@ function Engine.draw()
     end
     
     local fps = getFPS()
-    if fps < refreshRate * 0.95 or fps > refreshRate * 1.05 then
+    if fps < refreshRate * 0.95 then -- or fps > refreshRate * 1.05 then
         fontName('arial')
         fontSize(18)
         local w, h = textSize(fps)

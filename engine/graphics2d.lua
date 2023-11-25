@@ -57,10 +57,10 @@ function Graphics2d.screenBlur(clr, ...)
     pushMatrix()
     resetMatrix()
 
-    clr.a = clr.a == 1 and 0.05 or clr.a
+    local a = clr.a == 1 and 0.05 or clr.a
 
     noStroke()
-    fill(clr)
+    fill(clr.r, clr.g, clr.b, a)
 
     rectMode(CORNER)
     rect(-X, -Y, 2*X+W, 2*Y+H)

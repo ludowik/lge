@@ -6,7 +6,7 @@ function Firework:init()
     setOrigin(BOTTOM_LEFT)
 
     self.particles = Array()
-    self.parameter:watch('env.sketch.particles')
+    self.parameter:watch('#env.sketch.particles')
 
     gravity = vec2(0, -10)
 end

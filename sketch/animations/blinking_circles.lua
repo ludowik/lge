@@ -11,7 +11,7 @@ function setup()
 end
 
 function draw()
-    screenBlur(alpha, alpha, alpha, alpha)
+    screenBlur(alpha, alpha)
 
     noStroke()
     circleMode(CENTER)

@@ -100,6 +100,7 @@ function Sketch:drawSketch(force)
 
     love.graphics.setCanvas()
     love.graphics.setShader()
+    love.graphics.setDepthMode()
 
     love.graphics.setColor(colors.white:rgba())
     love.graphics.setBlendMode('replace')

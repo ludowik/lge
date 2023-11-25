@@ -1,6 +1,6 @@
 UI = class():extends(Rect, MouseEvent, KeyboardEvent)
 
-UI.innerMarge = 8
+UI.innerMarge = 6
 
 function UI:init(label)
     Rect.init(self)
@@ -9,9 +9,9 @@ function UI:init(label)
     self.label = label
 
     self.styles = Array {
-        fillColor = colors.gray,
+        fillColor = Color(0, 0.2),
         textColor = colors.white,
-        fontSize = 22,
+        fontSize = 20,
     }
 
     self.visible = true

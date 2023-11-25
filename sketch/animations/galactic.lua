@@ -14,7 +14,7 @@ function setup()
 end
 
 function draw()
-    screenBlur(0, 0, 0, 0.05)
+    screenBlur(0, 0.05)
 
     translate(W/2, H/2)
 

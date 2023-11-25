@@ -1,4 +1,6 @@
 function setup()
+    setOrigin(BOTTOM_LEFT)
+
     path = 'sketch/shaders/shader'
 
     shaders = Array()

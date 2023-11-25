@@ -75,6 +75,11 @@ function EventManager:keypressed(key, scancode, isrepeat)
     
     elseif key == 'f' then
         toggleFused()
+
+    elseif key == 'w' then
+        openURL('https://www.google.com/search?q='..
+            processManager:current().__className:replace('_', '+')..
+            '&lr=lang_en')
     
     elseif key == 'escape' then
         Engine.quit()

@@ -4,17 +4,9 @@ function setup()
     N = 0
 end
 
-
-
-
-
-
-
-
-
-
 function draw()
-    screenBlur(0, 0, 0, 0.05)
+    if ElapsedTime * 1000 / 30 < N then return end
+    screenBlur(0, 0.05)
 
     noFill()
 

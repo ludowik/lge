@@ -54,10 +54,10 @@ function Mouse:moved(id, x, y)
         self.endPosition:set(mouse.position)
         self.move:set(mouse.endPosition - mouse.startPosition)
         self.deltaPos:set(mouse.endPosition - mouse.previousPosition)
-    end
 
-    self.endTime = time()
-    self.elapsedTime = self.endTime - self.startTime
+        self.endTime = time()
+        self.elapsedTime = self.endTime - self.startTime
+    end
 end
 
 function Mouse:update(dt)

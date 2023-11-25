@@ -3,12 +3,16 @@ local __tan, __atan, __rad, __deg, __sqrt, __cos, __sin = math.tan, math.atan, m
 local stack = Array()
 
 function resetMatrix(resetStack)
+    resetMatrixContext(resetStack)
+    translate(X, Y)
+end
+
+function resetMatrixContext(resetStack)
     __modelMatrix = love.math.newTransform()
     __projectionMatrix = love.math.newTransform()
     __viewMatrix = love.math.newTransform()
 
     ortho()
-    translate(X, Y)
 
     if resetStack then
         stack = Array()

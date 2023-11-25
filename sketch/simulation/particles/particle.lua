@@ -44,6 +44,8 @@ function Particle.initImage(n)
     n = n or 200
     local img = FrameBuffer(n, n)
     img:setContext()
+
+    resetMatrixContext()
     
     background(0)
     ellipseMode(CENTER)

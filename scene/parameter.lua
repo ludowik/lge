@@ -22,7 +22,7 @@ function Parameter:randomizeParameter()
 end
 
 function Parameter:initControlBar()
-    self:action('sketches',
+    self:ui('sketches',
         function ()
             openSketches()
             engine.parameter.visible = false
@@ -258,6 +258,6 @@ function Parameter:number(label, varName, min, max, initValue, callback)
 end
 
 function Parameter:draw(x, y)
-    self:layout(x, y)
+    self:layout(x, y+self.innerMarge)
     Scene.draw(self)
 end

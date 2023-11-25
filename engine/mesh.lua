@@ -13,6 +13,7 @@ end
 function Mesh:draw()
     self:update()
     if self.mesh then
+        love.graphics.setColor(fill():rgba())
         love.graphics.draw(self.mesh, 0, 0)
     end
 end
