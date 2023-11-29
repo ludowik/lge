@@ -22,7 +22,7 @@ function Parameter:randomizeParameter()
 end
 
 function Parameter:initControlBar()
-    self:ui('sketches',
+    self:action('sketches',
         function ()
             openSketches()
             engine.parameter.visible = false

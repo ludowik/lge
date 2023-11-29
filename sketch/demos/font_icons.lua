@@ -1,6 +1,8 @@
 function setup()
     zoom = 1
     translation = vec2()
+
+    parameter:integer('font size', 'size', 2, 100, 22)
 end
 
 function mousemoved(touch)
@@ -11,7 +13,7 @@ function draw()
     background()
 
     fontName('foundation-icons')
-    fontSize(22)
+    fontSize(size)
 
     textMode(CORNER)
 
@@ -27,14 +29,15 @@ function draw()
     local i = 0
 
     local ncol = floor((W -2*wMax) / wMax)
-    local nrow = floor(n/ncol)
+    local nrow = floor((n) / ncol)
 
     translate(W/2, H/2)
     
     scale(zoom)
 
-    translate(translation.x, translation.y)
-    translate(-ncol*wMax/2, -nrow*hMax/2)    
+    translate(
+        translation.x - ncol*wMax/2,
+        translation.y - nrow*hMax/2)
 
     textColor(colors.white)
 
@@ -51,7 +54,7 @@ function draw()
     end
 
     fontName('arial')
-    fontSize(6)
+    fontSize(hMax/4)
 
     textMode(CENTER)
     

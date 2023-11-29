@@ -145,6 +145,7 @@ function draw()
     drawImage(vec2( 0, -h), ascii, false)
     drawImage(vec2(-w,  0), ascii, true)
     drawImage(vec2( 0,  0), pixel)
+    drawImage(vec2( -w,  h), asCircle)
 end
 
 function drawImage(position, f, reverse)
@@ -193,13 +194,13 @@ function drawImage(position, f, reverse)
             end
 
             local light = (r + g + b)/(n)
-            f(position, light, reverse, x+w/2, y+h/2, w, h)
+            f(light, reverse, x+w/2, y+h/2, w, h)
         end
     end
     popMatrix()
 end
 
-function ascii(position, light, reverse, x, y, w, h)
+function ascii(light, reverse, x, y, w, h)
     local i = floor(map(light, 0, 1, 1, characters:len()))
 
     if not reverse then
@@ -211,8 +212,16 @@ function ascii(position, light, reverse, x, y, w, h)
     text(characters:sub(i, i), x, y)
 end
 
-function pixel(position, light, reverse, x, y, w, h)
+function pixel(light, reverse, x, y, w, h)
     fill(light)
     noStroke()
     rect(x, y, w, h)
+end
+
+function asCircle(light, reverse, x, y, w, h)
+    fill(light)
+    noStroke()
+
+    circleMode(CENTER)
+    circle(x, y, 5*w)
 end

@@ -50,45 +50,72 @@ function EventManager:wheelmoved(x, y)
 end
 
 function EventManager:keypressed(key, scancode, isrepeat)
-    if processManager:current() then
-        processManager:current():keypressed(key, scancode, isrepeat)
+    local process = processManager:current()
+    if process then
+        process:keypressed(key, scancode, isrepeat)
     end
 
-    if key == 'r' then
-        engine.reload(true)
-
-    elseif key == 't' then
-        env.__autotest = not env.__autotest
-        love.window.setVSync(env.__autotest and 0 or 1)
-    
-    elseif key == 'i' then
-        processManager:setSketch('info')
-
-    elseif key == 'p' then
-        instrument:toggleState()
-
-    elseif key == 's' then
-        openSketches()
-
-    elseif key == 'l' or key == 'kpenter' then
-        processManager:loopProcesses()
-    
-    elseif key == 'f' then
-        toggleFused()
-
-    elseif key == 'w' then
-        openURL('https://www.google.com/search?q='..
-            processManager:current().__className:replace('_', '+')..
-            '&lr=lang_en')
-    
-    elseif key == 'escape' then
+    if key == 'escape' then
         Engine.quit()
+
+    elseif love.keyboard.isDown('lgui') then
+        if key == 'r' then
+            engine.reload(true)
+
+        elseif key == 't' then
+            env.__autotest = not env.__autotest
+            love.window.setVSync(env.__autotest and 0 or 1)
+        
+        elseif key == 'i' then
+            processManager:setSketch('info')
+
+        elseif key == 'p' then
+            instrument:toggleState()
+
+        elseif key == 's' then
+            openSketches()
+
+        elseif key == 'l' or key == 'kpenter' then
+            processManager:loopProcesses()
+        
+        elseif key == 'f' then
+            toggleFused()
+
+        elseif key == 'w' then
+            local name = process.__className:replace('_', '+')
+            openURL(('https://www.google.com/search?q=%s&lr=lang_en'):format(name))
+        
+        elseif key == 'up' then -- 'pageup' then
+            processManager:previous()
+        
+        elseif key == 'down' then -- 'pagedown' then
+            processManager:next()
+        
+        end
+    else
+        self:search(key)
+    end
+end
+
+local searchText = ''
+local searchTime = 0
+
+function EventManager:search(key)
+    if time() - searchTime > 2 then
+        searchText = ''
+    end
+
+    searchTime = time()
     
-    elseif key == 'pageup' then
-        processManager:previous()
-    
-    elseif key == 'pagedown' then
-        processManager:next()
-    
+    if key == 'backspace' then
+        searchText = searchText:sub(1, searchText:len()-1)
+    else
+        searchText = searchText..key
+    end
+
+    local index = processManager:findSketch(searchText)
+    if index then
+        processManager:setCurrentSketch(index)
+        searchText = ''
     end
 end

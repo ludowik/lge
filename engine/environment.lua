@@ -1,15 +1,5 @@
 Environment = class()
 
-function Environment.__newindex(self, key, ...)
-    local result = rawset(self, key, ...)
-
-    -- TODO : useless ?
-    self.__ordered = self.__ordered or {}
-    table.insert(self.__ordered, key)
-
-    return result
-end
-
 function Environment:init(name, itemPath, category)
     setmetatable(self, {
         __newindex = Environment.__newindex,
@@ -31,4 +21,13 @@ function Environment:init(name, itemPath, category)
     self.DeltaTime = 0
     self.ElapsedTime = 0
     self.indexFrame = 0
+end
+
+function Environment.__newindex(self, key, ...)
+    local result = rawset(self, key, ...)
+
+    self.__ordered = self.__ordered or {}
+    table.insert(self.__ordered, key)
+
+    return result
 end

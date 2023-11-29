@@ -9,13 +9,19 @@ function ProcessManager:init()
 end
 
 function ProcessManager:setSketch(name)
+    local index = self:findSketch(name)
+    if index then 
+        self:setCurrentSketch(index)
+    end
+end
+
+function ProcessManager:findSketch(name)
     if not name then return end
 
     name = name:lower()
     for i, env in ipairs(self.items) do
         if env.__className == name then
-            self:setCurrentSketch(i)
-            break
+            return i
         end
     end
 end
@@ -83,28 +89,42 @@ function ProcessManager:loopProcesses()
 end
 
 function ProcessManager:update(dt)
-    -- TODO
-    if not self:current() then return end
+    local process = processManager:current()
+    if not process then return end
 
+    self:updateLoop(dt)
+    process:updateSketch(dt)
+end
+
+function ProcessManager:updateLoop(dt)
     if self.__loopProcesses then
         self.__loopProcesses.famesToDraw = self.__loopProcesses.famesToDraw - 1
         if self.__loopProcesses.famesToDraw <= 0 then
             self:next()
             self.__loopProcesses.famesToDraw = LOOP_ITER_PROCESS
 
-            for i in range(10) do
-                self:current():updateSketch(dt)
-                self:current():drawSketch()
+            local process = processManager:current()
+            if not process then return end
+
+            local delay = 0.25
+            local dt = 1/60
+            local startTime = time()
+            while true do
+                process:updateSketch(dt)
+                process:drawSketch()
+
                 love.graphics.present()
+                
+                if time() - startTime > delay then
+                    break
+                end
             end
 
-            if self:current() == self.__loopProcesses.startProcess then
+            if process == self.__loopProcesses.startProcess then
                 self.__loopProcesses = nil
             end
         end
     end
-
-    self:current():updateSketch(dt)
 end
 
 function ProcessManager:current()

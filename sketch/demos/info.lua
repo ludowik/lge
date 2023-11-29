@@ -5,6 +5,12 @@ function setup()
     imageData = fb:getImageData()
 
     scene:add(UIExpression('version', 'version'))
+    scene:add(UIExpression('date', 'Date():asDate()'))
+    scene:add(UIExpression('time', 'Date():asTime()'))
+
+    scene:add(UI('State'):attrib{styles={fillColor=colors.red}})
+    scene:add(UIExpression('power', 'getPowerInfo()'))
+    scene:add(UIExpression('memory', 'getMemoryInfo()'))
     
     scene:add(UI('Frame'):attrib{styles={fillColor=colors.red}})
     scene:add(UIExpression('fps', 'string.format("%d fps", getFPS())'))

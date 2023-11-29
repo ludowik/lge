@@ -72,7 +72,6 @@ end
 
 function redraw()
     local process = processManager:current()
-    -- TODO
     if not process then return end
 
     if process.frames then
@@ -82,7 +81,6 @@ end
 
 function Engine.draw()
     local process = processManager:current()
-    -- TODO
     if not process then return end
 
     love.graphics.reset()
@@ -91,7 +89,7 @@ function Engine.draw()
     resetMatrix(true)
     resetStyle()
     
-    engine.parameter:draw(0, -Y)
+    engine.parameter:draw(0, 0)
 
     if instrument.active then
         instrument:draw()

@@ -70,7 +70,6 @@ end
 
 function Graphics2d.noLoop()
     local process = processManager:current()
-    -- TODO
     if not process then return end
 
     process.frames = 1
@@ -78,7 +77,6 @@ end
 
 function Graphics2d.loop()
     local process = processManager:current()
-    -- TODO
     if not process then return end
 
     process.frames = nil

@@ -1,6 +1,9 @@
 UI = class():extends(Rect, MouseEvent, KeyboardEvent)
 
 UI.innerMarge = 6
+UI.styles = {
+    fontSize = 20
+}
 
 function UI:init(label)
     Rect.init(self)
@@ -11,7 +14,7 @@ function UI:init(label)
     self.styles = Array {
         fillColor = Color(0, 0.2),
         textColor = colors.white,
-        fontSize = 20,
+        fontSize = UI.styles.fontSize,
     }
 
     self.visible = true
@@ -71,7 +74,7 @@ function UI:draw()
     self:drawFront()
 end
 
-function UI:drawBack()
+function UI:drawBack()    
     if self.styles.strokeColor then
         strokeSize(self.styles.strokeSize)
         stroke(self.styles.strokeColor)
@@ -79,13 +82,17 @@ function UI:drawBack()
         noStroke()
     end
 
-    local r = 4
-
-    fill(self.styles.fillColor)
-    if eventManager.currentObject == self then
-        fill(colors.red:alpha(0.25))
+    if self.styles.fillColor then
+        if eventManager.currentObject == self then
+            fill(colors.red:alpha(0.25))
+        else
+            fill(self.styles.fillColor)
+        end
+    else
+        noFill()
     end
 
+    local r = 4
     rect(self.position.x, self.position.y, self.size.x, self.size.y, r)
 end
 

@@ -69,9 +69,9 @@ function Color.hsb(h, s, b, a)
     return Color(r, g, b, a)
 end
 
-function Color:contrast()
-    local hue, saturation, lightness = rgb2hsl(self.r, self.g, self.b)
-    return lightness >= 0.1791 and colors.black or colors.white
+function Color:contrast(a)
+    local _, _, lightness = rgb2hsl(self.r, self.g, self.b)
+    return (lightness >= 0.1791 and colors.black or colors.white):alpha(a or 1)
 end
 
 function Color:alpha(a)
