@@ -49,11 +49,12 @@ function ProcessManager:setCurrentSketch(processIndex)
     collectgarbage('collect')
 
     self.processIndex = processIndex
-
     loadSketch(self.items[self.processIndex])
-    local process = self:current()
 
-    _G.env = process.env or _G.env
+    local process = self:current()
+    if not process then return end
+
+    _G.env = process.env
     setfenv(0, _G.env)
     if process.resume then process:resume() end
 
@@ -73,6 +74,33 @@ function ProcessManager:setCurrentSketch(processIndex)
     engine.parameter.items[#engine.parameter.items].items[2] = process.parameter.items[1]
 
     redraw()
+end
+
+function ProcessManager:current()
+    return self.items[self.processIndex].sketch
+end
+
+function ProcessManager:previous()
+    local processIndex = self.processIndex - 1
+    if processIndex < 1 then
+        processIndex = #self.items
+    end
+    self:setCurrentSketch(processIndex)
+    return self:current()
+end
+
+function ProcessManager:next()
+    local processIndex = self.processIndex + 1
+    if processIndex > #self.items then
+        processIndex = 1
+    end
+    self:setCurrentSketch(processIndex)
+    return self:current()
+end
+
+function ProcessManager:random()
+    self:setCurrentSketch(randomInt(#self.items))
+    return self:current()
 end
 
 LOOP_ITER_PROCESS = 1
@@ -125,31 +153,4 @@ function ProcessManager:updateLoop(dt)
             end
         end
     end
-end
-
-function ProcessManager:current()
-    return self.items[self.processIndex].sketch
-end
-
-function ProcessManager:previous()
-    local processIndex = self.processIndex - 1
-    if processIndex < 1 then
-        processIndex = #self.items
-    end
-    self:setCurrentSketch(processIndex)
-    return self:current()
-end
-
-function ProcessManager:next()
-    local processIndex = self.processIndex + 1
-    if processIndex > #self.items then
-        processIndex = 1
-    end
-    self:setCurrentSketch(processIndex)
-    return self:current()
-end
-
-function ProcessManager:random()
-    self:setCurrentSketch(randomInt(#self.items))
-    return self:current()
 end
