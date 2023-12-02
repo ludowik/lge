@@ -22,11 +22,16 @@ function Mesh:draw(x, y, z, w, h, d)
 
     pushMatrix()
 
-    scale(w, h, d)
-    translate(x, y, z)
+    if x then
+        translate(x, y, z)
+    end
+
+    if w then
+        scale(w, h, d)
+    end
 
     love.graphics.setColor(fill():rgba())
-    love.graphics.draw(self.mesh, 0, 0)
+    love.graphics.draw(self.mesh)
     
     popMatrix()
 end

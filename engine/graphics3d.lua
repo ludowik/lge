@@ -4,9 +4,10 @@ function Graphics3d.setup()
     push2globals(Graphics3d)
 end
 
-local boxModel
+local boxModel, boxMesh
 function Graphics2d.box(x, y, z, w, h, d)
     boxModel = boxModel or Model.box()
+    boxMesh = boxMesh or Mesh(boxModel)
 
     x = x or 0
     y = y or 0
@@ -16,8 +17,7 @@ function Graphics2d.box(x, y, z, w, h, d)
     h = h or w
     d = d or w
 
-    local m = Mesh(boxModel)
-    m:draw(x, y, z, w, h, d)
+    boxMesh:draw(x, y, z, w, h, d)
 end
 
 Model = class()
@@ -26,9 +26,9 @@ function Model:init()
 end
 
 function Model.box(w, h, d)
-    w = w or 1
-    h = h or 1
-    d = d or 1
+    w = w or 0.5
+    h = h or 0.5
+    d = d or 0.5
 
     local vertices = Array()
 

@@ -12,9 +12,8 @@ function Spirale:init()
     -- local state = getItem('cam_state')
     -- self.cam.setState(state)
 
+    -- TODO : parameter
     self.params = {
-        update = true,
-
         deltaAngle = 32,
         -- {
         --     value = 32,
@@ -31,11 +30,18 @@ function Spirale:init()
         noise = 100,
     }
 
+    self.parameter:boolean('update', 'updateSpirale', false)
+    self.parameter:boolean('ccw', true)
+    self.parameter:boolean('cull back', 'cullBack', true)
+    self.parameter:boolean('lequal', true)
+
     self.elapsedTime = 0
+
+    setOrigin(BOTTOM_LEFT)
 end
 
 function Spirale:update(dt)
-    if self.params.update then
+    if updateSpirale then
         self.elapsedTime = self.elapsedTime + dt
     end
 
@@ -46,31 +52,24 @@ end
 function Spirale:draw()
     background(0)
 
-    -- TODO
-    perspective()
+    love.graphics.setFrontFaceWinding(ccw and 'ccw' or 'cw')
+    love.graphics.setMeshCullMode('none') -- cullBack and 'back' or 'front')
+    love.graphics.setDepthMode(lequal and 'lequal' or 'gequal', true)
+    love.graphics.setWireframe(false)
 
     -- TODO
-    camera()
+    isometric(3)
+    -- perspective()
+    -- camera()
 
     fill(colors.white)
     
-    --axes2d()
-    --translate(W/2, H/2)
-
-    -- TODO
-    translate(0, 0, 100)
-    rect(-100, -100, 200, 200)
-
-    translate(0, 0, -200)
-    rect(-100, -100, 200, 200)
-
     local angle = 0
-
     local x, y, z = 0, 0, 0
-
     local px, py, pz
 
-    beginShape(TRIANGLE_STRIP)
+    local vertices = Array()
+    --beginShape(TRIANGLE_STRIP)
 
     for i = -self.params.height , self.params.height do
         y = y + noise(self.elapsedTime + (i / self.params.noise))
@@ -79,18 +78,24 @@ function Spirale:draw()
 
     for i = -self.params.height , self.params.height do
         local n = noise(self.elapsedTime + (i / self.params.noise))
+        local n2 = noise(self.elapsedTime * 2 + (i / self.params.noise))
+
         y = y + n
 
         x = cos(angle) * self.params.width * n ^ 2
         z = sin(angle) * self.params.width * n ^ 2
 
         --stroke(Color.hsb(n))
-        fill(Color.hsb(n, 0.5, 1))
+        local clr = Color.hsb(n2, 0.5, 0.5)
+        fill(clr)
 
         strokeSize(n)
 
-        vertex(x, y, z)
-        vertex(0, y, 0)
+        vertices:add({x, y, z, clr.r, clr.g, clr.b})
+        vertices:add({0, y, 0, clr.r, clr.g, clr.b})
+
+        -- vertex(x, y, z)
+        -- vertex(0, y, 0)
 
         --  if px then
         --      strokeSize(2)
@@ -105,5 +110,6 @@ function Spirale:draw()
         pz = z
     end
 
-    endShape()
+    --endShape()
+    Mesh(vertices, 'strip'):draw()
 end

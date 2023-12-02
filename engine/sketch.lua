@@ -90,7 +90,12 @@ function Sketch:drawSketch(force)
     end
 
     if processDraw then
-        love.graphics.setCanvas(self.fb.canvas)
+        love.graphics.setCanvas({
+            self.fb.canvas,
+            stencil = false,
+            depth = true,
+        })
+        love.graphics.clear(false, false, true)
 
         resetMatrix(true)
         resetStyle(getOrigin())
@@ -101,6 +106,7 @@ function Sketch:drawSketch(force)
     love.graphics.setCanvas()
     love.graphics.setShader()
     love.graphics.setDepthMode()
+    love.graphics.setWireframe(false)
 
     love.graphics.setColor(colors.white:rgba())
     love.graphics.setBlendMode('replace')

@@ -6,6 +6,8 @@ function setup()
 
     angleX = 0
     angleY = 0
+
+    setOrigin(BOTTOM_LEFT)
 end
 
 function update(dt)
@@ -25,7 +27,6 @@ function draw()
     fill(colors.white)
 
     isometric(3)
-    scale(1, -1, 1)
 
     -- perspective()
     -- camera(vec3(20, 20, -20))
@@ -33,10 +34,11 @@ function draw()
     rotate(angleX, 1, 0, 0)
     rotate(angleY, 0, 1, 0)
 
-    box(0, 0, 0, 50)
+    box( 0, 0, 0, 25)
+    box(25, 0, 0, 25)
 end
 
 function mousemoved(mouse)
     angleX = angleX + mouse.deltaPos.y * TAU / (W/2)
-    angleY = angleY - mouse.deltaPos.x * TAU / (W/2)
+    angleY = angleY + mouse.deltaPos.x * TAU / (W/2)
 end
