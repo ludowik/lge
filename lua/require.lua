@@ -28,5 +28,5 @@ end
 function scriptName(level)
     level = level or 3
     local source = debug.getinfo(level, "S").source
-    return source:match("(%w+)%.lua$")
+    return source:match("([#_%w]+)%.lua$")
 end

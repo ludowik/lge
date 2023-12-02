@@ -41,13 +41,13 @@ function Horloge:aiguille(clr, x, y, a, l, size)
     rotate(rad(a-180), 0, 0, 1)
 
     if self.m == nil then
-        self.m = Mesh()
-
-        self.m.vertices = Buffer('vec3', {
-                {0, l},
-                {-size, 0},
-                {size, 0},
-            })
+        local vertices = Buffer('vec3', {
+            {0, l},
+            {-size, 0},
+            {size, 0},
+        })
+        
+        self.m = Mesh(vertices, 'fan')
     end
 
     noStroke()

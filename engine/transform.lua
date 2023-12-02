@@ -162,7 +162,7 @@ function isometric(n)
     local alpha = __atan(1/__sqrt(2))
     local beta = PI/4
 
-    rotate_matrix(__modelMatrix, alpha, 1, 0, 0)
+    rotate_matrix(__modelMatrix, -alpha, 1, 0, 0)
     rotate_matrix(__modelMatrix, beta, 0, 1, 0)
 
     if n then

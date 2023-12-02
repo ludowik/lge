@@ -22,6 +22,12 @@ Array.unpack = table.unpack
 
 Array.clone = table.clone
 
+function Array:concat(t)
+    for _, v in ipairs(t) do
+        table.insert(self, v)
+    end
+end 
+
 function Array:removeIfTrue(f)
     for i, v in ipairs(self, true) do
         if f(v) then
@@ -58,6 +64,7 @@ function Array:forn(n, functionOrValue)
     return self
 end
 
+-- TODO : generalize function
 function Array:release()
     for i=1,#self do
         local v = self[i]

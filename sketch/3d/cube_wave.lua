@@ -21,10 +21,15 @@ function appCubeWave:draw()
 
     line(W / 2, 0, W / 2, H)
 
+    love.graphics.setFrontFaceWinding('ccw')
+    love.graphics.setMeshCullMode('back')
+    love.graphics.setDepthMode('lequal', true)
+
     -- TODO
-    --light(true)
+    -- light(true)
 
     isometric(self.zoom)
+    scale(1, -1, 1)
 
     local n = self.n * 2 + 1
 
