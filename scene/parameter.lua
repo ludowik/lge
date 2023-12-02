@@ -98,24 +98,11 @@ function Parameter:addCaptureMenu()
     self:action('resume', loop)
 
     self:action('capture image', function ()
-        engine.parameter.visible = false
-        love.graphics.captureScreenshot(function (imageData)
-            love.filesystem.createDirectory('capture')
-            imageData:encode('png', 'capture/'..env.__name..'.png')
-            engine.parameter.visible = true
-        end)
+        captureImage()
     end)
 
     self:action('capture logo', function ()
-        local size = 1024 / devicePixelRatio
-        local fb = FrameBuffer(size, size)
-        render2context(fb,
-            function ()
-                sprite(env.sketch.fb, 0, 0, size, size, 0, (H-W)/2, W, W)
-            end)
-        love.filesystem.createDirectory('logo')
-        fb:getImageData():encode('png', 'logo/'..env.__name..'.png')
-        fb:release()
+        captureLogo()
     end)
 end
 
@@ -260,4 +247,23 @@ end
 function Parameter:draw(x, y)
     self:layout(x, y+self.innerMarge)
     Scene.draw(self)
+end
+
+function captureImage()
+    engine.parameter.visible = false
+    love.graphics.captureScreenshot(function (imageData)
+        imageData:encode('png', 'image/'..env.__name..'.png')
+        engine.parameter.visible = true
+    end)
+end
+
+function captureLogo()
+    local size = 1024 / devicePixelRatio
+    local fb = FrameBuffer(size, size)
+    render2context(fb,
+        function ()
+            sprite(env.sketch.fb, 0, 0, size, size, 0, Y+(H-W)/2, W, W)
+        end)
+    fb:getImageData():encode('png', 'logo/'..env.__name..'.png')
+    fb:release()
 end

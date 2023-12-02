@@ -468,6 +468,7 @@ function Graphics2d.sprite(image, x, y, w, h, ox, oy, ow, oh)
     if Graphics2d.tint() then
         love.graphics.setColor(Graphics2d.tint():rgba())
     end
+    
     love.graphics.draw(texture,
         x, y, 0,
         w / ow, h / oh,

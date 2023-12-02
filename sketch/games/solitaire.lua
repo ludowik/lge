@@ -115,11 +115,11 @@ function Solitaire:serialize()
 end
 
 function Solitaire:saveGame()
-    saveFile('solitaire', self:serialize())
+    saveData('solitaire', self:serialize())
 end
 
 function Solitaire:loadGame()
-    local data = loadFile('solitaire')
+    local data = loadData('solitaire')
     if data and data.deck and data.wast and data.rows and data.piles then
         self:resetGame()
 

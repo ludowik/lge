@@ -1,9 +1,16 @@
 local settingsFileName = 'settings'
-
 local settings
+
+love.filesystem.createDirectory('data')
+love.filesystem.createDirectory('logo')
+love.filesystem.createDirectory('image')
 
 function saveSettings()
     saveFile(settingsFileName, settings)
+end
+
+function saveData(fileName, table)
+    saveFile('data/'..fileName, table)
 end
 
 function saveFile(fileName, table)
@@ -16,6 +23,10 @@ function loadSettings()
         return loadFile(settingsFileName) or {
         sketch = 'Hexagone'
     }
+end
+
+function loadData(fileName)
+    return loadFile('data/'..fileName)
 end
 
 function loadFile(fileName)
