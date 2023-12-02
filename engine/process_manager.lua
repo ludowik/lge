@@ -148,6 +148,9 @@ function ProcessManager:updateLoop(dt)
                 end
             end
 
+            captureImage()
+            captureLogo()
+
             if process == self.__loopProcesses.startProcess then
                 self.__loopProcesses = nil
             end

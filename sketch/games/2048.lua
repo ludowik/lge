@@ -55,7 +55,7 @@ function The2048:__loadGame()
     self.animations = Array()
 
     -- load data
-    local data = loadFile('2048')
+    local data = loadData('2048')
     if not data or not data.cells then return false end
 
     -- use data to restore the game
@@ -85,7 +85,7 @@ function The2048:saveGame(data)
     end)
 
     -- save data
-    saveFile('2048', data)
+    saveData('2048', data)
 end
 
 function The2048:newCell(i, j, value)
