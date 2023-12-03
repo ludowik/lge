@@ -5,17 +5,11 @@ function appCubeWave:init()
 
     self.angle = 0
 
-    self.parameter:boolean('ccw', true)
-    self.parameter:boolean('cull back', 'cullBack', true)
-    self.parameter:boolean('lequal', true)
-
     self.parameter:integer('n', Bind(self, 'n'), 1, 20, 5)
     self.parameter:integer('size', Bind(self, 'cubeSize'), 1, 20, 4)
 
     self.parameter:number('zoom', Bind(self, 'zoom'), 1, 20, 8)
     self.parameter:number('speed', Bind(self, 'speed'), 1, 10, 2)
-
-    setOrigin(BOTTOM_LEFT)
 end
 
 function appCubeWave:update(dt)
@@ -27,15 +21,10 @@ function appCubeWave:draw()
 
     line(W / 2, 0, W / 2, H)
 
-    love.graphics.setFrontFaceWinding(ccw and 'ccw' or 'cw')
-    love.graphics.setMeshCullMode(cullBack and 'back' or 'front')
-    love.graphics.setDepthMode(lequal and 'lequal' or 'gequal', true)
+    isometric(self.zoom)
 
     -- TODO
     -- light(true)
-
-    isometric(self.zoom)
-    -- scale(1, -1, 1)
 
     local n = self.n * 2 + 1
 

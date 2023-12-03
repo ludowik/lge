@@ -155,19 +155,20 @@ end
 function isometric(n)
     ortho()
 
-    -- TODO :with model and not projection ????
-
     translate_matrix(__modelMatrix, W/2, H/2)
 
     local alpha = __atan(1/__sqrt(2))
     local beta = PI/4
 
-    rotate_matrix(__modelMatrix, -alpha, 1, 0, 0)
+    rotate_matrix(__modelMatrix, alpha, 1, 0, 0)
     rotate_matrix(__modelMatrix, beta, 0, 1, 0)
 
-    if n then
-        scale_matrix(__modelMatrix, n, n, n)
-    end
+    n = n or 1
+    scale_matrix(__modelMatrix, n, -n, -n)
+
+    love.graphics.setFrontFaceWinding('cw')
+    love.graphics.setMeshCullMode('none')
+    love.graphics.setDepthMode('lequal', true)
 
     setTransformation()
 end
@@ -191,12 +192,21 @@ function perspective(fovy, aspect, near, far)
     local bottom = -range
     local top = range
 
+    resetMatrixContext()
+    
+    scale_matrix(__modelMatrix, 1, -1, 1)
+    
     __projectionMatrix:setMatrix(
         (2 * near) / (right - left), 0, (right + left)/(right - left), 0,
         0, (2 * near) / (top - bottom), (top + bottom)/(top - bottom), 0,
         0, 0, - (far + near) / (far - near), - (2 * far * near) / (far - near),
         0, 0, - 1, 0)
-    
+
+    love.graphics.setFrontFaceWinding('ccw')
+    love.graphics.setMeshCullMode('none') -- 'back')
+    love.graphics.setDepthMode('gequal', true)
+    love.graphics.clear(false, false, 0)
+
     setTransformation()
 end
 

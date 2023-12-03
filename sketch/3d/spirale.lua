@@ -30,18 +30,13 @@ function Spirale:init()
         noise = 100,
     }
 
-    self.parameter:boolean('update', 'updateSpirale', false)
-    self.parameter:boolean('ccw', true)
-    self.parameter:boolean('cull back', 'cullBack', true)
-    self.parameter:boolean('lequal', true)
+    self.parameter:boolean('rotate', 'rotateSpirale', false)
 
     self.elapsedTime = 0
-
-    setOrigin(BOTTOM_LEFT)
 end
 
 function Spirale:update(dt)
-    if updateSpirale then
+    if rotateSpirale then
         self.elapsedTime = self.elapsedTime + dt
     end
 
@@ -52,13 +47,9 @@ end
 function Spirale:draw()
     background(0)
 
-    love.graphics.setFrontFaceWinding(ccw and 'ccw' or 'cw')
-    love.graphics.setMeshCullMode('none') -- cullBack and 'back' or 'front')
-    love.graphics.setDepthMode(lequal and 'lequal' or 'gequal', true)
-    love.graphics.setWireframe(false)
-
     -- TODO
     isometric(3)
+
     -- perspective()
     -- camera()
 

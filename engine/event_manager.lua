@@ -58,7 +58,7 @@ function EventManager:keypressed(key, scancode, isrepeat)
     if key == 'escape' then
         Engine.quit()
 
-    elseif os.name == 'osx' and love.keyboard.isDown('lgui') or  love.keyboard.isDown('lalt')  then
+    elseif getOS() == 'osx' and love.keyboard.isDown('lgui') or love.keyboard.isDown('lalt')  then
         if key == 'r' then
             engine.reload(true)
 

@@ -1,13 +1,9 @@
 function setup()
     parameter:boolean('rotate', 'rotateScene', false)
-    parameter:boolean('ccw', true)
-    parameter:boolean('cull back', 'cullBack', true)
-    parameter:boolean('lequal', true)
+    parameter:boolean('isometric/perspective', 'isometricMode', false)
 
     angleX = 0
     angleY = 0
-
-    setOrigin(BOTTOM_LEFT)
 end
 
 function update(dt)
@@ -20,16 +16,14 @@ end
 function draw()
     background(51)
 
-    love.graphics.setFrontFaceWinding(ccw and 'ccw' or 'cw')
-    love.graphics.setMeshCullMode(cullBack and 'back' or 'front')
-    love.graphics.setDepthMode(lequal and 'lequal' or 'gequal', true)
+    if isometricMode then
+        isometric(3)
+    else
+        perspective()
+        camera(vec3(0, 0, 100))
+    end
 
     fill(colors.white)
-
-    isometric(3)
-
-    -- perspective()
-    -- camera(vec3(20, 20, -20))
 
     rotate(angleX, 1, 0, 0)
     rotate(angleY, 0, 1, 0)

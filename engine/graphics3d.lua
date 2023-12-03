@@ -34,70 +34,27 @@ function Model.box(w, h, d)
 
     function addFace(f, clr)
         for _,v in ipairs(f) do
-            Array.concat(v, {clr:rgba()})
+            v = Array.addArray(Array.clone(v), {clr:rgba()})
+            vertices:add(v)
         end
-        vertices:concat(f)
     end
 
-    -- front
-    addFace({
-        { w, -h, -d},
-        {-w, -h, -d},
-        {-w,  h, -d},
-        { w, -h, -d},
-        {-w,  h, -d},
-        { w,  h, -d},
-    }, colors.blue)
+    local b1 = { w, -h, -d}
+    local b2 = {-w, -h, -d}
+    local b3 = {-w,  h, -d}
+    local b4 = { w,  h, -d}
 
-    -- back
-    addFace({
-        {-w, -h,  d},
-        { w, -h,  d},
-        { w,  h,  d},
-        {-w, -h,  d},
-        { w,  h,  d},
-        {-w,  h,  d},
-    }, colors.green)
-
-    -- left
-    addFace({
-        {-w, -h, -d},
-        {-w, -h,  d},
-        {-w,  h,  d},
-        {-w, -h, -d},
-        {-w,  h,  d},
-        {-w,  h, -d},
-    }, colors.red)
-
-    -- right
-    addFace({
-        { w, -h,  d},
-        { w, -h, -d},
-        { w,  h, -d},
-        { w, -h,  d},
-        { w,  h, -d},
-        { w,  h,  d},
-    }, colors.orange)
-        
-    -- up
-    addFace({
-        {-w,  h,  d},
-        { w,  h,  d},
-        { w,  h, -d},
-        {-w,  h,  d},
-        { w,  h, -d},
-        {-w,  h, -d},
-    }, colors.white)
-
-    -- bottom
-    addFace({
-        { w,  -h,  d},
-        {-w,  -h,  d},
-        {-w,  -h, -d},
-        { w,  -h,  d},
-        {-w,  -h, -d},
-        { w,  -h, -d},
-    }, colors.yellow)
+    local f1 = {-w, -h,  d}
+    local f2 = { w, -h,  d}
+    local f3 = { w,  h,  d}
+    local f4 = {-w,  h,  d}
+    
+    addFace({f1, f2, f3, f1, f3, f4}, colors.blue) -- front
+    addFace({b1, b2, b3, b1, b3, b4}, colors.green) -- back
+    addFace({b2, f1, f4, b2, f4, b3}, colors.red) -- left
+    addFace({f2, b1, b4, f2, b4, f3}, colors.orange) -- right
+    addFace({f4, f3, b4, f4, b4, b3}, colors.white) -- up
+    addFace({f2, f1, b2, f2, b2, b1}, colors.yellow) -- bottom
 
     return vertices
 end

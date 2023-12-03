@@ -22,10 +22,11 @@ Array.unpack = table.unpack
 
 Array.clone = table.clone
 
-function Array:concat(t)
+function Array:addArray(t)
     for _, v in ipairs(t) do
         table.insert(self, v)
     end
+    return self
 end 
 
 function Array:removeIfTrue(f)
@@ -34,6 +35,7 @@ function Array:removeIfTrue(f)
             table.remove(self, i)
         end
     end
+    return self
 end
 
 function Array:count(f)
