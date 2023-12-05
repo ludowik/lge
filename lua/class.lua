@@ -101,8 +101,6 @@ end
 function attributeof(attrName, object)
     if not object or type(object) ~= 'table' then return end
     return object[attrName]
-    -- global.__object__ = object
-    -- return evalExpression('global.__object__.'..attrName)
 end
 
 class().unitTest = function () 

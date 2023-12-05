@@ -78,6 +78,7 @@ function draw()
     
     scene:layout()
     scene:layout(0, dy + H/2 - scene.size.y/2)
+    
     scene:draw()
 end
 

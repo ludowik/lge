@@ -1,13 +1,13 @@
 global = {}
 
-function evalExpression(expression)
+function evaluateExpression(expression)
     local src = (
         "global.__temp__ = "..tostring(expression)..NL..
         "return global.__temp__")
-    return evalCode(src)
+    return evaluateCode(src)
 end
 
-function evalCode(source)
+function evaluateCode(source)
     assert(source)
 
     local f, err = loadstring(source)

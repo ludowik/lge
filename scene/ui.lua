@@ -28,14 +28,6 @@ function UI:getLabel()
     return label
 end
 
-function UI:formatValue(value)
-    if self.intValue then
-        return string.format('%.0f', value)
-    else
-        return string.format('%.2f', value)
-    end
-end
-
 function UI:getValue(value)
     value = value or self.value
     if type(value) == 'table' and value.get then
@@ -49,6 +41,14 @@ function UI:getValue(value)
         strValue = tostring(value)
     end
     return strValue
+end
+
+function UI:formatValue(value)
+    if self.intValue then
+        return string.format('%.0f', value)
+    else
+        return string.format('%.2f', value)
+    end
 end
 
 function UI:fontSize()
@@ -92,7 +92,7 @@ function UI:drawBack()
         noFill()
     end
 
-    local r = 4
+    local r = self.styles.radiusBorder or 4
     rect(self.position.x, self.position.y, self.size.x, self.size.y, r)
 end
 

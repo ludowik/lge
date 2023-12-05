@@ -5,6 +5,16 @@ function Rect:init(x, y, w, h)
     self.size = vec2(w, h)
 end
 
+function Rect:setPosition(...)
+    self.position:set(...)
+    return self
+end
+
+function Rect:setSize(...)
+    self.size:set(...)
+    return self
+end
+
 function Rect.random(pw, ph, sw, sh)
     return Rect():randomize(pw, ph, sw, sh)
 end
