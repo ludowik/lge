@@ -10,8 +10,8 @@ function Mesh:update()
     if not self.mesh then
         local vertexFormat = {
             {'VertexPosition', 'float', 3},
-            {'VertexColor', 'byte', 4},
-            --{'VertexTexCoord', 'float', 2},
+            {'VertexTexCoord', 'float', 2},
+            {'VertexColor', 'byte', 4},            
         }
         self.mesh = love.graphics.newMesh(vertexFormat, self.vertices, self.drawMode, self.usageMode)
     end

@@ -168,7 +168,7 @@ function isometric(n)
 
     love.graphics.setFrontFaceWinding('cw')
     love.graphics.setMeshCullMode('none')
-    love.graphics.setDepthMode('lequal', true)
+    love.graphics.setDepthMode('less', true)
 
     setTransformation()
 end
@@ -204,7 +204,7 @@ function perspective(fovy, aspect, near, far)
 
     love.graphics.setFrontFaceWinding('ccw')
     love.graphics.setMeshCullMode('none') -- 'back')
-    love.graphics.setDepthMode('gequal', true)
+    love.graphics.setDepthMode('greater', true)
     love.graphics.clear(false, false, 0)
 
     setTransformation()

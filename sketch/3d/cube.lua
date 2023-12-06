@@ -17,10 +17,10 @@ function draw()
     background(51)
 
     if isometricMode then
-        isometric(3)
+        isometric(5)
     else
         perspective()
-        camera(vec3(0, 0, 100))
+        camera(vec3(5, 5, 5))
     end
 
     fill(colors.white)
@@ -28,8 +28,7 @@ function draw()
     rotate(angleX, 1, 0, 0)
     rotate(angleY, 0, 1, 0)
 
-    box( 0, 0, 0, 25)
-    box(25, 0, 0, 25)
+    box()
 end
 
 function mousemoved(mouse)
