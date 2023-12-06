@@ -6,9 +6,9 @@ function try_require(module)
     return ok and result
 end
 
-function requireLib(modules)
+function requireLib(path, modules)
     for i,module in ipairs(modules) do
-        require(scriptPath(level):gsub('/', '.')..'.'..module)
+        require(path..'.'..module)
     end
 end
 

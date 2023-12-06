@@ -8,14 +8,9 @@ function Sketch:init(w, h)
     Index.init(self)
     State.init(self)
 
-    local ws, hs
-
-    if w then
-        ws, hs = w, h
-    else
+    if not w then
         w = w or (2 * X + W)
         h = h or (2 * Y + H)
-        ws, hs = w / 3, h / 3
     end
 
     Rect.init(self, 0, 0, w, h)

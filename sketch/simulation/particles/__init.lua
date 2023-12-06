@@ -1,5 +1,5 @@
-requireLib {
+requireLib (..., {
     'main',
     'emitter',
     'particle'
-}
+})

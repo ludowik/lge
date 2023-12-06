@@ -82,6 +82,7 @@ function classSetup(env)
     for name,klass in pairs(classList) do
         if klass.setup then
             klass.setup()
+            klass.setup = nil
         end
     end
 end
@@ -90,6 +91,7 @@ function classUnitTesting()
     for name,klass in pairs(classList) do
         if klass.unitTest then
             klass.unitTest()
+            klass.unitTest = nil
         end
     end
 end

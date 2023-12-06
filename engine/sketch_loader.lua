@@ -2,6 +2,9 @@ function load(reload)
     declareSketches(reload)
     --loadSketches()
 
+    classSetup()
+    classUnitTesting()
+
     processManager:setSketch(getSettings('sketch', 'sketches'))
 end
 

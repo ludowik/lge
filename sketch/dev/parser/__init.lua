@@ -1,7 +1,7 @@
-requireLib {
+requireLib (..., {
     'lexer',
     'parser'
-}
+})
 
 function setup()
     local directoryItems = love.filesystem.getDirectoryItems('engine', '*.lua')

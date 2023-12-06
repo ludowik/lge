@@ -10,8 +10,6 @@ Solitaire = class():extends(Sketch)
 function Solitaire:init()
     Sketch.init(self)
 
-    Card.setup()
-
     self.deckList = Array()
 
     self.deck = Deck(0, 0)

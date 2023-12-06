@@ -1,7 +1,7 @@
 function setup()
     setOrigin(BOTTOM_LEFT)
 
-    path = 'sketch/shaders/shader'
+    path = 'sketch/shaders arts/shadertoy'
 
     shaders = Array()
 
