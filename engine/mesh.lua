@@ -30,7 +30,9 @@ function Mesh:draw(x, y, z, w, h, d)
         scale(w, h, d)
     end
 
-    love.graphics.setColor(fill():rgba())
+    if fill() then
+        love.graphics.setColor(fill():rgba())
+    end
     love.graphics.draw(self.mesh)
     
     popMatrix()
