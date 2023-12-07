@@ -140,7 +140,7 @@ end
 
 function Calc:percent()
     self.acc1 = self.acc1 / 100
-    self.decimalPart = math. self.acc1
+    self.decimalPart = 1 + (tostring(self.acc1):match('%d*%.(%d+)') or ''):len()
     self.value = self.acc1
 end
 
