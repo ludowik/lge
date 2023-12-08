@@ -16,6 +16,14 @@ function vec3:set(x, y, z)
     return self
 end
 
+function vec3:__add(v, factor)
+    factor = factor or 1
+    return vec3(
+        self.x + v.x * factor,
+        self.y + v.y * factor,
+        self.z + v.z * factor)
+end
+
 function vec3:add(v, factor)
     factor = factor or 1
     self.x = self.x + v.x * factor
@@ -38,6 +46,15 @@ function vec3:sub(v, factor)
     self.y = self.y - v.y * factor
     self.z = self.z - v.z * factor
     return self
+end
+
+function vec3.__mul(u, coef)
+    if type(u) == 'number' then u, coef = coef, u end
+    
+    return vec3(
+        u.x * coef,
+        u.y * coef,
+        u.z * coef)
 end
 
 function vec3:clone()
