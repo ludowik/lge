@@ -21,8 +21,7 @@ function Graphics3d.box(x, y, z, w, h, d)
 
     Graphics3d.shader:update()
     
-    love.graphics.setShader(Graphics3d.shader.program)
+    boxMesh.shader = Graphics3d.shader
     boxMesh:draw(x, y, z, w, h, d)
-    love.graphics.setShader()
 end
 

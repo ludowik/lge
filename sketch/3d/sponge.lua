@@ -1,40 +1,47 @@
 function setup()
-    scene = Scene()
-    scene:add(Cube(vec3(0, 0, 0), 50))
+    mesh = Mesh(Model.box())
+    
+    cubes = Array()
+    cubes:add({0, 0, 0, 50, 50, 50})
+
+    updateInstance()
+
+    parameter:watch('cubes:count()')
 end
 
-Cube = class()
-
-function Cube:init(position, size)
-    self.position = position
-    self.size = size
-end
-
-function Cube:draw()
-    box(self.position.x, self.position.y, self.position.z, self.size)
+function updateInstance()
+    instancesBuffer = mesh:instancedBuffer(cubes)
 end
 
 function draw()
-    isometric(5)
-    scene:draw()
+    isometric(5)    
+    mesh:drawInstanced(cubes, instancesBuffer)
 end
 
 function keypressed(key)
     if key == 'return' then
-        local newScene = Scene()
-        scene:foreach(function (cube)
+        local newCubes = Array()
+        cubes:foreach(function (cube)
             for x=-1,1 do
                 for y=-1,1 do
                     for z=-1,1 do
                         if abs(x) + abs(y) + abs(z) > 1 then
-                            newScene:add(Cube(
-                                cube.position + vec3(x, y, z) * (cube.size / 3),
-                                cube.size / 3))
+                            local size = cube[4] / 3
+                            newCubes:add{
+                                cube[1] + x * size,
+                                cube[2] + y * size,
+                                cube[3] + z * size,
+                                size,
+                                size,
+                                size,
+                            }
                         end
                     end
                 end
             end
         end)
-        scene = newScene
+        cubes = newCubes
+
+        updateInstance()
     end
 end

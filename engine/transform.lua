@@ -161,14 +161,12 @@ function isometric(n)
     local beta = PI/4
 
     rotate_matrix(__modelMatrix, alpha, 1, 0, 0)
-    rotate_matrix(__modelMatrix, beta, 0, 1, 0)
+    rotate_matrix(__modelMatrix, -beta, 0, 1, 0)
 
     n = n or 1
-    scale_matrix(__modelMatrix, n, -n, -n)
+    scale_matrix(__modelMatrix, n, n, n)
 
-    love.graphics.setFrontFaceWinding('cw')
-    love.graphics.setMeshCullMode('none')
-    love.graphics.setDepthMode('less', true)
+    set3dMode()
 
     setTransformation()
 end
@@ -191,10 +189,11 @@ function perspective(fovy, aspect, near, far)
 
     local bottom = -range
     local top = range
-
-    resetMatrixContext()
     
-    scale_matrix(__modelMatrix, 1, -1, 1)
+    --resetMatrixContext()
+
+    __modelMatrix = love.math.newTransform()
+    scale_matrix(__modelMatrix, 1, 1, 1)
     
     __projectionMatrix:setMatrix(
         (2 * near) / (right - left), 0, (right + left)/(right - left), 0,
@@ -202,18 +201,27 @@ function perspective(fovy, aspect, near, far)
         0, 0, - (far + near) / (far - near), - (2 * far * near) / (far - near),
         0, 0, - 1, 0)
 
-    love.graphics.setFrontFaceWinding('ccw')
-    love.graphics.setMeshCullMode('none') -- 'back')
-    love.graphics.setDepthMode('greater', true)
-    love.graphics.clear(false, false, 0)
+    set3dMode()
 
     setTransformation()
 end
 
 function camera(eye, target, up)
-    eye = eye or vec3()    
-    target = target or vec3()
-    up = up or vec3(0, 1, 0)
+    env.sketch.cam = lookat(eye, target, up)
+end
+
+function lookat(eye, target, up)
+    if type(eye) == 'number' then
+        eye = vec3(eye, target, up)
+        target = vec3()
+        up = vec3(0, 1, 0)
+
+    else
+        assert(eye == nil or type(eye) == 'table' or type(eye) == 'cdata')
+        eye = eye or vec3()
+        target = target or vec3()
+        up = up or vec3(0, 1, 0)
+    end
 
     local f = (target - eye):normalize()
     local s = f:cross(up):normalize()
@@ -226,6 +234,21 @@ function camera(eye, target, up)
         0, 0, 0, 1)
 
     setTransformation()
+
+    return {
+        eye = eye:clone(),
+        target = target:clone(),
+        up = up:clone(),
+    }
+end
+
+function set3dMode()
+    love.graphics.setFrontFaceWinding('cw')
+    love.graphics.setMeshCullMode('back')
+    love.graphics.setDepthMode('greater', true)
+    love.graphics.clear(true, false, 0)
+
+    setOrigin(BOTTOM_LEFT)
 end
 
 function setTransformation()

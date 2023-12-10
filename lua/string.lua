@@ -16,6 +16,32 @@ function string.format(str, args, ...)
     return string.__format(str, args, ...)
 end
 
+function string.formatNumber(value, sep, thousandSep)
+    sep = sep or '.'
+
+    value = tonumber(value)
+
+    local intPart, decimalPart = tostring(value):match('(%d*)%.?(%d*)')
+
+    local asString
+    if decimalPart == '' then
+        if thousandSep then
+            local reverse, temp = intPart:reverse(), ''
+            while reverse:len() > 0 do
+                temp = temp..thousandSep..reverse:left(3)
+                reverse = reverse:mid(4)
+            end
+            intPart = temp:mid(2):reverse()
+        end
+        asString = intPart
+        
+    else
+        asString = intPart..sep..decimalPart
+    end
+
+    return asString
+end
+
 function string:inList(list)
     assert(type(list) == 'table')
     for _, v in pairs(list) do if v == self then return true end end
@@ -140,7 +166,7 @@ function string.unitTest()
 
     assert(string.rep('t', 4) == 'tttt')
 
-    assert(string.proper('test test') == 'Test test')
+    assert(string.proper('test test') == 'Test Test')
 
     assert(string.startWith('test', 'te') == true)
     assert(string.startWith('test', 'et') == false)
@@ -152,4 +178,11 @@ function string.unitTest()
 
     assert(string.rep('a', 5) == 'aaaaa')
     assert(string.rep('ab', 2) == 'abab')
+
+    assert(string.formatNumber(6546541.6465465) == '6546541.6465465')
+    assert(string.formatNumber(.6465465, '.', ' ') == '0.6465465')
+    assert(string.formatNumber(6465465) == '6465465')
+    assert(string.formatNumber(6465465, '.', ' ') == '6 465 465')
+    assert(string.formatNumber(5.6, ',') == '5,6')
+    assert(string.formatNumber(0) == '0')
 end

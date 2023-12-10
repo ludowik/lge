@@ -10,6 +10,8 @@ function appCubeWave:init()
 
     self.parameter:number('zoom', Bind(self, 'zoom'), 1, 20, 8)
     self.parameter:number('speed', Bind(self, 'speed'), 1, 10, 2)
+
+    self.mesh = Mesh(Model.box())
 end
 
 function appCubeWave:update(dt)
@@ -35,10 +37,9 @@ function appCubeWave:draw()
 
     translate(-(n + 1) / 2 * w, 0, -(n + 1) / 2 * w)
 
-    for x = 1, n do
-        translate(w, 0, 0)
+    instances = Array()
 
-        pushMatrix()
+    for x = 1, n do
         for z = 1, n do
             local d = vec2(x, z):dist(vec2((n + 1) / 2, (n + 1) / 2))
             local offset = map(d, mind, maxd, -PI, PI)
@@ -47,15 +48,14 @@ function appCubeWave:draw()
             local h = map(s, -1, 1, w * 2, w * 8)
             local r = map(s, -1, 1, 0.4, 1)
 
-            translate(0, 0, w)
-
             strokeSize(2)
             stroke(colors.gray)
 
             fill(Color(r))
 
-            box(0, 0, 0, w, h, w)
+            instances:add{x*w, 0, z*w, w, h, w}
         end
-        popMatrix()
     end
+    
+    self.mesh:drawInstanced(instances)
 end

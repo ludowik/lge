@@ -20,11 +20,18 @@ function UIExpression:evaluateExpression()
     
     local type_expression = type(expression)
     if type_expression == 'string' then
-        return tostring(loadstring('return ' .. expression)())
+        return self:formatValue((loadstring('return ' .. expression)()))
 
     elseif type_expression == 'table' then
-        return tostring(expression)
+        return self:formatValue(expression)
     end
 
     return 'Expression error !'
+end
+
+function UIExpression:formatValue(value)
+    if type(value) == 'number' then
+        return string.formatNumber(value, '.', ' ')
+    end
+    return tostring(value)
 end

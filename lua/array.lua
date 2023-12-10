@@ -2,13 +2,11 @@ Array = class():extends(table)
 
 table.__className = 'table'
 
-function Array:init(...)
-    return ...
+function Array:init(t)
+    t = t or {}
+    setmetatable(t, Array)
+    return t
 end
-
--- function Array:__tostring()
---     return tostring(#self)
--- end
 
 Array.add = table.insert
 
@@ -39,14 +37,8 @@ function Array:removeIfTrue(f)
 end
 
 function Array:count(f)
-    local count = 0
-    for i=1,#self do
-        local v = self[i]
-        if f(v) then
-            count = count + 1
-        end
-    end
-    return count
+    assert(not f)
+    return #self
 end
 
 function Array:random()

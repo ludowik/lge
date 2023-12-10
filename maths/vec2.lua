@@ -1,11 +1,37 @@
 vec2 = class()
 
+local ffi = try_require 'ffi'
+if ffi then
+    ffi.cdef [[
+        typedef union vec2 {
+            struct {
+                float x;
+                float y;
+            };
+            float values[2];
+        } vec2;
+    ]]
+
+    ffi.metatype('vec2', vec2)
+
+    function vec2:init(x, y)
+        self = ffi.new('vec2')
+        self:set(x, y)
+        return self
+    end
+
+    function vec2:__pairs()
+        return next, {x=self.x, y=self.y}, nil
+    end
+end
+
 function vec2:init(x, y)
     self:set(x, y)
 end
 
 function vec2:set(x, y)
-    if type(x) == 'table' then
+    local typeof = type(x)
+    if typeof == 'table' or typeof == 'cdata' then
         x, y = x.x, x.y
     end
     

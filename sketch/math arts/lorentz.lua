@@ -10,7 +10,7 @@ points = Array()
 
 function setup()
     parameter:watch('#points')
-    --camera(0, 0, 1)
+    camera(0, 0, 1)
 end
 
 local function step(dt)

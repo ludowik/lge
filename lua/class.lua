@@ -24,11 +24,7 @@ function class(__className)
         __call = function(_, ...)
             local instance = setmetatable({}, klass)
             local init = klass.init or klass.__init
-            local newInstance = init(instance, ...)
-            if newInstance then
-                instance = setmetatable(newInstance, klass)
-            end
-            return instance
+            return init(instance, ...) or instance
         end
     })
     table.insert(classList, klass)
@@ -88,6 +84,8 @@ function classSetup(env)
 end
 
 function classUnitTesting()
+    string.unitTest()
+    
     for name,klass in pairs(classList) do
         if klass.unitTest then
             klass.unitTest()

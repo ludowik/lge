@@ -1,7 +1,9 @@
 Buffer = class()
 
 function Buffer:init(type, t)
-    return t or {}
+    t = t or {}
+    setmetatable(t, Buffer)
+    return t
 end
 
 function Buffer:resize(size)

@@ -1,5 +1,7 @@
 local __cloningObjects = {}
 function table.clone(self)
+    if self.clone and self.clone ~= table.clone then return self:clone() end
+    
     if __cloningObjects[self] then return __cloningObjects[self] end
 
     local t = Array()

@@ -48,10 +48,10 @@ function Spirale:draw()
     background(0)
 
     -- TODO
-    isometric(3)
+    --isometric(3)
 
-    -- perspective()
-    -- camera()
+    perspective()
+    lookat(500, 500, 500)
 
     fill(colors.white)
     

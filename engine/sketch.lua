@@ -95,6 +95,10 @@ function Sketch:drawSketch(force)
         resetMatrix(true)
         resetStyle(getOrigin())
 
+        if self.cam then
+            lookat(self.cam.eye, self.cam.target, self.up)
+        end
+
         self:draw()
     end
 

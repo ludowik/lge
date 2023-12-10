@@ -1,11 +1,38 @@
 vec3 = class()
 
+local ffi = try_require 'ffi'
+if ffi then
+    ffi.cdef [[
+        typedef union vec3 {
+            struct {
+                float x;
+                float y;
+                float z;
+            };
+            float values[3];
+        } vec3;
+    ]]
+
+    ffi.metatype('vec3', vec3)
+
+    function vec3:init(x, y, z)
+        self = ffi and ffi.new('vec3') or self
+        self:set(x, y, z)
+        return self
+    end
+
+    function vec2:__pairs()
+        return next, {x=self.x, y=self.y, z=self.z}, nil
+    end
+end
+
 function vec3:init(x, y, z)
     self:set(x, y, z)
 end
 
 function vec3:set(x, y, z)
-    if type(x) == 'table' then
+    local typeof = type(x)
+    if typeof == 'table' or typeof == 'cdata' then
         x, y, z = x.x, x.y, x.z
     end
     
@@ -55,6 +82,15 @@ function vec3.__mul(u, coef)
         u.x * coef,
         u.y * coef,
         u.z * coef)
+end
+
+function vec3.__div(u, coef)
+    if type(u) == 'number' then u, coef = coef, u end
+    
+    return vec3(
+        u.x / coef,
+        u.y / coef,
+        u.z / coef)
 end
 
 function vec3:clone()

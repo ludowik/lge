@@ -1,6 +1,6 @@
 function setup()
     parameter:boolean('rotate', 'rotateScene', false)
-    parameter:boolean('isometric/perspective', 'isometricMode', false)
+    parameter:boolean('isometric/perspective', 'isometricMode', true)
 
     angleX = 0
     angleY = 0
@@ -17,10 +17,10 @@ function draw()
     background(51)
 
     if isometricMode then
-        isometric(5)
+        isometric(50)
     else
         perspective()
-        camera(vec3(5, 5, 5))
+        lookat(vec3(5, 5, 5))
     end
 
     fill(colors.white)
