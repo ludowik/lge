@@ -3,7 +3,7 @@ Graphics3d = class()
 function Graphics3d.setup()
     push2globals(Graphics3d)
 
-    Graphics3d.shader = Shader('shader', 'engine')
+    Graphics3d.shader = Shader('shader', 'engine/3d')
 end
 
 function Graphics3d.params(x, y, z, w, h, d)

@@ -10,42 +10,37 @@ function Mesh:init(buffer, drawMode, usageMode)
 
     self.drawMode = drawMode or 'triangles'
     self.usageMode = usageMode or 'static'
+
+    self.shader = Graphics3d.shader
 end
 
 function Mesh:update()
     if not self.mesh then
-        local format = Array{{'VertexPosition', 'float', 3}}
-        self.mesh = love.graphics.newMesh(format, self.vertices, self.drawMode, self.usageMode)
-        
-        if self.colors and #self.colors > 0 then
-            local format = {{'VertexColor', 'float', 4}}
-            self.bufs.colors = love.graphics.newMesh(format, self.colors, nil, "static")
-        end
-        
-        if self.texCoords and #self.texCoords > 0 then
-            local format = {{'VertexTexCoord', 'float', 2}}
-            self.bufs.texCoords = love.graphics.newMesh(format, self.texCoords, nil, "static")
-        end        
-
-        if self.normals and #self.normals > 0 then
-            local format = {{'VertexNormal', 'float', 3}}
-            self.bufs.normals = love.graphics.newMesh(format, self.normals, nil, "static")
-        end
+        self.mesh = self:createBuffer(self.vertices, 'VertexPosition', 'float', 3, self.drawMode, self.usageMode)
+        self.bufs.colors = self:createBuffer(self.colors, 'VertexColor', 'float', 4)
+        self.bufs.texCoords = self:createBuffer(self.texCoords, 'VertexTexCoord', 'float', 2)
+        self.bufs.normals = self:createBuffer(self.normals, 'VertexNormal', 'float', 3)
     end
 
-    local shader = self.shader or Graphics3d.shader
-    function attachBuffer(buf, bufName, flagName)
-        if buf then
-            self.mesh:attachAttribute(bufName, buf, 'pervertex')
-            shader.program:send(flagName, 1)
-        else
-            shader.program:send(flagName, 0)
-        end
-    end
+    self:attachBuffer(self.bufs.colors, 'VertexColor', 'useColor')
+    self:attachBuffer(self.bufs.texCoords, 'VertexTexCoord', 'useTexCoord')
+    self:attachBuffer(self.bufs.normals, 'VertexNormal', 'useNormal')
+end
 
-    attachBuffer(self.bufs.colors, 'VertexColor', 'useColor')
-    attachBuffer(self.bufs.texCoords, 'VertexTexCoord', 'useTexCoord')
-    attachBuffer(self.bufs.normals, 'VertexNormal', 'useNormal')
+function Mesh:createBuffer(buf, bufName, type, size, drawMode, usageMode)
+    if buf and #buf > 0 then
+        local format = {{bufName, type, size}}
+        return love.graphics.newMesh(format, buf, drawMode, usageMode or 'static')
+    end
+end
+
+function Mesh:attachBuffer(buf, bufName, flagName, shader)
+    if buf then
+        self.mesh:attachAttribute(bufName, buf, 'pervertex')
+        self.shader.program:send(flagName, 1)
+    else
+         self.shader.program:send(flagName, 0)
+    end
 end
 
 function Mesh:draw(x, y, z, w, h, d)
@@ -64,7 +59,7 @@ function Mesh:draw(x, y, z, w, h, d)
     local clr = fill() or colors.white
     love.graphics.setColor(clr:rgba())
 
-    self:setShader(0)
+    self:useShader(0)
     love.graphics.draw(self.mesh)
     self:restoreShader()
     
@@ -84,17 +79,22 @@ function Mesh:drawInstanced(instances, instancedBuffer)
     self.mesh:attachAttribute('InstancePosition', instancedBuffer, 'perinstance')
     self.mesh:attachAttribute('InstanceScale', instancedBuffer, 'perinstance')
 
-    self:setShader(1)
+    self:useShader(1)
     love.graphics.drawInstanced(self.mesh, n, 0, 0)
     self:restoreShader()
 end
 
-function Mesh:setShader(instanced)
+function Mesh:useShader(instanced)
     self.previousShader = love.graphics.getShader()
     
-    local shader = self.shader or Graphics3d.shader
-    love.graphics.setShader(shader.program)
-    shader.program:send('useInstanced', instanced or 0)
+    love.graphics.setShader(self.shader.program)
+
+    self.shader.program:send('useInstanced', instanced or 0)
+
+    if self.shader.program:hasUniform('camera') and env.sketch.cam then
+        local fromCamera = env.sketch.cam.target - env.sketch.cam.eye
+        self.shader.program:send('camera', {fromCamera.x, fromCamera.y, fromCamera.z, 1.})
+    end
 end
 
 function Mesh:restoreShader()
