@@ -5,28 +5,62 @@ float border = 0.;
 uniform float useColor;
 uniform float useTexCoord;
 uniform float useNormal;
+uniform float useLight;
+uniform float useLightAmbient;
+uniform float useLightDiffuse;
+
 uniform float useInstanced;
 
-uniform vec4 camera;
+uniform vec3 cameraToLight;
 
-varying vec4 normal;
+varying vec3 normal;
+vec3 normalNormalize;
+
+struct Light {    
+    vec4 lightColor;
+    
+    float ambientStrength;
+    float diffuseStrength;
+};
+
+vec4 ambient(Light light) {
+    return light.ambientStrength * light.lightColor;
+}
+
+vec4 diffuse(Light light) {
+    float diff = max(dot(normalNormalize, cameraToLight), 0.0);    
+    return light.diffuseStrength * diff * light.lightColor;
+}
 
 vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
     if (border == 0.) {
         vec4 finalColor = vec4(1., 1., 1., 1.);
 
         if (useColor == 1.) {
-            finalColor = finalColor * color;
+            finalColor = color;
         }
         
         if (useTexCoord == 1.) {
             vec4 texturecolor = Texel(tex, texture_coords);
-            finalColor = finalColor * texturecolor;
+            finalColor = texturecolor * finalColor;
         }
+        
+        if (useLight == 1.) {
+            normalNormalize = normalize(normal);
 
-        if (useNormal == 1.) {                
-            finalColor = finalColor * normal;
-        }        
+            vec4 composition;
+
+            Light light = Light(vec4(.8, .6, .6, 1.), .8, .8);
+            if (useLightAmbient == 1.) {
+                composition += ambient(light);
+            }
+
+            if (useLightDiffuse == 1. && useNormal == 1.) {
+               composition += diffuse(light);
+            }
+
+            finalColor = vec4(composition.xyz, 1.) * finalColor;
+        }
 
         return finalColor;
     }

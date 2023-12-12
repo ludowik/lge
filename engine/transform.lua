@@ -33,6 +33,26 @@ function popMatrix()
     setTransformation()
 end
 
+function pvMatrix()
+    return __projectionMatrix * __viewMatrix
+end
+
+function pvmMatrix()
+    return __projectionMatrix * __viewMatrix * __modelMatrix
+end
+
+function modelMatrix()
+    return __modelMatrix
+end
+
+function viewMatrix()
+    return __viewMatrix
+end
+
+function projectionMatrix()
+    return __projectionMatrix
+end
+
 function translate(x, y, z)
     translate_matrix(__modelMatrix, x, y, z)
     setTransformation()

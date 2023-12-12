@@ -1,5 +1,8 @@
 #pragma language glsl3
 
+uniform mat4 matrixPV;
+uniform mat4 matrixModel;
+
 uniform float useColor;
 //attribute vec4 VertexColor;
 //varying vec4 color;
@@ -9,8 +12,8 @@ uniform float useTexCoord;
 varying vec4 texCoord;
 
 uniform float useNormal;
-attribute vec4 VertexNormal;
-varying vec4 normal;
+attribute vec3 VertexNormal;
+varying vec3 normal;
 
 uniform float useInstanced;
 attribute vec3 InstancePosition;
@@ -23,7 +26,7 @@ vec4 position(mat4 transform_projection, vec4 vertex_position) {
     }
 
     texCoord = VertexTexCoord;
-    normal = VertexNormal;
+    normal = mat3(transpose(inverse(matrixModel))) * VertexNormal;
 
     return transform_projection * vp;
 }

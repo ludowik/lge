@@ -43,6 +43,10 @@ function vec3:set(x, y, z)
     return self
 end
 
+function vec3:__unm()
+    return vec3(-self.x, -self.y, -self.z)
+end
+
 function vec3:__add(v, factor)
     factor = factor or 1
     return vec3(

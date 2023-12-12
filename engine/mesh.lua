@@ -7,6 +7,7 @@ function Mesh:init(buffer, drawMode, usageMode)
     self.normals = (buffer and buffer.normals)
 
     self.bufs = {}
+    self.uniforms = {}
 
     self.drawMode = drawMode or 'triangles'
     self.usageMode = usageMode or 'static'
@@ -34,12 +35,18 @@ function Mesh:createBuffer(buf, bufName, type, size, drawMode, usageMode)
     end
 end
 
+function Mesh:send(uniformName, ...)
+    if self.shader.program:hasUniform(uniformName) then
+        self.shader.program:send(uniformName, ...)
+    end
+end
+
 function Mesh:attachBuffer(buf, bufName, flagName, shader)
     if buf then
         self.mesh:attachAttribute(bufName, buf, 'pervertex')
-        self.shader.program:send(flagName, 1)
+        self:send(flagName, 1)
     else
-         self.shader.program:send(flagName, 0)
+         self:send(flagName, 0)
     end
 end
 
@@ -91,9 +98,20 @@ function Mesh:useShader(instanced)
 
     self.shader.program:send('useInstanced', instanced or 0)
 
-    if self.shader.program:hasUniform('camera') and env.sketch.cam then
-        local fromCamera = env.sketch.cam.target - env.sketch.cam.eye
-        self.shader.program:send('camera', {fromCamera.x, fromCamera.y, fromCamera.z, 1.})
+    if self.shader.program:hasUniform('cameraToLight') and env.sketch.cam then
+        local cameraToLight = vec3(-100, 100, -100) - env.sketch.cam.eye
+        cameraToLight = cameraToLight:normalize()
+        self.shader.program:send('cameraToLight', {cameraToLight.x, cameraToLight.y, cameraToLight.z})
+    end
+
+    for k,v in pairs(self.uniforms) do
+        if self.shader.program:hasUniform(k) then
+            if type(v) == 'boolean' then
+                self.shader.program:send(k, v and 1 or 0)
+            else
+                self.shader.program:send(k, v)
+            end
+        end 
     end
 end
 
