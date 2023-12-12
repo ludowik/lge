@@ -80,11 +80,14 @@ function redraw()
 end
 
 function Engine.draw()
-    local process = processManager:current()
-    if not process then return end
-
     love.graphics.reset()
-    process:drawSketch()
+    
+    local process = processManager:current()
+    if process then
+        process:drawSketch()
+    else
+        background()
+    end
 
     resetMatrix(true)
     resetStyle()
