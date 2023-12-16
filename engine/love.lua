@@ -7,7 +7,7 @@ function love.runProc()
 	local dt = 0
 
 	-- Main loop time
-	return function ()
+	local mainLoop = function ()
 		-- Process events
 		love.event.pump()
 		for name, a,b,c,d,e,f in love.event.poll() do
@@ -33,6 +33,18 @@ function love.runProc()
 		end
 
 		love.timer.sleep(0.001)
+	end
+
+	return function (...)
+		local args = {...}
+		local status, result = xpcall(
+			function ()
+				return mainLoop(unpack(args))
+			end,
+            function (msg)
+				error(msg)
+            end)
+		return result
 	end
 end
 
