@@ -20,4 +20,9 @@ elseif arg[#arg] == "-debug" then
     mobdebug.start()
 
     debugMode = true
+
+else
+    function love.run(...)
+        return love.runProc(...)
+    end
 end

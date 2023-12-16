@@ -15,6 +15,8 @@ uniform float useNormal;
 attribute vec3 VertexNormal;
 varying vec3 normal;
 
+error
+
 uniform float useInstanced;
 attribute vec3 InstancePosition;
 attribute vec3 InstanceScale;
