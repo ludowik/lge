@@ -1,12 +1,3 @@
-function io.read(path)
-    local file = io.open(path, 'r')
-    if file then
-        local content = file:read('*a')
-        file:close()
-        return content
-    end
-end
-
 function lexer(source)
     local tokens = {}
 

@@ -1,8 +1,7 @@
 function Model.load(fileName)
     local filePath = 'resources/models/'..fileName
 
-    local content = io.read(filePath)
-
+    local content = love.filesystem.read(filePath)
     if content then
         content = content:replace('  ', ' ')
 

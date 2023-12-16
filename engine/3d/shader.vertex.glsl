@@ -1,5 +1,7 @@
 #pragma language glsl3
 
+precision highp float;
+
 uniform mat4 matrixPV;
 uniform mat4 matrixModel;
 

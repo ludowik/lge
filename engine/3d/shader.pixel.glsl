@@ -1,5 +1,7 @@
 #pragma language glsl3
 
+precision highp float;
+
 float border = 0.;
 
 uniform float useColor;

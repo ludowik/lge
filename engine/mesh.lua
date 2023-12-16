@@ -17,10 +17,13 @@ end
 
 function Mesh:update()
     if not self.mesh then
-        self.mesh = self:createBuffer(self.vertices, 'VertexPosition', 'float', 3, self.drawMode, self.usageMode)
-        self.bufs.colors = self:createBuffer(self.colors, 'VertexColor', 'float', 4)
-        self.bufs.texCoords = self:createBuffer(self.texCoords, 'VertexTexCoord', 'float', 2)
-        self.bufs.normals = self:createBuffer(self.normals, 'VertexNormal', 'float', 3)
+
+        self.mesh = self:createBuffer(self.vertices, 'VertexPosition', 'floatvec3', 'float', 3, self.drawMode, self.usageMode)
+
+
+        self.bufs.colors = self:createBuffer(self.colors, 'VertexColor', 'floatvec4', 'float', 4, self.drawMode, self.usageMode)
+        self.bufs.texCoords = self:createBuffer(self.texCoords, 'VertexTexCoord', 'floatvec2', 'float', 2, self.drawMode, self.usageMode)
+        self.bufs.normals = self:createBuffer(self.normals, 'VertexNormal', 'floatvec3', 'float', 3, self.drawMode, self.usageMode)
     end
 
     self:attachBuffer(self.bufs.colors, 'VertexColor', 'useColor')
@@ -28,9 +31,14 @@ function Mesh:update()
     self:attachBuffer(self.bufs.normals, 'VertexNormal', 'useNormal')
 end
 
-function Mesh:createBuffer(buf, bufName, type, size, drawMode, usageMode)
+function Mesh:createBuffer(buf, bufName, newType, type, size, drawMode, usageMode)
     if buf and #buf > 0 then
-        local format = {{bufName, type, size}}
+        local format
+        if getOS() == 'ios' then
+            format = {{name=bufName, format=newType}}
+        else
+            format = {{bufName, type, size}}
+        end
         return love.graphics.newMesh(format, buf, drawMode, usageMode or 'static')
     end
 end
@@ -122,10 +130,18 @@ end
 function Mesh:instancedBuffer(instances)
     local n = #instances
 
-    local bufferFormat = {
-        {'InstancePosition', 'float', 3},
-        {'InstanceScale', 'float', 3},        
-    }
+    local bufferFormat
+    if getOS() == 'ios' then
+        bufferFormat = {
+            {name='InstancePosition', format='floatvec3'},
+            {name='InstanceScale', format='floatvec3'},        
+        }
+    else
+        bufferFormat = {
+            {'InstancePosition', 'float', 3},
+            {'InstanceScale', 'float', 3},        
+        }
+    end
 
     local instancedBuffer = love.graphics.newMesh(bufferFormat, instances, nil, "static")
     return instancedBuffer
