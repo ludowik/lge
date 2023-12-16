@@ -1,4 +1,4 @@
-precision highp float;
+highp float;
 
 float ball(vec2 p, float fx, float fy, float ax, float ay) {
     vec2 r = vec2(p.x + cos(iTime * fx) * ax, p.y + sin(iTime * fy) * ay);	

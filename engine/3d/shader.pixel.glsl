@@ -1,17 +1,15 @@
 #pragma language glsl3
 
-precision highp float;
-
 float border = 0.;
 
-uniform float useColor;
-uniform float useTexCoord;
-uniform float useNormal;
-uniform float useLight;
-uniform float useLightAmbient;
-uniform float useLightDiffuse;
+uniform highp float useColor;
+uniform highp float useTexCoord;
+uniform highp float useNormal;
+uniform highp float useLight;
+uniform highp float useLightAmbient;
+uniform highp float useLightDiffuse;
 
-uniform float useInstanced;
+uniform highp float useInstanced;
 
 uniform vec3 cameraToLight;
 

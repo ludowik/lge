@@ -17,9 +17,7 @@ end
 
 function Mesh:update()
     if not self.mesh then
-
         self.mesh = self:createBuffer(self.vertices, 'VertexPosition', 'floatvec3', 'float', 3, self.drawMode, self.usageMode)
-
 
         self.bufs.colors = self:createBuffer(self.colors, 'VertexColor', 'floatvec4', 'float', 4, self.drawMode, self.usageMode)
         self.bufs.texCoords = self:createBuffer(self.texCoords, 'VertexTexCoord', 'floatvec2', 'float', 2, self.drawMode, self.usageMode)

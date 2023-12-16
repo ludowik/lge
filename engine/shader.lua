@@ -15,6 +15,7 @@ end
 function Shader:loadProgram()
     local vs = self:loadShaderCode(self.vertexShader)
     local ps = self:loadShaderCode(self.pixelShader)
+    
     if vs or ps then
         self.errorMsg = nil
         
