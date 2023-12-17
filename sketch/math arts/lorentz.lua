@@ -10,7 +10,7 @@ points = Array()
 
 function setup()
     parameter:watch('#points')
-    camera(0, 0, 1)
+    target = vec3()
 end
 
 local function step(dt)
@@ -34,11 +34,11 @@ end
 function draw()
     background()
 
-    --perspective()
+    perspective()
     --scale(2/W)
 
-    translate(W/2, H/2)
-    scale(4, 4)
+    -- translate(W/2, H/2)
+    -- scale(4, 4)
     
     strokeSize(0.1)
     stroke(colors.blue)
@@ -48,7 +48,11 @@ function draw()
     local camX = map(mouse.position.x, 0, W, -200, 200)
     local camY = map(mouse.position.y, 0, H, -200, 200)
 
-    --camera(camX, camY, -(H / 2.0) / tan(PI * 30.0 / 180.0))
+    camera(vec3(camX, camY, -(H / 2.0) / tan(PI * 30.0 / 180.0)), target)
+    camera(vec3(2, 2, -5), target)
+
+    strokeSize(1/15)
+    scale(1/15)
 
     stroke(colors.white)
     
@@ -56,11 +60,15 @@ function draw()
 
     local hu = 0
     
+    target = vec3()
+
     beginShape()
     for i,v in ipairs(points) do
         stroke(Color.hsl(hu, 1, 1))
         
         vertex(v.x, v.y, v.z)
+
+        target = target + v
 
         hu = hu + 1
 
@@ -69,4 +77,6 @@ function draw()
         end
     end
     endShape()
+
+    target = target / #points
 end

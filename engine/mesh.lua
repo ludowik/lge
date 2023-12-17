@@ -7,7 +7,10 @@ function Mesh:init(buffer, drawMode, usageMode)
     self.normals = (buffer and buffer.normals)
 
     self.bufs = {}
-    self.uniforms = {}
+    self.uniforms = {
+        useColor = 1,
+        useLight = 0,
+    }
 
     self.drawMode = drawMode or 'triangles'
     self.usageMode = usageMode or 'static'
@@ -104,16 +107,23 @@ function Mesh:useShader(instanced)
 
     self.shader.program:send('useInstanced', instanced or 0)
 
-    if self.shader.program:hasUniform('cameraToLight') and env.sketch.cam then
-        local cameraToLight = vec3(-100, 100, -100) - env.sketch.cam.eye
-        cameraToLight = cameraToLight:normalize()
-        self.shader.program:send('cameraToLight', {cameraToLight.x, cameraToLight.y, cameraToLight.z})
+    if env.sketch.cam then
+        self.uniforms.cameraPos = env.sketch.cam.eye
+        self.uniforms.cameraToLight = (vec3(-100, 100, -100) - env.sketch.cam.eye):normalize()
     end
 
     for k,v in pairs(self.uniforms) do
         if self.shader.program:hasUniform(k) then
+            print(k)
             if type(v) == 'boolean' then
                 self.shader.program:send(k, v and 1 or 0)
+            
+            elseif classnameof(v) == 'vec2' then
+                self.shader.program:send(k, {v:unpack()})
+            
+            elseif classnameof(v) == 'vec3' then
+                self.shader.program:send(k, {v:unpack()})
+            
             else
                 self.shader.program:send(k, v)
             end
@@ -141,7 +151,7 @@ function Mesh:instancedBuffer(instances)
         }
     end
 
-    local instancedBuffer = love.graphics.newMesh(bufferFormat, instances, nil, "static")
+    local instancedBuffer = love.graphics.newMesh(bufferFormat, instances, self.drawMode, self.usageMode)
     return instancedBuffer
 end
 

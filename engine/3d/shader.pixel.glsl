@@ -8,12 +8,16 @@ uniform highp float useNormal;
 uniform highp float useLight;
 uniform highp float useLightAmbient;
 uniform highp float useLightDiffuse;
+uniform highp float useLightSpecular;
 
 uniform highp float useInstanced;
 
+uniform vec3 cameraPos;
 uniform vec3 cameraToLight;
 
+varying vec3 fragmentPos;
 varying vec3 normal;
+
 vec3 normalNormalize;
 
 struct Light {    
@@ -21,7 +25,10 @@ struct Light {
     
     float ambientStrength;
     float diffuseStrength;
+    float specularStrength;
 };
+
+uniform Light lights[32];
 
 vec4 ambient(Light light) {
     return light.ambientStrength * light.lightColor;
@@ -30,6 +37,13 @@ vec4 ambient(Light light) {
 vec4 diffuse(Light light) {
     float diff = max(dot(normalNormalize, cameraToLight), 0.0);    
     return light.diffuseStrength * diff * light.lightColor;
+}
+
+vec4 specular(Light light) {
+    vec3 viewDir = normalize(cameraPos - fragmentPos);
+    vec3 reflectDir = reflect(-cameraToLight, normalNormalize);  
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.);
+    return light.specularStrength * spec * vec4(1., 0., 0., 1.); 
 }
 
 vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
@@ -50,13 +64,17 @@ vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
 
             vec4 composition;
 
-            Light light = Light(vec4(.8, .6, .6, 1.), .8, .8);
+            Light light = Light(vec4(.8, .6, .6, 1.), .8, .8, 0.8);
             if (useLightAmbient == 1.) {
                 composition += ambient(light);
             }
 
             if (useLightDiffuse == 1. && useNormal == 1.) {
                composition += diffuse(light);
+            }
+
+            if (useLightSpecular == 1. && useNormal == 1.) {
+               composition += specular(light);
             }
 
             finalColor = vec4(composition.xyz, 1.) * finalColor;

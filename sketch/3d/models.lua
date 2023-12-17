@@ -13,21 +13,35 @@ function setup()
     parameter:boolean('light', 'lightMode', true)
     parameter:boolean('ambient', 'lightAmbient', true)
     parameter:boolean('diffuse', 'lightDiffuse', true)
+    parameter:boolean('specular', 'lightSpecular', true)
+
+    camera(5, 5, 10)
+end
+
+Light = class()
+
+function Light:init(lightColor, ambientStrength, diffuseStrength, specularStrength)
+    self.lightColor = lightColor
+    self.ambientStrength = ambientStrength
+    self.diffuseStrength = diffuseStrength
+    self.specularStrength = specularStrength
 end
 
 function draw()
     background()
     perspective()
-
-    camera(5, 5, 10)
     
+    local light = Light(Color(.8, .6, .6, 1.), .8, .8, 0.8)
+
     models[modelIndex].uniforms = {
         matrixModel = {modelMatrix():getMatrix()},
         matrixPV = {pvMatrix():getMatrix()},
         
+        useColor = 1,
         useLight = lightMode,
         useLightAmbient = lightAmbient,
-        useLightDiffuse = lightDiffuse,        
+        useLightDiffuse = lightDiffuse,
+        useLightSpecular = lightSpecular,
     }
     models[modelIndex]:draw()
 end

@@ -95,10 +95,6 @@ function Sketch:drawSketch(force)
         resetMatrix(true)
         resetStyle(getOrigin())
 
-        if self.cam then
-            lookat(self.cam.eye, self.cam.target, self.up)
-        end
-
         self:draw()
     end
 
@@ -190,6 +186,11 @@ function Sketch:mousepressed(mouse)
 end
 
 function Sketch:mousemoved(mouse)
+    if self.cam then
+        self.cam.angleX = self.cam.angleX + mouse.deltaPos.y * TAU / (W/2)
+        self.cam.angleY = self.cam.angleY + mouse.deltaPos.x * TAU / (W/2)
+    end
+
     local scene = self.scene or env.scene
     if scene then
         return scene:mousemoved(mouse)

@@ -14,6 +14,11 @@ function Shape:draw()
 
     pushMatrix()
     scale(self.scaleFactor)
+
+    if self.shader then
+       self.oldShader = love.graphics.getShader()
+       love.graphics.setShader(self.shader.program)
+    end
     
     if self.type == LINES then
         for i=1,#self.vertices,4 do
@@ -25,6 +30,10 @@ function Shape:draw()
         polyline(self.vertices)
     end
 
+    if self.shader then
+       love.graphics.setShader(self.oldShader)
+    end
+
     popMatrix()
 end
 
@@ -34,9 +43,14 @@ function beginShape(type)
     shape = Shape(type)
 end
 
-function vertex(x, y)
+function vertex(x, y, z)
     shape.vertices:add(x)
     shape.vertices:add(y)
+
+    if z then
+        shape.shader = Graphics3d.shader
+        shape.vertices:add(z)
+    end
 end
 
 local function lerp(a, b, t)

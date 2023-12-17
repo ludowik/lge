@@ -43,6 +43,18 @@ function vec3:set(x, y, z)
     return self
 end
 
+function vec3:__tostring()
+    if isinteger(self.x) and isinteger(self.y) and isinteger(self.z) then
+        return string.format("%d,%d,%d", self.x, self.y, self.z)
+    else
+        return string.format("%.2f,%.2f,%.2f", self.x, self.y, self.z)
+    end
+end
+
+function vec3:unpack()
+    return self.x, self.y, self.z
+end
+
 function vec3:__unm()
     return vec3(-self.x, -self.y, -self.z)
 end

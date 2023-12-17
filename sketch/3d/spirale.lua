@@ -59,8 +59,10 @@ function Spirale:draw()
     local x, y, z = 0, 0, 0
     local px, py, pz
 
-    local vertices = Array()
-    --beginShape(TRIANGLE_STRIP)
+    local buffers = {
+        vertices = Array(),
+        colors = Array()
+    }
 
     for i = -self.params.height , self.params.height do
         y = y + noise(self.elapsedTime + (i / self.params.noise))
@@ -82,17 +84,11 @@ function Spirale:draw()
 
         strokeSize(n)
 
-        vertices:add({x, y, z, clr.r, clr.g, clr.b})
-        vertices:add({0, y, 0, clr.r, clr.g, clr.b})
+        buffers.vertices:add({x, y, z})
+        buffers.vertices:add({0, y, 0})
 
-        -- vertex(x, y, z)
-        -- vertex(0, y, 0)
-
-        --  if px then
-        --      strokeSize(2)
-        --      vertex(0, y, 0, 0, py, 0)
-        --      vertex(x, y, z, px, py, pz)
-        --  end
+        buffers.colors:add({clr.r, clr.g, clr.b, 1})
+        buffers.colors:add({clr.r, clr.g, clr.b, 1})
 
         angle = angle + n * rad(self.params.deltaAngle)
 
@@ -101,6 +97,5 @@ function Spirale:draw()
         pz = z
     end
 
-    --endShape()
-    Mesh(vertices, 'strip'):draw()
+    Mesh(buffers, 'strip'):draw()
 end

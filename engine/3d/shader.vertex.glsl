@@ -3,6 +3,8 @@
 uniform mat4 matrixPV;
 uniform mat4 matrixModel;
 
+varying vec3 fragmentPos;
+
 uniform highp float useColor;
 //attribute vec4 VertexColor;
 //varying vec4 color;
@@ -29,6 +31,8 @@ vec4 position(mat4 transform_projection, vec4 vertex_position) {
 
     mat4 inv = inverse(matrixModel);
     normal = mat3(transpose(inv)) * VertexNormal;
+
+    fragmentPos = vec3(matrixModel * vp);
 
     return transform_projection * vp;
 }

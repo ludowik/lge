@@ -200,7 +200,7 @@ function perspective(fovy, aspect, near, far)
     aspect = aspect or (w / h)
 
     near = near or 0.1
-    far = far or 100000
+    far = far or 10000
 
     local range = __tan(__rad(fovy*0.5)) * near
 
@@ -210,8 +210,6 @@ function perspective(fovy, aspect, near, far)
     local bottom = -range
     local top = range
     
-    --resetMatrixContext()
-
     __modelMatrix = love.math.newTransform()
     scale_matrix(__modelMatrix, 1, 1, 1)
     
@@ -224,13 +222,16 @@ function perspective(fovy, aspect, near, far)
     set3dMode()
 
     setTransformation()
+
+    if env.sketch.cam then
+        lookat(env.sketch.cam.eye, env.sketch.cam.target, env.sketch.cam.up)
+
+        rotate(env.sketch.cam.angleX, 1, 0, 0)
+        rotate(env.sketch.cam.angleY, 0, 1, 0)
+    end
 end
 
-function camera(eye, target, up)
-    env.sketch.cam = lookat(eye, target, up)
-end
-
-function lookat(eye, target, up)
+function cameraParameter(eye, target, up)
     if type(eye) == 'number' then
         eye = vec3(eye, target, up)
         target = vec3()
@@ -243,6 +244,26 @@ function lookat(eye, target, up)
         up = up or vec3(0, 1, 0)
     end
 
+    return eye, target, up
+end
+
+function camera(eye, target, up)
+    eye, target, up = cameraParameter(eye, target, up)
+
+    env.sketch.cam = {
+        eye = eye,
+        target = target,
+        up = up,
+        angleX = 0,
+        angleY = 0,
+    }
+    
+    lookat(eye, target, up)
+end
+
+function lookat(eye, target, up)
+    eye, target, up = cameraParameter(eye, target, up)
+
     local f = (target - eye):normalize()
     local s = f:cross(up):normalize()
     local u = s:cross(f)
@@ -254,12 +275,6 @@ function lookat(eye, target, up)
         0, 0, 0, 1)
 
     setTransformation()
-
-    return {
-        eye = eye:clone(),
-        target = target:clone(),
-        up = up:clone(),
-    }
 end
 
 function set3dMode()
@@ -267,7 +282,7 @@ function set3dMode()
     love.graphics.setMeshCullMode('back')
     love.graphics.setDepthMode('greater', true)
     love.graphics.clear(true, false, 0)
-
+    
     setOrigin(BOTTOM_LEFT)
 end
 

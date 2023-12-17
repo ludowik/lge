@@ -41,6 +41,22 @@ function vec2:set(x, y)
     return self
 end
 
+function vec2:clone()
+    return vec2(self.x, self.y)
+end
+
+function vec2:__tostring()
+    if isinteger(self.x) and isinteger(self.y) then
+        return string.format("%d,%d", self.x, self.y)
+    else
+        return string.format("%.2f,%.2f", self.x, self.y)
+    end
+end
+
+function vec2:unpack()
+    return self.x, self.y
+end
+
 function vec2:draw()
     circle(self.x, self.y, 5)
 end
@@ -72,18 +88,6 @@ function vec2:rotate(angle)
     return vec2(
         c * self.x - s * self.y,
         s * self.x + c * self.y)
-end
-
-function vec2:clone()
-    return vec2(self.x, self.y)
-end
-
-function vec2:__tostring()
-    if isinteger(self.x) and isinteger(self.y) then
-        return string.format("%2d,%2d", self.x, self.y)
-    else
-        return string.format("%.2f,%.2f", self.x, self.y)
-    end
 end
 
 function vec2:__unm()
