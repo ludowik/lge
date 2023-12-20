@@ -64,7 +64,7 @@ vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
 
             vec4 composition;
 
-            Light light = Light(vec4(.8, .6, .6, 1.), .8, .8, 0.8);
+            Light light = lights[0]; // Light(vec4(.8, .6, .6, 1.), .8, .8, 0.8);
             if (useLightAmbient == 1.) {
                 composition += ambient(light);
             }

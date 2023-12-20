@@ -47,8 +47,6 @@ function draw()
             end
         end)
 
-    print(index)
-
     if index == processManager:count() then
         i, j = 0, 0
         index = 0

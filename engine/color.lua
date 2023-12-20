@@ -39,6 +39,10 @@ function Color:set(r, ...)
     end
 end
 
+function Color:unpack()
+    return self.r, self.g, self.b, self.a
+end
+
 function Color.fromParam(clr, ...)
     if clr == nil then return end
     if type(clr) == 'table' then return clr end

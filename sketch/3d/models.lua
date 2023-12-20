@@ -31,7 +31,7 @@ function draw()
     background()
     perspective()
     
-    local light = Light(Color(.8, .6, .6, 1.), .8, .8, 0.8)
+    local light = Light(Color(.8, .6, .2, 1.), .8, .2, 0.2)
 
     models[modelIndex].uniforms = {
         matrixModel = {modelMatrix():getMatrix()},
@@ -42,6 +42,8 @@ function draw()
         useLightAmbient = lightAmbient,
         useLightDiffuse = lightDiffuse,
         useLightSpecular = lightSpecular,
+
+        lights = {light}
     }
     models[modelIndex]:draw()
 end

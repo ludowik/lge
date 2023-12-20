@@ -45,9 +45,7 @@ function Mesh:createBuffer(buf, bufName, newType, type, size, drawMode, usageMod
 end
 
 function Mesh:send(uniformName, ...)
-    if self.shader.program:hasUniform(uniformName) then
-        self.shader.program:send(uniformName, ...)
-    end
+    self.shader:send(uniformName, ...)
 end
 
 function Mesh:attachBuffer(buf, bufName, flagName, shader)
@@ -55,7 +53,7 @@ function Mesh:attachBuffer(buf, bufName, flagName, shader)
         self.mesh:attachAttribute(bufName, buf, 'pervertex')
         self:send(flagName, 1)
     else
-         self:send(flagName, 0)
+        self:send(flagName, 0)
     end
 end
 
@@ -105,27 +103,39 @@ function Mesh:useShader(instanced)
     
     love.graphics.setShader(self.shader.program)
 
-    self.shader.program:send('useInstanced', instanced or 0)
+    self:send('useInstanced', instanced or 0)
 
     if env.sketch.cam then
         self.uniforms.cameraPos = env.sketch.cam.eye
         self.uniforms.cameraToLight = (vec3(-100, 100, -100) - env.sketch.cam.eye):normalize()
     end
 
-    for k,v in pairs(self.uniforms) do
-        if self.shader.program:hasUniform(k) then
-            print(k)
+    self:sendUniforms(self.uniforms)
+end
+
+function Mesh:sendUniforms(uniforms, prefix)
+    for k,v in pairs(uniforms) do
+        local name = (prefix or '')..k
+        if type(v) == 'table' and #v > 0 and type(v[1]) == 'table' then
+            for i,o in ipairs(v) do
+                self:sendUniforms(o, k..'['..(i-1)..'].')
+            end
+
+        elseif self.shader.program:hasUniform(name) then        
             if type(v) == 'boolean' then
-                self.shader.program:send(k, v and 1 or 0)
+                self:send(name, v and 1 or 0)
+            
+            elseif classnameof(v) == 'Color' then
+                self:send(name, {v:unpack()})
             
             elseif classnameof(v) == 'vec2' then
-                self.shader.program:send(k, {v:unpack()})
+                self:send(name, {v:unpack()})
             
             elseif classnameof(v) == 'vec3' then
-                self.shader.program:send(k, {v:unpack()})
-            
+                self:send(name, {v:unpack()})
+
             else
-                self.shader.program:send(k, v)
+                self:send(name, v)
             end
         end 
     end
