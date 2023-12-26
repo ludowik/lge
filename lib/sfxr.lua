@@ -27,7 +27,8 @@ together with the *awesome* [LÖVE](https://love2d.org) game framework.
 ]]--
 -- @module sfxr
 local sfxr = {}
-local bit = bit32 or require("bit")
+local bit = bit32 or try_require("bit")
+if not bit then return end
 
 -- Constants
 

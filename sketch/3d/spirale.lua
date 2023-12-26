@@ -6,12 +6,6 @@ function Spirale:init()
     -- TODO
     -- normalMaterial()
 
-    -- TODO : implement a camera
-    -- self.cam = createEasyCam()
-
-    -- local state = getItem('cam_state')
-    -- self.cam.setState(state)
-
     -- TODO : parameter
     self.params = {
         deltaAngle = 32,
@@ -33,26 +27,21 @@ function Spirale:init()
     self.parameter:boolean('rotate', 'rotateSpirale', false)
 
     self.elapsedTime = 0
+
+    camera(300, 500, 300)
 end
 
 function Spirale:update(dt)
     if rotateSpirale then
-        self.elapsedTime = self.elapsedTime + dt
+        self.elapsedTime = self.elapsedTime + dt / 2
     end
-
-    -- TODO : implement a camera
-    -- storeItem('cam_state', self.cam.getState())
 end
 
 function Spirale:draw()
     background(0)
 
-    -- TODO
-    --isometric(3)
-
     perspective()
-    lookat(500, 500, 500)
-
+    
     fill(colors.white)
     
     local angle = 0
@@ -71,7 +60,7 @@ function Spirale:draw()
 
     for i = -self.params.height , self.params.height do
         local n = noise(self.elapsedTime + (i / self.params.noise))
-        local n2 = noise(self.elapsedTime * 2 + (i / self.params.noise))
+        local n2 = noise(self.elapsedTime  + (i / self.params.noise))
 
         y = y + n
 

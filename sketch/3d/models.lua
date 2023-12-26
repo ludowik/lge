@@ -16,34 +16,30 @@ function setup()
     parameter:boolean('specular', 'lightSpecular', true)
 
     camera(5, 5, 10)
-end
 
-Light = class()
-
-function Light:init(lightColor, ambientStrength, diffuseStrength, specularStrength)
-    self.lightColor = lightColor
-    self.ambientStrength = ambientStrength
-    self.diffuseStrength = diffuseStrength
-    self.specularStrength = specularStrength
+    lights = {
+        Light.ambient(colors.yellow, 0.25),
+        Light.random()
+    }
 end
 
 function draw()
     background()
     perspective()
     
-    local light = Light(Color(.8, .6, .2, 1.), .8, .2, 0.2)
-
-    models[modelIndex].uniforms = {
-        matrixModel = {modelMatrix():getMatrix()},
-        matrixPV = {pvMatrix():getMatrix()},
-        
+    models[modelIndex].uniforms = {        
         useColor = 1,
         useLight = lightMode,
         useLightAmbient = lightAmbient,
         useLightDiffuse = lightDiffuse,
         useLightSpecular = lightSpecular,
 
-        lights = {light}
+        lights = lights
     }
+
+    if modelIndex == 1 and models[modelIndex].image == nil then
+        -- models[modelIndex].image = Image('resources/images/joconde.png')
+    end
+    
     models[modelIndex]:draw()
 end

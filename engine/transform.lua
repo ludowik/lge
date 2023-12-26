@@ -173,15 +173,15 @@ function ortho3D()
 end
 
 function isometric(n)
-    ortho()
+    ortho(0, W, H, 0)
 
     translate_matrix(__modelMatrix, W/2, H/2)
 
     local alpha = __atan(1/__sqrt(2))
-    local beta = PI/4
+    local beta = -PI/4
 
     rotate_matrix(__modelMatrix, alpha, 1, 0, 0)
-    rotate_matrix(__modelMatrix, -beta, 0, 1, 0)
+    rotate_matrix(__modelMatrix, beta, 0, 1, 0)
 
     n = n or 1
     scale_matrix(__modelMatrix, n, n, n)
@@ -200,15 +200,15 @@ function perspective(fovy, aspect, near, far)
     aspect = aspect or (w / h)
 
     near = near or 0.1
-    far = far or 10000
+    far = far or 10^10
 
     local range = __tan(__rad(fovy*0.5)) * near
 
     local left = -range * aspect
     local right = range * aspect
 
-    local bottom = -range
-    local top = range
+    local bottom = range
+    local top = -range
     
     __modelMatrix = love.math.newTransform()
     scale_matrix(__modelMatrix, 1, 1, 1)
@@ -216,8 +216,8 @@ function perspective(fovy, aspect, near, far)
     __projectionMatrix:setMatrix(
         (2 * near) / (right - left), 0, (right + left)/(right - left), 0,
         0, (2 * near) / (top - bottom), (top + bottom)/(top - bottom), 0,
-        0, 0, - (far + near) / (far - near), - (2 * far * near) / (far - near),
-        0, 0, - 1, 0)
+        0, 0, -(far + near) / (far - near), -(2 * far * near) / (far - near),
+        0, 0, -1, 0)
 
     set3dMode()
 
@@ -278,12 +278,10 @@ function lookat(eye, target, up)
 end
 
 function set3dMode()
-    love.graphics.setFrontFaceWinding('cw')
+    love.graphics.setFrontFaceWinding('ccw')
     love.graphics.setMeshCullMode('back')
-    love.graphics.setDepthMode('greater', true)
-    love.graphics.clear(true, false, 0)
-    
-    setOrigin(BOTTOM_LEFT)
+    love.graphics.setDepthMode('less', true)
+    love.graphics.clear(true, false, 1)
 end
 
 function setTransformation()

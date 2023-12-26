@@ -1,4 +1,5 @@
-local sfxr = require 'lib.sfxr'
+if getOS() == 'web' then return end
+local sfxr = try_require 'lib.sfxr'
 
 Sound = class ()
 

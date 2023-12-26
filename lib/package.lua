@@ -3,7 +3,7 @@ function updateScripts(github)
     if github then
         url = 'https://ludowik.github.io/lge'
     else
-        url = 'http://192.168.1.13:8080'
+        url = 'http://192.168.1.29:8080' -- 1 at garches
     end
 
     url = url..'/build/lge.love'

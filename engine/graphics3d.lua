@@ -7,11 +7,11 @@ function Graphics3d.setup()
 end
 
 function Graphics3d.params(x, y, z, w, h, d)
-    x = x or 0
-    y = y or 0
-    z = z or 0
-
-    w = w or 1
+    if not w then
+        w = x or 1
+        x, y, z = 0, 0, 0
+    end
+    
     h = h or w
     d = d or w
 

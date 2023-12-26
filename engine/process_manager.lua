@@ -62,6 +62,8 @@ function ProcessManager:setCurrentSketch(processIndex)
 
     love.window.setTitle(process.env.__name)
 
+    Graphics2d.setMode(process.size.x, process.size.y)
+
     process.fb:setContext()
     process.fb:background()
     resetContext()
@@ -134,7 +136,7 @@ function ProcessManager:updateLoop(dt)
             local process = processManager:current()
             if not process then return end
 
-            local delay = 0.25
+            local delay = 0.05
             local dt = 1/60
             local startTime = time()
             while true do

@@ -25,8 +25,7 @@ function appCubeWave:draw()
 
     isometric(self.zoom)
 
-    -- TODO
-    -- light(true)
+    --light(true)
 
     local n = self.n * 2 + 1
 

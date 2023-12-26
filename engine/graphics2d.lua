@@ -7,8 +7,6 @@ function Graphics2d.setup()
 end
 
 function Graphics2d.initMode()
-    local fullscreen = false
-
     love.window.setVSync(1)
 
     local ws, hs, flags = love.window.getMode()
@@ -28,12 +26,7 @@ function Graphics2d.initMode()
 
     else
         X, Y, W, H = 5, 51, 400, 800
-
-        love.window.setMode(2 * X + W, 2 * Y + H, {
-            msaa = 3,
-            fullscreen = false,
-            highdpi = true,
-        })
+        Graphics2d.setMode(2*X+W, 2*Y+H)
     end
 
     if getOS() == 'macos' then
@@ -43,6 +36,19 @@ function Graphics2d.initMode()
     end
 
     devicePixelRatio = love.window.getDPIScale()
+end
+
+function Graphics2d.setMode(w, h)
+    local params = {
+        msaa = 3,
+        fullscreen = false,
+    }
+
+    if love.getVersion() < 12 then
+        params.highdpi = true
+    end
+
+    love.window.setMode(w, h, params)
 end
 
 function Graphics2d.background(clr, ...)

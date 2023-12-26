@@ -9,7 +9,7 @@
             "type": "lua-local",
             "request": "launch",
             "program": {
-                "command": "/Applications/love.app/Contents/MacOS/love"
+                "command": "/Applications/lge.app/Contents/MacOS/lge"
             },
             "windows": {
                 "program": {

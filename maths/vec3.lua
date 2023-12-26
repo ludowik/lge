@@ -26,6 +26,10 @@ if ffi then
     end
 end
 
+function vec3.fromArray(t)
+    return vec3(t[1], t[2], t[3])
+end
+
 function vec3:init(x, y, z)
     self:set(x, y, z)
 end

@@ -8,15 +8,7 @@ function Sketch:init(w, h)
     Index.init(self)
     State.init(self)
 
-    if not w then
-        w = w or (2 * X + W)
-        h = h or (2 * Y + H)
-    end
-
-    Rect.init(self, 0, 0, w, h)
-
-    fb = fb or FrameBuffer(w, h)
-    self.fb = fb
+    self:setMode(W, H)
 
     MouseEvent.init(self)
     KeyboardEvent.init(self)
@@ -26,6 +18,20 @@ function Sketch:init(w, h)
     self:initMenu()
 
     self.scene = nil
+end
+
+function Sketch:setMode(w, h, specific)
+    w = (2 * X + w)
+    h = (2 * Y + h)
+
+    Rect.init(self, 0, 0, w, h)
+
+    if specific then
+        self.fb = FrameBuffer(w, h)
+    else
+        fb = fb or FrameBuffer(w, h)
+        self.fb = fb
+    end
 end
 
 function Sketch:__tostring()
@@ -187,7 +193,7 @@ end
 
 function Sketch:mousemoved(mouse)
     if self.cam then
-        self.cam.angleX = self.cam.angleX + mouse.deltaPos.y * TAU / (W/2)
+        -- self.cam.angleX = self.cam.angleX + mouse.deltaPos.y * TAU / (W/2)
         self.cam.angleY = self.cam.angleY + mouse.deltaPos.x * TAU / (W/2)
     end
 
@@ -207,6 +213,12 @@ function Sketch:mousereleased(mouse)
 end
 
 function Sketch:wheelmoved(dx, dy)
+    if self.cam then
+        local direction = self.cam.target - self.cam.eye 
+        self.cam.eye.y = self.cam.eye.y + dy / 5
+        self.cam.target:set(self.cam.eye + direction)
+    end
+
     if env.zoom then
         local ratio = 1.2
         if dy > 0 then

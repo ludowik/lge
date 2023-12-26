@@ -1,8 +1,9 @@
 FrameBuffer = class()
 
-function FrameBuffer:init(w, h)
+function FrameBuffer:init(w, h, format)
     self.canvas = love.graphics.newCanvas(w, h, {
-        msaa = 5
+        msaa = 5,
+        format = format or 'normal'
     })
 
     self:setContext()
@@ -49,7 +50,8 @@ end
 
 function FrameBuffer:update()
     if self.imageData then
-        self.texture = love.graphics.newImage(self.imageData)
+        self.texture = love.graphics.newImage(self.imageData, {dpiscale=devicePixelRatio})
+        self.texture:setWrap('repeat')
         --self.imageData = nil
     end
 end
@@ -70,7 +72,8 @@ end
 Image = class()
 
 function Image:init(filename, ...)
-    self.texture = love.graphics.newImage(filename)
+    self.texture = love.graphics.newImage(filename, {dpiscale=devicePixelRatio})
+
     self.width = self.texture:getWidth()
     self.height = self.texture:getHeight()
 end

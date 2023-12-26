@@ -2,20 +2,22 @@ Mesh = class()
 
 function Mesh:init(buffer, drawMode, usageMode)
     self.vertices = (buffer and buffer.vertices) or buffer or {}
-    self.colors = (buffer and buffer.colors)
-    self.texCoords = (buffer and buffer.texCoords)
-    self.normals = (buffer and buffer.normals)
+    self.colors = (buffer and buffer.colors) or {}
+    self.texCoords = (buffer and buffer.texCoords) or {}
+    self.normals = (buffer and buffer.normals) or {}
 
     self.bufs = {}
     self.uniforms = {
         useColor = 1,
         useLight = 0,
+        useHeightMap = 0,
     }
 
     self.drawMode = drawMode or 'triangles'
     self.usageMode = usageMode or 'static'
 
     self.shader = Graphics3d.shader
+    self.texture = nil
 end
 
 function Mesh:update()
@@ -30,12 +32,19 @@ function Mesh:update()
     self:attachBuffer(self.bufs.colors, 'VertexColor', 'useColor')
     self:attachBuffer(self.bufs.texCoords, 'VertexTexCoord', 'useTexCoord')
     self:attachBuffer(self.bufs.normals, 'VertexNormal', 'useNormal')
+
+    if self.image then
+        self.image:update()
+        self.mesh:setTexture(self.image.texture)
+    else
+        self.mesh:setTexture()
+    end
 end
 
 function Mesh:createBuffer(buf, bufName, newType, type, size, drawMode, usageMode)
     if buf and #buf > 0 then
         local format
-        if getOS() == 'ios' then
+        if love.getVersion() > 11 then
             format = {{name=bufName, format=newType}}
         else
             format = {{bufName, type, size}}
@@ -58,6 +67,8 @@ function Mesh:attachBuffer(buf, bufName, flagName, shader)
 end
 
 function Mesh:draw(x, y, z, w, h, d)
+    x, y, z, w, h, d = Graphics3d.params(x, y, z, w, h, d)
+    
     self:update()
 
     pushMatrix()
@@ -107,16 +118,25 @@ function Mesh:useShader(instanced)
 
     if env.sketch.cam then
         self.uniforms.cameraPos = env.sketch.cam.eye
-        self.uniforms.cameraToLight = (vec3(-100, 100, -100) - env.sketch.cam.eye):normalize()
     end
 
     self:sendUniforms(self.uniforms)
+
+    self:sendUniforms({
+        matrixModel = {modelMatrix():getMatrix()},
+        matrixPV = {pvMatrix():getMatrix()},
+
+        deltaTime = deltaTime,
+        elapsedTime = ElapsedTime,
+    })
+
 end
 
 function Mesh:sendUniforms(uniforms, prefix)
     for k,v in pairs(uniforms) do
         local name = (prefix or '')..k
         if type(v) == 'table' and #v > 0 and type(v[1]) == 'table' then
+            self:send(k..'Count', #v)
             for i,o in ipairs(v) do
                 self:sendUniforms(o, k..'['..(i-1)..'].')
             end
@@ -149,7 +169,7 @@ function Mesh:instancedBuffer(instances)
     local n = #instances
 
     local bufferFormat
-    if getOS() == 'ios' then
+    if love.getVersion() > 11 then
         bufferFormat = {
             {name='InstancePosition', format='floatvec3'},
             {name='InstanceScale', format='floatvec3'},        
@@ -165,12 +185,89 @@ function Mesh:instancedBuffer(instances)
     return instancedBuffer
 end
 
--- TODO
-function Mesh:addRect(x, y, w, h, angle)
+function Mesh:addRect(...)
+    local idx = #self.vertices/6 + 1
+    
+    self:setRect(idx, ...)
+    self:setRectColor(idx, colors.white)
+    self:setRectTex(idx, 0, 0, 1, 1)
+
+    return idx
 end
 
-function Mesh:setRect(index, x, y, w, h, angle)
+function Mesh:setRect(idx, x, y, w, h, angle, z)
+    local i = (idx - 1) * 6
+
+    z = z or 0
+    
+    -- TODO : rotate
+    self.vertices[i+1] = {x, y, z}
+    self.vertices[i+2] = {x+w, y, z}
+    self.vertices[i+3] = {x+w, y+h, z}
+    self.vertices[i+4] = {x, y, z}
+    self.vertices[i+5] = {x+w, y+h, z}
+    self.vertices[i+6] = {x, y+h, z}
 end
 
-function Mesh:setRectColor(index, clr)
+function Mesh:addPlane(...)
+    local idx = #self.vertices/6 + 1
+    
+    self:setPlane(idx, ...)
+    self:setRectColor(idx, colors.white)
+    self:setRectTex(idx, 0, 0, 1, 1)
+
+    return idx
+end
+
+function Mesh:setPlane(idx, x, y, w, h, angle, z)
+    local i = (idx - 1) * 6
+
+    z = z or 0
+    
+    -- TODO : rotate
+    self.vertices[i+1] = {x, z, y}
+    self.vertices[i+2] = {x+w, z, y}
+    self.vertices[i+3] = {x+w, z, y-h}
+    self.vertices[i+4] = {x, z, y}
+    self.vertices[i+5] = {x+w, z, y-h}
+    self.vertices[i+6] = {x, z, y-h}
+end
+
+function Mesh:setRectColor(idx, clr)
+    local i = (idx - 1) * 6
+
+    local clrAsArray = {clr:unpack()}
+
+    self.colors[i+1] = clrAsArray
+    self.colors[i+2] = clrAsArray
+    self.colors[i+3] = clrAsArray
+    self.colors[i+4] = clrAsArray
+    self.colors[i+5] = clrAsArray
+    self.colors[i+6] = clrAsArray
+end
+
+function Mesh:setRectTex(idx, s, t, w, h)
+    local i = (idx - 1) * 6
+
+    local sw = s + w
+    local th = t + h
+
+    self.texCoords[i+1] = {s , t}
+    self.texCoords[i+2] = {s , th}
+    self.texCoords[i+3] = {sw, th}
+    self.texCoords[i+4] = {s , t}
+    self.texCoords[i+5] = {sw, th}
+    self.texCoords[i+6] = {sw, t}
+end
+
+function  Mesh:vertex(i, v)
+    if v then
+        self.vertices[i] = v
+    else
+        return self.vertices[i]
+    end
+end
+
+function Mesh:computeNormals()
+    self.normals = Model.computeNormals(self.vertices)
 end
