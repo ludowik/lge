@@ -23,7 +23,20 @@ function Graphics3d.box(x, y, z, w, h, d)
     x, y, z, w, h, d = Graphics3d.params(x, y, z, w, h, d)
 
     boxMesh = boxMesh or Mesh(Model.box())
+    boxMesh.uniforms.border = 0
 
+    boxMesh.shader = Graphics3d.shader
+    boxMesh.shader:update()
+
+    boxMesh:draw(x, y, z, w, h, d)
+end
+
+function Graphics3d.boxBorder(x, y, z, w, h, d)
+    x, y, z, w, h, d = Graphics3d.params(x, y, z, w, h, d)
+
+    boxMesh = boxMesh or Mesh(Model.box())
+    boxMesh.uniforms.border = 1
+    
     boxMesh.shader = Graphics3d.shader
     boxMesh.shader:update()
 

@@ -15,7 +15,7 @@ if ffi then
     ffi.metatype('vec2', vec2)
 
     function vec2:init(x, y)
-        self = ffi.new('vec2')
+        self = ffi and ffi.new('vec2') or self
         self:set(x, y)
         return self
     end
@@ -23,6 +23,10 @@ if ffi then
     function vec2:__pairs()
         return next, {x=self.x, y=self.y}, nil
     end
+end
+
+function vec2.fromArray(t)
+    return vec2(t[1], t[2])
 end
 
 function vec2:init(x, y)
@@ -45,6 +49,34 @@ function vec2:clone()
     return vec2(self.x, self.y)
 end
 
+function vec2.fromAngle(angle)
+    return vec2(cos(angle), sin(angle))
+end
+
+function vec2.random(w, h)
+    return vec2():randomize(w, h)
+end
+
+function vec2:randomize(w, h)
+    if w then
+        h = h or w
+        self.x = random(w)
+        self.y = random(h)
+    else
+        self.x = random()
+        self.y = random()
+    end
+    return self
+end
+
+function vec2.randomInScreen()
+    return vec2():randomize(W, H)
+end
+
+function vec2.randomAngle(angle)
+    return vec2(1, 0):rotate(random(angle or TAU))
+end
+
 function vec2:__tostring()
     if isinteger(self.x) and isinteger(self.y) then
         return string.format("%d,%d", self.x, self.y)
@@ -55,26 +87,6 @@ end
 
 function vec2:unpack()
     return self.x, self.y
-end
-
-function vec2:draw()
-    circle(self.x, self.y, 5)
-end
-
-function vec2.fromAngle(angle)
-    return vec2(cos(angle), sin(angle))
-end
-
-function vec2.random(w, h)
-    return vec2():randomize(w, h)
-end
-
-function vec2.randomInScreen()
-    return vec2():randomize(W, H)
-end
-
-function vec2.randomAngle(angle)
-    return vec2(1, 0):rotate(random(angle or TAU))
 end
 
 function vec2:rotateInPlace(angle)
@@ -152,18 +164,6 @@ function vec2.div(u, coef)
     return u
 end
 
-function vec2:randomize(w, h)
-    if w then
-        h = h or w
-        self.x = random(w)
-        self.y = random(h)
-    else
-        self.x = random()
-        self.y = random()
-    end
-    return self
-end
-
 function vec2:dist(v)
     return (v-self):len()
 end
@@ -226,6 +226,10 @@ function vec2:crossInPlace(v)
     self.y = y
 
     return self
+end
+
+function vec2:draw()
+    circle(self.x, self.y, 5)
 end
 
 function vec2.unitTest()

@@ -1,6 +1,6 @@
 #pragma language glsl3
 
-float border = 0.;
+uniform float border = 0.;
 
 uniform highp float useColor;
 uniform highp float useTexCoord;
@@ -9,7 +9,6 @@ uniform highp float useLight;
 uniform highp float useLightAmbient;
 uniform highp float useLightDiffuse;
 uniform highp float useLightSpecular;
-uniform highp float useHeightMap;
 
 uniform highp float useInstanced;
 
@@ -18,6 +17,8 @@ uniform vec3 cameraPos;
 varying vec3 vertexPos;
 varying vec3 fragmentPos;
 varying vec3 normal;
+
+varying vec4 vertexProjection;
 
 struct Light {
     float lightType;
@@ -53,14 +54,11 @@ vec4 specular(Light light) {
 }
 
 vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
+    vec4 finalColor = vec4(1., 1., 1., 1.);
+    
     if (border == 0.) {
-        vec4 finalColor = vec4(1., 1., 1., 1.);
-
         if (useColor == 1.) {
             finalColor = color;
-        }
-
-        if (useHeightMap == 1.) {
         }
         
         if (useTexCoord == 1.) {
@@ -92,7 +90,14 @@ vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
         return finalColor;
     }
 
-    if (texture_coords.x >= 0.01 && texture_coords.x <= 0.99 && texture_coords.y >= 0.01 && texture_coords.y <= 0.99) discard;    
-    float v = 1.;
-    return vec4(v, v, v, 1.);
+    float size = 0.002 * vertexProjection.z;
+    if (texture_coords.x >= size &&
+        texture_coords.x <= 1.-size &&
+        texture_coords.y >= size &&
+        texture_coords.y <= 1.-size)
+    {
+        discard;
+    }
+
+    return finalColor;
 }

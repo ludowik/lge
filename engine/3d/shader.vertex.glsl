@@ -6,6 +6,8 @@ uniform mat4 matrixModel;
 varying vec3 vertexPos;
 varying vec3 fragmentPos;
 
+varying vec4 vertexProjection;
+
 uniform highp float useColor;
 //attribute vec4 VertexColor;
 //varying vec4 color;
@@ -64,5 +66,6 @@ vec4 position(mat4 , vec4 ) {
     vertexPos = vec3(vp);
     fragmentPos = vec3(matrixModel * vp);
 
-    return matrixPV * matrixModel * vp;
+    vertexProjection = matrixPV * matrixModel * vp;
+    return vertexProjection;
 }

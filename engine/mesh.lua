@@ -60,9 +60,9 @@ end
 function Mesh:attachBuffer(buf, bufName, flagName, shader)
     if buf then
         self.mesh:attachAttribute(bufName, buf, 'pervertex')
-        self:send(flagName, 1)
+        self.uniforms[flagName] = 1
     else
-        self:send(flagName, 0)
+        self.uniforms[flagName] = 0
     end
 end
 
@@ -110,19 +110,17 @@ function Mesh:drawInstanced(instances, instancedBuffer)
 end
 
 function Mesh:useShader(instanced)
-    self.previousShader = love.graphics.getShader()
-    
+    self.previousShader = love.graphics.getShader()    
     love.graphics.setShader(self.shader.program)
-
-    self:send('useInstanced', instanced or 0)
 
     if env.sketch.cam then
         self.uniforms.cameraPos = env.sketch.cam.eye
     end
 
     self:sendUniforms(self.uniforms)
-
     self:sendUniforms({
+        useInstanced = instanced or 0,
+        
         matrixModel = {modelMatrix():getMatrix()},
         matrixPV = {pvMatrix():getMatrix()},
 

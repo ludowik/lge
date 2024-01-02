@@ -1,6 +1,7 @@
 function setup()
     parameter:boolean('rotate', 'rotateScene', false)
     parameter:boolean('isometric/perspective', 'isometricMode', true)
+    parameter:boolean('border', 'border', true)
 
     camera(vec3(5, 5, 5))
 end
@@ -23,5 +24,6 @@ function draw()
 
     fill(colors.white)
 
-    box()
+    --box()
+    boxBorder()
 end
