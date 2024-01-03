@@ -58,7 +58,7 @@ function draw()
     local instances = Array()
     for x=-count,count-1 do
         for z=-count,count-1 do
-            instances:add{x*len*size, 0, z*len*size, 1, 1, 1}
+            instances:add{x*len*size, 0, z*len*size, 1, 1, 1, 1, 1, 1, 1}
         end
     end
 

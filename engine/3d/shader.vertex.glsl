@@ -3,6 +3,9 @@
 uniform mat4 matrixPV;
 uniform mat4 matrixModel;
 
+uniform vec4 strokeColor;
+uniform vec4 fillColor;
+
 varying vec3 vertexPos;
 varying vec3 fragmentPos;
 
@@ -10,7 +13,7 @@ varying vec4 vertexProjection;
 
 uniform highp float useColor;
 //attribute vec4 VertexColor;
-//varying vec4 color;
+varying vec4 color;
 
 uniform highp float useTexCoord;
 //attribute vec4 VertexTexCoord;
@@ -23,6 +26,7 @@ varying vec3 normal;
 uniform highp float useInstanced;
 attribute vec3 InstancePosition;
 attribute vec3 InstanceScale;
+attribute vec4 InstanceColor;
 
 uniform highp float useHeightMap;
 
@@ -36,8 +40,11 @@ vec4 position(mat4 , vec4 ) {
     vec4 vp = vec4(VertexPosition.xyz, 1.);
     vec3 vn = VertexNormal;
 
+    color = fillColor * VertexColor;
+
     if (useInstanced == 1.) {
         vp = vp * vec4(InstanceScale, 1.) + vec4(InstancePosition, 0.);
+        color *= InstanceColor;
     }
 
     if (useHeightMap == 1.) {

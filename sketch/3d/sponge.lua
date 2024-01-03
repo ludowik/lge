@@ -2,7 +2,7 @@ function setup()
     mesh = Mesh(Model.box())
     
     cubes = Array()
-    cubes:add({0, 0, 0, 50, 50, 50})
+    cubes:add({0, 0, 0, 50, 50, 50, 1, 1, 1, 1})
 
     updateInstance()
 
@@ -34,6 +34,7 @@ function keypressed(key)
                                 size,
                                 size,
                                 size,
+                                1, 1, 1, 1
                             }
                         end
                     end

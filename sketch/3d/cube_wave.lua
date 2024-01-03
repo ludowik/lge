@@ -50,9 +50,9 @@ function appCubeWave:draw()
             strokeSize(2)
             stroke(colors.gray)
 
-            fill(Color(r))
+            --fill(Color(r))
 
-            instances:add{x*w, 0, z*w, w, h, w}
+            instances:add{x*w, 0, z*w, w, h, w, r, r, r, 1}
         end
     end
     

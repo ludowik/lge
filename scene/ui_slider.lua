@@ -31,13 +31,13 @@ function UISlider:draw()
 
     noStroke()
 
-    local r = 4
-    fill(self.styles.fillColor:darken())
+    local r = 5
+    fill(self.styles.fillColor:alpha(0.6))    
     rect(0, 0, self.size.y, self.size.y, r)
     rect(self.size.x - self.size.y, 0, self.size.y, self.size.y, r)
 
     fill(self.styles.fillColor)
-    rect(self.size.y - r, 0, self.size.x - 2 * self.size.y + 2 * r, self.size.y)
+    rect(self.size.y, 0, self.size.x - 2 * self.size.y, self.size.y)
 
     local dx = (self.value:get() - self.minValue) / (self.maxValue - self.minValue)
     local x = self.size.y + dx * (self.size.x - 2 * self.size.y)

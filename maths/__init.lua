@@ -1,6 +1,7 @@
 require 'maths.random'
 require 'maths.vec2'
 require 'maths.vec3'
+require 'maths.quaternion'
 require 'maths.rect'
 require 'maths.box'
 require 'maths.math'

@@ -11,6 +11,7 @@ function Mesh:init(buffer, drawMode, usageMode)
         useColor = 1,
         useLight = 0,
         useHeightMap = 0,
+        border = 0,
     }
 
     self.drawMode = drawMode or 'triangles'
@@ -18,6 +19,7 @@ function Mesh:init(buffer, drawMode, usageMode)
 
     self.shader = Graphics3d.shader
     self.texture = nil
+    self.clr = nil
 end
 
 function Mesh:update()
@@ -81,7 +83,7 @@ function Mesh:draw(x, y, z, w, h, d)
         scale(w, h, d)
     end
 
-    local clr = fill() or colors.white
+    local clr = self.clr or fill() or colors.white
     love.graphics.setColor(clr:rgba())
 
     self:useShader(0)
@@ -103,10 +105,32 @@ function Mesh:drawInstanced(instances, instancedBuffer)
         
     self.mesh:attachAttribute('InstancePosition', instancedBuffer, 'perinstance')
     self.mesh:attachAttribute('InstanceScale', instancedBuffer, 'perinstance')
+    self.mesh:attachAttribute('InstanceColor', instancedBuffer, 'perinstance')
 
     self:useShader(1)
     love.graphics.drawInstanced(self.mesh, n, 0, 0)
     self:restoreShader()
+end
+
+function Mesh:instancedBuffer(instances)
+    local n = #instances
+
+    local bufferFormat
+    if love.getVersion() > 11 then
+        bufferFormat = {
+            {name='InstancePosition', format='floatvec3'},
+            {name='InstanceScale', format='floatvec3'},
+            {name='InstanceColor', format='floatvec4'},
+        }
+    else
+        bufferFormat = {
+            {'InstancePosition', 'float', 3},
+            {'InstanceScale', 'float', 3},
+            {'InstanceColor', 'float', 4},
+        }
+    end
+
+    return love.graphics.newMesh(bufferFormat, instances, self.drawMode, self.usageMode)
 end
 
 function Mesh:useShader(instanced)
@@ -123,6 +147,9 @@ function Mesh:useShader(instanced)
         
         matrixModel = {modelMatrix():getMatrix()},
         matrixPV = {pvMatrix():getMatrix()},
+
+        strokeColor = stroke() or colors.white,
+        fillColor = fill() or colors.white,
 
         deltaTime = deltaTime,
         elapsedTime = ElapsedTime,
@@ -161,26 +188,6 @@ end
 
 function Mesh:restoreShader()
     love.graphics.setShader(self.previousShader)
-end
-
-function Mesh:instancedBuffer(instances)
-    local n = #instances
-
-    local bufferFormat
-    if love.getVersion() > 11 then
-        bufferFormat = {
-            {name='InstancePosition', format='floatvec3'},
-            {name='InstanceScale', format='floatvec3'},        
-        }
-    else
-        bufferFormat = {
-            {'InstancePosition', 'float', 3},
-            {'InstanceScale', 'float', 3},        
-        }
-    end
-
-    local instancedBuffer = love.graphics.newMesh(bufferFormat, instances, self.drawMode, self.usageMode)
-    return instancedBuffer
 end
 
 function Mesh:addRect(...)

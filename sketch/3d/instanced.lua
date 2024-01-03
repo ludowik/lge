@@ -7,14 +7,15 @@ function setup()
     for x=-size,size do
         for y=-size,size do
             for z=-size,size do
-                m.instances:add({x, y, z, 0.25, 0.25, 0.25})
+                m.instances:add({x, y, z, 0.25, 0.25, 0.25, 1, 1, 1, 1})
             end
         end
     end
 
     m.instancesBuffer = m:instancedBuffer(m.instances)
 
-    camera(100, 100, 100)
+    local distance = 1000
+    camera(vec3(distance))
 end
 
 function draw()

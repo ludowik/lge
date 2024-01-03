@@ -304,7 +304,7 @@ function Graphics2d.rectMode(mode)
     return stylesSet('rectMode', mode)
 end
 
-function Graphics2d.rect(x, y, w, h, radius)
+function Graphics2d.rect(x, y, w, h, radius, ...)
     local mode = rectMode()
 
     if mode == CENTER then
@@ -313,13 +313,13 @@ function Graphics2d.rect(x, y, w, h, radius)
 
     if fill() then
         love.graphics.setColor(fill():rgba())
-        love.graphics.rectangle('fill', x, y, w, h, radius)
+        love.graphics.rectangle('fill', x, y, w, h, radius, ...)
     end
     if stroke() then
         local width = strokeSize()
         love.graphics.setColor(stroke():rgba())
         love.graphics.setLineWidth(width)
-        love.graphics.rectangle('line', x + width / 2, y + width / 2, w - width, h - width, radius)
+        love.graphics.rectangle('line', x + width / 2, y + width / 2, w - width, h - width, radius, ...)
     end
 end
 

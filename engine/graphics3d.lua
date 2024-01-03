@@ -28,19 +28,23 @@ function Graphics3d.box(x, y, z, w, h, d)
     boxMesh.shader = Graphics3d.shader
     boxMesh.shader:update()
 
+    boxMesh.clr = fill()
     boxMesh:draw(x, y, z, w, h, d)
 end
 
+local boxBorderMesh
 function Graphics3d.boxBorder(x, y, z, w, h, d)
     x, y, z, w, h, d = Graphics3d.params(x, y, z, w, h, d)
 
-    boxMesh = boxMesh or Mesh(Model.box())
-    boxMesh.uniforms.border = 1
+    boxBorderMesh = boxBorderMesh or Mesh(Model.box())
+    boxBorderMesh.colors = nil
+    boxBorderMesh.uniforms.border = 1
     
-    boxMesh.shader = Graphics3d.shader
-    boxMesh.shader:update()
+    boxBorderMesh.shader = Graphics3d.shader
+    boxBorderMesh.shader:update()
 
-    boxMesh:draw(x, y, z, w, h, d)
+    boxBorderMesh.clr = stroke()
+    boxBorderMesh:draw(x, y, z, w, h, d)
 end
 
 local teapotMesh

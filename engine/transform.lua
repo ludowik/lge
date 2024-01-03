@@ -80,7 +80,7 @@ function rotate(angle, x, y, z)
     setTransformation()
 end
 
-local __rm = love.math.newTransform()    
+local __rm = love.math.newTransform()
 function rotate_matrix(m, angle, x, y, z)
     x = x or 0
     y = y or 0
@@ -93,7 +93,7 @@ function rotate_matrix(m, angle, x, y, z)
     c, s = cos(angle), sin(angle)
     -- end
 
-    if x == 1 then        
+    if x == 1 then
         __rm:setMatrix(
             1, 0, 0, 0,
             0, c,-s, 0,
@@ -124,7 +124,7 @@ function rotate_matrix(m, angle, x, y, z)
     end
 end
 
-function scale(sx, sy, sz)    
+function scale(sx, sy, sz)
     scale_matrix(__modelMatrix, sx, sy, sz)
     setTransformation()
 end
@@ -140,13 +140,17 @@ function scale_matrix(m, sx, sy, sz)
         0,  0, sz, 0,
         0,  0,  0, 1)
 
-    m = m or love.math.newTransform()    
+    m = m or love.math.newTransform()
     if m then
         m:apply(__sm)
         return m
     else
         return __sm
     end
+end
+
+function applyMatrix(m)
+    __modelMatrix:apply(m)
 end
 
 function ortho(left, right, bottom, top, near, far)
@@ -195,7 +199,7 @@ function perspective(fovy, aspect, near, far)
     local w = W or 400
     local h = H or 400
 
-    fovy = fovy or 45    
+    fovy = fovy or 45
 
     aspect = aspect or (w / h)
 
@@ -261,7 +265,7 @@ function camera(eye, target, up)
     lookat(eye, target, up)
 end
 
-function lookat(eye, target, up)
+function lookat(eye, target, up)    
     eye, target, up = cameraParameter(eye, target, up)
 
     local f = (target - eye):normalize()
@@ -274,13 +278,19 @@ function lookat(eye, target, up)
         -f.x, -f.y, -f.z, f:dot(eye),
         0, 0, 0, 1)
 
+    local q = Quaternion.lookAt(eye, target, up)
+
+    local t = translate_matrix(nil, -eye.x, -eye.y, -eye.z)
+    __viewMatrix = q:toRotationMatrix()
+    __viewMatrix:apply(t)
+
     setTransformation()
 end
 
 function set3dMode()
     love.graphics.setFrontFaceWinding('ccw')
     love.graphics.setMeshCullMode('back')
-    love.graphics.setDepthMode('less', true)
+    love.graphics.setDepthMode('lequal', true)
     love.graphics.clear(true, false, 1)
 end
 
