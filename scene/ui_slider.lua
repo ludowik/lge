@@ -23,7 +23,7 @@ function UISlider:computeSize()
     fontSize(self.styles.fontSize)
     local strValue = self:getValue(self.maxValue)
     local wvalue, hvalue = textSize(strValue)
-    self.size:set(max(W / 3, wlabel + wvalue) + 2 * hvalue, hvalue)
+    self.size:set(min(W / 3, wlabel + 5 + wvalue) + 2 * hvalue, hvalue)
 end
 
 function UISlider:draw()

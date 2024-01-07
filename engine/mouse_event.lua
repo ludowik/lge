@@ -11,7 +11,6 @@ function MouseEvent:mousemoved(mouse)
 end
 
 function MouseEvent:mousereleased(mouse)
-    --return self:click(mouse)
 end
 
 function MouseEvent:click(mouse)

@@ -30,7 +30,7 @@ function EventManager:mousereleased(id, x, y, presses)
     mouse:released(id, x, y, 0)
     
     if eventManager.currentObject then
-        if mouse.elapsedTime < 0.15 and mouse.move:len() <= 1 then
+        if mouse.move:len() <= 1 then -- and mouse.elapsedTime < 0.15
             mouse.presses = 1
             if eventManager.currentObject:click(mouse) then
                 eventManager.currentObject = nil
@@ -80,6 +80,9 @@ function EventManager:keypressed(key, scancode, isrepeat)
         
         elseif key == 'f' then
             toggleFused()
+
+        elseif key == 'f1' then
+            env.__wireframe = not env.__wireframe
 
         elseif key == 'w' then
             local name = process.__className:replace('_', '+')

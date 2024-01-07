@@ -14,7 +14,7 @@ function setup()
 
     m.instancesBuffer = m:instancedBuffer(m.instances)
 
-    local distance = 1000
+    local distance = 100
     camera(vec3(distance))
 end
 
