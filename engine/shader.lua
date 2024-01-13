@@ -19,6 +19,8 @@ function Shader:loadProgram()
     if vs or ps then
         self.errorMsg = nil
         
+        log('compile shader '..self.pathName)
+
         local status, result = xpcall(
             function ()
                 return love.graphics.newShader(self.pixelShader.code, self.vertexShader.code)

@@ -40,7 +40,7 @@ function setup()
     }
 
     skybox = Mesh(Model.skybox())
-    skybox.image = Image('resources/images/skybox.png')
+    skybox.image = Image('resources/images/skybox2.png')
 
     local eye = vec3(0, 20, 0)
     camera(eye, eye + vec3(len, -1, len))
