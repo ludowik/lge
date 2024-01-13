@@ -27,8 +27,8 @@ function setup()
     
     m.uniforms.useHeightMap = true
     m.uniforms.tex = img.texture
-    m.uniforms.texWidth = img.width*devicePixelRatio
-    m.uniforms.texHeight = img.height*devicePixelRatio
+    m.uniforms.texWidth = img.width * devicePixelRatio
+    m.uniforms.texHeight = img.height * devicePixelRatio
 
     m.uniforms.useLight = true
     m.uniforms.useLightAmbient = true
@@ -53,12 +53,12 @@ function draw()
     background()
     perspective()
     
-    local count = 5
+    local count = 10
 
     local instances = Array()
     for x=-count,count-1 do
         for z=-count,count-1 do
-            instances:add{x*len*size, 0, z*len*size, 1, 1, 1}
+            instances:add{x*len*size, 0, z*len*size, 1, 1, 1, 1, 1, 1, 1}
         end
     end
 

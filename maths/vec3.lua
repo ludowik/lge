@@ -47,6 +47,38 @@ function vec3:set(x, y, z)
     return self
 end
 
+function vec3:clone()
+    return vec3(self.x, self.y, self.z)
+end
+
+function vec3.random(w, h, d)
+    return vec3():randomize(w, h, d)
+end
+
+function vec3:randomize(w, h, d)
+    if w then
+        h = h or w
+        d = d or w
+        self.x = random(w)
+        self.y = random(h)
+        self.z = random(d)
+    else
+        self.x = random()
+        self.y = random()
+        self.z = random()
+    end
+    return self
+end
+
+function vec3.randomAngle()
+    local v = vec3()
+    v.x = random(-1, 1)
+    v.y = random(-1, 1)
+    v.z = random(-1, 1)
+    v:normalizeInPlace()
+    return v
+end
+
 function vec3:__tostring()
     if isinteger(self.x) and isinteger(self.y) and isinteger(self.z) then
         return string.format("%d,%d,%d", self.x, self.y, self.z)
@@ -113,27 +145,11 @@ function vec3.__div(u, coef)
         u.z / coef)
 end
 
-function vec3:clone()
-    return vec3(self.x, self.y, self.z)
-end
-
-function vec3.random(w, h, d)
-    return vec3():randomize(w, h, d)
-end
-
-function vec3:randomize(w, h, d)
-    if w then
-        h = h or w
-        d = d or w
-        self.x = random(w)
-        self.y = random(h)
-        self.z = random(d)
-    else
-        self.x = random()
-        self.y = random()
-        self.z = random()
-    end
-    return self
+function vec3.div(u, coef)
+    u.x = u.x / coef
+    u.y = u.y / coef
+    u.z = u.z / coef
+    return u
 end
 
 function vec3:dist(v)

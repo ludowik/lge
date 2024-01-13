@@ -48,7 +48,7 @@ function draw()
     local camX = map(mouse.position.x, 0, W, -200, 200)
     local camY = map(mouse.position.y, 0, H, -200, 200)
 
-    camera(vec3(camX, camY, -(H / 2.0) / tan(PI * 30.0 / 180.0)), target)
+--    camera(vec3(camX, camY, -(H / 2.0) / tan(PI * 30.0 / 180.0)), target)
     camera(vec3(2, 2, -5), target)
 
     strokeSize(1/15)

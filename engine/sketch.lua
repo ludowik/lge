@@ -3,6 +3,9 @@ Sketch = class() : extends(Index, State, Rect, MouseEvent, KeyboardEvent)
 local fb
 
 function Sketch:init(w, h)
+    -- TODEL
+    assert(not w and not h)
+
     env.sketch = self
 
     Index.init(self)
@@ -97,6 +100,7 @@ function Sketch:drawSketch(force)
             depth = true,
         })
         love.graphics.clear(false, false, true)
+        love.graphics.setWireframe(env.__wireframe and true or false)
 
         resetMatrix(true)
         resetStyle(getOrigin())
@@ -129,11 +133,11 @@ function Sketch:drawSketch(force)
     end
 
     love.graphics.draw(self.fb.canvas,
-        self.position.x, -- x
-        self.position.y, -- y
-        0,               -- rotation
-        sx,              -- scale x
-        sy)              -- scale y
+        self.position.x,
+        self.position.y + (deviceOrientation ~= 0 and self.size.x or 0),
+        deviceOrientation, -- rotation
+        sx, -- scale x
+        sy) -- scale y
 
     -- TODO : gérer un zoom
     -- TODO : gérer une translation

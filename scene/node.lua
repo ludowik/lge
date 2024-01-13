@@ -75,7 +75,7 @@ function Node:contains(position)
     if self.visible == false then return end
 
     for _,item in ipairs(self.items, self.reverseSearch) do
-        if item.visible ~=  false then
+        if item.visible ~=  false and item.contains then
             local result = item:contains(position)
             if result then
                 return result
