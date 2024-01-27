@@ -15,6 +15,7 @@ function Parameter:randomizeParameter()
     for _,ui in ipairs(self.items) do
         if ui.items then
             Parameter.randomizeParameter(ui)
+
         elseif ui.set then
             ui:set(random(ui.minValue, ui.maxValue))
         end

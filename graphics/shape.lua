@@ -48,7 +48,7 @@ function vertex(x, y, z)
     shape.vertices:add(y)
 
     if z then
-        shape.shader = Graphics3d.shader
+        shape.shader = Graphics3d.shaders.shader3d
         shape.vertices:add(z)
     end
 end

@@ -136,6 +136,13 @@ function vec3.__mul(u, coef)
         u.z * coef)
 end
 
+function vec3.mul(u, coef)
+    u.x = u.x * coef
+    u.y = u.y * coef
+    u.z = u.z * coef
+    return u
+end
+
 function vec3.__div(u, coef)
     if type(u) == 'number' then u, coef = coef, u end
     

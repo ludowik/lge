@@ -1,13 +1,24 @@
 function setup()
     supportedOrientations(LANDSCAPE_ANY)
 
-    baseImageList = {
-        'resources/images/joconde.png',
-        'resources/images/marsu.jpeg',
-        'resources/images/wikipedia.png',
-    }
+    -- baseImageList = {
+    --     'resources/images/joconde.png',
+    --     'resources/images/marsu.jpeg',
+    --     'resources/images/wikipedia.png',
+    -- }
 
-    baseImageList = love.filesystem.getDirectoryItems('resources/images')
+    -- TODO : make a global function and more flexible
+    function dir(path, ext)
+        local items = love.filesystem.getDirectoryItems(path)
+        local list = Array()
+        for i,file in ipairs(items) do
+            if file:find(ext) then
+                list:add(file)
+            end
+        end
+        return list
+    end
+    baseImageList = dir('resources/images', '.png')
 
     local function getSource()
         local baseImage = Image('resources/images/'..baseImageList[baseImageIndex])

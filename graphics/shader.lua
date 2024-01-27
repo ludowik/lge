@@ -45,8 +45,8 @@ function Shader:loadShaderCode(shader)
     local modtime = info.modtime
     if shader.modtime == nil or modtime > shader.modtime then
         shader.modtime = modtime
-        local noise2d = love.filesystem.read(self.path..'/noise2d.glsl')
-        local noise3d = love.filesystem.read(self.path..'/noise3d.glsl')
+        local noise2d = love.filesystem.read('graphics/shaders/noise2d.glsl')
+        local noise3d = love.filesystem.read('graphics/shaders/noise3d.glsl')
         shader.code = '#pragma language glsl3'..NL..
             noise2d..NL..
             noise3d..NL..

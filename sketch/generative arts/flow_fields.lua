@@ -71,6 +71,7 @@ function FlowFields:draw()
     else
         self.fb:getImageData()
         self.fb.imageData:mapPixel(function(x, y)
+            if self.grid[x] == nil or self.grid[x][y] == nil then return 1, 1, 1, 1 end
             return hsb2rgb(self.grid[x][y] / TAU, 0.5, 0.5)
         end)
     end
