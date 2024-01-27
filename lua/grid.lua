@@ -143,6 +143,8 @@ function Grid:draw(x, y, drawCellFunction)
             if cell then
                 if cell.draw then
                     cell:draw(i, j)
+                elseif cell.value and type(cell.value) == 'table' and cell.value.draw then
+                    cell.value:draw(i, j)
                 elseif drawCellFunction then
                     drawCellFunction(cell, i, j)
                 end
