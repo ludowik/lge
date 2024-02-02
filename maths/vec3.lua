@@ -202,3 +202,17 @@ function vec3.dot(a, b)
         a.y * b.y +
         a.z * b.z)        
 end
+
+function vec3:rotateInPlace(angle)
+    local c, s = cos(angle), sin(angle)
+    self.x, self.z = c * self.x - s * self.z, s * self.x + c * self.z
+    return self
+end
+
+function vec3:rotate(angle)
+    local c, s = cos(angle), sin(angle)
+    return vec3(
+        c * self.x - s * self.y,
+        self.y,
+        s * self.z + c * self.z)
+end

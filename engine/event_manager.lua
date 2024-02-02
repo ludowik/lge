@@ -43,9 +43,9 @@ function EventManager:mousereleased(id, x, y, presses)
     end
 end
 
-function EventManager:wheelmoved(x, y)
+function EventManager:wheelmoved(dx, dy)
     if _G.env.sketch.wheelmoved then
-        _G.env.sketch:wheelmoved(x, y)
+        _G.env.sketch:wheelmoved(dx, dy)
     end
 end
 

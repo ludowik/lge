@@ -1,13 +1,14 @@
 local previousCanvas
-function setContext(fb)
-    assert(fb)
-    -- TODEL
-    -- if fb == nil then return resetContext() end
-
+function setContext(fb, depth)
     assert(fb and fb.canvas)
 
     previousCanvas = love.graphics.getCanvas()
-    love.graphics.setCanvas(fb.canvas)
+    love.graphics.setCanvas({
+        fb.canvas,
+        stencil = false,
+        depth = depth,
+    })
+
     pushMatrix()
 end
 

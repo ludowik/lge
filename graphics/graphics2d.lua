@@ -6,7 +6,7 @@ function Graphics2d.setup()
     font = love.graphics.newFont(25)
     Graphics2d.lights = {
         Light.sun(),
-        Light.ambient(colors.red, 0.5),
+        Light.ambient(colors.white, 0.8),
     }
 end
 
@@ -17,7 +17,7 @@ function Graphics2d.getSafeArea()
     if getOS() == 'ios' then
         x, y, w, h = love.window.getSafeArea()
     else
-        x, y, w, h = 5, 50, 1200, 800
+        x, y, w, h = 5, 50, 1600, 800
     end
 
     x = x + margeExtension
