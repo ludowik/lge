@@ -12,8 +12,7 @@ function class(__className)
         __class = true,
         __className = __className or scriptName(3),
         __classInfo = scriptLink(3),
-        __init = function(instance, ...)
-        end,
+        __init = function(instance, ...) end,
         extends = extends,
         attrib = attrib,
         clone = table.clone,

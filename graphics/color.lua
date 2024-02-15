@@ -117,6 +117,30 @@ function Color.mix(clr1, clr2, alpha)
     )
 end
 
+function Color.min(a, b)
+    return Color(
+        min(a.r, b.r),
+        min(a.g, b.g),
+        min(a.b, b.b),
+        1)
+end
+
+function Color.max(a, b)
+    return Color(
+        max(a.r, b.r),
+        max(a.g, b.g),
+        max(a.b, b.b),
+        1)
+end
+
+function Color.avg(a, b)
+    return Color(
+        (a.r + b.r)/2,
+        (a.g + b.g)/2,
+        (a.b + b.b)/2,
+        1)
+end
+
 function Color:grayscale()
     grayscale =
         self.r * 0.299 +
@@ -171,6 +195,56 @@ function Color:randomize()
     self.b = random()
     self.a = 1
     return self
+end
+
+function Color.grayScaleLightness(clr, to)
+    local r, g, b = clr.r, clr.g, clr.b
+    local c = (max(r,g,b) + min(r,g,b)) / 2
+    if to then
+        to.r, to.g, to.b, to.a = c, c, c, clr.a
+        return to
+    else
+        return Color(c,c,c,clr.a)
+    end
+end
+
+function Color.grayScaleAverage(clr, to)
+    local r, g, b = clr.r, clr.g, clr.b
+    local c = (r+g+b) / 3
+    if to then
+        to.r, to.g, to.b, to.a = c, c, c, clr.a
+        return to
+    else
+        return Color(c,c,c,clr.a)
+    end
+end
+
+function Color.grayScaleLuminosity(clr, to)
+    local r, g, b = clr.r, clr.g, clr.b
+    local c = 0.21*r + 0.72*g + 0.07*b
+    if to then
+        to.r, to.g, to.b, to.a = c, c, c, clr.a
+        return to
+    else
+        return Color(c,c,c,clr.a)
+    end
+end
+
+function Color.grayScaleIntensity(clr, to)
+    local r, g, b = clr.r, clr.g, clr.b
+    local c = 0.299*r + 0.587*g + 0.114*b
+    if to then
+        to.r, to.g, to.b, to.a = c, c, c, clr.a
+        return to
+    else
+        return Color(c,c,c,clr.a)
+    end
+end
+
+Color.grayscale = Color.grayScaleIntensity
+
+function Color.rgb2hsl(self)
+    return rgb2hsl(self.r, self.g, self.b)
 end
 
 function rgb2hsl(r, g, b)
@@ -259,6 +333,10 @@ function hsl2rgb(hue, saturation, lightness)
 
         return r, g, b
     end
+end
+
+function Color.rgb2hsb(self)
+    return rgb2hsb(self.r, self.g, self.b)
 end
 
 function rgb2hsb(r, g, b)
