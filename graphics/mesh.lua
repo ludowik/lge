@@ -20,7 +20,7 @@ function Mesh:init(buffer, drawMode, usageMode)
     self.drawMode = drawMode or 'triangles'
     self.usageMode = usageMode or 'static'
 
-    self.shader = Graphics3d.shader
+    self.shader = Graphics3d.shaders.shader3d
     self.image = nil
     self.clr = nil
 end
@@ -100,7 +100,9 @@ function Mesh:drawInstanced(instances, instancedBuffer)
     
     local n = #instances
 
-    instancedBuffer = instancedBuffer or self:instancedBuffer(instances)
+    instancedBuffer = getResource(instances, function (instances)
+        return self:instancedBuffer(instances)
+    end)
         
     self.mesh:attachAttribute('InstancePosition', instancedBuffer, 'perinstance')
     self.mesh:attachAttribute('InstanceScale', instancedBuffer, 'perinstance')
@@ -156,6 +158,7 @@ function Mesh:useShader(instanced)
         matrixModel = {modelMatrix():getMatrix()},
         matrixPV = {pvMatrix():getMatrix()},
 
+        strokeSize = strokeSize(),
         strokeColor = stroke() or colors.white,
         fillColor = fill() or colors.white,
 

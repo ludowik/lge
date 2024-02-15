@@ -4,7 +4,7 @@ function setup()
 end
 
 function reset()
-    shape = undefined
+    shape = nil
 end
 
 function drawbranches(ax, ay, aa, x, y, a, l, level)
@@ -24,11 +24,11 @@ function drawbranches(ax, ay, aa, x, y, a, l, level)
         stroke(0, 1, 0, level / 10)
     end
 
-    vertex(ax, ay)
+    --vertex(ax, ay)
     aa = aa + a
     ax = ax + sin(-aa) * l
     ay = ay + cos(-aa) * l
-    vertex(ax, ay)
+    --vertex(ax, ay)
 
     line(0, 0, 0, l)
 
@@ -53,7 +53,7 @@ function draw()
     scale(1, -1)
     translate(0, -H * 0.95)
 
-    if not shape then
+    if true or not shape then
         beginShape(LINES)
 
         local l = random(4, 8)

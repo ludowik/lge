@@ -28,6 +28,8 @@ function setup()
     parameter:boolean('scale_shape', true)
 
     parameter:boolean('_3d', false)
+
+    camera(1000, 1000, 1000)
 end
 
 function draw()
@@ -76,11 +78,9 @@ end
 function __draw3d()
     background(51)
 
-    light(true)
-
     perspective()
 
-    translate(W/2, H/2)
+    light(true)
 
     stroke(colors.white)
     strokeSize(5)
@@ -138,16 +138,19 @@ function __draw3d()
     for i=1,#array do
         local v = array[i]
         v:mul(ratio)
+
+        array[i] = {v:unpack()}
     end
 
     fill(colors.white)
 
-    cullingMode(false)
+    -- cullingMode(false)
+    love.graphics.setMeshCullMode('none')
 
-    mesh = Mesh(array)
+    mesh = Mesh(Model.centerVertices(array))
     mesh.drawMode = 'strip'
-    -- TODO : BUG !!!
-    mesh.normals = Model.computeNormals(mesh.vertices, nil, false)
+    -- TODO : BUG !!! computeNormals need to be modify to manage strip type
+    --mesh.normals = Model.computeNormals(mesh.vertices, nil, false)
 
     mesh:draw()
 end

@@ -23,13 +23,13 @@ function Sketch:init(w, h)
     self.scene = nil
 end
 
-function Sketch:setMode(w, h, specific)
+function Sketch:setMode(w, h, persistence)
     w = (2 * X + w)
     h = (2 * Y + h)
 
     Rect.init(self, 0, 0, w, h)
 
-    if specific then
+    if persistence then
         self.fb = FrameBuffer(w, h)
     else
         fb = fb or FrameBuffer(w, h)
@@ -84,16 +84,16 @@ function Sketch:updateSketch(dt)
 end
 
 function Sketch:drawSketch(force)
-    local processDraw = true
+    local requireDrawing = true
     if self.frames then
         if self.frames == 0 then
-            processDraw = false
+            requireDrawing = false
         else
             self.frames = self.frames - 1
         end
     end
 
-    if processDraw then
+    if requireDrawing then
         love.graphics.setCanvas({
             self.fb.canvas,
             stencil = false,
@@ -196,9 +196,16 @@ function Sketch:mousepressed(mouse)
 end
 
 function Sketch:mousemoved(mouse)
-    if self.cam then
-        -- self.cam.angleX = self.cam.angleX + mouse.deltaPos.y * TAU / (W/2)
-        self.cam.angleY = self.cam.angleY + mouse.deltaPos.x * TAU / (W/2)
+    local camera = self.cam
+    if camera then
+        if camera.mode == MODEL then
+            -- camera.angleX = camera.angleX + mouse.deltaPos.y * TAU / (W/2)
+            camera.angleY = camera.angleY + mouse.deltaPos.x * TAU / (W/2)
+        else
+            local direction = camera.target - camera.eye 
+            direction:rotateInPlace(mouse.deltaPos.x * TAU / (W/2))
+            camera.target:set(camera.eye + direction)
+        end
     end
 
     local scene = self.scene or env.scene
@@ -217,10 +224,11 @@ function Sketch:mousereleased(mouse)
 end
 
 function Sketch:wheelmoved(dx, dy)
-    if self.cam then
-        local direction = self.cam.target - self.cam.eye 
-        self.cam.eye.y = self.cam.eye.y + dy / 5
-        self.cam.target:set(self.cam.eye + direction)
+    local camera = self.cam
+    if camera then
+        local direction = camera.target - camera.eye 
+        camera.eye.y = camera.eye.y + dy
+        camera.target:set(camera.eye + direction)
     end
 
     if env.zoom then

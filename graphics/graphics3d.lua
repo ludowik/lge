@@ -3,14 +3,18 @@ Graphics3d = class()
 function Graphics3d.setup()
     push2globals(Graphics3d)
 
-    Graphics3d.shader = Shader('shader', 'graphics/shaders')
+    Graphics3d.shaders = {
+        shader3d = Shader('shader', 'graphics/shaders'),
+        line = Shader('line', 'graphics/shaders'),
+    }
+
     Graphics3d.meshes = {}
 end
 
 function Graphics3d.getMesh(name, f)
     if not Graphics3d.meshes[name] then
         Graphics3d.meshes[name] = Graphics3d.meshes[name] or Mesh(f())
-        Graphics3d.meshes[name].shader = Graphics3d.shader
+        Graphics3d.meshes[name].shader = Graphics3d.shaders.shader3d
     end
     return Graphics3d.meshes[name]
 end

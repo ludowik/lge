@@ -1,4 +1,4 @@
-uniform float border = 0.;
+uniform highp float border;
 
 uniform highp float useColor;
 uniform highp float useTexCoord;
@@ -12,13 +12,10 @@ uniform highp float useRelief;
 
 uniform highp float useInstanced;
 
-uniform mat4 matrixPV;
-uniform mat4 matrixModel;
+uniform highp vec4 strokeColor;
+uniform highp vec4 fillColor;
 
-uniform vec4 strokeColor;
-uniform vec4 fillColor;
-
-uniform vec3 cameraPos;
+uniform highp vec3 cameraPos;
 
 varying vec3 vertexPos;
 varying vec3 fragmentPos;
@@ -26,12 +23,11 @@ varying vec4 color;
 varying vec4 texCoord;
 varying vec3 normal;
 vec3 nn;
-varying float instanceID;
 varying vec4 vertexProjection;
 
-uniform float param1;
-uniform float param2;
-uniform float param3;
+uniform highp float param1;
+uniform highp float param2;
+uniform highp float param3;
 
 struct Light {
     float lightType;
@@ -44,7 +40,7 @@ struct Light {
     float specularStrength;
 };
 
-uniform int lightsCount;
+uniform highp int lightsCount;
 uniform Light lights[32];
 
 struct Material {
@@ -57,7 +53,6 @@ struct Material {
     float alpha;
 };
 uniform Material materials[1];
-Material material = materials[0];
 
 vec4 ambient(Light light) {
     return light.ambientStrength * light.lightColor;
@@ -80,6 +75,7 @@ vec4 specular(Light light, float shininess, vec3 normal) {
 }
 
 vec4 effect(vec4 _color, Image tex, vec2 texture_coords, vec2 screen_coords) {    
+    Material material = materials[0];
     vec4 finalColor = color;
     
     if (border == 0.)

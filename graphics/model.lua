@@ -17,6 +17,20 @@ function Model.model(w, h, d)
     return data, w, h, d
 end
 
+function Model.line(x1, y1, x2, y2)
+    local data = Model.model()
+
+    local f1 = vec3(x1, y1, 0)
+    local f2 = vec3(x2, y2, 0)
+    
+    Model.addFace(data, {f1, f2, f2, f1, f2, f1}, {colors.white}) -- line
+    data.texCoords = {
+        {-1}, {-1}, {1}, {-1}, {1}, {1},
+    }
+
+    return data
+end
+
 function Model.plane(w, h, d)
     local data, w, h, d = Model.model(w, h, d)
     h = 0
@@ -248,7 +262,10 @@ function Model.computeNormals(vertices, indices)
     local v12, v13 = vec3(), vec3()
 
     local n = indices and #indices or #vertices
+    n = floor(n/3)*3
+     
     local v1, v2, v3
+    
     for i=1,n,3 do
         if indices then
             v1 = vec3.fromArray(vertices[indices[i]])
@@ -288,21 +305,16 @@ function Model.centerVertices(vertices, indices)
     end
 
     local n = indices and #indices or #vertices
-    local v1, v2, v3
-    for i=1,n,3 do
+    
+    local v
+    for i=1,n do
         if indices then
-            v1 = vec3.fromArray(vertices[indices[i]])
-            v2 = vec3.fromArray(vertices[indices[i+1]])
-            v3 = vec3.fromArray(vertices[indices[i+2]])
+            v = vec3.fromArray(vertices[indices[i]])
         else
-            v1 = vec3.fromArray(vertices[i])
-            v2 = vec3.fromArray(vertices[i+1])
-            v3 = vec3.fromArray(vertices[i+2])
+            v = vec3.fromArray(vertices[i])
         end
 
-        updateMinMax(v1)
-        updateMinMax(v2)
-        updateMinMax(v3)
+        updateMinMax(v)
     end
 
     local d = -vec3(
@@ -316,20 +328,14 @@ function Model.centerVertices(vertices, indices)
         v[3] = v[3] + d.z
     end
 
-    for i=1,n,3 do
+    for i=1,n do
         if indices then
-            v1 = vertices[indices[i]]
-            v2 = vertices[indices[i+1]]
-            v3 = vertices[indices[i+2]]
+            v = vertices[indices[i]]
         else
-            v1 = vertices[i]
-            v2 = vertices[i+1]
-            v3 = vertices[i+2]
+            v = vertices[i]
         end
 
-        translateVertex(v1, d)
-        translateVertex(v2, d)
-        translateVertex(v3, d)        
+        translateVertex(v, d)
     end
 
     return vertices

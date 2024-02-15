@@ -1,8 +1,8 @@
-uniform mat4 matrixPV;
-uniform mat4 matrixModel;
+uniform highp mat4 matrixPV;
+uniform highp mat4 matrixModel;
 
-uniform vec4 strokeColor;
-uniform vec4 fillColor;
+uniform highp vec4 strokeColor;
+uniform highp vec4 fillColor;
 
 varying vec3 vertexPos;
 varying vec3 fragmentPos;
@@ -25,17 +25,17 @@ uniform highp float useInstanced;
 attribute vec3 InstancePosition;
 attribute vec3 InstanceScale;
 attribute vec4 InstanceColor;
-varying float instanceID;
+flat out int instanceID;
 
 uniform highp float useHeightMap;
 uniform highp float computeHeight;
 uniform vec3 translation;
 
 uniform Image tex;
-uniform float texWidth;
-uniform float texHeight;
+uniform highp float texWidth;
+uniform highp float texHeight;
 
-uniform float elapsedTime;
+uniform highp float elapsedTime;
 
 float noise(vec2 v) {
     return snoise(v/100.);

@@ -238,18 +238,19 @@ function perspective(fovy, aspect, near, far)
 
     setTransformation()
 
-    if env.sketch.cam then
-        lookat(env.sketch.cam.eye, env.sketch.cam.target, env.sketch.cam.up)
+    local camera = env.sketch.cam
+    if camera then
+        lookat(camera.eye, camera.target, camera.up)
 
-        rotate(env.sketch.cam.angleX, 1, 0, 0)
-        rotate(env.sketch.cam.angleY, 0, 1, 0)
+        rotate(camera.angleX, 1, 0, 0)
+        rotate(camera.angleY, 0, 1, 0)
     end
 end
 
-function cameraParameter(eye, target, up)
+function cameraParameter(eye, target, up, ...)
     if type(eye) == 'number' then
         eye = vec3(eye, target, up)
-        target = vec3()
+        target = vec3(...)
         up = vec3(0, 1, 0)
 
     else
@@ -262,8 +263,8 @@ function cameraParameter(eye, target, up)
     return eye, target, up
 end
 
-function camera(eye, target, up)
-    eye, target, up = cameraParameter(eye, target, up)
+function camera(eye, target, up, ...)
+    eye, target, up = cameraParameter(eye, target, up, ...)
 
     env.sketch.cam = {
         eye = eye,
@@ -271,9 +272,20 @@ function camera(eye, target, up)
         up = up,
         angleX = 0,
         angleY = 0,
+        mode = MODEL,
     }
     
     lookat(eye, target, up)
+end
+
+MODEL = 'model'
+CAMERA = 'camera'
+
+function cameraMode(mode)
+    if mode then
+        env.sketch.cam.mode = mode 
+    end
+    return env.sketch.cam.mode
 end
 
 function lookat(eye, target, up)    

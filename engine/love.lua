@@ -96,8 +96,8 @@ else
         eventManager:mousereleased(button, x, y, presses)
     end
 
-	function love.wheelmoved(x, y)
-		eventManager:wheelmoved(x, y)
+	function love.wheelmoved(dx, dy)
+		eventManager:wheelmoved(dx, dy)
 	end
 end
 
