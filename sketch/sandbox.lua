@@ -1,53 +1,6 @@
-Particle = class() 
-
-function Particle:init(x, y)
-    self:set(x, y)
-end
-
-function Particle:set(x, y)
-    if self.x then
-        grid:set(self.x, self.y, nil)
-    end
-
-    self.x = x
-    self.y = y
-    grid:set(x, y, self)
-end
-
-function Particle:update()
-    local nx, ny
-    if not grid:get(self.x, self.y+1) then
-        nx, ny = self.x, self.y+1
-
-    elseif self.x > 1 and not grid:get(self.x-1, self.y+1) and self.x < W and not grid:get(self.x+1, self.y+1) then
-        if random() < 0.5 then
-            nx, ny = self.x-1, self.y+1
-        else
-            nx, ny = self.x+1, self.y+1
-        end
-    
-    elseif self.x > 1 and not grid:get(self.x-1, self.y+1) then
-        nx, ny = self.x-1, self.y+1
-
-    elseif self.x < W and not grid:get(self.x+1, self.y+1) then
-        nx, ny = self.x+1, self.y+1
-    end
-
-    if nx and Rect(0, 0, grid.w, grid.h):contains(vec2(nx, ny)) then
-        self:set(nx, ny)
-    end
-end
-
-function Particle:draw()
-    strokeSize(1)
-    point(self.x-1, self.y-1)
-end
-
 function setup()
     grid = Grid(160, 100)
-
     particles = Array()
-    particles:add(Particle(grid.w/2, 1))
 end
 
 function update(dt)
@@ -71,6 +24,77 @@ end
 function mousemoved(mouse)
     local position = ((mouse.position - vec2(W, H)/2)/SCALE + vec2(grid.w, grid.h)/2):floor()
     if Rect(0, 0, grid.w, grid.h):contains(position) then
-        particles:add(Particle(position.x, position.y))
+        particles:add(Water(position.x, position.y))
     end
+end
+
+Particle = class() 
+
+function Particle:init(x, y)
+    self:set(x, y)
+end
+
+function Particle:set(x, y)
+    if self.x then
+        grid:set(self.x, self.y, nil)
+    end
+
+    self.x = x
+    self.y = y
+    grid:set(x, y, self)
+end
+
+function Particle:isAvailableMove(move)
+    local dx, dy = move[1], move[2]
+    local cell = grid:getCell(self.x + dx, self.y + dy)
+    if cell and cell.value == nil then
+        return {dx = self.x + dx, dy = self.y + dy}
+    end
+end
+
+function Particle:isAvailableMoves(moves)
+    local availableMoves = Array()
+    for _,move in ipairs(moves) do
+        move = self:isAvailableMove(move)
+        if move then 
+            availableMoves:add(move)
+        end
+    end
+
+    if #availableMoves == #moves then
+        return {moves = availableMoves}
+    end
+end
+
+function Particle:getAvailableMove()
+    return
+        self:isAvailableMove({0, 1}) or 
+        self:isAvailableMoves({-1, 1}, {1, 1}) or 
+        self:isAvailableMove({-1, 1}) or 
+        self:isAvailableMove({1, 1})
+end
+
+function Particle:update()
+    local move = self:getAvailableMove()
+    if move then
+        move = move.moves and move.moves:random() or move
+        if Rect(0, 0, grid.w, grid.h):contains(vec2(move.dx, move.dy)) then
+            self:set(move.dx, move.dy)
+        end
+    end
+end
+
+function Particle:draw()
+    strokeSize(1)
+    point(self.x-1, self.y-1)
+end
+
+Water = class() : extends(Particle)
+
+function Water:getAvailableMove()
+    return
+        self:isAvailableMove({0, 1}) or
+        self:isAvailableMoves({{-1, 1}, {1, 1}}) or
+        self:isAvailableMove({-1, 1}) or
+        self:isAvailableMove({1, 1})
 end

@@ -1,31 +1,28 @@
 Light = class()
 
-function Light:init(lightType, lightColor, lightPos, ambientStrength, diffuseStrength, specularStrength)
-    self.lightType = lightType or 0
-    
+function Light:init(lightColor, lightPos, ambientStrength, diffuseStrength, specularStrength)    
     self.lightColor = lightColor or colors.white
     self.lightPos = lightPos or vec3()
 
-    self.ambientStrength = ambientStrength or 0.8
-    self.diffuseStrength = diffuseStrength or 1
-    self.specularStrength = specularStrength or 0
+    self.ambientStrength = ambientStrength or 0.4
+    self.diffuseStrength = diffuseStrength or 0.6
+    self.specularStrength = specularStrength or 1.0
 end
 
-function  Light.sun()
-    return Light(1, colors.yellow, vec3(-500000., -50000., -1000.), 0.2, 0.8, 0.3)
+function Light.sun()
+    return Light(colors.white, vec3(-10., 500., 10.), 0.4, 0.6, 1.0)
 end
 
 function  Light.ambient(lightColor, ambientStrength)
-    return Light(0, lightColor, nil, ambientStrength, 0, 0)
+    return Light(lightColor, nil, ambientStrength, 0, 0)
 end
 
 function  Light.directionnal(lightColor, lightPos, ambientStrength, diffuseStrength, specularStrength)
-    return Light(1, lightColor, lightPos, ambientStrength, diffuseStrength, specularStrength)
+    return Light(lightColor, lightPos, ambientStrength, diffuseStrength, specularStrength)
 end
 
 function Light.random()
     return Light(
-        1,
         Color.random(),
         vec3.random()*W,
         random(0.5, 1),

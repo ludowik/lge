@@ -72,7 +72,11 @@ end
 Image = class()
 
 function Image:init(filename, ...)
-    self.texture = love.graphics.newImage(filename, {dpiscale=devicePixelRatio})
+    if love.filesystem.getInfo(filename) == nil then return end
+    
+    self.texture = love.graphics.newImage(filename, {
+        dpiscale = devicePixelRatio,
+    })
 
     self.width = self.texture:getWidth()
     self.height = self.texture:getHeight()

@@ -27,7 +27,7 @@ function draw()
     end
 end
 
-class('Snowflake')
+Snowflake = class()
 
 function Snowflake:init()
     -- initialize coordinates

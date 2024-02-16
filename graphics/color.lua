@@ -1,7 +1,7 @@
 Color = class()
 
 function Color.setup()
-    colors = {
+    colors = Array{
         black = Color(0),
         white = Color(1),
 

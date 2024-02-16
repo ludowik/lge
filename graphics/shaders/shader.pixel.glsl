@@ -30,8 +30,6 @@ uniform highp float param2;
 uniform highp float param3;
 
 struct Light {
-    float lightType;
-
     vec4 lightColor;
     vec3 lightPos;
     
@@ -43,11 +41,11 @@ struct Light {
 uniform highp int lightsCount;
 uniform Light lights[32];
 
-struct Material {
-    float ambientStrength;
-    float diffuseStrength;
-    float specularStrength;
-    
+struct Material {    
+    vec4 ambientColor;
+    vec4 diffuseColor;
+    vec4 specularColor;
+
     float shininess;
     
     float alpha;
@@ -60,14 +58,12 @@ vec4 ambient(Light light) {
 
 vec4 diffuse(Light light, vec3 normal) {
     vec3 lightDir = normalize(light.lightPos - fragmentPos);
-    //vec3 cameraToLight = normalize(light.lightPos - cameraPos);
-    float diff = max(dot(normal, lightDir), 0.0);    
+    float diff = max(dot(normal, lightDir), 0.0);
     return light.diffuseStrength * light.lightColor * diff;
 }
 
 vec4 specular(Light light, float shininess, vec3 normal) {
     vec3 lightDir = normalize(light.lightPos - fragmentPos);
-    //vec3 cameraToLight = normalize(light.lightPos - cameraPos);    
     vec3 viewDir = normalize(cameraPos - fragmentPos);
     vec3 reflectDir = reflect(-lightDir, normal);  
     float brightness = pow(max(dot(viewDir, reflectDir), 0.0), shininess);            
@@ -76,6 +72,7 @@ vec4 specular(Light light, float shininess, vec3 normal) {
 
 vec4 effect(vec4 _color, Image tex, vec2 texture_coords, vec2 screen_coords) {    
     Material material = materials[0];
+
     vec4 finalColor = color;
     
     if (border == 0.)
@@ -94,27 +91,32 @@ vec4 effect(vec4 _color, Image tex, vec2 texture_coords, vec2 screen_coords) {
 
             for (int i=0; i<lightsCount; ++i) {
                 Light light = lights[i];
-                if (light.lightType == 0. && useLightAmbient == 1.) {
+                if (useLightAmbient == 1.) {
                     if (useMaterial == 1.)
-                        composition += ambient(light) * finalColor * material.ambientStrength;
+                        // composition += ambient(light) * finalColor * material.ambientStrength;
+                        composition += ambient(light) * finalColor * material.ambientColor;
                     else
                         composition += ambient(light) * finalColor;
                 }
 
                 if (useLightDiffuse == 1. && useNormal == 1.) {
                     float relief = 0.;
-                    if (useRelief == 1.)
+                    if (useRelief == 1.) {
                         relief = snoise(texCoord.xy * param1);
-                        
-                    if (useMaterial == 1.){
-                        composition += diffuse(light, normal + vec3(relief)) * finalColor * material.diffuseStrength;}
-                    else
+                    }
+
+                    if (useMaterial == 1.) {
+                        // composition += diffuse(light, normal + vec3(relief)) * finalColor * material.diffuseStrength;}
+                        composition += diffuse(light, normal + vec3(relief)) * finalColor * material.diffuseColor;
+                    } else {
                         composition += diffuse(light, normal + vec3(relief)) * finalColor;
+                    }
                 }
 
                 if (useLightSpecular == 1. && useNormal == 1.) {
                     if (useMaterial == 1.)
-                        composition += specular(light, material.shininess, normal) * finalColor * material.specularStrength;
+                        // composition += specular(light, material.shininess, normal) * finalColor * material.specularStrength;
+                        composition += specular(light, 32., normal) * finalColor * material.shininess * material.specularColor;
                     else
                         composition += specular(light, 32., normal) * finalColor;
                 }

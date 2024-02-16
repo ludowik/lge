@@ -45,13 +45,24 @@ function Shader:loadShaderCode(shader)
     local modtime = info.modtime
     if shader.modtime == nil or modtime > shader.modtime then
         shader.modtime = modtime
-        local noise2d = love.filesystem.read('graphics/shaders/noise2d.glsl')
-        local noise3d = love.filesystem.read('graphics/shaders/noise3d.glsl')
-        shader.code = '#pragma language glsl3'..NL..
-            noise2d..NL..
-            noise3d..NL..
+
+        local includes = {
+            'graphics/shaders/colors.glsl',
+            'graphics/shaders/noise2d.glsl',
+            'graphics/shaders/noise3d.glsl',
+        }
+
+        shader.code = '#pragma language glsl3'..NL
+
+        for _,include in ipairs(includes) do
+            local code = love.filesystem.read(include)
+            shader.code = shader.code..code..NL
+        end
+
+        shader.code = shader.code..
             '#line 1'..NL..
             love.filesystem.read(shader.pathFile)
+
         return true
     end
 end
@@ -60,7 +71,36 @@ function Shader:update(dt)
     self:loadProgram()
 end
 
-function Shader:send(name, value)
+function Shader:sendUniforms(uniforms, prefix)
+    for k,v in pairs(uniforms) do
+        local name = (prefix or '')..k
+        if type(v) == 'table' and #v > 0 and type(v[1]) == 'table' then
+            self:sendUniform(k..'Count', #v)
+            for i,o in ipairs(v) do
+                self:sendUniforms(o, k..'['..(i-1)..'].')
+            end
+
+        elseif self.program:hasUniform(name) then        
+            if type(v) == 'boolean' then
+                self:sendUniform(name, v and 1 or 0)
+            
+            elseif classnameof(v) == 'Color' then
+                self:sendUniform(name, {v:unpack()})
+            
+            elseif classnameof(v) == 'vec2' then
+                self:sendUniform(name, {v:unpack()})
+            
+            elseif classnameof(v) == 'vec3' then
+                self:sendUniform(name, {v:unpack()})
+
+            else
+                self:sendUniform(name, v)
+            end
+        end 
+    end
+end
+
+function Shader:sendUniform(name, value)
     if self.program:hasUniform(name) then
         self.program:send(name, value)
     end

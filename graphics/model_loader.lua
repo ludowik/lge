@@ -1,6 +1,17 @@
 function Model.load(fileName)
     local filePath = 'resources/models/'..fileName
 
+    local info = love.filesystem.getInfo(filePath)
+    if info and info.type == 'directory' then
+        local model = Model.load(fileName..'/'..fileName..'.obj')
+        model.image = Image(filePath..'/'..fileName..'.png')
+        return model
+    end
+    if not fileName:find('obj') then
+        return
+    end
+
+
     local content = love.filesystem.read(filePath)
     if not content then return end
 
@@ -21,7 +32,10 @@ function Model.load(fileName)
 
         typeofRecord = datas[1]
 
-        if typeofRecord == 'v' then
+        if typeofRecord == 'mtllib' then
+            local name = datas[2]
+            
+        elseif typeofRecord == 'v' then
             -- vertex
             verticesTemp:insert{
                 tonumber(datas[2]),
@@ -39,7 +53,7 @@ function Model.load(fileName)
             -- texture coordinates
             texCoordsTemp:insert{
                 tonumber(datas[2]),
-                tonumber(datas[3])}
+                1-tonumber(datas[3])}
 
         elseif typeofRecord == 'f' then
             -- faces

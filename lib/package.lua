@@ -5,9 +5,9 @@ function updateScripts(github)
     else
         url = 'http://192.168.1.13:8080' -- 1 at garches
     end
-
+    
     url = url..'/build/lge.love'
-
+    
     request(url,
         function (result, code, headers)
             local data = love.filesystem.write('lge.love', result)
