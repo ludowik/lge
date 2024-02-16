@@ -340,3 +340,54 @@ function Model.centerVertices(vertices, indices)
 
     return vertices
 end
+
+function Model.normalize(vertices, indices)
+    local minx, miny, minz =  math.maxinteger,  math.maxinteger,  math.maxinteger
+    local maxx, maxy, maxz = -math.maxinteger, -math.maxinteger, -math.maxinteger
+
+    local function updateMinMax(v)
+        minx = min(minx, v.x)
+        miny = min(miny, v.y)
+        minz = min(minz, v.z)
+
+        maxx = max(maxx, v.x)
+        maxy = max(maxy, v.y)
+        maxz = max(maxz, v.z)
+    end
+
+    local n = indices and #indices or #vertices
+    
+    local v
+    for i=1,n do
+        if indices then
+            v = vec3.fromArray(vertices[indices[i]])
+        else
+            v = vec3.fromArray(vertices[i])
+        end
+
+        updateMinMax(v)
+    end
+
+    local scale = 1 / min(
+        (maxx - minx),
+        (maxy - miny),
+        (maxz - minz))
+
+    local function scaleVertex(v, scale)
+        v[1] = v[1] * scale
+        v[2] = v[2] * scale
+        v[3] = v[3] * scale
+    end
+
+    for i=1,n do
+        if indices then
+            v = vertices[indices[i]]
+        else
+            v = vertices[i]
+        end
+
+        scaleVertex(v, scale)
+    end
+
+    return vertices
+end

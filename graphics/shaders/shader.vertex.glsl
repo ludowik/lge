@@ -68,17 +68,15 @@ vec4 position(mat4 , vec4 ) {
 
         vn = normalize(cross(v1, v2));
 
-        // vn += noise3(vertexPos);
-
     } else if (computeHeight == 1.) {
         vp.y += noise(vec3(vp.xyz + translation).xz) * 10.;
     
-        float ya = noise(vp.xz);
-        float yb = noise(vp.xz+vec2(1., 0.));
-        float yc = noise(vp.xz+vec2(0., 1.));
+        float ya = noise(vec3(vp.xyz + translation).xz) * 10.;
+        float yb = noise(vec3(vp.xyz + translation).xz + vec2(1., 0.)) * 10.;
+        float yc = noise(vec3(vp.xyz + translation).xz + vec2(0., 1.)) * 10.;
         
         vec3 v1 = vec3(1., yb-ya, 0.);
-        vec3 v2 = vec3(0., yc-ya, 1.);    
+        vec3 v2 = vec3(0., yc-ya, 1.);
         
         vn = normalize(cross(v1, v2));
     }

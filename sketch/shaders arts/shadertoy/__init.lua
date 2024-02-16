@@ -38,17 +38,17 @@ function update(dt)
 
     if shader.program then
         if not paused then
-            shader:send('iTime', ElapsedTime);
+            shader:sendUniform('iTime', ElapsedTime);
         end
-        shader:send('iChannel0', shaderChannel[0].texture);
-        shader:send('TIMESCALE', 1.);
-        shader:send('SHAPE_SIZE', SHAPE_SIZE);
-        shader:send('SMOOTHNESS', SMOOTHNESS);
-        shader:send('z', z);
-        shader:send('CAMERA_POS_WORLD', {0., 2., -5.})
-        shader:send('MAX_STEPS', 100)
-        shader:send('MAX_DIST', 100)
-        shader:send('SURF_DIST', 0.01)
+        shader:sendUniform('iChannel0', shaderChannel[0].texture);
+        shader:sendUniform('TIMESCALE', 1.);
+        shader:sendUniform('SHAPE_SIZE', SHAPE_SIZE);
+        shader:sendUniform('SMOOTHNESS', SMOOTHNESS);
+        shader:sendUniform('z', z);
+        shader:sendUniform('CAMERA_POS_WORLD', {0., 2., -5.})
+        shader:sendUniform('MAX_STEPS', 100)
+        shader:sendUniform('MAX_DIST', 100)
+        shader:sendUniform('SURF_DIST', 0.01)
     end
 end
 

@@ -227,7 +227,8 @@ function Sketch:wheelmoved(dx, dy)
     local camera = self.cam
     if camera then
         local direction = camera.target - camera.eye 
-        camera.eye.y = camera.eye.y + dy
+        camera.eye.x = camera.eye.x + dx / 10.
+        camera.eye.y = camera.eye.y + dy / 10.
         camera.target:set(camera.eye + direction)
     end
 

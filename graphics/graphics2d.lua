@@ -6,7 +6,7 @@ function Graphics2d.setup()
     font = love.graphics.newFont(25)
     Graphics2d.lights = {
         Light.sun(),
-        Light.ambient(colors.white, 0.8),
+        --Light.ambient(colors.white, 0.8),
     }
 end
 
@@ -18,6 +18,9 @@ function Graphics2d.getSafeArea()
         x, y, w, h = love.window.getSafeArea()
     else
         x, y, w, h = 5, 50, 1600, 800
+        w, h = love.window.getDesktopDimensions(1) -- displayindex
+        h = 880
+        w = h / 16 * 9
     end
 
     x = x + margeExtension
@@ -32,7 +35,7 @@ function Graphics2d.initMode()
     local ws, hs, flags = love.window.getMode()
     X, Y, W, H = Graphics2d.getSafeArea()
     
-    deviceOrientation = 0 -- -PI/2
+    deviceOrientation = 0
     if getOS() == 'ios' then
         Graphics2d.setMode(ws, hs, true)
     else
@@ -448,12 +451,21 @@ function Graphics2d.text(str, x, y, limit, align)
         x = x - ws
     end
 
+    local font = FontManager.getFont()
+
+    local text = getResource(tostring(font)..str, function ()
+        local text = love.graphics.newText(font, str)
+        return text
+    end)
+
     local sx, sy = 1, styles.origin == BOTTOM_LEFT and -1 or 1
-    if limit then
-        love.graphics.printf(str, x, y, limit, align, 0, sx, sy)
-    else
-        love.graphics.print(str, x, y, 0, sx, sy)
-    end
+    love.graphics.draw(text, x, y, 0, sx, sy)
+
+    -- if limit then
+    --     love.graphics.printf(str, x, y, limit, align, 0, sx, sy)
+    -- else
+    --     love.graphics.print(str, x, y, 0, sx, sy)
+    -- end
 
     return ws, hs
 end

@@ -8,13 +8,13 @@ function Mesh:init(buffer, drawMode, usageMode)
 
     self.bufs = {}
     self.uniforms = {
-        useColor = 1,
-        useLight = 0,
-        useMaterial = 0,
-        useRelief = 0,
-        useHeightMap = 0,
-        computeHeight = 0,
-        border = 0,
+        useColor = true,
+        useLight = nil,
+        useMaterial = nil,
+        useRelief = nil,
+        useHeightMap = nil,
+        computeHeight = nil,
+        border = nil,
     }
 
     self.drawMode = drawMode or 'triangles'
@@ -143,17 +143,17 @@ function Mesh:useShader(instanced)
     end
 
     local lights = light()
-    local useLight = lights and 1 or 0
+    local useLight = argument(self.uniforms.useLight, lights and true or false)
 
     self:sendUniforms(self.uniforms)
     self:sendUniforms({
         useLight = useLight,
-        useLightAmbient = useLight,
-        useLightDiffuse = useLight,
-        useLightSpecular = useLight,
+        useLightAmbient = argument(self.uniforms.useLightAmbient, useLight),
+        useLightDiffuse = argument(self.uniforms.useLightDiffuse, useLight),
+        useLightSpecular = argument(self.uniforms.useLightSpecular, useLight),
         lights = lights,
 
-        useInstanced = instanced or 0,
+        useInstanced = instanced or false,
         
         matrixModel = {modelMatrix():getMatrix()},
         matrixPV = {pvMatrix():getMatrix()},
@@ -169,36 +169,11 @@ function Mesh:useShader(instanced)
 end
 
 function Mesh:sendUniforms(uniforms, prefix)
-    for k,v in pairs(uniforms) do
-        local name = (prefix or '')..k
-        if type(v) == 'table' and #v > 0 and type(v[1]) == 'table' then
-            self:send(k..'Count', #v)
-            for i,o in ipairs(v) do
-                self:sendUniforms(o, k..'['..(i-1)..'].')
-            end
-
-        elseif self.shader.program:hasUniform(name) then        
-            if type(v) == 'boolean' then
-                self:send(name, v and 1 or 0)
-            
-            elseif classnameof(v) == 'Color' then
-                self:send(name, {v:unpack()})
-            
-            elseif classnameof(v) == 'vec2' then
-                self:send(name, {v:unpack()})
-            
-            elseif classnameof(v) == 'vec3' then
-                self:send(name, {v:unpack()})
-
-            else
-                self:send(name, v)
-            end
-        end 
-    end
+    self.shader:sendUniforms(uniforms, prefix)
 end
 
-function Mesh:send(uniformName, ...)
-    self.shader:send(uniformName, ...)
+function Mesh:sendUniform(uniformName, ...)
+    self.shader:sendUniform(uniformName, ...)
 end
 
 function Mesh:restoreShader()

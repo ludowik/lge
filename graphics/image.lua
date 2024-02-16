@@ -86,7 +86,11 @@ end
 Image = class() : extends(FrameBuffer)
 
 function Image:init(filename, ...)
-    self.imageData = love.image.newImageData(filename, {dpiscale=devicePixelRatio})
+    if love.filesystem.getInfo(filename) == nil then return end
+    
+    self.imageData = love.image.newImageData(filename, {
+        dpiscale = devicePixelRatio,
+    })
     self:update()
 
     self.width = self.texture:getWidth()

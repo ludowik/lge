@@ -4,48 +4,56 @@ function setup()
     local directoryItems = love.filesystem.getDirectoryItems('resources/models')
     for _,modelName in ipairs(directoryItems) do
         local model = Model.load(modelName)
-        model.vertices = Model.centerVertices(model.vertices)
-        models:add(model)
+        if model then
+            model.vertices = Model.normalize(Model.centerVertices(model.vertices))
+            models:add(model)
+        end
     end
 
     lights = {
-        Light.ambient(colors.yellow, 0.25),
-        Light.random()
+        Light.sun()
     }
 
     materials = {
-        Material()
+        materials.wood
     }
 
     parameter:link('OpenGL', 'https://learnopengl.com/lighting/basic-lighting')
+    parameter:link('Models', 'https://poly.pizza')
 
-    parameter:integer('model', 'modelIndex', 1, #models, #models)
+    parameter:integer('model', 'modelIndex', 1, #models, 1)
     
-    parameter:boolean('material', 'materialMode', true)
+    parameter:boolean('material', 'materialMode', false)
+    parameter:boolean('texture', 'withTexture', false)
+
     parameter:boolean('light', 'lightMode', true)
     parameter:boolean('ambient', 'lightAmbient', true)
     parameter:boolean('diffuse', 'lightDiffuse', true)
+
     parameter:boolean('specular', 'lightSpecular', true)
 
-    parameter:number('ambientStrength', Bind(lights[2], 'ambientStrength'), 0, 1)
-    parameter:number('diffuseStrength', Bind(lights[2], 'diffuseStrength'), 0, 1)
-    parameter:number('specularStrength', Bind(lights[2], 'specularStrength'), 0, 1)
+    parameter:number('light - ambient', Bind(lights[1], 'ambientStrength'), 0, 1)
+    parameter:number('light - diffuse', Bind(lights[1], 'diffuseStrength'), 0, 1)
+    parameter:number('light - specular', Bind(lights[1], 'specularStrength'), 0, 1)
 
-    parameter:number('ambientStrength', Bind(materials[1], 'ambientStrength'), 0, 5)
-    parameter:number('diffuseStrength', Bind(materials[1], 'diffuseStrength'), 0, 5)
-    parameter:number('specularStrength', Bind(materials[1], 'specularStrength'), 0, 3)
-    parameter:number('alpha', Bind(materials[1], 'alpha'), 0, 1)
+    parameter:number('material - ambient', Bind(materials[1].ambientColor, 'r'), 0, 5)
+    parameter:number('material - diffuse', Bind(materials[1].diffuseColor, 'r'), 0, 5)
+    parameter:number('material - specular', Bind(materials[1].specularColor, 'r'), 0, 3)
+    parameter:number('alpha', Bind(materials[1], 'shininess'), 0, 1)
 
-    camera(5, 5, 10)
+    camera(3, 2, 3)
 end
 
 function draw()
+    local model = models[modelIndex]
+
     background()
+    
     perspective()
 
     light(lights)
     
-    models[modelIndex].uniforms = {        
+    model.uniforms = {        
         useColor = 1,
         
         useLight = lightMode,
@@ -53,15 +61,10 @@ function draw()
         useLightDiffuse = lightDiffuse,
         useLightSpecular = lightSpecular,
 
-        --lights = lights,
-
         useMaterial = materialMode,
         materials = materials,
     }
 
-    if modelIndex == 1 and models[modelIndex].image == nil then
-        -- models[modelIndex].image = Image('resources/images/joconde.png')
-    end
-    
-    models[modelIndex]:draw()
+    model.image = model.image or (withTexture and Image('resources/images/joconde.png'))
+    model:draw()
 end

@@ -43,10 +43,13 @@ function draw()
     light(true)
 
     fill(colors.white)
+
     translate(position.x, 0, position.z)
     
     env.ground.uniforms.translation = position / 2
+    
     env.ground.uniforms.useRelief = 1
     env.ground.uniforms.param1 = param1
+
     env.ground:drawInstanced(env.instances)
 end

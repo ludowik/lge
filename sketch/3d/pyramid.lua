@@ -18,12 +18,12 @@ function pyramid(name, x, y, z, W, H, nw, nh)
         pushMatrix()
         translate(object.position)
         self.uniforms.param1 = param1
-        self.uniforms.useNormal = 0
-        self.uniforms.useMaterial = 0
+        self.uniforms.useNormal = false
+        self.uniforms.useMaterial = false
         self.uniforms.useLight = lightMode
-        self.uniforms.useLightAmbient = 1
-        self.uniforms.useLightDiffuse = 1
-        self.uniforms.useLightSpecular = 1
+        self.uniforms.useLightAmbient = true
+        self.uniforms.useLightDiffuse = true
+        self.uniforms.useLightSpecular = true
         self.uniforms.lights = {Light()}
         self:drawInstanced(self.instances)
         popMatrix()
