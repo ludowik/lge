@@ -31,8 +31,6 @@ function setup()
 
     parameter:watch('draw', "scores['draw']")
 
-    parameter:boolean('auto test', '__autotest', false)
-
     depth = 5 -- enough to win
     parameter:integer('depth', 1, 10, depth)
 
@@ -41,18 +39,11 @@ end
 
 function draw()
     background(54)
-
     cells:foreach(drawCell)
 end
 
 function update(dt)
-    if env.__autotest then
-        repeat
-            play()
-        until cells.state == 'new game'
-    else
-        play()
-    end
+    play()
 end
 
 function play()

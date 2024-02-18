@@ -8,13 +8,13 @@ function Mesh:init(buffer, drawMode, usageMode)
 
     self.bufs = {}
     self.uniforms = {
-        useColor = true,
-        useLight = nil,
-        useMaterial = nil,
-        useRelief = nil,
-        useHeightMap = nil,
-        computeHeight = nil,
-        border = nil,
+        useColor = false,
+        useLight = false,
+        useMaterial = false,
+        useRelief = false,
+        useHeightMap = false,
+        computeHeight = false,
+        border = false,
     }
 
     self.drawMode = drawMode or 'triangles'
@@ -61,9 +61,9 @@ end
 function Mesh:attachBuffer(buf, bufName, flagName, shader)
     if buf then
         self.mesh:attachAttribute(bufName, buf, 'pervertex')
-        self.uniforms[flagName] = 1
+        self.uniforms[flagName] = true
     else
-        self.uniforms[flagName] = 0
+        self.uniforms[flagName] = false
     end
 end
 
@@ -143,7 +143,7 @@ function Mesh:useShader(instanced)
     end
 
     local lights = light()
-    local useLight = argument(self.uniforms.useLight, lights and true or false)
+    local useLight = lights and true or false
 
     self:sendUniforms(self.uniforms)
     self:sendUniforms({

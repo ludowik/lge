@@ -89,7 +89,7 @@ else
     end
 
     function love.mousemoved(x, y, dx, dy, istouch)
-        eventManager:mousemoved(1, x, y)
+        eventManager:mousemoved(mouse.id, x, y)
     end
 
     function love.mousereleased(x, y, button, istouch, presses)

@@ -3,41 +3,53 @@ function setup()
 
     i, j = 0, 0
     index = 0
+
+    --noLoop()
 end
 
 function draw()
-    local n = 6
+    local n = 10
 
     index = index + 1
     
     process = processManager:getSketch(index)
     if process.sketch == sketch then return end
 
-    if not process.sketch then
+    if not process.sketch then        
         loadSketch(process)
+        log(process.sketch.__className)
     end
+
+    local origin = TOP_LEFT
 
     local status, result = pcall(
         function ()
-            love.graphics.setCanvas(process.sketch.fb.canvas)
-            love.graphics.clear()
+            local previousCanvas = love.graphics.getCanvas()
+            love.graphics.setCanvas({
+                process.sketch.fb.canvas,
+                stencil = false,
+                depth = true,
+            })
+            love.graphics.clear(0, 0, 0, 1, true, false, 1)
 
             resetMatrix()
-            resetStyle(getOrigin())
+            resetStyle()
 
             if index == 1 then
                 process.sketch:update(1/60)
             end
             
             process.sketch:draw()
-            
+
             loop()
-
+            
             resetMatrix()
+            resetStyle(origin)
 
-            love.graphics.setCanvas(sketch.fb.canvas)
-            love.graphics.draw(process.sketch.fb.canvas, (2*X+W)/n*i, (2*Y+H)/n*j, 0, 1/n)
-            love.graphics.setCanvas()
+            setOrigin(origin)
+
+            love.graphics.setCanvas(previousCanvas)
+            love.graphics.draw(process.sketch.fb.canvas, (2*X+W)/n*i, (2*Y+H)/n*j, 0, 1/n)            
 
             i = i + 1
 

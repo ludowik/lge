@@ -12,6 +12,16 @@ uniform highp float useRelief;
 
 uniform highp float useInstanced;
 
+uniform highp float useHeightMap;
+uniform highp float computeHeight;
+uniform highp float frequence1;
+uniform highp float frequence2;
+uniform highp float frequence3;
+uniform highp float octave1;
+uniform highp float octave2;
+uniform highp float octave3;
+uniform vec3 translation;
+
 uniform highp vec4 strokeColor;
 uniform highp vec4 fillColor;
 
@@ -24,10 +34,6 @@ varying vec4 texCoord;
 varying vec3 normal;
 vec3 nn;
 varying vec4 vertexProjection;
-
-uniform highp float param1;
-uniform highp float param2;
-uniform highp float param3;
 
 struct Light {
     vec4 lightColor;
@@ -77,7 +83,18 @@ vec4 effect(vec4 _color, Image tex, vec2 texture_coords, vec2 screen_coords) {
     
     if (border == 0.)
     {
-        if (useColor == 1.) {
+        if (computeHeight == 1.) {
+            if (fragmentPos.y <= 0.) {
+                finalColor = blue;
+            } else if (fragmentPos.y <= 15.) {
+                finalColor = green;
+            } else if (fragmentPos.y <= 20.) {
+                finalColor = rock;
+            } else {
+                finalColor = vec4(fragmentPos.y / 20.);
+            }
+
+        } else if (useColor == 1.) {
             finalColor = color;
         }
 
@@ -93,20 +110,18 @@ vec4 effect(vec4 _color, Image tex, vec2 texture_coords, vec2 screen_coords) {
                 Light light = lights[i];
                 if (useLightAmbient == 1.) {
                     if (useMaterial == 1.)
-                        // composition += ambient(light) * finalColor * material.ambientStrength;
                         composition += ambient(light) * finalColor * material.ambientColor;
                     else
                         composition += ambient(light) * finalColor;
                 }
 
-                if (useLightDiffuse == 1. && useNormal == 1.) {
+                if (useLightDiffuse == 1. && useNormal == 1.) {                        
                     float relief = 0.;
                     if (useRelief == 1.) {
-                        relief = snoise(texCoord.xy * param1);
+                        relief = snoise(texCoord.xy / frequence1);
                     }
-
+                    
                     if (useMaterial == 1.) {
-                        // composition += diffuse(light, normal + vec3(relief)) * finalColor * material.diffuseStrength;}
                         composition += diffuse(light, normal + vec3(relief)) * finalColor * material.diffuseColor;
                     } else {
                         composition += diffuse(light, normal + vec3(relief)) * finalColor;
@@ -115,7 +130,6 @@ vec4 effect(vec4 _color, Image tex, vec2 texture_coords, vec2 screen_coords) {
 
                 if (useLightSpecular == 1. && useNormal == 1.) {
                     if (useMaterial == 1.)
-                        // composition += specular(light, material.shininess, normal) * finalColor * material.specularStrength;
                         composition += specular(light, 32., normal) * finalColor * material.shininess * material.specularColor;
                     else
                         composition += specular(light, 32., normal) * finalColor;

@@ -19,7 +19,7 @@ function Shader:loadProgram()
     if vs or ps then
         self.errorMsg = nil
         
-        log('compile shader '..self.pathName)
+        log('Compile shader : '..self.pathName)
 
         local status, result = xpcall(
             function ()

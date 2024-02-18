@@ -25,7 +25,7 @@
             ],
             "ignorePatterns": [
                 "class",
-                "instrument"
+                "_instrument"
             ],
             "scriptRoots": [
                 "./"

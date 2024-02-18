@@ -18,7 +18,7 @@ function draw()
 
     translate(W/2, H/2)
 
-    local position = vec3()
+    local position = vec2()
     
     local star
     for i=1,#stars do

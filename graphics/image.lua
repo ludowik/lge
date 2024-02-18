@@ -1,41 +1,50 @@
 FrameBuffer = class()
 
-function FrameBuffer:init(w, h, format)
+function FrameBuffer:init(w, h, format, clr)
     self.format = format or 'normal'
     self.canvas = love.graphics.newCanvas(w, h, {
         msaa = 5,
         format = self.format
     })
-
+    
     self:setContext()
-    self:background(colors.transparent)
-
-    resetContext()
-
+    self:background(clr or colors.transparent)
+    self:resetContext()
+    
     self.width = w
     self.height = h
 end
 
 function FrameBuffer:copy(fb)
+    self:update()
+    
     local fb = FrameBuffer(self.width, self.height, self.format)    
     fb:setContext()
 
+    love.graphics.setColor(1, 1, 1)
     love.graphics.draw(self.canvas)
 
     fb:getImageData()
-
-    resetContext()
+    fb:resetContext()
 
     return fb
 end
 
 function FrameBuffer:release()
     self.imageData:release()
+    self.imageData = nil
+    
     self.canvas:release()
+    self.canvas = nil
 end
 
 function FrameBuffer:setContext()
     setContext(self)
+    resetMatrixContext()
+end
+
+function FrameBuffer:resetContext()
+    resetContext()
 end
 
 function FrameBuffer:background(clr, ...)
@@ -63,14 +72,28 @@ function FrameBuffer:getImageData()
 end
 
 function FrameBuffer:update()
-    if self.imageData then
-        self.texture = love.graphics.newImage(self.imageData, {dpiscale=devicePixelRatio})
+    if self.imageData and (self.texture == nil or self.needUpdate == true) then
+        self.needUpdate = false
+
+        self.texture = love.graphics.newImage(self.imageData, {
+            dpiscale = devicePixelRatio
+        })
         self.texture:setWrap('repeat')
+
+        -- self:setContext()
+
+        -- love.graphics.setColor(1, 1, 1)
+        -- love.graphics.draw(self.texture)
+
+        -- self:resetContext()
     end
 end
 
 function FrameBuffer:set(x, y, clr, ...)
     self:getImageData()
+
+    self.needUpdate = true
+
     if type(clr) == 'table' then
         self.imageData:setPixel(x, y, clr:rgba())
     else
@@ -78,21 +101,37 @@ function FrameBuffer:set(x, y, clr, ...)
     end
 end
 
-function FrameBuffer:get(x, y)
+function FrameBuffer:get(x, y, clr)
     self:getImageData()
-    return self.imageData:getPixel(x, y)
+    if clr then
+        local r, g, b, a = self.imageData:getPixel(x, y)    
+        clr:set(r, g, b, a)
+        return r, g, b, a
+    else
+        return self.imageData:getPixel(x, y)
+    end
 end
 
 Image = class() : extends(FrameBuffer)
 
 function Image:init(filename, ...)
-    if love.filesystem.getInfo(filename) == nil then return end
-    
-    self.imageData = love.image.newImageData(filename, {
+    if love.filesystem.getInfo(filename) == nil then
+        log('Image : '..filename..' not found')
+        FrameBuffer.init(self, ...)
+        return
+    end
+
+    self.texture = love.graphics.newImage(filename, {
         dpiscale = devicePixelRatio,
     })
-    self:update()
 
-    self.width = self.texture:getWidth()
-    self.height = self.texture:getHeight()
+    local w, h =  self.texture:getDimensions()
+    FrameBuffer.init(self, w, h, self.texture:getFormat())
+
+    self:setContext()
+
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.draw(self.texture)
+    
+    self:resetContext()
 end

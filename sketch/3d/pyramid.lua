@@ -7,7 +7,6 @@ function setup()
     camera(500, 50, 500, 0, 0, 0)
 
     parameter:boolean('lightMode', true)
-    parameter:number('param1', 0, 150, 65)
 end
 
 function pyramid(name, x, y, z, W, H, nw, nh)
@@ -17,7 +16,6 @@ function pyramid(name, x, y, z, W, H, nw, nh)
     object.draw = function (self)
         pushMatrix()
         translate(object.position)
-        self.uniforms.param1 = param1
         self.uniforms.useNormal = false
         self.uniforms.useMaterial = false
         self.uniforms.useLight = lightMode

@@ -40,9 +40,11 @@ function vec3:set(x, y, z)
         x, y, z = x.x, x.y, x.z
     end
     
+    assert((x and y and z) or (not x and not y and not z))
+
     self.x = x or 0
-    self.y = y or self.x
-    self.z = z or self.x
+    self.y = y or 0
+    self.z = z or 0
 
     return self
 end

@@ -24,6 +24,8 @@ function Sketch:init(w, h)
 end
 
 function Sketch:setMode(w, h, persistence)
+    env.W, env.H = w, H
+    
     w = (2 * X + w)
     h = (2 * Y + h)
 

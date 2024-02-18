@@ -24,7 +24,7 @@ function draw(dt)
 
     area = Rect(-W/2, -H/2, W, H)
 
-    local position = vec3()
+    local position = vec2()
 
     local star
     for i=1,#stars do

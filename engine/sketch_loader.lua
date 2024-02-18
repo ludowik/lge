@@ -129,7 +129,17 @@ function loadSketch(env)
         end
 
         if env.sketch.setup then
+            local previousCanvas = love.graphics.getCanvas()
+            love.graphics.setCanvas({
+                env.sketch.fb.canvas,
+                stencil = false,
+                depth = true,
+            })
+            love.graphics.clear(0, 0, 0, 1, true, false, 1)
+
             env.sketch:setup()
+
+            love.graphics.setCanvas(previousCanvas)
         end
     end
 

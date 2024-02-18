@@ -29,6 +29,12 @@ flat out int instanceID;
 
 uniform highp float useHeightMap;
 uniform highp float computeHeight;
+uniform highp float frequence1;
+uniform highp float frequence2;
+uniform highp float frequence3;
+uniform highp float octave1;
+uniform highp float octave2;
+uniform highp float octave3;
 uniform vec3 translation;
 
 uniform Image tex;
@@ -38,7 +44,7 @@ uniform highp float texHeight;
 uniform highp float elapsedTime;
 
 float noise(vec2 v) {
-    return snoise(v/100.);
+    return snoise(v / 43.65);
 }
 
 vec4 position(mat4 , vec4 ) {
@@ -69,7 +75,12 @@ vec4 position(mat4 , vec4 ) {
         vn = normalize(cross(v1, v2));
 
     } else if (computeHeight == 1.) {
-        vp.y += noise(vec3(vp.xyz + translation).xz) * 10.;
+        float height =
+            noise(vec3(vp.xyz + translation).xz / frequence1) * octave1 +
+            noise(vec3(vp.xyz + translation).xz / frequence2) * octave2 +
+            noise(vec3(vp.xyz + translation).xz / frequence3) * octave3;
+
+        vp.y += height * 25.;
     
         float ya = noise(vec3(vp.xyz + translation).xz) * 10.;
         float yb = noise(vec3(vp.xyz + translation).xz + vec2(1., 0.)) * 10.;

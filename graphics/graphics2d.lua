@@ -17,10 +17,10 @@ function Graphics2d.getSafeArea()
     if getOS() == 'ios' then
         x, y, w, h = love.window.getSafeArea()
     else
-        x, y, w, h = 5, 50, 1600, 800
-        w, h = love.window.getDesktopDimensions(1) -- displayindex
-        h = 880
-        w = h / 16 * 9
+        x, y = 5, 50
+        _, h = love.window.getDesktopDimensions(1) -- displayindex
+        h = h * 0.8
+        w = h / 15 * 10
     end
 
     x = x + margeExtension
@@ -147,7 +147,7 @@ function Graphics2d.resetStyle(origin)
     fontSize(22)
 
     noLight()
-    --noMaterial()
+    noMaterial()
 
     styles.origin = origin or TOP_LEFT
 end
@@ -208,7 +208,11 @@ function Graphics2d.light(lights)
 end
 
 function Graphics2d.noLight()
-    stylesReset('lights')
+    stylesReset('light')
+end
+
+function Graphics2d.noMaterial()
+    stylesReset('material')
 end
 
 function Graphics2d.zLevel()
@@ -521,7 +525,8 @@ function Graphics2d.sprite(image, x, y, w, h, ox, oy, ow, oh)
     end
     
     love.graphics.draw(texture,
-        x, y, 0,
+        x, y,
+        0,
         w / ow, h / oh,
         ox, oy)
 end

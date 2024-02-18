@@ -1,11 +1,14 @@
 function setup()
-    size = floor(W/4)
+    env.sketch:setMode(1600, 800, true)
 
-    fb = FrameBuffer(W, H)
+    fb = FrameBuffer(600, 600)
+    
     parameter:number('ratio', 1, 100, 50)
 
-    local eye = vec3(size/2, 75, size/2)
-    camera(eye, eye + vec3(0, -2, 10))
+    sizeUnivers = 400
+
+    local eye = vec3(100, 40, 100)
+    camera(eye, eye + vec3(10, -5, 10))
     cameraMode(CAMERA)
 end
 
@@ -14,7 +17,7 @@ block = class()
 function block.setup()
     block.mesh = Mesh(Model.box())
     block.mesh.image = createTexture()
-    block.mesh.colors = nil
+    --block.mesh.colors = nil
 end
 
 function block.position(x, y, z)
@@ -46,67 +49,81 @@ function block.terrain(x, y,z)
         0.06 * perlinNoise(16*x, 16*y, 16*z)
 end
 
+function getUnivers(getBlock, size)
+    return getResource(getBlock, function ()
+        return createUnivers(getBlock, size)
+    end)
+end
+
+function createUnivers(getBlock, size)
+    seed(51)
+
+    local positions = Array()
+    local blocks = Array()
+
+    for x=0,size-1 do
+        for z=0,size-1 do
+            local height = getBlock(x, 0, z)
+            height = (height + 1) / 2
+
+            positions:add({x, z, height, height, height, 1})
+            blocks:add({x, floor(height*20), z, 1, 1, 1, height, height, height, 1})
+        end
+    end
+
+    return positions, blocks
+end
+
+function getPosition(i, j, size)
+    return (i-1)*size, (j-1)*size, size, size
+end
+
 function draw()
     background()
 
-    function getUnivers(getBlock, size)
-        return getResource(getBlock, function ()
-            return createUnivers(getBlock, size)
-        end)
-    end
+    local sizeScreen = W / 4
 
-    function createUnivers(getBlock, size)
-        seed(51)
+    function univers(i, getBlock)
+        local positions, blocks = getUnivers(getBlock, sizeUnivers)
+        
+        -- draw direct 2d
+        pushMatrix()    
 
-        local positions = Array()
-        local blocks = Array()
+        translate(getPosition(i, 1, sizeScreen))
+        scale(sizeScreen/sizeUnivers)
 
-        for x=0,size-1 do
-            for z=0,size-1 do
-                local height, type = getBlock(x, 0, z)
-                height = (height+1)/2
-                positions:add({x, z, height, height, height, 1})
-                blocks:add({x, floor(height*50), z, 1, 1, 1, height, height, height, 1})
-            end
-        end
-
-        return positions, blocks
-    end
-
-    local i, j = 0, 1
-    local function getPosition(_, _, size)
-        i = i + 1
-        return (i-1)*size, (j-1)*size, size, size
-    end
-
-    function univers(getBlock, i, j)
-        pushMatrix()
-
-        translate(getPosition(i, j, size))
-
-        local positions, blocks = getUnivers(getBlock, size)
         points(positions)
 
+        popMatrix()
+
+        -- draw 3d in fb        
         setContext(fb, true)
-        resetMatrix()
+        resetMatrixContext()
+        
         perspective()
         
-        -- light(true)
+        light(true)
 
+        love.graphics.clear(0, 0, 0, 1, true, false, 1)
         block.mesh:drawInstanced(blocks)
+
         resetContext()
 
-        translate(0, 400)
+        -- draw fb
+        pushMatrix()
+        resetMatrix()
 
-        love.graphics.draw(fb.canvas, 0, 0, 0, size/W, size/H)
+        translate(getPosition(i, 1, sizeScreen))
+
+        love.graphics.draw(fb.canvas, 0, sizeScreen, 0, sizeScreen/fb.width, sizeScreen/fb.height)
 
         popMatrix()
     end
 
-    univers(block.random)
-    univers(block.simplex)
-    univers(block.perlin)
-    univers(block.terrain)
+    univers(1, block.random)
+    univers(2, block.simplex)
+    univers(3, block.perlin)
+    univers(4, block.terrain)
 end
 
 function createTexture()
@@ -141,6 +158,8 @@ function createTexture()
             face(size*1, size*2, colors.green)
             face(size*1, size*0, colors.green)
         end)
+    
+    image:getImageData()
         
     return image
 end

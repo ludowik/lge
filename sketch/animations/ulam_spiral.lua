@@ -2,9 +2,7 @@ UlamSpiral = class() : extends(Sketch)
 
 function UlamSpiral:init()
     Sketch.init(self)
-
-    background(colors.black)
-
+    
     self.xp = W/2
     self.yp = H/2
 

@@ -39,8 +39,10 @@ function vec2:set(x, y)
         x, y = x.x, x.y
     end
     
+    assert((x and y) or (not x and not y))
+
     self.x = x or 0
-    self.y = y or self.x
+    self.y = y or 0
 
     return self
 end

@@ -113,7 +113,6 @@ function ProcessManager:loopProcesses()
     else
         self.__loopProcesses = {
             startProcess = self:current(),
-            famesToDraw = LOOP_ITER_PROCESS
         }
     end
 end
@@ -122,40 +121,49 @@ function ProcessManager:update(dt)
     local process = processManager:current()
     if not process then return end
 
-    self:updateLoop(dt)
-    process:updateSketch(dt)
+    if self.__loopProcesses then
+        self:updateLoop(dt)
+    else
+        process:updateSketch(dt)
+    end
 end
 
 function ProcessManager:updateLoop(dt)
     if self.__loopProcesses then
-        self.__loopProcesses.famesToDraw = self.__loopProcesses.famesToDraw - 1
-        if self.__loopProcesses.famesToDraw <= 0 then
-            self:next()
-            self.__loopProcesses.famesToDraw = LOOP_ITER_PROCESS
+        self:next()
 
-            local process = processManager:current()
-            if not process then return end
+        local process = processManager:current()
+        if not process then return end
 
-            local delay = 0.05
-            local dt = 1/60
-            local startTime = time()
-            while true do
-                process:updateSketch(dt)
-                process:drawSketch()
+        local delay = 0.25
+        local dt = 1/60
+        local n = 0
+        local startTime = time()
 
-                love.graphics.present()
-                
-                if time() - startTime > delay then
-                    break
-                end
+        process.env.__autotest = true
+            
+        while true do
+            n = n + 1
+
+            process:updateSketch(dt)
+            process:drawSketch()
+
+            love.graphics.present()
+            
+            if time() - startTime > delay then
+                break
             end
+        end
 
-            captureImage()
-            captureLogo()
+        print(n)
 
-            if process == self.__loopProcesses.startProcess then
-                self.__loopProcesses = nil
-            end
+        process.env.__autotest = false
+
+        captureImage()
+        captureLogo()
+
+        if process == self.__loopProcesses.startProcess then
+            self.__loopProcesses = nil
         end
     end
 end

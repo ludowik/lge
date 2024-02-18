@@ -102,7 +102,30 @@ function Color:setComponents(r, g, b, a)
 end
 
 function Color.__add(clr1, clr2)
+    assert(false)
     return Color.mix(clr1, clr2, 0.5) 
+end
+
+function Color.add(clr1, clr2)
+    clr1.r = clr1.r + clr2.r
+    clr1.g = clr1.g + clr2.g
+    clr1.b = clr1.b + clr2.b
+    return clr1
+end
+
+function Color.__div(clr, coef)
+    return Color(
+        clr.r / coef,
+        clr.g / coef,
+        clr.b / coef,
+        clr.a) 
+end
+
+function Color.div(clr, coef)
+    clr.r = clr.r / coef
+    clr.g = clr.g / coef
+    clr.b = clr.b / coef
+    return clr
 end
 
 function Color.mix(clr1, clr2, alpha)
@@ -135,9 +158,9 @@ end
 
 function Color.avg(a, b)
     return Color(
-        (a.r + b.r)/2,
-        (a.g + b.g)/2,
-        (a.b + b.b)/2,
+        (a.r + b.r) / 2,
+        (a.g + b.g) / 2,
+        (a.b + b.b) / 2,
         1)
 end
 
