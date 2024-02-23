@@ -141,6 +141,7 @@ function ProcessManager:updateLoop(dt)
         local startTime = time()
 
         process.env.__autotest = true
+        love.window.setVSync(0)
             
         while true do
             n = n + 1
@@ -157,6 +158,7 @@ function ProcessManager:updateLoop(dt)
 
         print(n)
 
+        love.window.setVSync(1)
         process.env.__autotest = false
 
         captureImage()

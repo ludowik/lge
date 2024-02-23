@@ -11,6 +11,7 @@ end
 
 function Grid:clear(initValue)
     self.items = Array()
+
     if initValue then
         for i in range(self.w) do
             for j in range(self.h) do
@@ -39,6 +40,7 @@ function Grid:offset(x, y)
         return -1
     end
 end
+
 
 function Grid:setCell(x, y, cell)
     local offset = self:offset(x, y)

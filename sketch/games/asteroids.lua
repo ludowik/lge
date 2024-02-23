@@ -81,3 +81,7 @@ function Bullet:draw()
     fill(colors.white)
     circle(self.position.x, self.position.y, 2)
 end
+
+
+Asteroid = class()
+
