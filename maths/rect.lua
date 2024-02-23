@@ -52,6 +52,10 @@ function Rect.intersect(r1, r2)
     end
 end
 
+function Rect:getArea()
+    return self.size.x * self.size.y
+end
+
 function Rect:draw()
     stroke(self.clr or colors.white)
     rect(self.position.x, self.position.y, self.size.x, self.size.y)

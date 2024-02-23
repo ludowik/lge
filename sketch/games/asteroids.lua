@@ -10,30 +10,46 @@ function setup()
     scene:add(asteroids)
 
     for i=1,10 do
-asteroids:add(Asteroid())
+        asteroids:add(Asteroid())
+    end
+end
+
+function keypressed(key)
+    if key == 'space' then
+        bullets:add(Bullet(vec2(), vec2.fromAngle(ship.angle)))
     end
 end
 
 function action(dt)
-    if love.keyboard.isDown('space') then
-        bullets:add(Bullet(vec2(), vec2.fromAngle(ship.angle)))
-    end
-
-    ship.angularVelocity = 0
+    ship.angularForce = 0
     
-    if love.keyboard.isDown('left') then
-        ship.angularVelocity = -TAU
-    end
     if love.keyboard.isDown('right') then
-        ship.angularVelocity = TAU
+        ship.angularForce = PI
+    end
+    if love.keyboard.isDown('left') then
+        ship.angularForce = -PI
+    end
+    
+    if love.keyboard.isDown('up') then
     end
 end
 
 function update(dt)
     action(dt)
 
-    bullets:removeIfTrue(function (bullet) return bullet.distance > W end )
+    bullets:removeIfTrue(function (bullet) return bullet.hit or bullet.distance > W end)
+    asteroids:removeIfTrue(function (asteroid) return asteroid.destroyed end)
+
     scene:update(dt)
+
+    for _,bullet in bullets:ipairs() do
+        for _,asteroid in asteroids:ipairs() do
+            if asteroid.boundingBox:contains(bullet.position) then
+                bullet.hit = true
+                asteroid.hit = true
+            end
+        end
+    end
 end
 
 function draw()
@@ -49,6 +65,8 @@ function Object:init()
 end
 
 function Object:draw()
+    noFill()
+
     beginShape()
     for i,point in ipairs(self.vertices) do
         vertex(point.x, point.y)
@@ -60,12 +78,13 @@ end
 Ship = class() : extends(Object)
 
 function Ship:init()
-Object.init(self)
+    Object.init(self)
 
     local size = 15
 
     self.angle = 0
-self.angularVelocity = 0
+    self.angularForce = 0
+    self.angularVelocity = 0
 
     self.vertices = Array{
         size * vec2(cos(0), sin(0)),
@@ -75,6 +94,9 @@ self.angularVelocity = 0
 end
 
 function Ship:update(dt)
+    self.angularVelocity = self.angularVelocity + self.angularForce * dt
+    self.angularVelocity = self.angularVelocity * 0.98
+    self.angularVelocity = clamp(self.angularVelocity, -PI, PI)
     self.angle = self.angle + self.angularVelocity * dt
 end
 
@@ -88,13 +110,13 @@ Bullet = class()
 
 function Bullet:init(position, linearVelocity)
     self.position = vec2(position)
-    self.linearVelocity = vec2(linearVelocity):normalize(W)
+    self.linearVelocity = vec2(linearVelocity):normalize(100)
     self.distance = 0
 end
 
 function Bullet:update(dt)
     local dp = self.linearVelocity * dt
-self.position = self.position + dp
+    self.position = self.position + dp
 
     self.distance = self.distance + dp:len()
     self.position = self.position + dp
@@ -108,20 +130,20 @@ end
 
 Asteroid = class() : extends(Object)
 
-function Asteroid:init()
+function Asteroid:init(position, radius, linearVelocity)
     Object.init(self)
 
-    self.position = vec2.randomInScreen() - vec2(W/2, H/2)
+    self.position = position or (vec2.randomInScreen() - vec2(W/2, H/2))
 
     self.vertices = Array()
 
     self.angle = 0
-    self.radius = random(20, 50)
+    self.radius = radius or (random(20, 50))
 
-    self.linearVelocity = vec2.randomAngle():normalize(randomInt(25))
+    self.linearVelocity = linearVelocity or (vec2.randomAngle():normalize(randomInt(25)))
     self.angularVelocity = PI / 4
     
-    local n = randomInt(5, 7)
+    local n = randomInt(12, 20)
     for i=1,n do
         local len = random(self.radius/2, self.radius)
         self.vertices:add(len * vec2(cos(2*PI*i/n), sin(2*PI*i/n)))
@@ -150,30 +172,45 @@ function Asteroid:updateBoudingBox()
 end
 
 function Asteroid:update(dt)
-    local dp = self.linearVelocity * dt
-    self.position = self.position + dp
+    if self.hit then
+        self.destroyed = true
+        if self.boundingBox:getArea() > 1500 then
+            local radius = self.radius / 2
+            asteroids:add(Asteroid(self.position+self.linearVelocity, radius,  self.linearVelocity))
+            asteroids:add(Asteroid(self.position-self.linearVelocity, radius, -self.linearVelocity))
+        end
+    else
+        local dp = self.linearVelocity * dt
+        self.position = self.position + dp
 
-    self.angle = self.angle + self.angularVelocity * dt
+        self.angle = self.angle + self.angularVelocity * dt
 
-    if self.position.x <= -W/2 then
-        self.position.x = self.position.x + W
-    elseif self.position.x > W/2 then
-        self.position.x = self.position.x - W
+        if self.position.x <= -W/2 then
+            self.position.x = self.position.x + W
+        elseif self.position.x > W/2 then
+            self.position.x = self.position.x - W
+        end
+
+        if self.position.y <= -H/2 then
+            self.position.y = self.position.y + H
+        elseif self.position.y > H/2 then
+            self.position.y = self.position.y - H
+        end
+
+        self:updateBoudingBox()
     end
-
-    if self.position.y <= -H/2 then
-        self.position.y = self.position.y + H
-    elseif self.position.y > H/2 then
-        self.position.y = self.position.y - H
-    end
-
-    self:updateBoudingBox()
 end
 
 function Asteroid:draw()
-    self.boundingBox:draw()
-
     translate(self.position.x, self.position.y)
+
+    fontSize(9)
+    stroke(colors.red)
+    textMode(CENTER)
+    text(floor(self.boundingBox:getArea()), 0, 0)
+
     rotate(self.angle)
+
+    stroke(colors.white)
     Object.draw(self)
 end
