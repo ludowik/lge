@@ -16,11 +16,12 @@ end
 
 function keypressed(key)
     if key == 'space' then
-        bullets:add(Bullet(vec2(), vec2.fromAngle(ship.angle)))
+        bullets:add(Bullet(ship.position, vec2.fromAngle(ship.angle)))
     end
 end
 
 function action(dt)
+    ship.linearForce = vec2()
     ship.angularForce = 0
     
     if love.keyboard.isDown('right') then
@@ -31,6 +32,11 @@ function action(dt)
     end
     
     if love.keyboard.isDown('up') then
+        ship.linearForce = vec2.fromAngle(ship.angle):normalize(100)
+    end
+
+    if love.keyboard.isDown('down') then
+        ship.linearForce = -vec2.fromAngle(ship.angle):normalize(50)
     end
 end
 
@@ -54,7 +60,10 @@ end
 
 function draw()
     background()
+
     translate(W/2, H/2)
+    translate(-ship.position.x, -ship.position.y)
+
     scene:draw()
 end
 
@@ -82,6 +91,10 @@ function Ship:init()
 
     local size = 15
 
+    self.position = vec2()
+    self.linearForce = vec2()
+    self.linearVelocity = vec2()
+
     self.angle = 0
     self.angularForce = 0
     self.angularVelocity = 0
@@ -94,6 +107,10 @@ function Ship:init()
 end
 
 function Ship:update(dt)
+    self.linearVelocity = self.linearVelocity + self.linearForce * dt
+    self.linearVelocity = self.linearVelocity * 0.992
+    self.position = self.position + self.linearVelocity * dt
+
     self.angularVelocity = self.angularVelocity + self.angularForce * dt
     self.angularVelocity = self.angularVelocity * 0.98
     self.angularVelocity = clamp(self.angularVelocity, -PI, PI)
@@ -101,6 +118,7 @@ function Ship:update(dt)
 end
 
 function Ship:draw()
+    translate(self.position.x, self.position.y)
     rotate(self.angle)
     Object.draw(self)
 end
@@ -141,7 +159,7 @@ function Asteroid:init(position, radius, linearVelocity)
     self.radius = radius or (random(20, 50))
 
     self.linearVelocity = linearVelocity or (vec2.randomAngle():normalize(randomInt(25)))
-    self.angularVelocity = PI / 4
+    self.angularVelocity = random(-PI / 4, PI / 4)
     
     local n = randomInt(12, 20)
     for i=1,n do
@@ -172,6 +190,8 @@ function Asteroid:updateBoudingBox()
 end
 
 function Asteroid:update(dt)
+    local center = ship.position
+
     if self.hit then
         self.destroyed = true
         if self.boundingBox:getArea() > 1500 then
@@ -180,20 +200,20 @@ function Asteroid:update(dt)
             asteroids:add(Asteroid(self.position-self.linearVelocity, radius, -self.linearVelocity))
         end
     else
-        local dp = self.linearVelocity * dt
-        self.position = self.position + dp
-
+        self.position = self.position + self.linearVelocity * dt
         self.angle = self.angle + self.angularVelocity * dt
 
-        if self.position.x <= -W/2 then
+        if self.position.x <= center.x - W/2 then
             self.position.x = self.position.x + W
-        elseif self.position.x > W/2 then
+
+        elseif self.position.x > center.x + W/2 then
             self.position.x = self.position.x - W
         end
 
-        if self.position.y <= -H/2 then
+        if self.position.y <= center.y - H/2 then
             self.position.y = self.position.y + H
-        elseif self.position.y > H/2 then
+
+        elseif self.position.y > center.y + H/2 then
             self.position.y = self.position.y - H
         end
 

@@ -6,11 +6,15 @@ Quadtree.DYNAMIC = 'dynamic'
 function Quadtree:init(mode, checkNode, areaSize)
     self.mode = mode
     self.checkNode = checkNode
+    self.maxObject = 3
     self.areaSize = areaSize
+
+    self.level = 0
+    self.addNode = 0
 end
 
 function Quadtree:update(items)
-    local minx, miny = math.maxinteger, math.maxinteger
+    local minx, miny =  math.maxinteger,  math.maxinteger
     local maxx, maxy = -math.maxinteger, -math.maxinteger
 
     for i,v in items:ipairs() do        
@@ -22,7 +26,11 @@ function Quadtree:update(items)
     end
 
     local size = max(maxx - minx, maxy - miny)
+    
     self.node = QuadtreeNode(self, minx, miny, size, size)
+
+    self.level = 0
+    self.addNode = 0
 
     for i,v in items:ipairs() do
         self.node:add(v)
@@ -54,13 +62,15 @@ function QuadtreeNode:init(root, x, y, w, h)
 end
 
 function QuadtreeNode:add(node)
+    self.root.addNode = self.root.addNode + 1
+
     if not self.root.checkNode(self, node) then return end
 
     if self.items then
         self.items:add(node)
 
         if self.root.mode == Quadtree.DYNAMIC then
-            if #self.items > self.root.areaSize then
+            if #self.items > self.root.maxObject then
                 local items = self.items
                 self.items = nil
                 for i,v in ipairs(items) do
@@ -81,6 +91,8 @@ function QuadtreeNode:add(node)
             self.se = QuadtreeNode(self.root, x+w, y  , w, h)
             self.nw = QuadtreeNode(self.root, x  , y+h, w, h)
             self.ne = QuadtreeNode(self.root, x+w, y+h, w, h)
+
+            self.root.level = self.root.level + 1
         end
 
         self.sw:add(node)
@@ -109,19 +121,16 @@ function QuadtreeNode:cross(f)
     return self
 end
 
-function QuadtreeNode:draw(level)
-    level = level or 1
-
+function QuadtreeNode:draw()
     if self.items then
         if #self.items > 0 then
-            strokeSize(0.5)
             Rect.draw(self)
         end
         
     elseif self.sw then
-        self.sw:draw(level)
-        self.se:draw(level)
-        self.nw:draw(level)
-        self.ne:draw(level)
+        self.sw:draw()
+        self.se:draw()
+        self.nw:draw()
+        self.ne:draw()
     end
 end
