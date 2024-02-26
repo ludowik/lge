@@ -6,6 +6,7 @@ Octree.DYNAMIC = 'dynamic'
 function Octree:init(mode, checkNode, areaSize)
     self.mode = mode
     self.checkNode = checkNode
+    self.maxObject = 3
     self.areaSize = areaSize
 end
 
@@ -62,7 +63,7 @@ function OctreeNode:add(node)
         self.items:add(node)
 
         if self.root.mode == Octree.DYNAMIC then
-            if #self.items > self.root.areaSize then
+            if #self.items > self.root.maxObject then
                 local items = self.items
                 self.items = nil
                 for i,v in ipairs(items) do

@@ -53,7 +53,11 @@ function FrameBuffer:background(clr, ...)
 end
 
 function FrameBuffer:getImageData()
-    if self.imageData then return end
+    if self.imageData then
+        self.needUpdate = true
+        return
+    end
+
     local getImageData = love.graphics.readbackTexture or self.canvas.newImageData
 
     local restoreCanvas = false
