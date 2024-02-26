@@ -115,10 +115,10 @@ function Grid:rotate(clockwise)
     return grid
 end
 
-function Grid:draw(x, y, drawCellFunction)    
-    local size =
-        (type(self.size) == 'number' and self.size) or
-        (type(self.size) == 'table' and self.size.x) or
+function Grid:draw(x, y, drawCellFunction)
+    local cellSize =
+        (type(self.cellSize) == 'number' and self.cellSize) or
+        (type(self.cellSize) == 'table' and self.cellSize.x) or
         (Anchor(self.w + 2):size(1, 1).x)
     
     x = x or 0
@@ -132,7 +132,7 @@ function Grid:draw(x, y, drawCellFunction)
         for i in range(self.w) do
             for j in range(self.h) do
                 local cell = self:getCell(i, j)
-                rect(x + (i-1) * size, y + (j-1) * size, size, size)
+                rect(x + (i-1) * cellSize, y + (j-1) * cellSize, cellSize, cellSize)
             end
         end
     end
