@@ -12,6 +12,8 @@ function setup()
     parameter:watch('physics.countCollision')
     parameter:watch('physics.quadtree.level')
     parameter:watch('physics.quadtree.addNode')
+
+    parameter:boolean('gravity', 'withGravity', true)
 end
 
 function update(dt)
@@ -38,10 +40,12 @@ Ball = class()
 function Ball:init(x, y, radius)
     self.position = vec3(
         x or random(W*.1, W*.9),
-        y or random(H*.5,H*1.5),
+        y or random(H*.5, H*1.5),
         0)
 
-    self.body = Body(DYNAMIC, CIRCLE, self.position, radius)
+    self.radius = random(20, 50)
+
+    self.body = Body(DYNAMIC, CIRCLE, self.position, self.radius)
 end
 
 function Ball:draw()
@@ -65,7 +69,7 @@ function Physics:init()
 end
 
 function Physics:update(dt)
-    local fixDeltaTime = 1/120
+    local fixDeltaTime = 0.005
     
     self.dt = self.dt + dt
     while self.dt > 0 do
@@ -127,8 +131,11 @@ Body = class()
 
 function Body:init(bodyType, shapeType, position, radius)
     self.position = vec3(position) / physics.pixelRatio
-    self.radius = (radius or 1) / physics.pixelRatio
-    self.size = vec3(self.radius*2, self.radius*2, 0)
+    self.radius = radius / physics.pixelRatio
+
+    self.size = vec3(
+        self.radius * 2,
+        self.radius * 2, 0)
 
     self.acceleration = vec3()
     self.linearVelocity = vec3()
@@ -146,10 +153,15 @@ function Body:intersect(r)
     return Rect.intersect(r, self) -- cornerRect)
 end
 
+function Body:applyForce(force)
+    self.acceleration:add(force)
+end
+
 function Body:update(dt)
     -- linear velocity
-    local force = physics.gravity:clone()
-    self.acceleration = force
+    if withGravity then
+        self:applyForce(physics.gravity)
+    end
 
     self.linearVelocity = self.linearVelocity + self.acceleration * dt
     self.linearVelocity = self.linearVelocity:normalize(min(15, self.linearVelocity:len()))
@@ -158,6 +170,9 @@ function Body:update(dt)
     
     -- linear damping
     self.linearVelocity = self.linearVelocity * math.pow(self.damping, dt)
+
+    -- reset acceleration
+    self.acceleration:set()
 end
 
 function Body:keepInArea()

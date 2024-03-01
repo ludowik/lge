@@ -4,7 +4,9 @@ Quadtree.FIXED = 'fixed'
 Quadtree.DYNAMIC = 'dynamic'
 
 function Quadtree:init(mode, checkNode, areaSize)
-    self.mode = mode
+    assert(mode)
+
+    self.mode = mode or FIXED
     self.checkNode = checkNode
     self.maxObject = 3
     self.areaSize = areaSize
@@ -68,9 +70,8 @@ function QuadtreeNode:add(node)
 
     if self.items then
         self.items:add(node)
-
         if self.root.mode == Quadtree.DYNAMIC then
-            if #self.items > self.root.maxObject then
+            if #self.items > self.root.maxObject and self.size.x > self.root.areaSize then
                 local items = self.items
                 self.items = nil
                 for i,v in ipairs(items) do
@@ -93,6 +94,8 @@ function QuadtreeNode:add(node)
             self.ne = QuadtreeNode(self.root, x+w, y+h, w, h)
 
             self.root.level = self.root.level + 1
+
+            print(w..','..h..':'..self.root.level)
         end
 
         self.sw:add(node)

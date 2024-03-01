@@ -178,8 +178,11 @@ function vec2:normalize(len)
     return vec2.clone(self):normalizeInPlace(len)
 end
 
-function vec2:normalizeInPlace(len)
-    local ratio = (len or 1) / self:len()
+function vec2:normalizeInPlace(norm)
+    local len = self:len()
+    if len == 0 then return self end
+
+    local ratio = (norm or 1) / len
     self.x = self.x * ratio
     self.y = self.y * ratio
     return self
