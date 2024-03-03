@@ -37,6 +37,7 @@ function Solitaire:init()
     end
 
     self.parameter:boolean('auto', Bind(self, 'autoPlay'), true)
+    self.parameter:boolean('x3', Bind(self, 'play3Card'), true)
     self.parameter:action('Nouvelle donne', function() self:newGame() end)
 
     self.scene = Scene()
@@ -190,7 +191,7 @@ function Solitaire:draw()
     cards:foreach(function(card) card:draw() end)
 end
 
-Deck = class():extends(Node)
+Deck = class() : extends(Node)
 
 function Deck:init(dx, dy)
     Node.init(self)
@@ -250,6 +251,15 @@ end
 
 function Deck:isMoveable(card)
     return true
+end
+
+function Deck:shift()
+    for i=#self.items,2,-1 do
+        self.items[i].position:set(self.items[i-1].position)
+        self.items[i].nextPosition:set(self.items[i-1].nextPosition)
+    end
+
+    return Node.shift(self)
 end
 
 function Deck:push(card, count)
@@ -421,14 +431,15 @@ function Card:click()
     if not self.deck:isMoveable(self) then return end
 
     if self.deck == env.sketch.deck then
-        for i in range(#env.sketch.wast.items) do
+        local nCardsInDeck = #env.sketch.deck.items
+        local nCardsToMove = min(env.sketch.play3Card and 3 or 1, nCardsInDeck)
+        
+        for i in range(#env.sketch.wast.items + nCardsToMove - 3) do
             local card = env.sketch.wast.items:first()
             card.faceUp = false
             card:move2bottom(env.sketch.deck, i)
         end
 
-        local nCardsInDeck = #env.sketch.deck.items
-        local nCardsToMove = min(3, nCardsInDeck)
         for i in range(nCardsToMove) do
             local card = env.sketch.deck.items:last()
             card.faceUp = true
@@ -460,7 +471,7 @@ function Card:move2(newDeck, countCard)
 end
 
 function Card:move2bottom(newDeck, countCard)
-    assert(self.deck.items:shift() == self)
+    assert(self.deck:shift() == self)
 
     self.faceUp = false
 

@@ -20,11 +20,11 @@ function Quadtree:update(items)
     local maxx, maxy = -math.maxinteger, -math.maxinteger
 
     for i,v in items:ipairs() do        
-        minx = min(minx, v.position.x)
-        miny = min(miny, v.position.y)
+        minx = min(minx, v.position.x - v.size.x/2)
+        miny = min(miny, v.position.y - v.size.y/2)
 
-        maxx = max(maxx, v.position.x + v.size.x)
-        maxy = max(maxy, v.position.y + v.size.y)
+        maxx = max(maxx, v.position.x + v.size.x/2)
+        maxy = max(maxy, v.position.y + v.size.y/2)
     end
 
     local size = max(maxx - minx, maxy - miny)
@@ -94,8 +94,6 @@ function QuadtreeNode:add(node)
             self.ne = QuadtreeNode(self.root, x+w, y+h, w, h)
 
             self.root.level = self.root.level + 1
-
-            print(w..','..h..':'..self.root.level)
         end
 
         self.sw:add(node)

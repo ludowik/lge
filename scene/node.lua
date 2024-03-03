@@ -18,6 +18,10 @@ function Node:add(item)
     return self
 end
 
+function Node:shift()
+    return self.items:shift()
+end
+
 function Node:count()
     return #self.items
 end

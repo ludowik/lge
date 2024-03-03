@@ -69,7 +69,7 @@ function Physics:init()
 end
 
 function Physics:update(dt)
-    local fixDeltaTime = 0.005
+    local fixDeltaTime = dt
     
     self.dt = self.dt + dt
     while self.dt > 0 do
@@ -83,11 +83,8 @@ function Physics:collision(dt)
     self.countDetectCollision = 0
     self.countCollision = 0
 
-    for _,body in ipairs(self.bodies) do
-        body:keepInArea()
-    end
-
     self.quadtree:update(self.bodies)
+
     self.quadtree:cross(function (b1, b2)        
         self.countDetectCollision = self.countDetectCollision + 1
 
@@ -118,6 +115,10 @@ function Physics:collision(dt)
             b2.position = b2.position + direction * b2.mass / (b1.mass + b2.mass)
         end
     end)
+
+    for _,body in ipairs(self.bodies) do
+        body:keepInArea()
+    end
 end
 
 function Physics:draw()
@@ -127,7 +128,7 @@ function Physics:draw()
 end
 
 
-Body = class()
+Body = class() : extends(Rect)
 
 function Body:init(bodyType, shapeType, position, radius)
     self.position = vec3(position) / physics.pixelRatio
@@ -136,6 +137,8 @@ function Body:init(bodyType, shapeType, position, radius)
     self.size = vec3(
         self.radius * 2,
         self.radius * 2, 0)
+
+    self.center = self.position - self.size / 2
 
     self.acceleration = vec3()
     self.linearVelocity = vec3()
@@ -149,8 +152,8 @@ function Body:init(bodyType, shapeType, position, radius)
 end
 
 function Body:intersect(r)
-    --local cornerRect = Rect(self.position.x-self.size.x/2, self.position.y-self.size.y/2, self.size.x, self.size.y)
-    return Rect.intersect(r, self) -- cornerRect)
+    local cornerRect = Rect(r.position.x-r.size.x/2, r.position.y-r.size.y/2, r.size.x, r.size.y)
+    return Rect.intersect(self, cornerRect)
 end
 
 function Body:applyForce(force)
@@ -176,17 +179,17 @@ function Body:update(dt)
 end
 
 function Body:keepInArea()
-    if self.position.y - self.radius <= 0 then
+    if self.position.y - self.radius < 0 then
         self.position.y = self.radius
         self.linearVelocity.y = -self.bouncing * self.linearVelocity.y    
     end
     
-    if self.position.x - self.radius <= 0 then
+    if self.position.x - self.radius < 0 then
         self.position.x = self.radius
         self.linearVelocity.x = -self.bouncing * self.linearVelocity.x    
     end
     
-    if self.position.x + self.radius > W / physics.pixelRatio then
+    if self.position.x + self.radius >= W / physics.pixelRatio then
         self.position.x = (W / physics.pixelRatio) - self.radius
         self.linearVelocity.x = -self.bouncing * self.linearVelocity.x
     end
