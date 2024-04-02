@@ -4,7 +4,9 @@ Quadtree.FIXED = 'fixed'
 Quadtree.DYNAMIC = 'dynamic'
 
 function Quadtree:init(mode, checkNode, areaSize)
-    self.mode = mode
+    assert(mode)
+
+    self.mode = mode or FIXED
     self.checkNode = checkNode
     self.maxObject = 3
     self.areaSize = areaSize
@@ -18,11 +20,11 @@ function Quadtree:update(items)
     local maxx, maxy = -math.maxinteger, -math.maxinteger
 
     for i,v in items:ipairs() do        
-        minx = min(minx, v.position.x)
-        miny = min(miny, v.position.y)
+        minx = min(minx, v.position.x - v.size.x/2)
+        miny = min(miny, v.position.y - v.size.y/2)
 
-        maxx = max(maxx, v.position.x + v.size.x)
-        maxy = max(maxy, v.position.y + v.size.y)
+        maxx = max(maxx, v.position.x + v.size.x/2)
+        maxy = max(maxy, v.position.y + v.size.y/2)
     end
 
     local size = max(maxx - minx, maxy - miny)
@@ -68,9 +70,8 @@ function QuadtreeNode:add(node)
 
     if self.items then
         self.items:add(node)
-
         if self.root.mode == Quadtree.DYNAMIC then
-            if #self.items > self.root.maxObject then
+            if #self.items > self.root.maxObject and self.size.x > self.root.areaSize then
                 local items = self.items
                 self.items = nil
                 for i,v in ipairs(items) do

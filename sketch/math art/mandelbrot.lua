@@ -23,7 +23,7 @@ function prepare()
     local y1 = -1.5
     local y2 =  1.5
     
-    local zoom = floor(W / (y2 - y1))
+    local zoom = floor(H / (y2 - y1))
     
     local iteration_max = 50
 
@@ -59,10 +59,14 @@ function prepare()
                 i = i + 1
             end
 
-            if i == iteration_max then
-                img:set(x-1, y-1, colors.black)
-            else
-                img:set(x-1, y-1, Color.hsl(i/iteration_max))
+            if (x-1 >= 0 and x-1 < img.width * devicePixelRatio and
+                y-1 >= 0 and y-1 < img.height * devicePixelRatio)
+            then
+                if i == iteration_max then
+                    img:set(x-1, y-1, colors.black)
+                else
+                    img:set(x-1, y-1, Color.hsl(i/iteration_max))
+                end
             end
         end
     end

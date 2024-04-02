@@ -173,8 +173,11 @@ function vec3:normalize(len)
     return vec3.clone(self):normalizeInPlace(len)
 end
 
-function vec3:normalizeInPlace(len)
-    local ratio = (len or 1) / self:len()
+function vec3:normalizeInPlace(norm)
+    local len = self:len()
+    if len == 0 then return self end
+    
+    local ratio = (norm or 1) / len
     self.x = self.x * ratio
     self.y = self.y * ratio
     self.z = self.z * ratio

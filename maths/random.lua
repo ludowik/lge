@@ -1,8 +1,11 @@
 class().setup = function ()
-    love.math.setRandomSeed(51)
+    seed(os.time())
 end
 
-seed = love.math.setRandomSeed
+seed = function (value)
+    return love.math.setRandomSeed(value)
+end
+
 random = function (min, max)
     if min and max then 
         return love.math.random() * (max-min) + min

@@ -12,6 +12,8 @@ function setup()
     parameter:watch('physics.countCollision')
     parameter:watch('physics.quadtree.level')
     parameter:watch('physics.quadtree.addNode')
+
+    parameter:boolean('gravity', 'withGravity', true)
 end
 
 function update(dt)
@@ -38,10 +40,12 @@ Ball = class()
 function Ball:init(x, y, radius)
     self.position = vec3(
         x or random(W*.1, W*.9),
-        y or random(H*.5,H*1.5),
+        y or random(H*.5, H*1.5),
         0)
 
-    self.body = Body(DYNAMIC, CIRCLE, self.position, radius)
+    self.radius = random(20, 50)
+
+    self.body = Body(DYNAMIC, CIRCLE, self.position, self.radius)
 end
 
 function Ball:draw()
@@ -65,7 +69,7 @@ function Physics:init()
 end
 
 function Physics:update(dt)
-    local fixDeltaTime = 1/120
+    local fixDeltaTime = dt
     
     self.dt = self.dt + dt
     while self.dt > 0 do
@@ -79,11 +83,8 @@ function Physics:collision(dt)
     self.countDetectCollision = 0
     self.countCollision = 0
 
-    for _,body in ipairs(self.bodies) do
-        body:keepInArea()
-    end
-
     self.quadtree:update(self.bodies)
+
     self.quadtree:cross(function (b1, b2)        
         self.countDetectCollision = self.countDetectCollision + 1
 
@@ -114,6 +115,10 @@ function Physics:collision(dt)
             b2.position = b2.position + direction * b2.mass / (b1.mass + b2.mass)
         end
     end)
+
+    for _,body in ipairs(self.bodies) do
+        body:keepInArea()
+    end
 end
 
 function Physics:draw()
@@ -123,12 +128,17 @@ function Physics:draw()
 end
 
 
-Body = class()
+Body = class() : extends(Rect)
 
 function Body:init(bodyType, shapeType, position, radius)
     self.position = vec3(position) / physics.pixelRatio
-    self.radius = (radius or 1) / physics.pixelRatio
-    self.size = vec3(self.radius*2, self.radius*2, 0)
+    self.radius = radius / physics.pixelRatio
+
+    self.size = vec3(
+        self.radius * 2,
+        self.radius * 2, 0)
+
+    self.center = self.position - self.size / 2
 
     self.acceleration = vec3()
     self.linearVelocity = vec3()
@@ -142,14 +152,19 @@ function Body:init(bodyType, shapeType, position, radius)
 end
 
 function Body:intersect(r)
-    --local cornerRect = Rect(self.position.x-self.size.x/2, self.position.y-self.size.y/2, self.size.x, self.size.y)
-    return Rect.intersect(r, self) -- cornerRect)
+    local cornerRect = Rect(r.position.x-r.size.x/2, r.position.y-r.size.y/2, r.size.x, r.size.y)
+    return Rect.intersect(self, cornerRect)
+end
+
+function Body:applyForce(force)
+    self.acceleration:add(force)
 end
 
 function Body:update(dt)
     -- linear velocity
-    local force = physics.gravity:clone()
-    self.acceleration = force
+    if withGravity then
+        self:applyForce(physics.gravity)
+    end
 
     self.linearVelocity = self.linearVelocity + self.acceleration * dt
     self.linearVelocity = self.linearVelocity:normalize(min(15, self.linearVelocity:len()))
@@ -158,20 +173,23 @@ function Body:update(dt)
     
     -- linear damping
     self.linearVelocity = self.linearVelocity * math.pow(self.damping, dt)
+
+    -- reset acceleration
+    self.acceleration:set()
 end
 
 function Body:keepInArea()
-    if self.position.y - self.radius <= 0 then
+    if self.position.y - self.radius < 0 then
         self.position.y = self.radius
         self.linearVelocity.y = -self.bouncing * self.linearVelocity.y    
     end
     
-    if self.position.x - self.radius <= 0 then
+    if self.position.x - self.radius < 0 then
         self.position.x = self.radius
         self.linearVelocity.x = -self.bouncing * self.linearVelocity.x    
     end
     
-    if self.position.x + self.radius > W / physics.pixelRatio then
+    if self.position.x + self.radius >= W / physics.pixelRatio then
         self.position.x = (W / physics.pixelRatio) - self.radius
         self.linearVelocity.x = -self.bouncing * self.linearVelocity.x
     end

@@ -37,6 +37,7 @@ function Solitaire:init()
     end
 
     self.parameter:boolean('auto', Bind(self, 'autoPlay'), true)
+    self.parameter:boolean('x3', Bind(self, 'play3Card'), true)
     self.parameter:action('Nouvelle donne', function() self:newGame() end)
 
     self.scene = Scene()
@@ -147,7 +148,7 @@ function Solitaire:update(dt)
             local lastCard = self.rows.items[i].items:last()
             if lastCard then
                 local validMoves = Array()
-                getValidMovesFor(validMoves, lastCard, self.piles.items)
+                lastCard:getValidMovesFor(validMoves, self.piles.items)
                 if #validMoves == 1 then
                     lastCard:move2(validMoves[1], countCard)
                     countCard = countCard + 1
@@ -190,7 +191,7 @@ function Solitaire:draw()
     cards:foreach(function(card) card:draw() end)
 end
 
-Deck = class():extends(Node)
+Deck = class() : extends(Node)
 
 function Deck:init(dx, dy)
     Node.init(self)
@@ -252,9 +253,17 @@ function Deck:isMoveable(card)
     return true
 end
 
-function Deck:push(card, count)
-    count = count or 0
+function Deck:shift()
+    for i=#self.items,2,-1 do
+        --self.items[i].position:set(self.items[i-1].position)
+        self.items[i].nextPosition:set(self.items[i-1].nextPosition)
+        self.items[i]:animate()
+    end
 
+    return Node.shift(self)
+end
+
+function Deck:push(card, count)
     -- compute next position
     if card.position == vec2() then
         card.position:set(self.position)
@@ -274,11 +283,7 @@ function Deck:push(card, count)
         card.tween:finalize()
     end
 
-    -- init animation
-    card.tween = animate(card.position, card.nextPosition, {
-        delayBeforeStart = count / 60,
-        delay = 30 / 60
-    }, tween.easing.quadOut, function() card.tween = nil end)
+    card:animate(count)
 
     self.items:push(card)
     card.deck = self
@@ -317,6 +322,7 @@ function Pile:isValidMove(card, toDeck)
     end
 end
 
+
 Row = class():extends(Deck)
 
 function Row:isMoveable(card)
@@ -337,6 +343,13 @@ function Row:isValidMove(card, toDeck)
         end
     end
 end
+
+function Row:update()
+    if #self.items > 0 and self.items:last().faceUp == false then
+        self.items:last().faceUp = true
+    end
+end
+
 
 Card = class():extends(Rect)
 
@@ -362,6 +375,15 @@ function Card:init(value, suit, faceUp)
     self.faceUp = faceUp
 
     self.img = Image('resources/images/' .. self.suit.name .. '.png')
+end
+
+function Card:animate(count)
+    count = count or 0
+
+    self.tween = animate(self.position, self.nextPosition, {
+        delayBeforeStart = count / 60,
+        delay = 30 / 60
+    }, tween.easing.quadOut, function() self.tween = nil end)    
 end
 
 local labels = { 'A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K' }
@@ -421,21 +443,22 @@ function Card:click()
     if not self.deck:isMoveable(self) then return end
 
     if self.deck == env.sketch.deck then
-        for i in range(#env.sketch.wast.items) do
+        local nCardsInDeck = #env.sketch.deck.items
+        local nCardsToMove = min(env.sketch.play3Card and 3 or 1, nCardsInDeck)
+        
+        for i in range(#env.sketch.wast.items + nCardsToMove - 3) do
             local card = env.sketch.wast.items:first()
             card.faceUp = false
             card:move2bottom(env.sketch.deck, i)
         end
 
-        local nCardsInDeck = #env.sketch.deck.items
-        local nCardsToMove = min(3, nCardsInDeck)
         for i in range(nCardsToMove) do
             local card = env.sketch.deck.items:last()
             card.faceUp = true
             card:move2(env.sketch.wast, i)
         end
     else
-        local toDeck = getFirstValidMove(self)
+        local toDeck = self:getFirstValidMove()
         if toDeck then
             self:move2(toDeck)
         end
@@ -452,15 +475,15 @@ function Card:move2(newDeck, countCard)
         newDeck:push(currentDeck.items:remove(index), countCard)
     end
 
-    for _, row in ipairs(env.sketch.rows.items) do
-        if row == currentDeck and #currentDeck.items > 0 then
-            currentDeck.items:last().faceUp = true
-        end
-    end
+    -- for _, row in ipairs(env.sketch.rows.items) do
+    --     if row == currentDeck and #currentDeck.items > 0 then
+    --         currentDeck.items:last().faceUp = true
+    --     end
+    -- end
 end
 
 function Card:move2bottom(newDeck, countCard)
-    assert(self.deck.items:shift() == self)
+    assert(self.deck:shift() == self)
 
     self.faceUp = false
 
@@ -469,29 +492,29 @@ function Card:move2bottom(newDeck, countCard)
     end
 
     self.position:set(newDeck.position)
+    self.nextPosition:set(self.position)
+    
     newDeck.items:insert(1, self)
     self.deck = newDeck
 end
 
-function getFirstValidMove(card)
-    return getValidMoves(card)[1]
+function Card:getFirstValidMove()
+    return self:getValidMoves()[1]
 end
 
-function getValidMovesFor(validMoves, card, items)
+function Card:getValidMoves()
+    local validMoves = Array()
+
+    self:getValidMovesFor(validMoves, env.sketch.piles.items)
+    self:getValidMovesFor(validMoves, env.sketch.rows.items)
+
+    return validMoves
+end
+
+function Card:getValidMovesFor(validMoves, items)
     for _, item in ipairs(items) do
-        if item:isValidMove(card, item) then
+        if item:isValidMove(self, item) then
             validMoves:add(item)
         end
     end
-end
-
-function getValidMoves(card)
-    local self       = env.sketch
-
-    local validMoves = Array()
-
-    getValidMovesFor(validMoves, card, self.piles.items)
-    getValidMovesFor(validMoves, card, self.rows.items)
-
-    return validMoves
 end

@@ -15,13 +15,13 @@ function Octree:update(items)
     local maxx, maxy, maxz = -math.maxinteger, -math.maxinteger, -math.maxinteger
 
     for i,v in items:ipairs() do
-        minx = min(minx, v.position.x)
-        miny = min(miny, v.position.y)
-        minz = min(minz, v.position.z)
+        minx = min(minx, v.position.x - v.size.x/2)
+        miny = min(miny, v.position.y - v.size.y/2)
+        minz = min(minz, v.position.z - v.size.z/2)
 
-        maxx = max(maxx, v.position.x + v.size.x)
-        maxy = max(maxy, v.position.y + v.size.y)
-        maxz = max(maxz, v.position.z + v.size.z)
+        maxx = max(maxx, v.position.x + v.size.x/2)
+        maxy = max(maxy, v.position.y + v.size.y/2)
+        maxz = max(maxz, v.position.z + v.size.z/2)
     end
 
     local size = max(maxx - minx, maxy - miny, maxz - minz)

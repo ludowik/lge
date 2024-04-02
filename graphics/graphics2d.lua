@@ -457,8 +457,10 @@ function Graphics2d.text(str, x, y, limit, align)
 
     local font = FontManager.getFont()
 
+    local newText = love.graphics.newTextBatch or love.graphics.newText
+
     local text = getResource(tostring(font)..str, function ()
-        local text = love.graphics.newText(font, str)
+        local text = newText(font, str)
         return text
     end)
 
