@@ -140,7 +140,6 @@ function createTexture()
             local function face(x, y, clr)
                 pushMatrix()
                 translate(x, y)
-                seed(x)
 
                 for x=0,size-tileSize,tileSize do
                     for y=0,size-tileSize,tileSize do
