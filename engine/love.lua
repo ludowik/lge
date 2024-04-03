@@ -48,8 +48,8 @@ function love.runProc()
 	end
 end
 
-function love.load()
-    Engine.load()	
+function love.load(arg, unfilteredArg)
+    Engine.load()
 end
 
 function love.update(dt)
