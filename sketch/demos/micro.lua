@@ -3,18 +3,22 @@ if getOS() == 'ios' or not love.audio then
 end
 
 function setup()
+    env.sketch:setMode(1600, 800, true)
+    
     devices = love.audio.getRecordingDevices()
     device = devices[1]
 
     status = 'pause'
 
     buffer = Array()
+    bufferMaxSize = 256
 
     parameter:watch('#devices')
-    parameter:watch('status')
     parameter:watch('#buffer')
     
-    mode = 2
+    --parameter:watch('status')    
+    
+    mode = 1
     parameter:integer('mode', 1, 2, 1)
 end
 
@@ -23,10 +27,10 @@ function pause()
 end
 
 function resume()
-    status = device:start(2048)
+    status = device:start(bufferMaxSize)
 end
 
-function update(dt)
+function update(dt)    
     data = device:getData()
     while data do
         for i=0,data:getSampleCount()-1 do
@@ -35,13 +39,13 @@ function update(dt)
         data = device:getData()
     end
 
-    while #buffer > W do
+    while #buffer > bufferMaxSize do
         buffer:remove(1)
     end
 end
 
 function draw()
-    background()
+    screenBlur()
 
     local arrays = Array()
 
@@ -54,7 +58,7 @@ function draw()
     end
 
     local scale = 1/maxValue
-    for i=1,n do
+    local function addSample(i)
         local len = buffer[i] * scale
 
         local x, y
@@ -70,5 +74,11 @@ function draw()
         table.insert(arrays, y)
     end
 
+    for i=1,n do
+        addSample(i)
+    end
+    addSample(1)
+
+    stroke(colors.white)
     polyline(arrays)
 end
