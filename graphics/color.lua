@@ -312,7 +312,7 @@ function hsl2rgb(hue, saturation, lightness)
 
     -- Adjusting hue to be in the range of 0-1
     if hue > 1 then hue = hue / 255 end
-    --hue = hue % 1
+    hue = hue % 1
 
     -- Normalizing saturation and lightness to be in the range of 0-1
     saturation = math.max(0, math.min(1, saturation))
@@ -404,7 +404,7 @@ function hsb2rgb(hue, saturation, lightness)
 
     -- Adjusting hue to be in the range of 0-1
     if hue > 1 then hue = hue / 255 end
-    --hue = hue % 1
+    hue = hue % 1
 
     -- Normalizing saturation and lightness to be in the range of 0-1
     saturation = math.max(0, math.min(1, saturation))

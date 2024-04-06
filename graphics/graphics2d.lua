@@ -78,15 +78,13 @@ function Graphics2d.background(clr, ...)
 end
 
 function Graphics2d.screenBlur(clr, ...)
-    clr = Color.fromParam(clr, ...) or colors.black
+    clr = Color.fromParam(clr, ...) or Color(0, 0.05)
 
     pushMatrix()
     resetMatrix()
 
-    local a = clr.a == 1 and 0.05 or clr.a
-
     noStroke()
-    fill(clr.r, clr.g, clr.b, a)
+    fill(clr.r, clr.g, clr.b, clr.a)
 
     rectMode(CORNER)
     rect(-X, -Y, 2*X+W, 2*Y+H)

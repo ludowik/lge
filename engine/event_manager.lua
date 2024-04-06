@@ -116,9 +116,9 @@ function EventManager:search(key)
         searchText = searchText..key
     end
 
-    local index = processManager:findSketch(searchText)
-    if index then
-        processManager:setCurrentSketch(index)
+    local sketches = processManager:findSketches(searchText)
+    if #sketches == 1 then
+        processManager:setCurrentSketch(sketches[1])
         searchText = ''
     end
 end

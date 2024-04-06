@@ -26,6 +26,19 @@ function ProcessManager:findSketch(name)
     end
 end
 
+function ProcessManager:findSketches(keyword)
+    if not keyword then return end
+
+    local sketches = Array()
+    keyword = keyword:lower()
+    for i, env in ipairs(self.items) do
+        if env.__name:contains(keyword) then
+            sketches:add(i)
+        end
+    end
+    return sketches
+end
+
 function ProcessManager:getSketch(nameOrIndex)
     if not nameOrIndex then return end
 
