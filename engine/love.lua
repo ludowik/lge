@@ -104,3 +104,7 @@ end
 function love.keypressed(key, scancode, isrepeat)
     eventManager:keypressed(key, scancode, isrepeat)
 end
+
+function love.keyreleased(key, scancode)
+    eventManager:keyreleased(key, scancode)
+end

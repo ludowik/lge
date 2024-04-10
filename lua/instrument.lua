@@ -159,7 +159,7 @@ end
 function Instrument:draw()
     self.behindInstrument = true
 
-    screenBlur(0, 0.5)
+    background(0, 0.5)
 
     stroke(colors.white)
     textColor(colors.white)

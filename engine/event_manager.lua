@@ -51,7 +51,7 @@ end
 
 function EventManager:keypressed(key, scancode, isrepeat)
     local process = processManager:current()
-    if process then
+    if process and process.keypressed then
         process:keypressed(key, scancode, isrepeat)
     end
     
@@ -93,10 +93,23 @@ function EventManager:keypressed(key, scancode, isrepeat)
         
         elseif key == 'down' then -- 'pagedown' then
             processManager:next()
-        
         end
+
+    elseif 'pageup' then
+        processManager:previous()
+    
+    elseif 'pagedown' then
+        processManager:next()
+    
     else
         self:search(key)
+    end
+end
+
+function EventManager:keyreleased(key, scancode)
+    local process = processManager:current()
+    if process and process.keyreleased then
+        process:keyreleased(key, scancode)
     end
 end
 

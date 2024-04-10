@@ -77,21 +77,6 @@ function Graphics2d.background(clr, ...)
     love.graphics.rectangle('fill', -X, -Y, 2 * X + W, 2 * Y + H)
 end
 
-function Graphics2d.screenBlur(clr, ...)
-    clr = Color.fromParam(clr, ...) or Color(0, 0.05)
-
-    pushMatrix()
-    resetMatrix()
-
-    noStroke()
-    fill(clr.r, clr.g, clr.b, clr.a)
-
-    rectMode(CORNER)
-    rect(-X, -Y, 2*X+W, 2*Y+H)
-
-    popMatrix()
-end
-
 function Graphics2d.noLoop()
     local process = processManager:current()
     if not process then return end
