@@ -19,8 +19,8 @@ function Graphics2d.getSafeArea()
     else
         x, y = 5, 50
         _, h = love.window.getDesktopDimensions(1) -- displayindex
-        h = h * 0.8
-        w = h / 15 * 10
+        h = floor(h * 0.8)
+        w = floor(h / 15 * 10)
     end
 
     x = x + margeExtension
@@ -67,7 +67,7 @@ function Graphics2d.setMode(w, h, fullscreen)
         if deviceOrientation ~= 0 then
             w, h = h, w
         end
-        love.window.setMode(w, h, params)
+        love.window.setMode(h, w, params)
     end
 end
 

@@ -90,7 +90,7 @@ love.graphics = meta{
     newShader = _love.graphics.newShader,
 }
 
---love = _love
+love = _love
 
 xpcall = function (f, err, ...)
     assert(f)

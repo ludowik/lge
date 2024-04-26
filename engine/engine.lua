@@ -42,7 +42,6 @@ end
 
 function Engine.reload(reload)
     engine.initParameter()
-
     processManager:clear()
     return load(reload)
 end
@@ -122,16 +121,16 @@ function fused()
     return getSettings('fused', false)
 end
 
+function getFPS()
+    return love.timer.getFPS()
+end
+
 function restart()
     love.event.quit('restart')
 end
 
 function quit()
     love.event.quit()
-end
-
-function getFPS()
-    return love.timer.getFPS()
 end
 
 function exit()

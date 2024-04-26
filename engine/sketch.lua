@@ -24,7 +24,7 @@ function Sketch:init(w, h)
 end
 
 function Sketch:setMode(w, h, persistence)
-    env.W, env.H = w, H
+    env.W, env.H = w, h
     
     w = (2 * X + w)
     h = (2 * Y + h)
@@ -86,6 +86,11 @@ function Sketch:updateSketch(dt)
 end
 
 function Sketch:drawSketch(force)
+    self:drawPhase1()
+    self:drawPhase2(force)
+end
+
+function  Sketch:drawPhase1()
     local requireDrawing = true
     if self.frames then
         if self.frames == 0 then
@@ -109,7 +114,9 @@ function Sketch:drawSketch(force)
 
         self:draw()
     end
+end
 
+function  Sketch:drawPhase2(force)
     love.graphics.setCanvas()
     love.graphics.setShader()
     love.graphics.setDepthMode()
@@ -125,8 +132,12 @@ function Sketch:drawSketch(force)
         love.graphics.translate(0, -(2 * Y + H))
     end
 
+    local ws, hs, flags = love.window.getMode()
+
     local sx = self.size.x / self.fb.canvas:getWidth()
     local sy = self.size.y / self.fb.canvas:getHeight()
+
+    local scale = min(ws/self.fb.canvas:getWidth(), hs/self.fb.canvas:getHeight())
 
     if self.sketchPixelRatio then
         love.graphics.translate(X, Y)
@@ -138,8 +149,8 @@ function Sketch:drawSketch(force)
         self.position.x,
         self.position.y + (deviceOrientation ~= 0 and self.size.x or 0),
         deviceOrientation, -- rotation
-        sx, -- scale x
-        sy) -- scale y
+        scale * sx, -- scale x
+        scale * sy) -- scale y
 
     -- TODO : gérer un zoom
     -- TODO : gérer une translation
