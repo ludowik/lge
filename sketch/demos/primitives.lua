@@ -6,7 +6,7 @@ end
 
 function draw()
     if ElapsedTime * 1000 / 30 < N then return end
-    screenBlur(0, 0.05)
+    background(0, 0.05)
 
     noFill()
 

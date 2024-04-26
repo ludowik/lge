@@ -45,7 +45,7 @@ function update(dt)
 end
 
 function draw()
-    screenBlur()
+    background(0, 0.05)
 
     local arrays = Array()
 
