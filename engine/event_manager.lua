@@ -62,6 +62,15 @@ function EventManager:keypressed(key, scancode, isrepeat)
         if key == 'r' then
             engine.reload(true)
 
+        elseif key == 'o' then
+            if deviceOrientation == PORTRAIT then
+                deviceOrientation = LANDSCAPE
+            else
+                deviceOrientation = PORTRAIT
+            end
+            setSetting('deviceOrientation', deviceOrientation)
+            restart()
+
         elseif key == 't' then
             env.__autotest = not env.__autotest
             love.window.setVSync(env.__autotest and 0 or 1)
@@ -81,12 +90,8 @@ function EventManager:keypressed(key, scancode, isrepeat)
         elseif key == 'f' then
             toggleFused()
 
-        elseif key == 'f1' then
-            env.__wireframe = not env.__wireframe
-
         elseif key == 'w' then
-            local name = process.__className:replace('_', '+')
-            openURL(('https://www.google.com/search?q=%s&lr=lang_en'):format(name))
+            env.__wireframe = not env.__wireframe
         
         elseif key == 'up' then -- 'pageup' then
             processManager:previous()
@@ -95,10 +100,14 @@ function EventManager:keypressed(key, scancode, isrepeat)
             processManager:next()
         end
 
-    elseif 'pageup' then
+    elseif key == 'f1' then
+        local name = process.__className:replace('_', '+')
+        openURL(('https://www.google.com/search?q=%s&lr=lang_en'):format(name))
+        
+    elseif key == 'pageup' then
         processManager:previous()
     
-    elseif 'pagedown' then
+    elseif key == 'pagedown' then
         processManager:next()
     
     else

@@ -1,5 +1,5 @@
 function setup()
-    supportedOrientations(LANDSCAPE_ANY)
+    supportedOrientations(LANDSCAPE)
 
     angle = 0
     radius = W / 8

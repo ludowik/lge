@@ -1,5 +1,5 @@
 function setup()
-    supportedOrientations(LANDSCAPE_ANY)
+    supportedOrientations(LANDSCAPE)
 
     -- baseImageList = {
     --     'resources/images/joconde.png',

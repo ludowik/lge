@@ -5,12 +5,13 @@ Tetris = class() : extends(Sketch)
 function Tetris:init()
     Sketch.init(self)
 
-    SIZE = Anchor(14):size(1).x
+    cellSize = Anchor(14):size(1).x
     
-    LEFT = vec2(-1, 0)
-    RIGHT = vec2(1, 0)
-    UP = vec2(0, -1)
-    DOWN = vec2(0, 1)
+    moves = {
+        left = vec2(-1, 0),
+        right = vec2(1, 0),
+        down = vec2(0, 1),
+    }
 
     self.tetriminos = Array {
         Tetrimino('I', { 0, 1, 2, 3, 4, 0, 0 }, colors.blue:lighten()),
@@ -128,13 +129,13 @@ function Tetris:keypressed(key)
     end
 
     if key == 'left' then
-        self:makeTranslation(self.current, LEFT)
+        self:makeTranslation(self.current, moves.left)
 
     elseif key == 'right' then
-        self:makeTranslation(self.current, RIGHT)
+        self:makeTranslation(self.current, moves.right)
 
     elseif key == 'down' then
-        self:makeTranslation(self.current, DOWN)
+        self:makeTranslation(self.current, moves.down)
     
     elseif key == 'up' then
         self:makeRotation(self.current, false)
@@ -161,17 +162,17 @@ function Tetris:mousemoved(mouse)
     local dx = direction.x
     local dy = direction.y
     
-    if abs(dx) >= SIZE then
+    if abs(dx) >= cellSize then
         self.startPosition = vec2(mouse.position.x, mouse.position.y)
         if dx > 0 then
-            self:makeTranslation(self.current, RIGHT)
+            self:makeTranslation(self.current, moves.right)
         else
-            self:makeTranslation(self.current, LEFT)
+            self:makeTranslation(self.current, moves.left)
         end
 
-    elseif dy >= SIZE then
+    elseif dy >= cellSize then
         self.startPosition = vec2(mouse.position.x, mouse.position.y)
-        self:makeTranslation(self.current, DOWN)
+        self:makeTranslation(self.current, moves.down)
     end
 end
 
@@ -181,7 +182,7 @@ function Tetris:mousereleased(mouse)
         self:playTetrimino()
 
     elseif mouse.presses == 1 then
-        if mouse.position.x < 2*SIZE then
+        if mouse.position.x < 2*cellSize then
             self:playTetrimino()
         else
             self:makeRotation(self.current, true)
@@ -190,7 +191,7 @@ function Tetris:mousereleased(mouse)
 end
 
 function Tetris:playTetrimino()
-    while self:makeTranslation(self.current, DOWN) do end
+    while self:makeTranslation(self.current, moves.down) do end
     self:pushTetrimino()
     self:hasLines()
     self:nextTetrimino()
@@ -216,7 +217,7 @@ function Tetris:nextTetrimino()
 
     self:completeStack()
 
-    if not self:isAvailableMove(self.current, {translation=DOWN}) then
+    if not self:isAvailableMove(self.current, {translation=moves.down}) then
         self.current = nil
         self.__isGameOver = true
     end
@@ -224,8 +225,8 @@ end
 
 function Tetris:updateShadow()
     self.shadow = self.current:clone()
-    while self:isAvailableMove(self.shadow, {translation=DOWN}) do
-        self.shadow.position:add(DOWN)
+    while self:isAvailableMove(self.shadow, {translation=moves.down}) do
+        self.shadow.position:add(moves.down)
     end
 end
 
@@ -243,7 +244,7 @@ function Tetris:makeTranslation(tetrimino, translation)
         self.lastMove = 'translation'
         tetrimino.position:add(translation)
         self:updateShadow()
-        if translation == DOWN then
+        if translation == moves.down then
             self.distance = 0
         end
         return true
@@ -259,7 +260,7 @@ function Tetris:makeRotation(tetrimino, clockwise)
         return true
     end
 
-    local translations = {DOWN}
+    local translations = {moves.down}
 
     for _,translation in ipairs(translations) do
         if self:isAvailableMove(tetrimino, {translation=translation, rotation=clockwise}) then
@@ -366,7 +367,7 @@ function Tetris:update(dt)
     self.distance = self.distance + dt * self.gravity * 60 -- 60 fps
 
     if self.distance >= 1 then
-        if not self:makeTranslation(self.current, DOWN) then
+        if not self:makeTranslation(self.current, moves.down) then
             self:playTetrimino()
         end
     end
@@ -377,11 +378,11 @@ function Tetris:draw()
 
     pushMatrix()
 
-    translate(2*SIZE, SIZE + (H - self.grid.h * SIZE) / 2)
+    translate(2*cellSize, cellSize + (H - self.grid.h * cellSize) / 2)
 
     fill(colors.black)
     noStroke()
-    rect(0, 0, self.grid.w*SIZE, self.grid.h*SIZE)
+    rect(0, 0, self.grid.w*cellSize, self.grid.h*cellSize)
 
     self.grid:draw()
 
@@ -392,17 +393,17 @@ function Tetris:draw()
         self.shadow:draw(true)
 
         pushMatrix()
-        translate((self.grid.w + 0.25) * SIZE, SIZE)
+        translate((self.grid.w + 0.25) * cellSize, cellSize)
         
         scale(1/2)
         for i,v in ipairs(self.stack) do
             v:draw(false, 0.2)
-            translate(0, v.grid.h * SIZE)
+            translate(0, v.grid.h * cellSize)
         end
 
         scale(2)
 
-        translate(0, SIZE)
+        translate(0, cellSize)
         
         fontName('comic')
         fontSize(22)
@@ -412,16 +413,16 @@ function Tetris:draw()
         textColor(colors.white)
 
         text('', 0, textPosition())
-        text('Lines', SIZE, textPosition())
-        text(self.lines, SIZE, textPosition())
+        text('Lines', cellSize, textPosition())
+        text(self.lines, cellSize, textPosition())
 
         text('', 0, textPosition())
-        text('Score', SIZE, textPosition())
-        text(self.score, SIZE, textPosition())
+        text('Score', cellSize, textPosition())
+        text(self.score, cellSize, textPosition())
                 
         text('', 0, textPosition())
-        text('Level', SIZE, textPosition())
-        text(self.level, SIZE, textPosition())
+        text('Level', cellSize, textPosition())
+        text(self.level, cellSize, textPosition())
                 
         popMatrix()
     end
@@ -484,7 +485,7 @@ end
 
 function Tetrimino:draw(...)
     pushMatrix()
-    translate(self.position.x*SIZE, self.position.y*SIZE)
+    translate(self.position.x*cellSize, self.position.y*cellSize)
 
     self.grid:draw(...)
 
@@ -498,16 +499,16 @@ function TetrisGrid:init(...)
 end
 
 function TetrisGrid:draw(shadow, luminosity)
-    self.size = SIZE
+    self.size = cellSize
     Grid.draw(self, 0, 0, function(cell, i, j)
         if not cell.value then return end
 
         local function rect(marge, border)
             Graphics2d.rect(
-                (i - 1) * SIZE - marge,
-                (j - 1) * SIZE - marge,
-                SIZE + 2 * marge,
-                SIZE + 2 * marge,
+                (i - 1) * cellSize - marge,
+                (j - 1) * cellSize - marge,
+                cellSize + 2 * marge,
+                cellSize + 2 * marge,
                 border)
         end
 

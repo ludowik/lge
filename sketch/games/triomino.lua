@@ -5,8 +5,8 @@ function Triomino:init()
 
     self.anchor = Anchor(12)
 
-    SIZE = self.anchor:size(1).x
-    SCALE = 0.7
+    cellSize = self.anchor:size(1).x
+    cellScale = 0.7
 
     self.minos = Array{
         Mino("1, 1"),
@@ -104,7 +104,7 @@ function Triomino:mousereleased(mouse)
         end
         
         self.mino.node.position = self.mino.node.oldPosition
-        self.mino.grid.scale = SCALE
+        self.mino.grid.scale = cellScale
 
         self.shadow = nil
 
@@ -118,7 +118,7 @@ function Triomino:getAvailableMove(mino)
     local grid = mino.grid
     local position = mino.position
 
-    local cellPosition = ((position - self.grid.position) / SIZE):ceil() - vec2(1, 1)
+    local cellPosition = ((position - self.grid.position) / cellSize):ceil() - vec2(1, 1)
     local x, y = cellPosition.x, cellPosition.y
 
     local availableMove = true
@@ -145,7 +145,7 @@ function Triomino:updateShadow(mino)
         self.shadow.node = nil
         self.shadow.scale = 1
         self.shadow.rotation = 0
-        self.shadow.position:set(self.grid.position + cellPosition*SIZE)
+        self.shadow.position:set(self.grid.position + cellPosition*cellSize)
         self.shadow.grid.clr = colors.gray
     else
         self.shadow = nil
@@ -156,7 +156,7 @@ function Triomino:pushMino(mino)
     local grid = mino.grid
     local position = mino.position
 
-    local cellPosition = ((position - self.grid.position) / SIZE):ceil() - vec2(1, 1)
+    local cellPosition = ((position - self.grid.position) / cellSize):ceil() - vec2(1, 1)
     local x, y = cellPosition.x, cellPosition.y
 
     grid:foreach(function (block, i, j)
@@ -237,7 +237,7 @@ function Triomino:draw()
     
     self.stack:draw()
 
-    grid2d(SIZE)
+    grid2d(cellSize)
 end
 
 Mino = class() : extends(Rect)
@@ -258,7 +258,7 @@ function Mino:init(init)
     
     self.grid = TriominoGrid(m, n)
 
-    self.grid.scale = SCALE
+    self.grid.scale = cellScale
     self.grid.rotation = 0
     
     self.clr = Color.random()
@@ -286,7 +286,7 @@ TriominoGrid = class() : extends(Grid)
 
 function TriominoGrid:init(...)
     Grid.init(self, ...)
-    self.size = vec2(self.w*SIZE, self.h*SIZE)
+    self.size = vec2(self.w*cellSize, self.h*cellSize)
 end
 
 function TriominoGrid:draw(border, position, size)
@@ -325,7 +325,7 @@ function TriominoGrid:draw(border, position, size)
 
         circleMode(CENTER)
 
-        circle((i-(self.w+1)/2)*SIZE, (j-(self.h+1)/2)*SIZE, SIZE/2-marge)
+        circle((i-(self.w+1)/2)*cellSize, (j-(self.h+1)/2)*cellSize, cellSize/2-marge)
     end)
 
     popMatrix()

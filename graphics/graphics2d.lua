@@ -35,7 +35,21 @@ function Graphics2d.initMode()
     local ws, hs, flags = love.window.getMode()
     X, Y, W, H = Graphics2d.getSafeArea()
     
-    deviceOrientation = 0
+    deviceOrientation = getSetting('deviceOrientation', PORTRAIT)
+
+    if deviceOrientation == LANDSCAPE then
+        X, Y = Y, X
+        W, H = H, W
+    end
+
+    MIN_SIZE = min(W, H)
+    MAX_SIZE = max(W, H)
+
+    SIZE = MIN_SIZE
+    
+    LEFT = X
+    TOP = Y
+
     if getOS() == 'ios' then
         Graphics2d.setMode(ws, hs, true)
     else
@@ -64,10 +78,7 @@ function Graphics2d.setMode(w, h, fullscreen)
     local ws, hs, flags = love.window.getMode()
     if not Graphics2d.initializedScreen or ws ~= w or h ~= h then
         Graphics2d.initializedScreen = true
-        if deviceOrientation ~= 0 then
-            w, h = h, w
-        end
-        love.window.setMode(h, w, params)
+        love.window.setMode(w, h, params)
     end
 end
 
@@ -138,12 +149,15 @@ end
 TOP_LEFT = 'top_left'
 BOTTOM_LEFT = 'bottom_left'
 
-LANDSCAPE_ANY = 'landscape_any'
+PORTRAIT = 'portrait'
+LANDSCAPE = 'landscape'
+
 function Graphics2d.supportedOrientations(orientation)
 end
 
 NORMAL = 'alpha'
 ADD = 'add'
+SUBTRACT = 'subtract'
 MULTIPLY = 'multiply'
 
 function Graphics2d.blendMode(mode)

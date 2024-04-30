@@ -147,8 +147,8 @@ function  Sketch:drawPhase2(force)
 
     love.graphics.draw(self.fb.canvas,
         self.position.x,
-        self.position.y + (deviceOrientation ~= 0 and self.size.x or 0),
-        deviceOrientation, -- rotation
+        self.position.y,
+        0, -- rotation
         scale * sx, -- scale x
         scale * sy) -- scale y
 
