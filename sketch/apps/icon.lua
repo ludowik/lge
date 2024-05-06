@@ -66,7 +66,7 @@ function draw()
     sprite(fb, size*3, size*3, size*2, size*2)
     sprite(fb, size*7, size*3, size*4, size*4)
     
-    sprite(fb, W/2, H/2, size*ratio, size*ratio)
+    sprite(fb, CX, CY, size*ratio, size*ratio)
     
     local w = size * 2
     translate(iconPosition.x, iconPosition.y - w)

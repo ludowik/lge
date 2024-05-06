@@ -12,7 +12,7 @@ function setContext(fb, depth)
     pushMatrix()
 end
 
-function resetContext(fb)
+function resetContext()
     popMatrix()
     love.graphics.setCanvas(previousCanvas)
 end

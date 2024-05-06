@@ -1,6 +1,6 @@
 function setup()
     count = 48
-    distance = W/2 - 2*X
+    distance = CX - 2*X
     step = 0.0
     delta = 0.05/count
 end
@@ -8,7 +8,7 @@ end
 function draw()
     background(0, 0.05)
 
-    translate(W/2, H/2)
+    translate(CX, CY)
 
     noStroke()
     fill(Color.hsb(ElapsedTime/10))

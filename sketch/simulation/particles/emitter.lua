@@ -3,7 +3,7 @@ Emitter = class() : extends(Node)
 function Emitter:init(n)
     Node.init(self)
 
-    self.absolutePosition = vec2(W/2, H/2)
+    self.absolutePosition = vec2(CX, CY)
     self.path = Array()
 
     self.particles = Node()
@@ -67,7 +67,7 @@ function Emitter:addPointToPath(position)
 end
 
 function Emitter:setPath()
-    local x, y = W/2, H/2
+    local x, y = CX, CY
 
     self:addPointToPath(vec2(x, y))
 

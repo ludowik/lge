@@ -15,7 +15,7 @@ function setup()
             local lon = v[1]
             local lat = v[2]
             
-            x, y = latLonToOffsets(lat, lon, W/2, W/2)
+            x, y = latLonToOffsets(lat, lon, CX, CX)
             
             minx = min(minx, x)
             miny = min(miny, y)
@@ -41,7 +41,7 @@ end
 function draw()
     background()
 
-    translate(W/2, H/2)
+    translate(CX, CY)
     
     scale(zoom)
     

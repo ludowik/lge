@@ -37,7 +37,7 @@ function draw()
     perspective()
     --scale(2/W)
 
-    -- translate(W/2, H/2)
+    -- translate(CX, CY)
     -- scale(4, 4)
     
     strokeSize(0.1)

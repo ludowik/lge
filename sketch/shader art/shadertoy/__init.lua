@@ -74,6 +74,6 @@ function draw()
     if shader.errorMsg then
         fontSize(12)
         textColor(colors.gray)
-        text(shader.errorMsg, 0, H/2, W)
+        text(shader.errorMsg, 0, CY, W)
     end
 end

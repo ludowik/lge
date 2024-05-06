@@ -9,5 +9,5 @@ end
 function draw(key)
     background()
     textMode(CENTER)
-    text(lastKey, W/2, H/2)
+    text(lastKey, CX, CY)
 end

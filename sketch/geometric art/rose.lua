@@ -10,7 +10,7 @@ end
 function draw()
     background(51)
 
-    translate(W/2, H/2)
+    translate(CX, CY)
 
     stroke(colors.gray)
     line(-W, 0, W, 0)

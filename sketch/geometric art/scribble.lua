@@ -11,7 +11,7 @@ function draw()
     local w = W / 2;
     local v = renderCount / 1000;
 
-    translate(W/2, H/2);
+    translate(CX, CY);
     rotate(noise(v / 10) * TAU);
 
     local c = noise(v + 952.74);

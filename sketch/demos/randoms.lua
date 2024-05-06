@@ -88,19 +88,21 @@ function draw()
 
     local x, y, w, h
 
-    x = anchor:size(1, 1).x / 2
-    y = anchor:size(1, 1).y / 2
-
-    w = anchor:size(1, 1).x
+    w = SIZE / 12 -- anchor:size(1, 1).x
     h = anchor:size(1, 1).y
+
+    x = CX - 11/2 * w -- anchor:size(1, 1).x / 2
+    y = CY - #randomGeneratorList * h / 2 -- anchor:size(1, 1).y / 2
 
     function drawRandomGenerator(randomGenerator)
         local maxInstance = randomGenerator.distribution:max()
 
         noStroke()
 
+        rectMode(CORNER)
+
         textMode(CENTER)
-        text(randomGenerator.name, W/2, y)
+        text(randomGenerator.name, CX, y)
 
         for i,v in ipairs(randomGenerator.distribution) do
             if i == randomGenerator.lastValue then

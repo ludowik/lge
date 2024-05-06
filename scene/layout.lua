@@ -25,7 +25,7 @@ function Layout:layout(_x, _y, align)
             if align == 'right' then
                 x = W - item.size.x - UI.innerMarge
             elseif align == 'center' then
-                x = W/2 - item.size.x/2
+                x = CX - item.size.x/2
             end
 
             -- set position

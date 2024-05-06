@@ -1,5 +1,5 @@
 function setup()
-    supportedOrientations(LANDSCAPE_ANY)
+    supportedOrientations(LANDSCAPE)
 
     -- baseImageList = {
     --     'resources/images/joconde.png',
@@ -25,12 +25,12 @@ function setup()
 
         local size, ratio, ws, hs
         if W < H then
-            size = even(W/2)
+            size = even(CX)
             ratio = baseImage.width / baseImage.height
             hs = size
             ws = hs * ratio
         else
-            size = even(H/2)
+            size = even(CY)
             ratio = baseImage.height / baseImage.width
             ws = size
             hs = ws * ratio
@@ -148,7 +148,7 @@ function draw()
 
     background(colors.black)
 
-    translate(W/2, H/2)
+    translate(CX, CY)
 
     spriteMode(CORNER)
     sprite(img, -w, -h)

@@ -31,7 +31,7 @@ function draw()
     local ncol = floor((W -2*wMax) / wMax)
     local nrow = floor((n) / ncol)
 
-    translate(W/2, H/2)
+    translate(CX, CY)
     
     scale(zoom)
 

@@ -59,15 +59,17 @@ function draw()
 
     local scale = 1/maxValue
     local function addSample(i)
+        if buffer[i] == nil then return end
+        
         local len = buffer[i] * scale
 
         local x, y
         if mode == 1 then
-            x = W/2 + cos(TAU*i/n) * map(len, -1, 1, size/3, size/2)
-            y = H/2 + sin(TAU*i/n) * map(len, -1, 1, size/3, size/2)
+            x = CX + cos(TAU*i/n) * map(len, -1, 1, size/3, size/2)
+            y = CY + sin(TAU*i/n) * map(len, -1, 1, size/3, size/2)
         else
             x = i
-            y = H/2 + map(len, -1, 1, -100, 100)
+            y = CY + map(len, -1, 1, -100, 100)
         end
 
         table.insert(arrays, x)

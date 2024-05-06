@@ -14,7 +14,7 @@ end
 function Cardioid:draw()
     background(colors.black)
 
-    translate(W/2, H/2)
+    translate(CX, CY)
 
     rotate(-ElapsedTime)
 

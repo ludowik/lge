@@ -17,9 +17,13 @@ function setup()
     scene:add(UIExpression('dt', 'string.format("%d ms", floor(DeltaTime*1000))'))
     scene:add(UIExpression('elapsed', 'string.format("%d s", ElapsedTime)'))
 
+    local w, h = love.window.getDesktopDimensions(1)
+
     scene:add(UI('Screen'):attrib{styles={fillColor=colors.red}})
     scene:add(UIExpression('position', 'X..","..Y'))
     scene:add(UIExpression('size', 'W..","..H'))
+    scene:add(UIExpression('ratio', 'MAX_SIZE/MIN_SIZE'))
+    scene:add(UIExpression('ratio', 'getScreenRatio()'))
     scene:add(UIExpression('data', 'imageData:getWidth()..","..imageData:getHeight()'))
     scene:add(UIExpression('pixel ratio', 'love.window.getDPIScale()'))
     scene:add(UIExpression('screen ratio', '(H+2*Y)/(W+2*X)'))
@@ -33,3 +37,9 @@ function setup()
     scene:add(UIExpression('move', 'mouse.move'))
     scene:add(UIExpression('delay', 'mouse.elapsedTime'))
 end
+
+function getScreenRatio()
+    local w, h = love.window.getMode()
+    return tofraction(w/h)
+end
+

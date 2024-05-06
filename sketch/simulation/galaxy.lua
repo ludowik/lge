@@ -126,7 +126,7 @@ function Galaxy:draw()
 
     stroke(colors.white)
 
-    translate(W/2, H/2)
+    translate(CX, CY)
     scale(scaleSize)
     
     noStroke()

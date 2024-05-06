@@ -59,7 +59,7 @@ function draw()
         local l = random(4, 8)
 
         count = 0
-        drawbranches(W/2, 0, 0, W/2, 0, 0, H/l, 8)
+        drawbranches(CX, 0, 0, CX, 0, 0, H/l, 8)
 
         stroke(colors.blue)
 

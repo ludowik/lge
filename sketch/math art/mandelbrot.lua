@@ -4,9 +4,11 @@ function setup()
 end
 
 function draw()
+    background()
+
     prepare()
 
-    translate(W/2, H/2)
+    translate(CX, CY)
     
     spriteMode(CENTER)
     sprite(img)
@@ -22,8 +24,10 @@ function prepare()
     
     local y1 = -1.5
     local y2 =  1.5
+
+    local SIZE = 1024
     
-    local zoom = floor(H / (y2 - y1))
+    local zoom = floor(SIZE / (y2 - y1))
     
     local iteration_max = 50
 

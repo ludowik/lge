@@ -7,7 +7,7 @@ function setup()
 
     autotest()
 
-    camera(H, H, H, H/2, H/2, H/2)
+    camera(H, H, H, CY, CY, CY)
 end
 
 function autotest()

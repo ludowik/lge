@@ -1,6 +1,6 @@
 Sketch = class() : extends(Index, State, Rect, MouseEvent, KeyboardEvent)
 
-local fb
+Sketch.fb = nil
 
 function Sketch:init(w, h)
     -- TODEL
@@ -23,31 +23,38 @@ function Sketch:init(w, h)
     self.scene = nil
 end
 
+function Sketch:__tostring()
+    return self.__className
+end
+
 function Sketch:setMode(w, h, persistence)
-    env.W, env.H = w, H
+    --env.W, env.H = w, h
     
     w = (2 * X + w)
     h = (2 * Y + h)
 
     Rect.init(self, 0, 0, w, h)
 
+    self.persistence = persistence
+
     if persistence then
         self.fb = FrameBuffer(w, h)
     else
-        fb = fb or FrameBuffer(w, h)
-        self.fb = fb
+        Sketch.fb = Sketch.fb or FrameBuffer(w, h)
+        self.fb = Sketch.fb
     end
-end
-
-function Sketch:__tostring()
-    return self.__className
 end
 
 function Sketch:setup()
 end
 
-function Sketch:autotest()
-    self.parameter:randomizeParameter()
+function Sketch:pause()
+end
+
+function Sketch:resume()
+end
+
+function Sketch:resize()
 end
 
 function Sketch:update()
@@ -86,6 +93,11 @@ function Sketch:updateSketch(dt)
 end
 
 function Sketch:drawSketch(force)
+    self:drawPhase1()
+    self:drawPhase2(force)
+end
+
+function Sketch:drawPhase1()
     local requireDrawing = true
     if self.frames then
         if self.frames == 0 then
@@ -109,7 +121,9 @@ function Sketch:drawSketch(force)
 
         self:draw()
     end
+end
 
+function Sketch:drawPhase2(force)
     love.graphics.setCanvas()
     love.graphics.setShader()
     love.graphics.setDepthMode()
@@ -125,8 +139,12 @@ function Sketch:drawSketch(force)
         love.graphics.translate(0, -(2 * Y + H))
     end
 
+    local ws, hs, flags = love.window.getMode()
+
     local sx = self.size.x / self.fb.canvas:getWidth()
     local sy = self.size.y / self.fb.canvas:getHeight()
+
+    local scale = min(ws/self.fb.canvas:getWidth(), hs/self.fb.canvas:getHeight())
 
     if self.sketchPixelRatio then
         love.graphics.translate(X, Y)
@@ -136,10 +154,10 @@ function Sketch:drawSketch(force)
 
     love.graphics.draw(self.fb.canvas,
         self.position.x,
-        self.position.y + (deviceOrientation ~= 0 and self.size.x or 0),
-        deviceOrientation, -- rotation
-        sx, -- scale x
-        sy) -- scale y
+        self.position.y,
+        0, -- rotation
+        scale * sx, -- scale x
+        scale * sy) -- scale y
 
     -- TODO : gérer un zoom
     -- TODO : gérer une translation
@@ -182,10 +200,14 @@ function Sketch:drawGameOver()
     local w, h = textSize(gameOver)
 
     rectMode(CENTER)
-    rect(W/2, H/2, w*1.2, h*1.2, 20)
+    rect(CX, CY, w*1.2, h*1.2, 20)
 
     textMode(CENTER)
-    text(gameOver, W/2, H/2)    
+    text(gameOver, CX, CY)    
+end
+
+function Sketch:autotest()
+    self.parameter:randomizeParameter()
 end
 
 function Sketch:mousepressed(mouse)
@@ -201,11 +223,11 @@ function Sketch:mousemoved(mouse)
     local camera = self.cam
     if camera then
         if camera.mode == MODEL then
-            -- camera.angleX = camera.angleX + mouse.deltaPos.y * TAU / (W/2)
-            camera.angleY = camera.angleY + mouse.deltaPos.x * TAU / (W/2)
+            -- camera.angleX = camera.angleX + mouse.deltaPos.y * TAU / (CX)
+            camera.angleY = camera.angleY + mouse.deltaPos.x * TAU / (CX)
         else
             local direction = camera.target - camera.eye 
-            direction:rotateInPlace(mouse.deltaPos.x * TAU / (W/2))
+            direction:rotateInPlace(mouse.deltaPos.x * TAU / (CX))
             camera.target:set(camera.eye + direction)
         end
     end

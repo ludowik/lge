@@ -25,9 +25,9 @@ ceil = math.ceil
 
 function math.round(v, decimal)
     if not decimal then
-        return math.ceil(v - 0.5)
+        return math.ceil(v-0.5)
     end
-    return math.floor(v*10^decimal)/10^decimal
+    return math.ceil(v*10^decimal-0.5)/10^decimal
 end
 round = math.round
 
@@ -120,4 +120,17 @@ function prime(a)
         end
     end
     return true
+end
+
+function tofraction(ratio)
+    if ratio < 1 then ratio = 1/ratio end
+
+    local precedent = 1
+    while true do
+        local antecedent = ratio * precedent
+        if abs(antecedent - round(antecedent, 1)) <= 0.01 then
+            return round(antecedent, 1)..'/'..precedent
+        end
+        precedent = precedent + 1
+    end
 end

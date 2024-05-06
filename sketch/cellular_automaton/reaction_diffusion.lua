@@ -146,5 +146,5 @@ function ReactionDiffusion:draw()
     end
 
     spriteMode(CENTER)
-    sprite(renderImage, W/2, H/2)
+    sprite(renderImage, CX, CY)
 end

@@ -10,10 +10,10 @@ end
 function draw()
     background()
 
-    translate(W/2, H/2)
+    translate(CX, CY)
     
-    SCALE = 8
-    scale(SCALE)
+    scaleFactor = 8
+    scale(scaleFactor)
     translate(-grid.w/2, -grid.h/2)
 
     rect(1, 1, grid.w, grid.h)
@@ -22,7 +22,7 @@ function draw()
 end
 
 function mousemoved(mouse)
-    local position = ((mouse.position - vec2(W, H)/2)/SCALE + vec2(grid.w, grid.h)/2):floor()
+    local position = ((mouse.position - vec2(W, H)/2)/scaleFactor + vec2(grid.w, grid.h)/2):floor()
     if Rect(0, 0, grid.w, grid.h):contains(position) then
         particles:add(Water(position.x, position.y))
     end

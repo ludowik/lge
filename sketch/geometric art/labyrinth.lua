@@ -176,8 +176,8 @@ function draw()
     noStroke()
 
     translate(
-        W/2-grid.w*w/2,
-        H/2-grid.h*w/2)
+        CX-grid.w*w/2,
+        CY-grid.h*w/2)
 
     for x=1,grid.w do
         for y=1,grid.h do

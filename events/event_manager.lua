@@ -62,6 +62,24 @@ function EventManager:keypressed(key, scancode, isrepeat)
         if key == 'r' then
             engine.reload(true)
 
+        elseif key == 'o' then
+            if deviceOrientation == PORTRAIT then
+                deviceOrientation = LANDSCAPE
+            else
+                deviceOrientation = PORTRAIT
+            end
+            setSetting('deviceOrientation', deviceOrientation)
+            rotateScreen()
+
+        elseif key == '^' then
+            if deviceScreenRatio == screenRatios.ipad then
+                deviceScreenRatio = screenRatios.iphone
+            else
+                deviceScreenRatio = screenRatios.ipad
+            end
+            setSetting('deviceScreenRatio', deviceScreenRatio)
+            rotateScreen()
+
         elseif key == 't' then
             env.__autotest = not env.__autotest
             love.window.setVSync(env.__autotest and 0 or 1)
@@ -81,12 +99,8 @@ function EventManager:keypressed(key, scancode, isrepeat)
         elseif key == 'f' then
             toggleFused()
 
-        elseif key == 'f1' then
-            env.__wireframe = not env.__wireframe
-
         elseif key == 'w' then
-            local name = process.__className:replace('_', '+')
-            openURL(('https://www.google.com/search?q=%s&lr=lang_en'):format(name))
+            env.__wireframe = not env.__wireframe
         
         elseif key == 'up' then
             processManager:previous()
@@ -95,6 +109,10 @@ function EventManager:keypressed(key, scancode, isrepeat)
             processManager:next()
         end
 
+    elseif key == 'f1' then
+        local name = process.__className:replace('_', '+')
+        openURL(('https://www.google.com/search?q=%s&lr=lang_en'):format(name))
+        
     elseif key == 'pageup' then
         processManager:previous()
     
