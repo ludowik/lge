@@ -52,7 +52,7 @@ function draw()
 
             minDistance = 255 + minDistance * ratio
 
-            image:set(x-1, y-1, minDistance/255, minDistance/255, minDistance/255, 1)
+            image:setPixel(x-1, y-1, minDistance/255, minDistance/255, minDistance/255, 1)
             
 --                    pixels[i  ] = minDistance
 --                    pixels[i+1] = minDistance

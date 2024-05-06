@@ -112,7 +112,7 @@ function defineCharactersSet()
         local npixels = 0
         for x=0,sw-1 do
             for y=0,sh-1 do
-                local r, g, b = img:get(x, y)
+                local r, g, b = img:getPixel(x, y)
                 if grayScale then
                     if r > 0 then
                         npixels = npixels + 1
@@ -194,7 +194,7 @@ function drawImage(position, f, reverse)
                 for dy=0,w-1 do
                     if y+dy >= img.height then break end
 
-                    local r1, g1, b1, a1 = img:get(x+dx, y+dy)
+                    local r1, g1, b1, a1 = img:getPixel(x+dx, y+dy)
                     r = r + r1
                     g = g + g1
                     b = b + b1

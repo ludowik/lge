@@ -43,7 +43,7 @@ function step()
 
             offset = (index -1) * 4
 
-            img:set(x-1, y-1, brigthness, brigthness, brigthness)
+            img:setPixel(x-1, y-1, brigthness, brigthness, brigthness)
 
             index = index + 1
         end

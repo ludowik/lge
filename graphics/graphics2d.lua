@@ -44,6 +44,8 @@ function Graphics2d.initMode()
 
     if getOS() == 'macos' then
         refreshRate = flags.refreshrate * 2
+    elseif getOS() == 'ios' then
+        refreshRate = flags.refreshrate * 2
     else
         refreshRate = flags.refreshrate
     end

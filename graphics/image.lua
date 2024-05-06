@@ -94,6 +94,10 @@ function FrameBuffer:update()
 end
 
 function FrameBuffer:set(x, y, clr, ...)
+    error('unsupported => use setPixel')
+end
+
+function FrameBuffer:setPixel(x, y, clr, ...)
     self:getImageData()
 
     self.needUpdate = true
@@ -106,6 +110,10 @@ function FrameBuffer:set(x, y, clr, ...)
 end
 
 function FrameBuffer:get(x, y, clr)
+    error('unsupported => use getPixel')
+end
+
+function FrameBuffer:getPixel(x, y, clr)
     self:getImageData()
     if clr then
         local r, g, b, a = self.imageData:getPixel(x, y)    

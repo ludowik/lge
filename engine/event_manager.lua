@@ -88,17 +88,17 @@ function EventManager:keypressed(key, scancode, isrepeat)
             local name = process.__className:replace('_', '+')
             openURL(('https://www.google.com/search?q=%s&lr=lang_en'):format(name))
         
-        elseif key == 'up' then -- 'pageup' then
+        elseif key == 'up' then
             processManager:previous()
         
-        elseif key == 'down' then -- 'pagedown' then
+        elseif key == 'down' then
             processManager:next()
         end
 
-    elseif 'pageup' then
+    elseif key == 'pageup' then
         processManager:previous()
     
-    elseif 'pagedown' then
+    elseif key == 'pagedown' then
         processManager:next()
     
     else

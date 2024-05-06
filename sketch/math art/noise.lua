@@ -31,7 +31,7 @@ function generateImg()
                 x / frequency,
                 y / frequency)
 
-            img:set(x, y, r, r, r, 1)
+            img:setPixel(x, y, r, r, r, 1)
         end
     end
 end

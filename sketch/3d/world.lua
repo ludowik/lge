@@ -18,7 +18,7 @@ function setup()
     for x=0,img.width*devicePixelRatio-1 do
         for z=0,img.height*devicePixelRatio-1 do
             local y = simplexNoise(x*size/10, z*size/10) * 5
-            img:set(x, z, y, 0, 0)
+            img:setPixel(x, z, y, 0, 0)
         end
     end
     img:update()

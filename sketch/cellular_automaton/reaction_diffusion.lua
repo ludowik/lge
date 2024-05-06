@@ -12,7 +12,7 @@ function ReactionDiffusion:init()
 
     self.parameter:link('http://www.karlsims.com/rd.html')
 
-    n = 300
+    n = 150
     m = n
 
     gridIn  = Grid(n, m, function () return {a=1, b=0, c=0} end)
@@ -55,16 +55,17 @@ function ReactionDiffusion:init()
 
     local size = .05
 
-    local xc = n/2
-    local yc = m/2
+    local xc = floor(n/2)
+    local yc = floor(m/2)
 
-    local ns = n * size
-    local ms = m * size
+    local ns = floor(n * size)
+    local ms = floor(m * size)
 
     for i = xc-ns, xc+ns do
         for j = yc-ms, yc+ms do
             if vec2(xc, yc):dist(vec2(i, j)) < ns then
-                gridIn:get(i, j).b = 1
+                local cell = gridIn:get(i, j)
+                cell.b = 1
             end
         end
     end
@@ -88,24 +89,23 @@ function ReactionDiffusion:init()
 end
 
 function ReactionDiffusion:update(dt)
-    for i=1,5 do
-        self:updateImage(1)
+    for i=1,15 do
+        self:updateImage(dt)
     end
 end
 
 function ReactionDiffusion:updateImage(dt)
     local function laplaceA(cell, v)
         return -cell.a
-            + ( cell.North.a + cell.East.a + cell.South.a + cell.West.a) * 0.2
-            + ( cell.NE.a + cell.SE.a + cell.SW.a + cell.NW.a) * 0.05
+            + ( cell.North.a + cell.East.a + cell.South.a + cell.West.a) * 0.14645 -- * 0.2
+            + ( cell.NE.a + cell.SE.a + cell.SW.a + cell.NW.a) * 0.10355 -- * 0.05
     end
     
     local function laplaceB(cell, v)
         return -cell.b
-            + ( cell.North.b + cell.East.b + cell.South.b + cell.West.b) * 0.2
-            + ( cell.NE.b + cell.SE.b + cell.SW.b + cell.NW.b) * 0.05
+            + ( cell.North.b + cell.East.b + cell.South.b + cell.West.b) * 0.14645 -- * 0.2
+            + ( cell.NE.b + cell.SE.b + cell.SW.b + cell.NW.b) * 0.10355 -- * 0.05
     end
-
     
     local a, b, abb
     local cellIn, cellOut
@@ -119,8 +119,11 @@ function ReactionDiffusion:updateImage(dt)
         
         abb = a * (b^2)
 
-        cellOut.a = a + (da * laplaceA(cellIn) - abb + f*(1-a)) * dt
-        cellOut.b = b + (db * laplaceB(cellIn) + abb - b*(k+f)) * dt
+        local la = laplaceA(cellIn)
+        local lb = laplaceB(cellIn)
+
+        cellOut.a = a + (da * la - abb + f*(1-a)) * dt
+        cellOut.b = b + (db * lb + abb - b*(k+f)) * dt
 
         cellOut.c = cellOut.a - cellOut.b
     end
@@ -139,7 +142,7 @@ function ReactionDiffusion:draw()
     for i=1,#gridInIterate do
         cellIn = gridInIterate[i]
         c = floor(cellIn.c * range) * range
-        renderImage:set(cellIn.x, cellIn.y, c, c, c, 1)
+        renderImage:setPixel(cellIn.x, cellIn.y, c, c, c, 1)
     end
 
     spriteMode(CENTER)

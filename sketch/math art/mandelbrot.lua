@@ -63,9 +63,9 @@ function prepare()
                 y-1 >= 0 and y-1 < img.height * devicePixelRatio)
             then
                 if i == iteration_max then
-                    img:set(x-1, y-1, colors.black)
+                    img:setPixel(x-1, y-1, colors.black)
                 else
-                    img:set(x-1, y-1, Color.hsl(i/iteration_max))
+                    img:setPixel(x-1, y-1, Color.hsl(i/iteration_max))
                 end
             end
         end

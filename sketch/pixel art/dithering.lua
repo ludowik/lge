@@ -36,7 +36,7 @@ local function getPixel(source, x, y, clr, defaultColor)
         0 <= x and x < source.width and
         0 <= y and y < source.height )
     then
-        return Color(source:get(x, y, clr))
+        return Color(source:getPixel(x, y, clr))
     end
     return defaultColor or colors.black
 end
@@ -46,7 +46,7 @@ local function setPixel(source, x, y, clr)
         0 <= x and x < source.width and
         0 <= y and y < source.height )
     then
-        source:set(x, y, clr)
+        source:setPixel(x, y, clr)
     end
 end
 
@@ -67,7 +67,7 @@ function Image.Filter:run(source, target)
         for x=0,source.width-1 do
             local res = self:fragment(x, y, getPixel(source, x, y))
             if res then
-                target:set(x, y, res)
+                target:setPixel(x, y, res)
             end
         end
         if y % 10 == 0 then
@@ -167,7 +167,7 @@ function Image.Filter.Dithering:fragment(x, y, clr)
     self.quantificationError.b = self.old.b - self.new.b
 
     -- set color
-    self.target:set(x, y, self.new)
+    self.target:setPixel(x, y, self.new)
 
     -- report error
     local function reportError(x, y, pct)
