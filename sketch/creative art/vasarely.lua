@@ -4,6 +4,8 @@ function setup()
 end
 
 function draw()
+    background()
+    
     local cellSize = even(MIN_SIZE/(12+1))
 
     local m = round(W/cellSize)-1

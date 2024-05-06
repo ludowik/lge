@@ -190,7 +190,7 @@ end
 function isometric(n)
     ortho(0, W, H, 0)
 
-    translate_matrix(__modelMatrix, W/2, H/2)
+    translate_matrix(__modelMatrix, CX, CY)
 
     local alpha = __atan(1/__sqrt(2))
     local beta = -PI/4

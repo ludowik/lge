@@ -47,7 +47,7 @@ function __draw2d()
     stroke(colors.white)
     strokeSize(5)
 
-    translate(W/2, H/2)
+    translate(CX, CY)
 
     local len, maxLen = 0, 0
     local x, y

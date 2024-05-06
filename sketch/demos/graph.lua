@@ -88,7 +88,7 @@ function ClassItem:init(className, classRef)
 end
 
 function ClassItem:reset()
-    self.position = vec2.random(1, 1) + vec2(W/2, H/2)
+    self.position = vec2.random(1, 1) + vec2(CX, CY)
     self.force = vec2()
     self.velocity = vec2()
 end

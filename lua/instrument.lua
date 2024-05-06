@@ -188,7 +188,7 @@ function Instrument:draw()
         ref.position = vec2(x, y)
         ref.size = vec2(w, h)
 
-        self.columnSize = min(max(self.columnSize , w), W/2)
+        self.columnSize = min(max(self.columnSize , w), CX)
 
         text(string.format('%.5f * %d = %.5f',
             ref.deltaTimeAvg,

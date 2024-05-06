@@ -80,8 +80,8 @@ function EstimatePI:draw(ox, oy, title, h)
     noStroke()
     fill(colors.white)
 
-    text(title, ox + W/2, oy)
-    text(pi, ox + W/2, oy + h)
+    text(title, ox + CX, oy)
+    text(pi, ox + CX, oy + h)
 
     oy = oy + 2 * h
 

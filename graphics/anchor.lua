@@ -1,18 +1,25 @@
 Anchor = class()
 
 function Anchor:init(ni, nj)
-    if ni then
+    if ni and nj then
         self.ni = ni
-        self.nj = nj or math.ceil(H/(W/self.ni))
+        self.nj = nj
+
+    elseif ni then
+        self.ni = ni
+        self.nj = H/(W/self.ni)
 
     elseif nj then
         self.nj = nj
-        self.ni = ni or math.ceil(W/(H/self.nj))
+        self.ni = W/(H/self.nj)
 
     else
         self.ni = 12
-        self.nj = axe2dmath.ceil(H/(W/self.ni))
+        self.nj = H/(W/self.ni)
     end
+
+    self.ni = math.ceil(self.ni)
+    self.nj = math.ceil(self.nj)
 end
 
 function Anchor:pos(i, j)

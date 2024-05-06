@@ -1,14 +1,20 @@
-require 'graphics.color'
-require 'graphics.shader'
-require 'graphics.context'
-require 'graphics.graphics2d'
-require 'graphics.graphics3d'
-require 'graphics.myline'
-require 'graphics.model'
-require 'graphics.model_loader'
-require 'graphics.transform'
-require 'graphics.mesh'
-require 'graphics.shape'
-require 'graphics.light'
-require 'graphics.material'
-require 'graphics.image'
+requireLib (..., {
+    'color',
+    'shader',
+    'context',
+    'graphics',
+    'graphics2d',
+    'graphics3d',
+    'myline',
+    'model',
+    'model_loader',
+    'transform',
+    'mesh',
+    'shape',
+    'light',
+    'material',
+    'image',
+    'font',
+    'font_icons',
+    'anchor',
+})

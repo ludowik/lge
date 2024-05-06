@@ -1,105 +1,13 @@
 Graphics2d = class()
 
 function Graphics2d.setup()
-    Graphics2d.initMode()
     push2globals(Graphics2d)
-    font = love.graphics.newFont(25)
-    Graphics2d.lights = {
-        Light.sun(),
-        --Light.ambient(colors.white, 0.8),
-    }
-end
-
-function Graphics2d.getSafeArea()
-    local margeExtension = 5
-
-    local x, y, w, h
-    if getOS() == 'ios' then
-        x, y, w, h = love.window.getSafeArea()
-    else
-        x, y = 5, 50
-        _, h = love.window.getDesktopDimensions(1) -- displayindex
-        h = floor(h * 0.8)
-        w = floor(h / 15 * 10)
-    end
-
-    x = x + margeExtension
-    w = w - margeExtension * 2
-
-    return x, y, w, h
-end
-
-function Graphics2d.initMode()
-    love.window.setVSync(1)
-
-    local ws, hs, flags = love.window.getMode()
-    X, Y, W, H = Graphics2d.getSafeArea()
-    
-    deviceOrientation = getSetting('deviceOrientation', PORTRAIT)
-
-    if deviceOrientation == LANDSCAPE then
-        X, Y = Y, X
-        W, H = H, W
-    end
-
-    MIN_SIZE = min(W, H)
-    MAX_SIZE = max(W, H)
-
-    SIZE = MIN_SIZE
-    
-    LEFT = X
-    TOP = Y
-
-    if getOS() == 'ios' then
-        Graphics2d.setMode(ws, hs, true)
-    else
-        Graphics2d.setMode(2*X+W, 2*Y+H, false)
-    end
-
-    if getOS() == 'macos' then
-        refreshRate = flags.refreshrate * 2
-    else
-        refreshRate = flags.refreshrate
-    end
-
-    devicePixelRatio = love.window.getDPIScale()
-end
-
-function Graphics2d.setMode(w, h, fullscreen)
-    local params = {
-        msaa = 3,
-        fullscreen = fullscreen,
-    }
-
-    if love.getVersion() < 12 then
-        params.highdpi = true
-    end
-
-    local ws, hs, flags = love.window.getMode()
-    if not Graphics2d.initializedScreen or ws ~= w or h ~= h then
-        Graphics2d.initializedScreen = true
-        love.window.setMode(w, h, params)
-    end
 end
 
 function Graphics2d.background(clr, ...)
     clr = Color.fromParam(clr, ...) or colors.black
     love.graphics.setColor(clr.r, clr.g, clr.b, clr.a)
     love.graphics.rectangle('fill', -X, -Y, 2 * X + W, 2 * Y + H)
-end
-
-function Graphics2d.noLoop()
-    local process = processManager:current()
-    if not process then return end
-
-    process.frames = 1
-end
-
-function Graphics2d.loop()
-    local process = processManager:current()
-    if not process then return end
-
-    process.frames = nil
 end
 
 local styles = {}
@@ -146,15 +54,6 @@ function Graphics2d.resetStyle(origin)
     styles.origin = origin or TOP_LEFT
 end
 
-TOP_LEFT = 'top_left'
-BOTTOM_LEFT = 'bottom_left'
-
-PORTRAIT = 'portrait'
-LANDSCAPE = 'landscape'
-
-function Graphics2d.supportedOrientations(orientation)
-end
-
 NORMAL = 'alpha'
 ADD = 'add'
 SUBTRACT = 'subtract'
@@ -168,13 +67,13 @@ function Graphics2d.blendMode(mode)
     end
 end
 
-function Graphics2d.noFill()
-    stylesReset('fillColor')
-end
-
 function Graphics2d.fill(clr, ...)
     clr = Color.fromParam(clr, ...)
     return stylesSet('fillColor', clr)
+end
+
+function Graphics2d.noFill()
+    stylesReset('fillColor')
 end
 
 function Graphics2d.tint(clr, ...)
@@ -182,13 +81,17 @@ function Graphics2d.tint(clr, ...)
     return stylesSet('tintColor', clr)
 end
 
-function Graphics2d.noStroke()
-    stylesReset('strokeColor')
+function Graphics2d.noTint()
+    stylesReset('tintColor')
 end
 
 function Graphics2d.stroke(clr, ...)
     clr = Color.fromParam(clr, ...)
     return stylesSet('strokeColor', clr)
+end
+
+function Graphics2d.noStroke()
+    stylesReset('strokeColor')
 end
 
 function Graphics2d.strokeSize(size)
@@ -222,7 +125,7 @@ function Graphics2d.axes2d()
     stroke(colors.gray)
     strokeSize(0.5)
 
-    translate(W/2, H/2)
+    translate(CX, CY)
 
     local len = max(W, H)
 
@@ -241,7 +144,7 @@ function Graphics2d.grid2d(size)
     stroke(colors.gray)
     strokeSize(0.5)
 
-    translate(W/2, H/2)
+    translate(CX, CY)
 
     local len = max(W, H)
 

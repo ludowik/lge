@@ -62,7 +62,7 @@ function draw()
         background(0, 0, 0, 0.005)
     end
     
-    translate(W/2, H/2)
+    translate(CX, CY)
 
     for i=1,100 do
         collatz()

@@ -40,7 +40,7 @@ function Snowflake:init()
 
     -- radius of snowflake spiral
     -- chosen so the snowflakes are uniformly spread out in area
-    self.radius = sqrt(random(pow(W/2, 2)))
+    self.radius = sqrt(random(pow(CX, 2)))
 end
 
 function Snowflake:update(dt)

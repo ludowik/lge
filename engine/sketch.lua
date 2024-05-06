@@ -1,6 +1,6 @@
 Sketch = class() : extends(Index, State, Rect, MouseEvent, KeyboardEvent)
 
-local fb
+Sketch.fb = nil
 
 function Sketch:init(w, h)
     -- TODEL
@@ -23,31 +23,38 @@ function Sketch:init(w, h)
     self.scene = nil
 end
 
+function Sketch:__tostring()
+    return self.__className
+end
+
 function Sketch:setMode(w, h, persistence)
-    env.W, env.H = w, h
+    --env.W, env.H = w, h
     
     w = (2 * X + w)
     h = (2 * Y + h)
 
     Rect.init(self, 0, 0, w, h)
 
+    self.persistence = persistence
+
     if persistence then
         self.fb = FrameBuffer(w, h)
     else
-        fb = fb or FrameBuffer(w, h)
-        self.fb = fb
+        Sketch.fb = Sketch.fb or FrameBuffer(w, h)
+        self.fb = Sketch.fb
     end
-end
-
-function Sketch:__tostring()
-    return self.__className
 end
 
 function Sketch:setup()
 end
 
-function Sketch:autotest()
-    self.parameter:randomizeParameter()
+function Sketch:pause()
+end
+
+function Sketch:resume()
+end
+
+function Sketch:resize()
 end
 
 function Sketch:update()
@@ -90,7 +97,7 @@ function Sketch:drawSketch(force)
     self:drawPhase2(force)
 end
 
-function  Sketch:drawPhase1()
+function Sketch:drawPhase1()
     local requireDrawing = true
     if self.frames then
         if self.frames == 0 then
@@ -116,7 +123,7 @@ function  Sketch:drawPhase1()
     end
 end
 
-function  Sketch:drawPhase2(force)
+function Sketch:drawPhase2(force)
     love.graphics.setCanvas()
     love.graphics.setShader()
     love.graphics.setDepthMode()
@@ -193,10 +200,14 @@ function Sketch:drawGameOver()
     local w, h = textSize(gameOver)
 
     rectMode(CENTER)
-    rect(W/2, H/2, w*1.2, h*1.2, 20)
+    rect(CX, CY, w*1.2, h*1.2, 20)
 
     textMode(CENTER)
-    text(gameOver, W/2, H/2)    
+    text(gameOver, CX, CY)    
+end
+
+function Sketch:autotest()
+    self.parameter:randomizeParameter()
 end
 
 function Sketch:mousepressed(mouse)
@@ -212,11 +223,11 @@ function Sketch:mousemoved(mouse)
     local camera = self.cam
     if camera then
         if camera.mode == MODEL then
-            -- camera.angleX = camera.angleX + mouse.deltaPos.y * TAU / (W/2)
-            camera.angleY = camera.angleY + mouse.deltaPos.x * TAU / (W/2)
+            -- camera.angleX = camera.angleX + mouse.deltaPos.y * TAU / (CX)
+            camera.angleY = camera.angleY + mouse.deltaPos.x * TAU / (CX)
         else
             local direction = camera.target - camera.eye 
-            direction:rotateInPlace(mouse.deltaPos.x * TAU / (W/2))
+            direction:rotateInPlace(mouse.deltaPos.x * TAU / (CX))
             camera.target:set(camera.eye + direction)
         end
     end

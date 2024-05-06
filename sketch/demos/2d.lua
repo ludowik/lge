@@ -3,7 +3,6 @@ Sketch2d = class() : extends(Sketch)
 function Sketch2d:init()
     Sketch.init(self)
     self.clr = Color.random()
-    self.anchor = Anchor(16)
 
     image = Image('resources/images/rusty_metal.jpg')
 end
@@ -11,21 +10,28 @@ end
 function Sketch2d:draw()
     background(colors.black)
 
+    local anchor
+    if deviceOrientation == PORTRAIT then
+        anchor = Anchor(16)
+    else
+        anchor = Anchor(nil, 16*W/H)
+    end
+
     stroke(0.25)
 
     line(0, 0, W, H)
 	line(0, H, W, 0)
 	
-	circle(W/2, H/2, W/2)
-	circle(W/2, H/2, H/2)
+	circle(CX, CY, CX)
+	circle(CX, CY, CY)
     
     noFill()
 	rect(0, 0, W, H)
 
-    self.anchor:draw()
+    anchor:draw()
 
-    local pos = self.anchor:pos(1, 1)
-    local size = self.anchor:size(1, 1)
+    local pos = anchor:pos(1, 1)
+    local size = anchor:size(1, 1)
     local x, y, w, h = pos.x, pos.y, size.x, size.y
     
     for _,f in ipairs{

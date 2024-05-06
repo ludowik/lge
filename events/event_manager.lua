@@ -69,7 +69,16 @@ function EventManager:keypressed(key, scancode, isrepeat)
                 deviceOrientation = PORTRAIT
             end
             setSetting('deviceOrientation', deviceOrientation)
-            restart()
+            rotateScreen()
+
+        elseif key == '^' then
+            if deviceScreenRatio == screenRatios.ipad then
+                deviceScreenRatio = screenRatios.iphone
+            else
+                deviceScreenRatio = screenRatios.ipad
+            end
+            setSetting('deviceScreenRatio', deviceScreenRatio)
+            rotateScreen()
 
         elseif key == 't' then
             env.__autotest = not env.__autotest

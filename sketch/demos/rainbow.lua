@@ -10,8 +10,6 @@ function Rainbow:draw()
 
     background(colors.gray)
 
-    local CX, CY = W/2, H/2
-
     -- lines
     pushMatrix()
     do
@@ -42,7 +40,7 @@ function Rainbow:draw()
     -- point
     pushMatrix()
     do
-        translate(CX / 2, h * 2)
+        translate(CX - w/2, h * 2)
         strokeSize(2)
         rectMode(CORNER)
         for hue=0,w-1 do

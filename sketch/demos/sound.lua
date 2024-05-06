@@ -130,7 +130,7 @@ function AppSound:draw()
 
     pushMatrix()
     do
-        translate(0, H/2)
+        translate(0, CY)
 
         noFill()
         polyline(vertices)

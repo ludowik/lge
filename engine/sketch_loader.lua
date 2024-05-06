@@ -5,7 +5,7 @@ function load(reload)
     classSetup()
     classUnitTesting()
 
-    processManager:setSketch(getSettings('sketch', 'sketches'))
+    processManager:setSketch(getSetting('sketch', 'sketches'))
 end
 
 local environments = nil
@@ -114,11 +114,12 @@ function loadSketch(env)
 
         for _,fname in ipairs({
             'setup',
-            'update',
-            'autotest',
-            'draw',
             'pause',
             'resume',
+            'resize',
+            'update',
+            'draw',
+            'autotest',
             'mousepressed',
             'mousemoved',
             'mousereleased',

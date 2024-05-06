@@ -95,7 +95,6 @@ end
 
 function FrameBuffer:set(x, y, clr, ...)
     self:getImageData()
-
     self.needUpdate = true
 
     if type(clr) == 'table' then
@@ -107,6 +106,7 @@ end
 
 function FrameBuffer:get(x, y, clr)
     self:getImageData()
+
     if clr then
         local r, g, b, a = self.imageData:getPixel(x, y)    
         clr:set(r, g, b, a)

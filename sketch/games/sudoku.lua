@@ -1,7 +1,7 @@
 function setup()
     grid = Grid(9, 9)
 
-    --grid.position = vec2(W/2, H/2) - grid.size/2
+    --grid.position = vec2(CX, CY) - grid.size/2
 
     scene = Scene()
     scene:add(grid)

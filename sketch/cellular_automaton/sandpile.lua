@@ -1,7 +1,7 @@
 local ffi = try_require 'ffi'
 
 function setup()
-    size = even(W/2)
+    size = even(CX)
     img = FrameBuffer(size, size)
 
     if ffi then
@@ -90,7 +90,7 @@ function draw()
             return clr.r, clr.g, clr.b, 1
         end)
 
-    translate(W/2, H/2)
+    translate(CX, CY)
 
     spriteMode(CENTER)
     sprite(img)

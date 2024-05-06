@@ -2,7 +2,9 @@ local grayScale = Color.grayScaleIntensity
 
 function reset()
     source = Image('resources/images/joconde.png')
-    target = FrameBuffer(source.width, source.height)
+    target = FrameBuffer(
+        source.width,
+        source.height)
 end
 
 function setup()
@@ -15,6 +17,7 @@ function setup()
             source, target = target, source
         end)
 
+    parameter:action('PopArt', function () setFilter(Image.Filter.PopArt) end)
     parameter:action('Iso', function () setFilter(Image.Filter) end)
     parameter:action('Min', function () setFilter(Image.Filter.Min) end)
     parameter:action('Max', function () setFilter(Image.Filter.Max) end)
@@ -33,8 +36,8 @@ end
 
 local function getPixel(source, x, y, clr, defaultColor)
     if (
-        0 <= x and x < source.width and
-        0 <= y and y < source.height )
+        0 <= x and x < source.width  * devicePixelRatio and
+        0 <= y and y < source.height * devicePixelRatio )
     then
         return Color(source:get(x, y, clr))
     end
@@ -43,8 +46,8 @@ end
 
 local function setPixel(source, x, y, clr)
     if (
-        0 <= x and x < source.width and
-        0 <= y and y < source.height )
+        0 <= x and x < source.width  * devicePixelRatio and
+        0 <= y and y < source.height * devicePixelRatio )
     then
         source:set(x, y, clr)
     end
@@ -63,8 +66,8 @@ function Image.Filter:process(source, target)
 end
 
 function Image.Filter:run(source, target)
-    for y=0,source.height-1 do
-        for x=0,source.width-1 do
+    for y=0,source.height * devicePixelRatio -1 do
+        for x=0,source.width * devicePixelRatio -1 do
             local res = self:fragment(x, y, getPixel(source, x, y))
             if res then
                 target:set(x, y, res)
@@ -272,8 +275,8 @@ function Image.Filter.Sort:init()
 end
 
 function Image.Filter.Sort:run(source, target)
-    for y=1,source.height do
-        for x=1,source.width do
+    for y=0,source.height * devicePixelRatio -1 do
+        for x=0,source.width * devicePixelRatio -1 do
             local clr = getPixel(source, x, y)
             local clrKey = tostring(clr)
 
@@ -339,6 +342,28 @@ function Image.Filter.Compose:run(source, target)
     end
 end
 
+Image.Filter.PopArt = class() : extends(Image.Filter)
+
+function Image.Filter.PopArt:init()
+    Image.Filter.init(self)
+end
+
+function Image.Filter.PopArt:run(source, target)
+    for y=0,source.height * devicePixelRatio -1 do
+        for x=0,source.width * devicePixelRatio -1 do
+            local clr = getPixel(source, x, y)
+        end
+    end
+
+    target:setContext()
+    background(colors.white)
+    fill(colors.red)
+    circle(source.width/2, source.width/2, source.width/2)
+    target:resetContext()
+    target.imageData = nil
+    target.texture = nil
+end
+
 function setFilter(filter)
     filter():process(source, target)
 
@@ -357,10 +382,10 @@ function draw()
     spriteMode(CORNER)
 
     if W > H then
-        sprite(source, 0,   0, W/2, H)
-        sprite(target, W/2, 0, W/2, H)
+        sprite(source, 0,  0)
+        sprite(target, CX, 0)
     else
-        sprite(source, 0, 0,   W, H/2)
-        sprite(target, 0, H/2, W, H/2)
+        sprite(source, 0, 0 , W, W)
+        sprite(target, 0, CY, W, W)
     end
 end

@@ -21,7 +21,7 @@ local cos, sin, deg, rad, sqrt = math.cos, math.sin, math.deg, math.rad, math.sq
 function draw()
     background(51)
 
-    translate(W/2, H/2)
+    translate(CX, CY)
     rotate(rad(n/10))
 
     local size = spacing - 1

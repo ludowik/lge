@@ -429,7 +429,7 @@ function Tetris:draw()
 
     popMatrix()
 
-    self.scene:layout(0, H/2, 'right')
+    self.scene:layout(0, CY, 'right')
     self.scene:draw()
 end
 

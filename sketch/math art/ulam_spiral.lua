@@ -3,11 +3,11 @@ UlamSpiral = class() : extends(Sketch)
 function UlamSpiral:init()
     Sketch.init(self)
     
-    self.xp = W/2
-    self.yp = H/2
+    self.xp = CX
+    self.yp = CY
 
-    self.x = W/2
-    self.y = H/2
+    self.x = CX
+    self.y = CY
 
     self.value = 1
     

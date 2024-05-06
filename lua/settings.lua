@@ -41,35 +41,35 @@ end
 
 settings = loadSettings()
 
-function setSettings(name, value)
+function setSetting(name, value)
     settings[name] = value
     saveSettings()
 end
 
-function getSettings(name, defaultValue)
+function getSetting(name, defaultValue)
     return settings[name] or defaultValue
 end
 
-setSettings('testBoolean', true)
-setSettings('testNumber', 12.12)
-setSettings('testString', 'valeur')
-setSettings('testTable', {a = 'a'})
-setSettings('testNil', nil)
+setSetting('testBoolean', true)
+setSetting('testNumber', 12.12)
+setSetting('testString', 'valeur')
+setSetting('testTable', {a = 'a'})
+setSetting('testNil', nil)
 
-assert(getSettings('testBoolean') == true)
-assert(getSettings('testNumber') == 12.12)
-assert(getSettings('testString') == 'valeur')
-assert(getSettings('testTable').a == 'a')
-assert(getSettings('testNil') == nil)
+assert(getSetting('testBoolean') == true)
+assert(getSetting('testNumber') == 12.12)
+assert(getSetting('testString') == 'valeur')
+assert(getSetting('testTable').a == 'a')
+assert(getSetting('testNil') == nil)
 
-setSettings('testBoolean', nil)
-setSettings('testNumber', nil)
-setSettings('testString', nil)
-setSettings('testTable', nil)
-setSettings('testNil', nil)
+setSetting('testBoolean', nil)
+setSetting('testNumber', nil)
+setSetting('testString', nil)
+setSetting('testTable', nil)
+setSetting('testNil', nil)
 
-assert(not setSettings('testBoolean'))
-assert(not setSettings('testNumber'))
-assert(not setSettings('testString'))
-assert(not setSettings('testTable'))
-assert(not setSettings('testNil'))
+assert(not setSetting('testBoolean'))
+assert(not setSetting('testNumber'))
+assert(not setSetting('testString'))
+assert(not setSetting('testTable'))
+assert(not setSetting('testNil'))

@@ -132,7 +132,7 @@ function draw()
     stroke(colors.white)
     strokeSize(1)
 
-    translate(W/2, H/2)
+    translate(CX, CY)
 
     if rotation then
         rotate(ElapsedTime)

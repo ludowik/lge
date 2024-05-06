@@ -5,12 +5,10 @@ DELAY = 0.05
 function The2048:init()
     Sketch.init(self)
 
-    self.anchor = Anchor(4.5)
-
     self.grid = Grid(4, 4)
-    
-    self.cellSize = self.anchor:size(1, 1)
 
+    self.cellSize = vec2(SIZE / 4.5, SIZE / 4.5)
+    
     self.score = 0
     self.scoreMax = 0
 
@@ -302,7 +300,8 @@ function The2048:keypressed(key)
 end
 
 function The2048:cellPosition(i, j)
-    return self.anchor:pos(i-.75, -3-(3.5-j))
+    return vec2(i-1, j-1)
+--    return vec2(self.cellSize.x * (i-1), self.cellSize.y * (j-1))
 end
 
 function The2048:update(dt)
@@ -312,6 +311,8 @@ function The2048:update(dt)
 end
 
 function The2048:draw()
+    self.cellSize = vec2(SIZE / 4.5, SIZE / 4.5)
+
     background(self.backgroundColor)
 
     rectMode(CENTER)
@@ -320,8 +321,8 @@ function The2048:draw()
     local innerMarge = 5
     local center, size
     
-    center = self.anchor:pos(2.25, -3.5)
-    size = self.anchor:size(4, 4)
+    center = vec2(CX, CY)
+    size = self.cellSize * 4
 
     noStroke()
     
@@ -343,6 +344,8 @@ function The2048:draw()
     end
     self.animations:removeIfTrue(function (cell) return cell.tween and cell.tween.state == 'dead' end)
 
+    translate(center-size/2)
+    
     for _,cell in ipairs(self.cells) do
         Tile.draw(cell, cell.position, self.cellSize)
     end
@@ -359,7 +362,7 @@ Tile.innerMarge = 5
 function Tile:draw(position, cellSize)
     pushMatrix()
 
-    local center = position + cellSize / 2
+    local center = position * cellSize.x + cellSize / 2
 
     translate(center.x, center.y)
 

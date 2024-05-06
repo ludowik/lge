@@ -10,11 +10,11 @@ end
 
 function setup()
     scene = Scene()
-    navigate(getSettings('category'))
+    navigate(getSetting('category'))
 end
 
 function navigate(category)
-    setSettings('category', category)
+    setSetting('category', category)
     
     scene:clear()
 
@@ -77,7 +77,7 @@ function draw()
     background()
     
     scene:layout()
-    scene:layout(0, dy + H/2 - scene.size.y/2)
+    scene:layout(0, dy + CY - scene.size.y/2)
     
     scene:draw()
 end

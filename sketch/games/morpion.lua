@@ -3,16 +3,6 @@ function setup()
 
     cells.state = 'play'
 
-    anchor = Anchor(4)
-
-    if W < H then
-        cells.cellSize = anchor:size(1, 1).x
-        cells.position = anchor:pos(1, 3)
-    else
-        cells.cellSize = anchor:size(1, 1).x
-        cells.position = vec2(cells.cellSize, cells.cellSize)
-    end
-
     player = 'x'
 
     players = {
@@ -38,6 +28,16 @@ function setup()
 end
 
 function draw()
+    if W < H then
+        anchor = Anchor(4)
+        cells.cellSize = anchor:size(1, 1).x
+        cells.position = anchor:pos(1, 3)
+    else
+        anchor = Anchor(nil, 4)
+        cells.cellSize = anchor:size(1, 1).y
+        cells.position = anchor:pos(3, 1)
+    end
+
     background(54)
     cells:foreach(drawCell)
 end

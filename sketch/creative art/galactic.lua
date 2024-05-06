@@ -16,7 +16,7 @@ end
 function draw()
     background(0, 0.05)
 
-    translate(W/2, H/2)
+    translate(CX, CY)
 
     local position = vec2()
     

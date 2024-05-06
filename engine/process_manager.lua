@@ -57,7 +57,7 @@ end
 
 function ProcessManager:setCurrentSketch(processIndex)
     local process = self:current()
-    if process and process.pause then process:pause() end
+    if process then process:pause() end
 
     collectgarbage('collect')
 
@@ -69,13 +69,13 @@ function ProcessManager:setCurrentSketch(processIndex)
 
     _G.env = process.env
     setfenv(0, _G.env)
-    if process.resume then process:resume() end
+    process:resume()
 
-    setSettings('sketch', process.env.__name)
+    setSetting('sketch', process.env.__name)
 
     love.window.setTitle(process.env.__name)
 
-    Graphics2d.setMode(process.size.x, process.size.y)
+    Graphics.setMode(process.size.x, process.size.y)
 
     process.fb:setContext()
     process.fb:background()
@@ -118,7 +118,9 @@ function ProcessManager:random()
     return self:current()
 end
 
-LOOP_ITER_PROCESS = 1
+local LOOP_PROCESS_DT = 1/60
+local LOOP_PROCESS_N = 15
+local LOOP_PROCESS_DELAY = LOOP_PROCESS_N * LOOP_PROCESS_DT
 
 function ProcessManager:loopProcesses()
     if self.__loopProcesses then
@@ -148,8 +150,8 @@ function ProcessManager:updateLoop(dt)
         local process = processManager:current()
         if not process then return end
 
-        local delay = 0.25
-        local dt = 1/60
+        local delay = LOOP_PROCESS_DELAY
+        local dt = LOOP_PROCESS_DT
         local n = 0
         local startTime = time()
 
@@ -164,21 +166,21 @@ function ProcessManager:updateLoop(dt)
 
             love.graphics.present()
             
-            if time() - startTime > delay then
+            if time() - startTime > delay or n >= LOOP_PROCESS_N then
                 break
             end
         end
 
-        print(n)
-
         love.window.setVSync(1)
         process.env.__autotest = false
 
-        captureImage()
-        captureLogo()
+        -- captureImage()
+        -- captureLogo()
 
         if process == self.__loopProcesses.startProcess then
             self.__loopProcesses = nil
         end
+
+        self:updateLoop(dt)
     end
 end

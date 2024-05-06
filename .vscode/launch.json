@@ -25,7 +25,8 @@
             ],
             "ignorePatterns": [
                 "class",
-                "instrument"
+                "instrument",
+                "debug"
             ],
             "scriptRoots": [
                 "./"

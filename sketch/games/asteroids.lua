@@ -61,7 +61,7 @@ end
 function draw()
     background()
 
-    translate(W/2, H/2)
+    translate(CX, CY)
     translate(-ship.position.x, -ship.position.y)
 
     scene:draw()
@@ -151,7 +151,7 @@ Asteroid = class() : extends(Object)
 function Asteroid:init(position, radius, linearVelocity)
     Object.init(self)
 
-    self.position = position or (vec2.randomInScreen() - vec2(W/2, H/2))
+    self.position = position or (vec2.randomInScreen() - vec2(CX, CY))
 
     self.vertices = Array()
 
@@ -203,17 +203,17 @@ function Asteroid:update(dt)
         self.position = self.position + self.linearVelocity * dt
         self.angle = self.angle + self.angularVelocity * dt
 
-        if self.position.x <= center.x - W/2 then
+        if self.position.x <= center.x - CX then
             self.position.x = self.position.x + W
 
-        elseif self.position.x > center.x + W/2 then
+        elseif self.position.x > center.x + CX then
             self.position.x = self.position.x - W
         end
 
-        if self.position.y <= center.y - H/2 then
+        if self.position.y <= center.y - CY then
             self.position.y = self.position.y + H
 
-        elseif self.position.y > center.y + H/2 then
+        elseif self.position.y > center.y + CY then
             self.position.y = self.position.y - H
         end
 

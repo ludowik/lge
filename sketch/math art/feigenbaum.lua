@@ -1,15 +1,18 @@
 function setup()
     parameter:linksearch('feigenbaum')
     parameter:number('py', 0, 1, 0.5, reset)
+    
     reset()
-
-    minSize = min(W, H)
 
     sketch.fb = FrameBuffer(w, h)
 end
 
 function reset()
     start = true
+end
+
+function resize()
+    reset()
 end
 
 function draw()
@@ -19,7 +22,7 @@ function draw()
         stroke(colors.black)
         strokeSize(1)
 
-        base = minSize * 0.5
+        base = H * 0.25
         line(0, base, W, base)
 
         start = false
@@ -37,14 +40,14 @@ function draw()
 
     local data = Array()
 
-    local ratio = minSize / (rMax - rMin)
+    local ratio = SIZE / (rMax - rMin)
     for r = rMin,rMax,rStep do
         y = py
         for index = 0,iMax do
             y = r * y * (1 - y)
             if index > iMax * 0.75 then
                 data:add((r - rMin) * ratio)
-                data:add(base + y * minSize * 0.8)
+                data:add(base + y * SIZE * 0.8)
             end
         end
     end

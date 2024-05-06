@@ -1,5 +1,5 @@
 function setup()
-	local seedValue = getSettings('seedValue', time())
+	local seedValue = getSetting('seedValue', time())
 	seed(12813324.6) -- seedValue)
 
     balls = Array():forn(50, function (i) return i end)
@@ -31,7 +31,7 @@ function setup()
 	
 	assert(#balls == 0)
 
-	setSettings('seedValue', seedValue)
+	setSetting('seedValue', seedValue)
 end
 
 function draw()

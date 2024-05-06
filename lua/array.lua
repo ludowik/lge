@@ -8,6 +8,11 @@ function Array:init(t)
     return t
 end
 
+function Array:count(f)
+    assert(not f)
+    return #self
+end
+
 Array.add = table.insert
 
 Array.push = table.insert
@@ -36,13 +41,12 @@ function Array:removeIfTrue(f)
     return self
 end
 
-function Array:count(f)
-    assert(not f)
-    return #self
-end
-
 function Array:random()
     return self[randomInt(1, #self)]
+end
+
+function Array:ipairs()
+    return ipairs(self)
 end
 
 function Array:forn(n, functionOrValue)
@@ -58,7 +62,51 @@ function Array:forn(n, functionOrValue)
     return self
 end
 
--- TODO : generalize function
+function Array:foreach(f, ...)
+    for i=1,#self do
+        local v = self[i]
+        f(v, i, ...)
+    end
+    return self
+end
+
+function Array:foreachKey(f, ...)
+    for k, v in pairs(self) do
+        f(v, k, ...)
+    end
+    return self
+end
+
+function Array:indexOf(item)
+    for i=1,#self do
+        local v = self[i]
+        if item == v then return i end
+    end
+end
+
+function Array:keyOf(item)
+    for k, v in pairs(self) do
+        if item == v then return k end
+    end
+end
+
+function Array:first()
+    return self[1]
+end
+
+function Array:last()
+    return self[#self]
+end
+
+function Array:next(item)
+    local i = self:indexOf(item) or #self
+    if i < #self then
+        return self[i+1]
+    else
+        return self[1]
+    end
+end
+
 function Array:release()
     for i=1,#self do
         local v = self[i]
@@ -89,25 +137,6 @@ function Array:draw(dt, ...)
     return self
 end
 
-function Array:ipairs()
-    return ipairs(self)
-end
-
-function Array:foreach(f, ...)
-    for i=1,#self do
-        local v = self[i]
-        f(v, i, ...)
-    end
-    return self
-end
-
-function Array:foreachKey(f, ...)
-    for k, v in pairs(self) do
-        f(v, k, ...)
-    end
-    return self
-end
-
 function Array:cross(f, ...)
     local n = #self
 
@@ -121,27 +150,6 @@ function Array:cross(f, ...)
         end
     end
     return self
-end
-
-function Array:indexOf(item)
-    for i=1,#self do
-        local v = self[i]
-        if item == v then return i end
-    end
-end
-
-function Array:keyOf(item)
-    for k, v in pairs(self) do
-        if item == v then return k end
-    end
-end
-
-function Array:first()
-    return self[1]
-end
-
-function Array:last()
-    return self[#self]
 end
 
 function Array:map(f)

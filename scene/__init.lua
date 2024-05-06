@@ -1,10 +1,13 @@
-require 'scene.bind'
-require 'scene.ui'
-require 'scene.ui_button'
-require 'scene.ui_expression'
-require 'scene.ui_slider'
-require 'scene.ui_check'
-require 'scene.layout'
-require 'scene.node'
-require 'scene.scene'
-require 'scene.parameter'
+requireLib(..., {
+    'bind',
+    'ui',
+    'ui_button',
+    'ui_expression',
+    'ui_slider',
+    'ui_check',
+    'layout',
+    'node',
+    'scene',
+    'parameter',
+    'animate',
+})

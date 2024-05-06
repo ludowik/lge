@@ -7,8 +7,8 @@ function Horloge:init(lieu, decalage, x, y, rayon)
 
     self.decalage = decalage or 0
 
-    self.x = x or W/2
-    self.y = y or H/2
+    self.x = x or CX
+    self.y = y or CY
 
     self.rayon = rayon or 150
 end

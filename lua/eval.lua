@@ -1,10 +1,7 @@
 global = {}
 
 function evaluateExpression(expression)
-    local src = (
-        "global.__temp__ = "..tostring(expression)..NL..
-        "return global.__temp__")
-    return evaluateCode(src)
+    return evaluateCode("return "..tostring(expression))
 end
 
 function evaluateCode(source)

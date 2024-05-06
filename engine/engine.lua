@@ -113,12 +113,12 @@ function Engine.draw()
 end
 
 function toggleFused()
-    setSettings('fused', not fused())
+    setSetting('fused', not fused())
     engine.reload(true)
 end
 
 function fused()
-    return getSettings('fused', false)
+    return getSetting('fused', false)
 end
 
 function getFPS()

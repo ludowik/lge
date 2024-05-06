@@ -20,9 +20,9 @@ end
 function draw(dt)
     background(0, 0, 0, 0.05)
 
-    translate(W/2, H/2)
+    translate(CX, CY)
 
-    area = Rect(-W/2, -H/2, W, H)
+    area = Rect(-CX, -CY, W, H)
 
     local position = vec2()
 

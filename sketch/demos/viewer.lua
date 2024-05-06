@@ -43,7 +43,7 @@ function draw()
 
     fontSize(15)
 
-    local x = W/2 - wmax
+    local x = CX - wmax
     local y = deltaY + 24
 
     textPosition(y)

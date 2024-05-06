@@ -10,7 +10,7 @@ end
 function draw()
     background()
 
-    translate(W/2, H/2)
+    translate(CX, CY)
     
     scaleFactor = 8
     scale(scaleFactor)
