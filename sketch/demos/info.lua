@@ -14,8 +14,8 @@ function setup()
     
     scene:add(UI('Frame'):attrib{styles={fillColor=colors.red}})
     scene:add(UIExpression('fps', 'string.format("%d fps", getFPS())'))
-    scene:add(UIExpression('dt', 'string.format("%d ms", floor(DeltaTime*1000))'))
-    scene:add(UIExpression('elapsed', 'string.format("%d s", ElapsedTime)'))
+    scene:add(UIExpression('dt', 'string.format("%d ms", floor(deltaTime*1000))'))
+    scene:add(UIExpression('elapsed', 'string.format("%d s", elapsedTime)'))
 
     local w, h = love.window.getDesktopDimensions(1)
 

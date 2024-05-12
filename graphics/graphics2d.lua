@@ -201,6 +201,7 @@ function Graphics2d.grid2d(size)
 end
 
 function Graphics2d.point(x, y)
+    if type(x) == 'table' then x, y = x.x, x.y end
     if stroke() then
         love.graphics.setColor(stroke():rgba())
     end

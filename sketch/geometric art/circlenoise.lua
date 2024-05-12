@@ -34,7 +34,7 @@ function Noise:draw()
                 Color(noise(
                     (i) / self.params.ratio,
                     (j) / self.params.ratio,
-                    ElapsedTime / self.params.speed
+                    elapsedTime / self.params.speed
                 ),
                 -- noise(
                 --     elapsedTime / self.params.speed,

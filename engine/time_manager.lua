@@ -5,8 +5,8 @@ function TimeManager.setup()
 end
 
 function TimeManager:init()
-    -- DeltaTime = 0
-    -- ElapsedTime = 0
+    -- deltaTime = 0
+    -- elapsedTime = 0
 end
 
 function TimeManager:update(dt)
@@ -19,7 +19,7 @@ function TimeManager:update(dt)
         end
     end
     
-    env.DeltaTime = dt
-    env.ElapsedTime = env.ElapsedTime + dt
-    env.indexFrame = env.indexFrame + 1
+    env.deltaTime = dt
+    env.elapsedTime = env.elapsedTime + dt
+    env.frameCount = env.frameCount + 1
 end

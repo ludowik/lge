@@ -1,6 +1,8 @@
 function setup()
-    grid = Grid(160, 100)
+    grid = Grid(40, 100)
     particles = Array()
+
+    scaleFactor = 8
 end
 
 function update(dt)
@@ -11,12 +13,19 @@ function draw()
     background()
 
     translate(CX, CY)
-    
-    scaleFactor = 8
+
+    if deviceOrientation == LANDSCAPE then
+        scale(H/W)
+    end
+
     scale(scaleFactor)
+    
     translate(-grid.w/2, -grid.h/2)
 
-    rect(1, 1, grid.w, grid.h)
+    strokeSize(1/scaleFactor)
+
+    rectMode(CORNER)
+    rect(-1, 0, grid.w+1, grid.h)
     
     particles:draw()
 end

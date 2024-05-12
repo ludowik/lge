@@ -41,8 +41,8 @@ function draw(dt)
 
         point(position.x, position.y)
 
-        star.angle = star.angle + star.angularSpeed * speed * DeltaTime
-        star.len = star.len + star.linearSpeed * speed * DeltaTime
+        star.angle = star.angle + star.angularSpeed * speed * deltaTime
+        star.len = star.len + star.linearSpeed * speed * deltaTime
 
         if not area:contains(position) then
             star.len = 0

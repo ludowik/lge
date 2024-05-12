@@ -35,7 +35,7 @@ function update()
 end
 
 function updatePiles()
-    if indexFrame % 2 == 0 then return end
+    if frameCount % 2 == 0 then return end
     local num
     
     for x=1,size do
@@ -71,8 +71,7 @@ function draw()
 
     local column, num, clr
 
-    img:getImageData()
-    img.imageData:mapPixel(function (x, y, r, g, b, a)            
+    img:mapPixel(function (x, y, r, g, b, a)            
             column = sandpiles[x+1]
             num = column[y+1]
 

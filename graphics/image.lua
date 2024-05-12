@@ -83,14 +83,12 @@ function FrameBuffer:update()
             dpiscale = devicePixelRatio
         })
         self.texture:setWrap('repeat')
-
-        -- self:setContext()
-
-        -- love.graphics.setColor(1, 1, 1)
-        -- love.graphics.draw(self.texture)
-
-        -- self:resetContext()
     end
+end
+
+function FrameBuffer:mapPixel(f)
+    self:getImageData()
+    self.imageData:mapPixel(f)
 end
 
 function FrameBuffer:set(x, y, clr, ...)

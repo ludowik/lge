@@ -38,7 +38,7 @@ function update(dt)
 
     if shader.program then
         if not paused then
-            shader:sendUniform('iTime', ElapsedTime);
+            shader:sendUniform('iTime', elapsedTime);
         end
         shader:sendUniform('iChannel0', shaderChannel[0].texture);
         shader:sendUniform('TIMESCALE', 1.);

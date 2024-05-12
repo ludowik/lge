@@ -46,7 +46,7 @@ end
 function Snowflake:update(dt)
     -- x position follows a circle
     local w = 0.2 -- angular speed
-    local angle = w * ElapsedTime + self.initialangle
+    local angle = w * elapsedTime + self.initialangle
     self.position.x = W / 2 + self.radius * sin(angle)
 
     -- different size snowflakes fall at slightly different y speeds

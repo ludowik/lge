@@ -78,6 +78,6 @@ function Particle:draw()
     end
 
     for i in range(10) do
-        step(DeltaTime/10)
+        step(deltaTime/10)
     end
 end

@@ -57,6 +57,10 @@ function vec3.random(w, h, d)
     return vec3():randomize(w, h, d)
 end
 
+function vec3.randomInScreen()
+    return vec3():randomize(W, H, W)
+end
+
 function vec3:randomize(w, h, d)
     if w then
         h = h or w

@@ -11,7 +11,7 @@ function draw()
     translate(CX, CY)
 
     noStroke()
-    fill(Color.hsb(ElapsedTime/10))
+    fill(Color.hsb(elapsedTime/10))
 
     for i=0,count-1 do
         a = (i/count)*TAU

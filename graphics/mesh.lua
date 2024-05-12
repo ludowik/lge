@@ -163,7 +163,7 @@ function Mesh:useShader(instanced)
         fillColor = fill() or colors.white,
 
         deltaTime = deltaTime,
-        elapsedTime = ElapsedTime,
+        elapsedTime = elapsedTime,
     })
 
 end

@@ -12,7 +12,7 @@ function class(__className)
         __class = true,
         __className = __className or scriptName(3),
         __classInfo = scriptLink(3),
-        __init = function(instance, ...) end,
+        __init = function (instance, ...) end,
         extends = extends,
         attrib = attrib,
         clone = table.clone,
@@ -20,12 +20,17 @@ function class(__className)
     klass.__index = klass
 
     setmetatable(klass, {
-        __call = function(_, ...)
+        __call = function (_, ...)
             local instance = setmetatable({}, klass)
             local init = klass.init or klass.__init
             return init(instance, ...) or instance
         end
     })
+    klass.new = function (_, ...)
+        local instance = setmetatable({}, klass)
+        return instance
+    end
+
     table.insert(classList, klass)
 
     if __className then
@@ -102,7 +107,7 @@ function attributeof(attrName, object)
     return object[attrName]
 end
 
-class().unitTest = function () 
+class().unitTest = function ()
     assert(true)
     assert(classnameof({}) == 'table')
 end

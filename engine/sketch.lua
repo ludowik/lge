@@ -1,25 +1,22 @@
 Sketch = class() : extends(Index, State, Rect, MouseEvent, KeyboardEvent)
 
-Sketch.fb = nil
+function Sketch.setup()
+    Sketch.fb = nil    
+end
 
-function Sketch:init(w, h)
-    -- TODEL
-    assert(not w and not h)
-
+function Sketch:init()
     env.sketch = self
-
-    Index.init(self)
-    State.init(self)
 
     self:setMode(W, H)
 
+    Index.init(self)
+    State.init(self)
     MouseEvent.init(self)
     KeyboardEvent.init(self)
 
-    self.tweenManager = TweenManager()
-
     self:initMenu()
 
+    self.tweenManager = TweenManager()
     self.scene = nil
 end
 
@@ -27,9 +24,7 @@ function Sketch:__tostring()
     return self.__className
 end
 
-function Sketch:setMode(w, h, persistence)
-    --env.W, env.H = w, h
-    
+function Sketch:setMode(w, h, persistence)    
     w = (2 * X + w)
     h = (2 * Y + h)
 
@@ -37,7 +32,7 @@ function Sketch:setMode(w, h, persistence)
 
     self.persistence = persistence
 
-    if persistence then
+    if self.persistence then
         self.fb = FrameBuffer(w, h)
     else
         Sketch.fb = Sketch.fb or FrameBuffer(w, h)
