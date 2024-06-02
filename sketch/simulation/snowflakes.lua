@@ -33,7 +33,7 @@ function Snowflake:init()
     -- initialize coordinates
     self.position = vec2(
         0,
-        H + Y + random(50, 0))
+        H + random(50, 0))
 
     self.initialangle = random(0, TAU)
     self.size = random(2, 5)
@@ -53,7 +53,7 @@ function Snowflake:update(dt)
     self.position.y = self.position.y - pow(self.size, 0.5) * dt * 80
 
     -- delete snowflake if past end of screen
-    if self.position.y < -Y then
+    if self.position.y < 0 then
         local index = snowflakes:indexOf(self)
         snowflakes:remove(index)
     end

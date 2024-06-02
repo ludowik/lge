@@ -18,11 +18,11 @@ if arg[#arg] == 'vsc_debug' then
         lldebugger.requestBreak()
     end
 
-elseif arg[#arg] == '-debug' then
-    local mobdebug = require 'mobdebug'
-    mobdebug.start()
+-- elseif arg[#arg] == '-debug' then
+--     local mobdebug = require 'mobdebug'
+--     mobdebug.start()
 
-    debugMode = true
+--     debugMode = true
 
 else
     function love.run(...)

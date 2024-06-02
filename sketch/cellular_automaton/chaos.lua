@@ -124,6 +124,8 @@ confs = {
 }
 
 function draw()
+    background(0, 0.01)
+
     if newConf then
         reset(newConf)
         newConf = nil

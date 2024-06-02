@@ -25,9 +25,6 @@ function Sketch:__tostring()
 end
 
 function Sketch:setMode(w, h, persistence)    
-    w = (2 * X + w)
-    h = (2 * Y + h)
-
     Rect.init(self, 0, 0, w, h)
 
     self.persistence = persistence
@@ -69,7 +66,7 @@ function Sketch:checkReload()
 end
 
 function Sketch:updateSketch(dt)
-    if self.frames and self.frames == 0 then return end
+    if self.loopMode == 'none' then return end
     self:checkReload()
 
     if env.__autotest and self.autotest then
@@ -88,37 +85,32 @@ function Sketch:updateSketch(dt)
 end
 
 function Sketch:drawSketch(force)
-    self:drawPhase1()
-    self:drawPhase2(force)
+    self:renderSketch()
+    self:presentSketch(force)
 end
 
-function Sketch:drawPhase1()
-    local requireDrawing = true
-    if self.frames then
-        if self.frames == 0 then
-            requireDrawing = false
-        else
-            self.frames = self.frames - 1
-        end
-    end
+function Sketch:renderSketch()
+    if self.loopMode == 'none' then return end
 
-    if requireDrawing then
-        love.graphics.setCanvas({
-            self.fb.canvas,
-            stencil = false,
-            depth = true,
-        })
-        love.graphics.clear(false, false, true)
-        love.graphics.setWireframe(env.__wireframe and true or false)
+    love.graphics.setCanvas({
+        self.fb.canvas,
+        stencil = false,
+        depth = true,
+    })
+    love.graphics.clear(false, false, true)
+    love.graphics.setWireframe(env.__wireframe and true or false)
 
-        resetMatrix(true)
-        resetStyle(getOrigin())
+    resetMatrix(true)
+    resetStyle(getOrigin())
 
-        self:draw()
+    self:draw()
+
+    if self.loopMode == 'redraw' then
+        self.loopMode = 'none'
     end
 end
 
-function Sketch:drawPhase2(force)
+function Sketch:presentSketch(force)
     love.graphics.setCanvas()
     love.graphics.setShader()
     love.graphics.setDepthMode()
@@ -131,7 +123,7 @@ function Sketch:drawPhase2(force)
 
     if getOrigin() == BOTTOM_LEFT then
         love.graphics.scale(1, -1)
-        love.graphics.translate(0, -(2 * Y + H))
+        love.graphics.translate(0, -H)
     end
 
     local ws, hs, flags = love.window.getMode()
@@ -141,15 +133,9 @@ function Sketch:drawPhase2(force)
 
     local scale = min(ws/self.fb.canvas:getWidth(), hs/self.fb.canvas:getHeight())
 
-    if self.sketchPixelRatio then
-        love.graphics.translate(X, Y)
-        love.graphics.scale(self.sketchPixelRatio, self.sketchPixelRatio)
-        love.graphics.translate(-X, -Y)
-    end
-
     love.graphics.draw(self.fb.canvas,
-        self.position.x,
-        self.position.y,
+        0, -- self.position.x,
+        0, -- self.position.y,
         0, -- rotation
         scale * sx, -- scale x
         scale * sy) -- scale y

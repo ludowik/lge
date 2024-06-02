@@ -1,6 +1,6 @@
 function setup()
     count = 48
-    distance = CX - 2*X
+    distance = CX
     step = 0.0
     delta = 0.05/count
 end

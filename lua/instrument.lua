@@ -53,7 +53,7 @@ function Instrument.Function:init(t, tname, k, v)
 end
 
 function Instrument.Function:reset()
-    self.frames = 0
+    self.frameCount = 0
     self.countByFrame = 0
     self.countByFrameAvg = 0
     self.countTotal = 0
@@ -134,10 +134,10 @@ function Instrument:update(dt)
             
             ref.elapsedTimeTotal = ref.elapsedTimeTotal + ref.elapsedTimeByFrame
             ref.countTotal = ref.countTotal + ref.countByFrame
-            ref.frames = ref.frames + 1
+            ref.frameCount = ref.frameCount + 1
 
-            ref.elapsedTimeByFrameAvg = ref.elapsedTimeTotal / ref.frames
-            ref.countByFrameAvg = ref.countTotal / ref.frames
+            ref.elapsedTimeByFrameAvg = ref.elapsedTimeTotal / ref.frameCount
+            ref.countByFrameAvg = ref.countTotal / ref.frameCount
             ref.deltaTimeAvg = ref.elapsedTimeTotal / ref.countTotal
             
             ref.elapsedTimeByFrame = 0

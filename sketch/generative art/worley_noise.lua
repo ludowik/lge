@@ -13,7 +13,10 @@ function reset()
 
     img = FrameBuffer(W, H)
 
-    pointList = Array():forn(N, vec3.randomInScreen)
+    pointList = Array():forn(N, function ()
+       return vec3.randomInScreen() 
+    end)
+    
     shader = nil
 end
 
@@ -61,7 +64,7 @@ function update()
         uniform int pointsCount;
         uniform vec3 points[MAX_N];
 
-        uniform float d;
+        uniform highp float d;
         uniform int frameCount;
         uniform int n;
 

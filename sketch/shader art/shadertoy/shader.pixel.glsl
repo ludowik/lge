@@ -1,19 +1,19 @@
 #pragma language glsl3
 
 // uniforms
-uniform float iTime;
-uniform float TIMESCALE;
-uniform float SHAPE_SIZE;
-uniform float SMOOTHNESS;
+uniform highp float iTime;
+uniform highp float SHAPE_SIZE;
+uniform highpfloat TIMESCALE;
+uniform highp float SMOOTHNESS;
 
-uniform float z;
+uniform highp float z;
 uniform vec3 CAMERA_POS_WORLD;
 
 // variables
 uniform int MAX_STEPS;
 
-uniform float MAX_DIST;
-uniform float SURF_DIST;
+uniform highp float MAX_DIST;
+uniform highp float SURF_DIST;
 
 // shapes
 float sdSphere(vec3 p, vec3 sp, float r) {

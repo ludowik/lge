@@ -1,9 +1,6 @@
 function setup()
     scene = Scene()
 
-    fb = FrameBuffer(W, H)
-    imageData = fb:getImageData()
-
     scene:add(UIExpression('version', 'version'))
     scene:add(UIExpression('date', 'Date():asDate()'))
     scene:add(UIExpression('time', 'Date():asTime()'))
@@ -20,13 +17,13 @@ function setup()
     local w, h = love.window.getDesktopDimensions(1)
 
     scene:add(UI('Screen'):attrib{styles={fillColor=colors.red}})
-    scene:add(UIExpression('position', 'X..","..Y'))
-    scene:add(UIExpression('size', 'W..","..H'))
-    scene:add(UIExpression('ratio', 'MAX_SIZE/MIN_SIZE'))
+    scene:add(UIExpression('desktop dimension', 'string.format("%f , %f", love.window.getDesktopDimensions())'))
+    scene:add(UIExpression('safe area', 'string.format("%f , %f , %f , %f", love.window.getSafeArea())'))
+    scene:add(UIExpression('position', 'LEFT.." , "..TOP'))
+    scene:add(UIExpression('size', 'W.." , "..H'))
     scene:add(UIExpression('ratio', 'getScreenRatio()'))
-    scene:add(UIExpression('data', 'imageData:getWidth()..","..imageData:getHeight()'))
+    scene:add(UIExpression('data', 'getFbSize()'))
     scene:add(UIExpression('pixel ratio', 'love.window.getDPIScale()'))
-    scene:add(UIExpression('screen ratio', '(H+2*Y)/(W+2*X)'))
 
     scene:add(UI('Mouse'):attrib{styles={fillColor=colors.red}})
     scene:add(UIExpression('startPosition', 'mouse.startPosition'))
@@ -43,3 +40,9 @@ function getScreenRatio()
     return tofraction(w/h)
 end
 
+function getFbSize()
+    if fb then
+        imageData = imageData or fb:getImageData()
+        return imageData:getWidth()..' , '..imageData:getHeight()
+    end 
+end

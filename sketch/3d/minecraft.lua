@@ -85,7 +85,7 @@ function draw()
 
     function univers(i, getBlock)
         local positions, blocks = getUnivers(getBlock, sizeUnivers)
-        
+
         -- draw direct 2d
         pushMatrix()    
 

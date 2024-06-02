@@ -2,7 +2,7 @@
 
 #define PI 3.14159265359
 
-uniform float iTime;
+uniform highp float iTime;
 
 vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
     vec3 ws_pixels_pos = vec3((screen_coords * 2. - love_ScreenSize.xy) / love_ScreenSize.x, 1.);

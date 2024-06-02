@@ -9,7 +9,7 @@ function TimeGym:init()
     self.sound = love.audio.newSource('resources/sounds/beep.wav', 'static')
 
     self.scene = Scene()
-    self.anchor = Anchor(6)
+    self.anchor = Anchor(6, 10)
     
     function addInterface(Interface, label, i, j, m, n, callback)
         local interface = Interface(label, callback):attrib{
@@ -48,7 +48,7 @@ function TimeGym:init()
         self.cycleDuration = self.cycleDuration + 15
     end)
     
-    j = 2.5
+    j = j + 1.5
     addButton('<<', 0.5, j, 1, 1, function ()
         self.cycleCount = max(1, self.cycleCount - 1)
     end)
@@ -59,9 +59,8 @@ function TimeGym:init()
         self.cycleCount = self.cycleCount + 1
     end)
 
-    j = 4
-    
-    addButton('Reset', 0.5, j, 1.5, 3, function ()
+    j = j + 1.5
+    addButton('Reset', 0.5, j, 1.5, 2, function ()
         self.state = 'stop'
         self.actionLabel = 'GO'
 
@@ -71,7 +70,7 @@ function TimeGym:init()
         self.lastCycle = self.cycleCount
     end):callback()
 
-    addButton(Bind(self, 'actionLabel'), 2.5, j, 3, 3, function ()
+    addButton(Bind(self, 'actionLabel'), 2.5, j, 3, 2, function ()
         if self.state == 'stop' then
             self.state = 'running'
             self.actionLabel = 'Pause'
@@ -91,8 +90,11 @@ function TimeGym:init()
         end
     end).styles.fillColor = Color(165, 106, 106)
 
-    addInterface(UIDelay, 'time', 0.5, 7.5, 5, 1).sketch = self
-    addInterface(UICycle, 'count', 0.5, 9, 5, 1).sketch = self
+    j = j + 2.5
+    addInterface(UIDelay, 'time', 0.5, j, 5, 1).sketch = self
+
+    j = j + 1.5
+    addInterface(UICycle, 'count', 0.5, j, 5, 1).sketch = self
 end
 
 function TimeGym:update(dt)

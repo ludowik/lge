@@ -25,7 +25,7 @@ function Mouse:pressed(id, x, y, presses)
     self.state = PRESSED
     self.id = id
     
-    self.position:set(x-X, y-Y)    
+    self.position:set(x, y)
     self.previousPosition:set(mouse.position)
 
     self.startPosition:set(mouse.position)
@@ -48,7 +48,7 @@ function Mouse:moved(id, x, y)
     self.id = id
 
     self.previousPosition:set(mouse.position)
-    self.position:set(x-X, y-Y)
+    self.position:set(x, y)
 
     if love.mouse.isDown(1) then
         self.endPosition:set(mouse.position)
@@ -60,16 +60,12 @@ function Mouse:moved(id, x, y)
     end
 end
 
-function Mouse:update(dt)
-    self:moved(self.id, self.position.x+X, self.position.y+Y)
-end
-
 function Mouse:released(id, x, y, presses)
     self.state = RELEASED
     self.id = id
     
     self.previousPosition:set(mouse.position)
-    self.position:set(x-X, y-Y)
+    self.position:set(x, y)
 
     self.endPosition:set(mouse.position)    
     self.move:set(mouse.endPosition - mouse.startPosition)

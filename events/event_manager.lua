@@ -50,9 +50,9 @@ function EventManager:wheelmoved(dx, dy)
 end
 
 function EventManager:keypressed(key, scancode, isrepeat)
-    local process = processManager:current()
-    if process and process.keypressed then
-        process:keypressed(key, scancode, isrepeat)
+    local sketch = processManager:current()
+    if sketch.keypressed then
+        sketch:keypressed(key, scancode, isrepeat)
     end
     
     if key == 'escape' then
@@ -110,7 +110,7 @@ function EventManager:keypressed(key, scancode, isrepeat)
         end
 
     elseif key == 'f1' then
-        local name = process.__className:replace('_', '+')
+        local name = sketch.__className:replace('_', '+')
         openURL(('https://www.google.com/search?q=%s&lr=lang_en'):format(name))
         
     elseif key == 'pageup' then
@@ -125,9 +125,9 @@ function EventManager:keypressed(key, scancode, isrepeat)
 end
 
 function EventManager:keyreleased(key, scancode)
-    local process = processManager:current()
-    if process and process.keyreleased then
-        process:keyreleased(key, scancode)
+    local sketch = processManager:current()
+    if sketch.keyreleased then
+        sketch:keyreleased(key, scancode)
     end
 end
 

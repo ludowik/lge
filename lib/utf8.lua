@@ -910,7 +910,8 @@ local function matcherGenerator(regex, plain)
         local char
         while not self.stop do
             if self.str < self.stringLen then
-                --[[ if lastPos < self.str then
+                --[[ 
+                if lastPos < self.str then
                     print('last byte', lastByte)
                     char, lastByte = utf8subWithBytes(str, 1, self.str - lastPos - 1, lastByte)
                     char, lastByte = utf8subWithBytes(str, 1, 1, lastByte)
@@ -918,9 +919,9 @@ local function matcherGenerator(regex, plain)
                 else
                     char, lastByte = utf8subWithBytes(str, self.str, self.str)
                 end
-                lastPos = self.str ]]
+                lastPos = self.str
+                ]]
                 char = utf8sub(str, self.str,self.str)
-                --print('char', char, utf8unicode(char))
                 self.functions[self.func](utf8unicode(char))
             else
                 self.functions[self.func](-1)

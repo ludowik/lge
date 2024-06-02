@@ -10,16 +10,12 @@ function TimeManager:init()
 end
 
 function TimeManager:update(dt)
-    local process = processManager:current()
-    if not process then return end
+    local sketch = processManager:current()
+    if sketch.loopMode == 'none' then return end
+
+    self.deltaTime = dt
     
-    if process.frames then
-        if process.frames == 0 then
-            return
-        end
-    end
-    
-    env.deltaTime = dt
+    env.deltaTime = self.deltaTime
     env.elapsedTime = env.elapsedTime + dt
     env.frameCount = env.frameCount + 1
 end

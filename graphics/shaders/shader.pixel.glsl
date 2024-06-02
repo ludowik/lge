@@ -20,7 +20,7 @@ uniform highp float frequence3;
 uniform highp float octave1;
 uniform highp float octave2;
 uniform highp float octave3;
-uniform vec3 translation;
+uniform highp vec3 translation;
 
 uniform highp vec4 strokeColor;
 uniform highp vec4 fillColor;

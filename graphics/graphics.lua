@@ -31,9 +31,22 @@ function Graphics.getSafeArea()
 
     local x, y, w, h
     if getOS() == 'ios' then
+        local ws, hs, flags = love.window.getMode()
+
         x, y, w, h = love.window.getSafeArea()
+        
+        local r = (w + 2*x) / ws
+        w = r * ws - 2*x
+
+        if deviceOrientation == LANDSCAPE then
+            x, y = max(x, y), min(x, y)
+            w, h = max(w, h), min(w, h)
+        else
+            x, y = min(x, y), max(x, y)
+            w, h = min(w, h), max(w, h)
+        end
+
     else
-        x, y = 5, 50
         local ws, hs = love.window.getDesktopDimensions(1) -- displayindex
 
         local ratio = deviceScreenRatio
@@ -50,14 +63,10 @@ function Graphics.getSafeArea()
             hs = round(ws / ratio)
         end
 
-        w = ws - 2*x
-        h = hs - 2*y
+        x, y = 5, 50
+        w = ws -- 2*x
+        h = hs -- 2*y
     end
-
-    -- local margeExtension = 5
-
-    -- x = x + margeExtension
-    -- w = w - margeExtension * 2
 
     return x, y, w, h
 end
@@ -67,7 +76,7 @@ function Graphics.initMode()
 
     local ws, hs, flags = love.window.getMode()
 
-    X, Y, W, H = Graphics.getSafeArea()
+    LEFT, TOP, W, H = Graphics.getSafeArea()
 
     CX = W/2
     CY = H/2
@@ -77,14 +86,7 @@ function Graphics.initMode()
 
     SIZE = MIN_SIZE
     
-    LEFT = X
-    TOP = Y
-
-    if getOS() == 'ios' then
-        Graphics.setMode(ws, hs, true)
-    else
-        Graphics.setMode(2*X+W, 2*Y+H, false)
-    end
+    Graphics.setMode(W, H, getOS() == 'ios')
 
     if getOS() == 'macos' then
         refreshRate = flags.refreshrate * 2
@@ -102,7 +104,7 @@ function Graphics.setMode(w, h, fullscreen)
     }
 
     if love.getVersion() < 12 then
-        params.highdpi = true
+        -- params.highdpi = true
     end
 
     local ws, hs, flags = love.window.getMode()
@@ -115,28 +117,23 @@ end
 function Graphics:rotateScreen()
     initMode()
 
-    local process = processManager:current()
-    if not process then return end
+    local sketch = processManager:current()
 
     Sketch.fb = nil
-    process:setMode(W, H, process.persistence)
-    process:resize()
+    sketch:setMode(W, H, sketch.persistence)
+    sketch:resize()
 
     redraw()
 end
 
 function Graphics.noLoop()
-    local process = processManager:current()
-    if not process then return end
-
-    process.frames = 1
+    local sketch = processManager:current()
+    sketch.loopMode = 'none'
 end
 
 function Graphics.loop()
-    local process = processManager:current()
-    if not process then return end
-
-    process.frames = nil
+    local sketch = processManager:current()
+    sketch.loopMode = 'loop'
 end
 
 function Graphics.supportedOrientations(orientation)

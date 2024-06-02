@@ -49,7 +49,7 @@ function draw()
             setOrigin(origin)
 
             love.graphics.setCanvas(previousCanvas)
-            love.graphics.draw(process.sketch.fb.canvas, (2*X+W)/n*i, (2*Y+H)/n*j, 0, 1/n)            
+            love.graphics.draw(process.sketch.fb.canvas, (W)/n*i, (H)/n*j, 0, 1/n)            
 
             i = i + 1
 

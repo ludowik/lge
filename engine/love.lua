@@ -60,6 +60,16 @@ function love.draw()
     return Engine.draw()
 end
 
+function love.filedropped(file)
+    local filename = file:getFilename()
+	local ext = filename:match("%.%w+$")
+	if ext == ".love" then
+        file:open('r')
+        love.filesystem.write('lge.love', file:read())
+        restart()
+    end
+end
+
 if getOS() == 'ios' then
     local touches = {}
 
@@ -81,6 +91,16 @@ if getOS() == 'ios' then
         eventManager:mousereleased(id, x, y, touches[id].presses)
 
         touches[id] = nil
+    end
+
+    function love.displayrotated(index, orientation)
+        if orientation:startWith('landscape') then
+            deviceOrientation = LANDSCAPE
+        else
+            deviceOrientation = PORTRAIT
+        end
+        setSetting('deviceOrientation', deviceOrientation)
+        rotateScreen()
     end
 
 else
