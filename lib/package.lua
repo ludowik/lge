@@ -10,7 +10,10 @@ function updateScripts(github)
     
     request(url,
         function (result, code, headers)
-            local data = love.filesystem.write('lge.love', result)
+            local identity = love.filesystem.getIdentity()
+            love.filesystem.setIdentity('lge')
+            love.filesystem.write('lge.love', result)
+            love.filesystem.setIdentity(identity)
         end,
         function (result, code, headers)
             log(result, code, headers)
