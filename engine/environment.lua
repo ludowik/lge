@@ -18,9 +18,9 @@ function Environment:init(name, itemPath, category)
     self.__sourceFile = itemPath
     self.__modtime = love.filesystem.getInfo(itemPath).modtime
 
-    self.DeltaTime = 0
-    self.ElapsedTime = 0
-    self.indexFrame = 0
+    self.deltaTime = 0
+    self.elapsedTime = 0
+    self.frameCount = 0
 end
 
 function Environment.__newindex(self, key, ...)

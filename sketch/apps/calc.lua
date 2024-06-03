@@ -14,7 +14,7 @@ function setup()
     function addInterface(ui, label, i, j, clr, len)
         len = len or 1
         local instance = ui(label)
-            :setPosition(anchor:pos(i-0.95, j-0.95))
+            :setPosition(anchor:pos(i-0.95, j-1))
             :setSize(anchor:size(len-0.1, 0.9))
             :attrib{
                 styles = {

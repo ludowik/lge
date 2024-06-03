@@ -16,7 +16,7 @@ function Cardioid:draw()
 
     translate(CX, CY)
 
-    rotate(-ElapsedTime)
+    rotate(-elapsedTime)
 
     local diameter = min(W, H) * 0.9
     local radius = diameter / 2

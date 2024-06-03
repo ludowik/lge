@@ -15,14 +15,14 @@ function setup()
     end
 
     parameter:number('speed', 0, 50, 20)
+
+    area = Rect(-MAX_SIZE, -MAX_SIZE, 2*MAX_SIZE, 2*MAX_SIZE)
 end
 
 function draw(dt)
     background(0, 0, 0, 0.05)
 
     translate(CX, CY)
-
-    area = Rect(-CX, -CY, W, H)
 
     local position = vec2()
 
@@ -41,8 +41,8 @@ function draw(dt)
 
         point(position.x, position.y)
 
-        star.angle = star.angle + star.angularSpeed * speed * DeltaTime
-        star.len = star.len + star.linearSpeed * speed * DeltaTime
+        star.angle = star.angle + star.angularSpeed * speed * deltaTime
+        star.len = star.len + star.linearSpeed * speed * deltaTime
 
         if not area:contains(position) then
             star.len = 0

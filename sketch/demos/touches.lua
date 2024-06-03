@@ -19,7 +19,7 @@ end
 
 local function getTouch(id)
     local x, y = love.touch.getPosition(id)
-    return vec2(x-X, y-Y)
+    return vec2(x, y)
 end
 
 function setup()

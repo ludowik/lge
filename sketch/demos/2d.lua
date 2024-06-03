@@ -19,6 +19,10 @@ function Sketch2d:draw()
 
     stroke(0.25)
 
+    anchor:draw()
+
+    stroke(0.5)
+
     line(0, 0, W, H)
 	line(0, H, W, 0)
 	
@@ -28,9 +32,7 @@ function Sketch2d:draw()
     noFill()
 	rect(0, 0, W, H)
 
-    anchor:draw()
-
-    local pos = anchor:pos(1, 1)
+    local pos = anchor:pos(2, 2)
     local size = anchor:size(1, 1)
     local x, y, w, h = pos.x, pos.y, size.x, size.y
     

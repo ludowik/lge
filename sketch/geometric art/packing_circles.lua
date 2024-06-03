@@ -24,8 +24,8 @@ function update(dt)
         end
     end)
     for i=countPacked,5 do
-        local x = randomInt(-X, W+2*X)
-        local y = randomInt(-Y, H+2*Y)
+        local x = randomInt(W)
+        local y = randomInt(H)
 
         local findPosition = true
         for j,circle in circles:ipairs() do

@@ -28,7 +28,7 @@ function Spirale:init()
 
     self.elapsedTime = 0
 
-    camera(300, 500, 300)
+    camera(300, 200, 300)
 end
 
 function Spirale:update(dt)
@@ -68,7 +68,7 @@ function Spirale:draw()
         z = sin(angle) * self.params.width * n ^ 2
 
         --stroke(Color.hsb(n))
-        local clr = Color.hsb(n2, 0.5, 0.5)
+        local clr = Color.hsb(n2)
         fill(clr)
 
         strokeSize(n)

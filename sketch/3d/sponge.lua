@@ -7,6 +7,7 @@ function setup()
     updateInstance()
 
     parameter:watch('cubes:count()')
+    parameter:action('level', addLevel)
 end
 
 function updateInstance()
@@ -18,31 +19,35 @@ function draw()
     mesh:drawInstanced(cubes, instancesBuffer)
 end
 
-function keypressed(key)
-    if key == 'return' then
-        local newCubes = Array()
-        cubes:foreach(function (cube)
-            for x=-1,1 do
-                for y=-1,1 do
-                    for z=-1,1 do
-                        if abs(x) + abs(y) + abs(z) > 1 then
-                            local size = cube[4] / 3
-                            newCubes:add{
-                                cube[1] + x * size,
-                                cube[2] + y * size,
-                                cube[3] + z * size,
-                                size,
-                                size,
-                                size,
-                                1, 1, 1, 1
-                            }
-                        end
+function addLevel()
+    local newCubes = Array()
+    cubes:foreach(function (cube)
+        for x=-1,1 do
+            for y=-1,1 do
+                for z=-1,1 do
+                    if abs(x) + abs(y) + abs(z) > 1 then
+                        local size = cube[4] / 3
+                        newCubes:add{
+                            cube[1] + x * size,
+                            cube[2] + y * size,
+                            cube[3] + z * size,
+                            size,
+                            size,
+                            size,
+                            1, 1, 1, 1
+                        }
                     end
                 end
             end
-        end)
-        cubes = newCubes
+        end
+    end)
+    cubes = newCubes
 
-        updateInstance()
+    updateInstance()    
+end
+
+function keypressed(key)
+    if key == 'return' then
+        addLevel()
     end
 end

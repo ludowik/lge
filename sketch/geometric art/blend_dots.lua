@@ -19,7 +19,7 @@ function draw()
     local radius = 14
     local dx = 0
 
-    local dt = DeltaTime * 50
+    local dt = deltaTime * 50
 
     t = t + dt
 

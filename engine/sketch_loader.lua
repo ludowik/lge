@@ -5,7 +5,11 @@ function load(reload)
     classSetup()
     classUnitTesting()
 
-    processManager:setSketch(getSetting('sketch', 'sketches'))
+    if getOS() == 'ios' then
+        processManager:setSketch('sketches')
+    else
+        processManager:setSketch(getSetting('sketch', 'sketches'))
+    end
 end
 
 local environments = nil
@@ -143,5 +147,4 @@ function loadSketch(env)
             love.graphics.setCanvas(previousCanvas)
         end
     end
-
 end

@@ -13,8 +13,8 @@ end
 
 function Firework:update(dt)
     if random() < .1 then
-        local X = W / 8
-        local particle = ParticleFirework(vec2(random(X, W-X), 0), 'parent')
+        local x = W / 8
+        local particle = ParticleFirework(vec2(random(x, W-x), 0), 'parent')
         particle:applyForce(vec2(0, 800))
 
         self.particles:add(particle)

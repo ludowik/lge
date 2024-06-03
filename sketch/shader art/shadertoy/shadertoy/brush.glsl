@@ -143,9 +143,9 @@ vec3 colorBrushStroke(vec2 uvLine, vec2 uvPaper, vec2 lineSize, float sdGeometry
     if(iMouse.z > 0.)
     {
 //    return mix(inpColor, vec3(0), dtoa(sdGeometry, 1000.));// reveal geometry.
-//    return mix(inpColor, dtocolor(inpColor, uvLine.y), dtoa(sdGeometry, 1000.));// reveal Y
+//    return mix(inpColor, dtocolor(inpColor, uvLine.y), dtoa(sdGeometry, 1000.));// reveal y
 //    return mix(inpColor, dtocolor(inpColor, posInLineY), dtoa(sdGeometry, 1000.));// reveal pos in line.
-//    return mix(inpColor, dtocolor(inpColor, uvLine.x), dtoa(sdGeometry, 1000.));// reveal X
+//    return mix(inpColor, dtocolor(inpColor, uvLine.x), dtoa(sdGeometry, 1000.));// reveal x
     	float okthen = 42.;// NOP
     }
 
@@ -166,7 +166,7 @@ vec3 colorBrushStroke(vec2 uvLine, vec2 uvPaper, vec2 lineSize, float sdGeometry
         ;
     strokeTexture *= 0.333 * strokeBoundary;// 0 to 1 (take average of above)
     strokeTexture = max(0.008, strokeTexture);// avoid 0; it will be ugly to modulate
-  	// fade it from very dark to almost nonexistent by manipulating the curve along Y
+  	// fade it from very dark to almost nonexistent by manipulating the curve along y-axis
 	float strokeAlpha = pow(strokeTexture, max(0.,posInLineY)+0.09);// add allows bleeding
     // fade out the end of the stroke by shifting the noise curve below 0
     const float strokeAlphaBoost = 1.09; //color

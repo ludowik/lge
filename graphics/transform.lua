@@ -4,7 +4,6 @@ local stack = Array()
 
 function resetMatrix(resetStack)
     resetMatrixContext(resetStack)
-    translate(X, Y)
 end
 
 function resetMatrixContext(resetStack)

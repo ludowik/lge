@@ -2,16 +2,14 @@ if getOS() == 'ios' or not love.audio then
     return
 end
 
-function setup()
-    env.sketch:setMode(1600, 800, true)
-    
+function setup()    
     devices = love.audio.getRecordingDevices()
     device = devices[1]
 
     status = 'pause'
 
     buffer = Array()
-    bufferMaxSize = 256
+    bufferMaxSize = MIN_SIZE
 
     parameter:watch('#devices')
     parameter:watch('#buffer')
@@ -45,11 +43,11 @@ function update(dt)
 end
 
 function draw()
-    background(0, 0.05)
+    background(0, 0.1)
 
     local arrays = Array()
 
-    local size = min(W, H) 
+    local size = MIN_SIZE
 
     local n = #buffer
     local maxValue = math.mininteger
@@ -79,7 +77,10 @@ function draw()
     for i=1,n do
         addSample(i)
     end
-    addSample(1)
+    
+    if mode == 1 then
+        addSample(1)
+    end
 
     stroke(colors.white)
     polyline(arrays)

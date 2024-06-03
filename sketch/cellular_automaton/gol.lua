@@ -27,10 +27,6 @@ function setup()
     parameter:action('next frame', function () grid:nextFrame() end)    
 end
 
-function cell2screen(i, j)
-    return WIDTH / 10 * i, HEIGHT / 10 * j
-end
-
 function update(dt)
     grid:update(dt)
 end

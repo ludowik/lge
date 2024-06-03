@@ -7,17 +7,17 @@ function setup()
 end
 
 function update()
-    x = noise(wn + ElapsedTime) * W
-    y = noise(hn + ElapsedTime) * H
+    x = noise(wn + elapsedTime) * W
+    y = noise(hn + elapsedTime) * H
 
-    x = x + noise(wn + ElapsedTime*10) * 50
-    y = y + noise(hn + ElapsedTime*10) * 50
+    x = x + noise(wn + elapsedTime*10) * 50
+    y = y + noise(hn + elapsedTime*10) * 50
 
-    love.mouse.setPosition(X+x, Y+y)
+    love.mouse.setPosition(x, y)
 end
 
 function draw()
-    stroke(Color.hsl(ElapsedTime))
+    stroke(Color.hsl(elapsedTime))
 
     line(xp, yp, x, y)
     xp, yp = x, y

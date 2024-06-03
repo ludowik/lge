@@ -124,6 +124,8 @@ confs = {
 }
 
 function draw()
+    background(0, 0.01)
+
     if newConf then
         reset(newConf)
         newConf = nil
@@ -135,7 +137,7 @@ function draw()
     translate(CX, CY)
 
     if rotation then
-        rotate(ElapsedTime)
+        rotate(elapsedTime)
     end
     
     for i = 1,1000 do

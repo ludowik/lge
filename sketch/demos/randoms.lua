@@ -1,16 +1,16 @@
 local bit = try_require 'bit'
 if bit then
-    local X = os.time()
+    local __seed = os.time()
     function setSeedValue(seed)
-        X = seed or os.time()
+        __seed = seed or os.time()
     end
 
     local A1 = 710425941047
     local B1 = 813633012810
     local M1 = 711719770602
     function getRandomValue()
-        X = (A1 * X + B1) % M1
-        return X / M1
+        __seed = (A1 * __seed + B1) % M1
+        return __seed / M1
     end
 end
 

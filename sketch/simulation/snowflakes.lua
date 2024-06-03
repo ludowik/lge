@@ -33,7 +33,7 @@ function Snowflake:init()
     -- initialize coordinates
     self.position = vec2(
         0,
-        H + Y + random(50, 0))
+        H + random(50, 0))
 
     self.initialangle = random(0, TAU)
     self.size = random(2, 5)
@@ -46,14 +46,14 @@ end
 function Snowflake:update(dt)
     -- x position follows a circle
     local w = 0.2 -- angular speed
-    local angle = w * ElapsedTime + self.initialangle
+    local angle = w * elapsedTime + self.initialangle
     self.position.x = W / 2 + self.radius * sin(angle)
 
     -- different size snowflakes fall at slightly different y speeds
     self.position.y = self.position.y - pow(self.size, 0.5) * dt * 80
 
     -- delete snowflake if past end of screen
-    if self.position.y < -Y then
+    if self.position.y < 0 then
         local index = snowflakes:indexOf(self)
         snowflakes:remove(index)
     end

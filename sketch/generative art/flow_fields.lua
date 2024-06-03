@@ -31,7 +31,7 @@ function FlowFields:initGrid()
 
     noiseSeed(0)
 
-    local time = ElapsedTime / 10
+    local time = elapsedTime / 10
     for i = 0, self.num_columns - 1 do
         for j = 0, self.num_rows - 1 do
             -- Processing's noise() works best when the step between
@@ -69,8 +69,7 @@ function FlowFields:draw()
             end
         end
     else
-        self.fb:getImageData()
-        self.fb.imageData:mapPixel(function(x, y)
+        self.fb:mapPixel(function(x, y)
             if self.grid[x] == nil or self.grid[x][y] == nil then return 1, 1, 1, 1 end
             return hsb2rgb(self.grid[x][y] / TAU, 0.5, 0.5)
         end)

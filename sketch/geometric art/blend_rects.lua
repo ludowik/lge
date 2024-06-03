@@ -23,15 +23,15 @@ function draw()
     rectMode(CENTER)
     noStroke()
 
-    rotate(ElapsedTime)
+    rotate(elapsedTime)
     fill(colors.red)
     rects()
 
-    rotate(-ElapsedTime * 4 / 3)
+    rotate(-elapsedTime * 4 / 3)
     fill(colors.green)
     rects()
 
-    rotate(ElapsedTime / 2)
+    rotate(elapsedTime / 2)
     fill(colors.blue)
     rects()
 end

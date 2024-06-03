@@ -34,7 +34,7 @@ function Parameter:initControlBar()
                 strokeColor = colors.transparent,
                 textColor = colors.transparent,
             },
-            fixedPosition = vec2(Anchor(3, 6):pos(0, 0).x, -Y),
+            fixedPosition = vec2(Anchor(3, 6):pos(0, 0).x, 0),
             fixedSize = Anchor(3, 8):size(1.25, 1)
         })
 
@@ -48,7 +48,7 @@ function Parameter:initControlBar()
                 strokeColor = colors.transparent,
                 textColor = colors.transparent,
             },
-            fixedPosition = vec2(Anchor(3, 6):pos(1.75, 0).x, -Y),
+            fixedPosition = vec2(Anchor(3, 6):pos(1.75, 0).x, 0),
             fixedSize = Anchor(3, 8):size(1.25, 1)
         })
 end
@@ -94,9 +94,9 @@ end
 function Parameter:addCaptureMenu()
     self:group('capture')
 
-    self:action('pause', noLoop)
-    self:action('frame', redraw)
-    self:action('resume', loop)
+    self:action('pause', Graphics.noLoop)
+    self:action('frame', Graphics.redraw)
+    self:action('resume', Graphics.loop)
 
     self:action('capture image', function ()
         captureImage()
@@ -263,7 +263,7 @@ function captureLogo()
     local fb = FrameBuffer(size, size)
     render2context(fb,
         function ()
-            sprite(env.sketch.fb, 0, 0, size, size, 0, Y+(H-W)/2, W, W)
+            sprite(env.sketch.fb, 0, 0, size, size, 0, (H-W)/2, W, W)
         end)
     fb:getImageData():encode('png', 'logo/'..env.__name..'.png')
     fb:release()

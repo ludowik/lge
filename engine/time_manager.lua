@@ -5,21 +5,17 @@ function TimeManager.setup()
 end
 
 function TimeManager:init()
-    -- DeltaTime = 0
-    -- ElapsedTime = 0
+    -- deltaTime = 0
+    -- elapsedTime = 0
 end
 
 function TimeManager:update(dt)
-    local process = processManager:current()
-    if not process then return end
+    local sketch = processManager:current()
+    if sketch.loopMode == 'none' then return end
+
+    self.deltaTime = dt
     
-    if process.frames then
-        if process.frames == 0 then
-            return
-        end
-    end
-    
-    env.DeltaTime = dt
-    env.ElapsedTime = env.ElapsedTime + dt
-    env.indexFrame = env.indexFrame + 1
+    env.deltaTime = self.deltaTime
+    env.elapsedTime = env.elapsedTime + dt
+    env.frameCount = env.frameCount + 1
 end

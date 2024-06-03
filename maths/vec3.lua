@@ -21,7 +21,7 @@ if ffi then
         return self
     end
 
-    function vec2:__pairs()
+    function vec3:__pairs()
         return next, {x=self.x, y=self.y, z=self.z}, nil
     end
 end
@@ -55,6 +55,10 @@ end
 
 function vec3.random(w, h, d)
     return vec3():randomize(w, h, d)
+end
+
+function vec3.randomInScreen()
+    return vec3():randomize(W, H, W)
 end
 
 function vec3:randomize(w, h, d)

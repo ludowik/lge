@@ -7,7 +7,7 @@ end
 function Graphics2d.background(clr, ...)
     clr = Color.fromParam(clr, ...) or colors.black
     love.graphics.setColor(clr.r, clr.g, clr.b, clr.a)
-    love.graphics.rectangle('fill', -X, -Y, 2 * X + W, 2 * Y + H)
+    love.graphics.rectangle('fill', 0, 0, W, H)
 end
 
 local styles = {}
@@ -201,6 +201,7 @@ function Graphics2d.grid2d(size)
 end
 
 function Graphics2d.point(x, y)
+    if type(x) == 'table' then x, y = x.x, x.y end
     if stroke() then
         love.graphics.setColor(stroke():rgba())
     end

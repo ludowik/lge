@@ -9,7 +9,7 @@ function setup()
     for _,itemName in ipairs(directoryItems) do
         if itemName:contains('pixel') then 
             local name = itemName:gsub('%.pixel.glsl', '')
-            shaders:add(Shader(name, path))
+            shaders:add(Shader(name, path..'/shaders'))
         end
     end
 
@@ -29,7 +29,14 @@ function setup()
     parameter:boolean('paused', false)
 
     parameter:integer('depth', 'z', 3)
-    parameter:integer('shader', 'shaderIndex', 1, #shaders, #shaders)
+
+    shaderIndex = getSetting('shaderIndex', 1)
+
+    parameter:integer('shader', 'shaderIndex', 1, #shaders, #shaders, function ()
+        setSetting('shaderIndex', shaderIndex)
+    end)
+
+    parameter:watch('shader name', 'shaders[shaderIndex].name')
 end
 
 function update(dt)
@@ -38,17 +45,20 @@ function update(dt)
 
     if shader.program then
         if not paused then
-            shader:sendUniform('iTime', ElapsedTime);
+            shader:sendUniform('iTime', elapsedTime);
         end
-        shader:sendUniform('iChannel0', shaderChannel[0].texture);
-        shader:sendUniform('TIMESCALE', 1.);
-        shader:sendUniform('SHAPE_SIZE', SHAPE_SIZE);
-        shader:sendUniform('SMOOTHNESS', SMOOTHNESS);
-        shader:sendUniform('z', z);
-        shader:sendUniform('CAMERA_POS_WORLD', {0., 2., -5.})
-        shader:sendUniform('MAX_STEPS', 100)
-        shader:sendUniform('MAX_DIST', 100)
-        shader:sendUniform('SURF_DIST', 0.01)
+        shader:sendUniforms{
+            iChannel0 = shaderChannel[0].texture,
+            iMouse = vec4(mouse.position.x, mouse.position.y, mouse.startPosition.x, mouse.startPosition.y),
+            TIMESCALE = 1.,
+            SHAPE_SIZE = SHAPE_SIZE,
+            SMOOTHNESS = SMOOTHNESS,
+            z = z;
+            CAMERA_POS_WORLD = vec3(0., 2., -5.),
+            MAX_STEPS = 100,
+            MAX_DIST = 100,
+            SURF_DIST = 0.01,
+        }
     end
 end
 

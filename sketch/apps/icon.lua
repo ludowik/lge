@@ -50,7 +50,7 @@ function mousereleased(mouse)
         if (0 <= x and x < size and 
             0 <= y and y < size)
         then
-            fb:set(x, y, clr)
+            fb:setPixel(x, y, clr)
             fb.imageData:encode('png', 'data/icon.png')
         end
     end

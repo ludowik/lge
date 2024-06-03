@@ -1,16 +1,18 @@
 function _G.openSketches()
-    local process = processManager:current()
-    if not process or process.__className ~= 'sketches' then            
+    local sketch = processManager:current()
+    if sketch.__className ~= 'sketches' then            
         processManager:setSketch('Sketches')
         engine.parameter.visible = false
     else
-        process.env.navigate()
+        sketch.env.navigate()
     end
 end
 
 function setup()
     scene = Scene()
     navigate(getSetting('category'))
+
+    parameter:watch('version')
 end
 
 function navigate(category)

@@ -3,7 +3,7 @@ function setup()
     for i=1,1000 do
         stars[i] = {
             angle = random(TAU),
-            len = random(W),
+            len = random(MAX_SIZE),
             width = random(1,5),
             speed = random(-0.001, -0.1),
             clr = Color.random()

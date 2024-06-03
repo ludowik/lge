@@ -1,7 +1,4 @@
 function setup()
-    W = WIDTH
-    H = HEIGHT
-
     reset()
 end
 

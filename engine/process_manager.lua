@@ -9,6 +9,8 @@ function ProcessManager:init()
 end
 
 function ProcessManager:setSketch(name)
+    assert(name)
+
     local index = self:findSketch(name)
     if index then 
         self:setCurrentSketch(index)
@@ -30,63 +32,55 @@ function ProcessManager:findSketches(keyword)
     if not keyword then return end
 
     local sketches = Array()
+
     keyword = keyword:lower()
     for i, env in ipairs(self.items) do
         if env.__name:contains(keyword) then
             sketches:add(i)
         end
     end
+    
     return sketches
 end
 
-function ProcessManager:getSketch(nameOrIndex)
-    if not nameOrIndex then return end
-
-    if type(nameOrIndex) == 'number' then
-        return self.items[nameOrIndex]
-        
-    else
-        nameOrIndex = nameOrIndex:lower()
-        for i, env in ipairs(self.items) do
-            if env.__name == nameOrIndex then
-                return env.sketch
-            end
-        end
-    end
+function ProcessManager:getSketch(index)
+    if not index then return end
+    return self.items[index]
 end
 
 function ProcessManager:setCurrentSketch(processIndex)
-    local process = self:current()
-    if process then process:pause() end
+    local sketch = self:current()
+    if sketch then sketch:pause() end
 
     collectgarbage('collect')
-
+    
     self.processIndex = processIndex
     loadSketch(self.items[self.processIndex])
+    
+    local sketch = self:current()
+    if not sketch then return end
 
-    local process = self:current()
-    if not process then return end
-
-    _G.env = process.env
+    _G.env = sketch.env
     setfenv(0, _G.env)
-    process:resume()
 
-    setSetting('sketch', process.env.__name)
+    sketch:resume()
 
-    love.window.setTitle(process.env.__name)
+    setSetting('sketch', sketch.env.__name)
 
-    Graphics.setMode(process.size.x, process.size.y)
+    love.window.setTitle(sketch.env.__name)
 
-    process.fb:setContext()
-    process.fb:background()
+    Graphics.setMode(sketch.size.x, sketch.size.y)
+
+    sketch.fb:setContext()
+    sketch.fb:background()
     resetContext()
 
     if instrument then
         instrument:reset()
     end
 
-    engine.parameter.items[#engine.parameter.items].items[1].label = process.env.__name
-    engine.parameter.items[#engine.parameter.items].items[2] = process.parameter.items[1]
+    engine.parameter.items[#engine.parameter.items].items[1].label = sketch.env.__name
+    engine.parameter.items[#engine.parameter.items].items[2] = sketch.parameter.items[1]
 
     redraw()
 end
@@ -133,13 +127,12 @@ function ProcessManager:loopProcesses()
 end
 
 function ProcessManager:update(dt)
-    local process = processManager:current()
-    if not process then return end
+    local sketch = processManager:current()
 
     if self.__loopProcesses then
         self:updateLoop(dt)
     else
-        process:updateSketch(dt)
+        sketch:updateSketch(dt)
     end
 end
 
@@ -147,22 +140,21 @@ function ProcessManager:updateLoop(dt)
     if self.__loopProcesses then
         self:next()
 
-        local process = processManager:current()
-        if not process then return end
+        local sketch = processManager:current()
 
         local delay = LOOP_PROCESS_DELAY
         local dt = LOOP_PROCESS_DT
         local n = 0
         local startTime = time()
 
-        process.env.__autotest = true
+        sketch.env.__autotest = true
         love.window.setVSync(0)
             
         while true do
             n = n + 1
 
-            process:updateSketch(dt)
-            process:drawSketch()
+            sketch:updateSketch(dt)
+            sketch:drawSketch()
 
             love.graphics.present()
             
@@ -172,12 +164,12 @@ function ProcessManager:updateLoop(dt)
         end
 
         love.window.setVSync(1)
-        process.env.__autotest = false
+        sketch.env.__autotest = false
 
         -- captureImage()
         -- captureLogo()
 
-        if process == self.__loopProcesses.startProcess then
+        if sketch == self.__loopProcesses.startProcess then
             self.__loopProcesses = nil
         end
 

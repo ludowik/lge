@@ -37,7 +37,7 @@ function drawCircles(n, a)
             index = index + 1
             randoms[n][index] = randoms[n][index] or (random() * 6)
 
-            local noiseValue = randoms[n][index] + ElapsedTime * noise(index, randoms[n][index])
+            local noiseValue = randoms[n][index] + elapsedTime * noise(index, randoms[n][index])
 
             local value =      (cos(noiseValue) + 1) / 2            
             local radius = w * (sin(noiseValue) + 1) / 4

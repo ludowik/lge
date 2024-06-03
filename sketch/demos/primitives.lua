@@ -5,7 +5,7 @@ function setup()
 end
 
 function draw()
-    if ElapsedTime * 1000 / 30 < N then return end
+    if elapsedTime * 1000 / 30 < N then return end
     background(0, 0.05)
 
     noFill()

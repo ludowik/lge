@@ -220,6 +220,14 @@ function Color:randomize()
     return self
 end
 
+function Color:randomizeGray()
+    self.r = random()
+    self.g = self.r
+    self.b = self.r
+    self.a = 1
+    return self
+end
+
 function Color.grayScaleLightness(clr, to)
     local r, g, b = clr.r, clr.g, clr.b
     local c = (max(r,g,b) + min(r,g,b)) / 2

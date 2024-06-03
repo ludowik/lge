@@ -58,47 +58,45 @@ function Engine.contains(mouse)
     local object = not fused() and engine.navigation:contains(mouse.position)
     if object then return object end
 
-    local process = processManager:current()
-    if process then
-        local object = process:contains(mouse.position)
-        if object then return object end
-    end
+    local sketch = processManager:current()
+    local object = sketch:contains(mouse.position)
+    if object then return object end
 end
 
 function Engine.update(dt)
     engine.components:update(dt)
 end
 
-function redraw()
-    local process = processManager:current()
-    if not process then return end
-
-    if process.frames then
-        process.frames = (process.frames or 0) + 1
+function Engine.redraw()
+    local sketch = processManager:current()
+    if sketch.loopMode == 'none' then
+        sketch.loopMode = 'redraw'
     end
+end
+redraw = Engine.redraw
+
+function echo(txt)
+    __echo = txt
+    __echoElapsedTime = 3
 end
 
 function Engine.draw()
     love.graphics.reset()
     
-    local process = processManager:current()
-    if process then
-        process:drawSketch()
-    else
-        background()
-    end
+    local sketch = processManager:current()
+    sketch:drawSketch()
 
     resetMatrix(true)
     resetStyle()
     
-    engine.parameter:draw(0, 0)
+    engine.parameter:draw(0, TOP)
 
     if instrument.active then
         instrument:draw()
     end
 
     if not fused() then
-        engine.navigation:draw(-X, -Y)
+        engine.navigation:draw(0, 0)
     end
     
     local fps = getFPS()
@@ -108,7 +106,19 @@ function Engine.draw()
         local w, h = textSize(fps)
         textColor(colors.red)
         textMode(CENTER)
-        text(fps, W - w / 2 - UI.innerMarge, -Y / 2)
+        text(fps, W - w / 2 - UI.innerMarge, TOP / 2)
+    end
+
+    if __echo then        
+        textMode(CORNER)
+        fontSize(32)
+        text(__echo..' '..W..'/'..H, 25, 25)
+
+        __echoElapsedTime = __echoElapsedTime - timeManager.deltaTime
+        if __echoElapsedTime <= 0 then
+            __echo = nil
+            __echoElapsedTime = nil
+        end
     end
 end
 
