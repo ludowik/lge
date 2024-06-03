@@ -124,7 +124,7 @@ function Shader:sendUniforms(uniforms, prefix)
         local name = (prefix or '')..k
         if type(v) == 'table' and #v > 0 and type(v[1]) == 'table' then
             self:sendUniform(k..'Count', #v)
-            if classnameof(v[1]):inList{'Color', 'vec2', 'vec3'} then
+            if classnameof(v[1]):inList{'Color', 'vec2', 'vec3', 'vec4'} then
                 local array = Array{}
                 for i,o in ipairs(v) do
                     array:add{o:unpack()}
@@ -140,7 +140,7 @@ function Shader:sendUniforms(uniforms, prefix)
             if type(v) == 'boolean' then
                 self:sendUniform(name, v and 1 or 0)
             
-            elseif classnameof(v):inList{'Color', 'vec2', 'vec3'} then
+            elseif classnameof(v):inList{'Color', 'vec2', 'vec3', 'vec4'} then
                 self:sendUniform(name, {v:unpack()})
 
             else
@@ -176,23 +176,23 @@ function ShaderToy:loadCode(shader)
     local ok = Shader.loadFromFile(self, shader)
     if ok then
         local declarations = [[
-            vec4 iResolution;
-            //uniform vec3      iResolution;           // viewport resolution (in pixels)
-            uniform highp float     iTime;                 // shader playback time (in seconds)
-            uniform highp float     iTimeDelta;            // render time (in seconds)
-            uniform highp float     iFrameRate;            // shader frame rate
-            uniform int       iFrame;                // shader playback frame
-            uniform highp float     iChannelTime[4];       // channel playback time (in seconds)
-            uniform vec3      iChannelResolution[4]; // channel resolution (in pixels)
-            uniform vec4      iMouse;                // mouse pixel coords. xy: current (if MLB down), zw: click
-            uniform sampler2D iChannel0;             // input channel. XX = 2D/Cube
-            uniform sampler2D iChannel1;             // input channel. XX = 2D/Cube
-            uniform sampler2D iChannel2;             // input channel. XX = 2D/Cube
-            uniform sampler2D iChannel3;             // input channel. XX = 2D/Cube
-            uniform vec4      iDate;                 // (year, month, day, time in seconds)
+            highp vec4 iResolution;
+            //uniform highp vec3  iResolution;           // viewport resolution (in pixels)
+            uniform highp float iTime;                 // shader playback time (in seconds)
+            uniform highp float iTimeDelta;            // render time (in seconds)
+            uniform highp float iFrameRate;            // shader frame rate
+            uniform highp int   iFrame;                // shader playback frame
+            uniform highp float iChannelTime[4];       // channel playback time (in seconds)
+            uniform highp vec3  iChannelResolution[4]; // channel resolution (in pixels)
+            uniform highp vec4  iMouse;                // mouse pixel coords. xy: current (if MLB down), zw: click
+            uniform highp sampler2D iChannel0;         // input channel. XX = 2D/Cube
+            uniform highp sampler2D iChannel1;         // input channel. XX = 2D/Cube
+            uniform highp sampler2D iChannel2;         // input channel. XX = 2D/Cube
+            uniform highp sampler2D iChannel3;         // input channel. XX = 2D/Cube
+            uniform highp vec4      iDate;             // (year, month, day, time in seconds)
 
-            varying vec3 vPosition;
-            varying vec2 vTexCoords;
+            varying highp vec3 vPosition;
+            varying highp vec2 vTexCoords;
 
             #define PI 3.14159265359
             

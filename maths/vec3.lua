@@ -21,7 +21,7 @@ if ffi then
         return self
     end
 
-    function vec2:__pairs()
+    function vec3:__pairs()
         return next, {x=self.x, y=self.y, z=self.z}, nil
     end
 end
