@@ -12,7 +12,7 @@ function UI:init(label)
     self.label = label
 
     self.styles = Array {
-        fillColor = Color(0.5, 0.25),
+        fillColor = Color(0.5, 0.5),
         textColor = colors.white,
         fontSize = UI.styles.fontSize,
     }

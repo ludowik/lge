@@ -4,7 +4,7 @@ requireLib (..., {
 })
 
 function setup()
-    local directoryItems = love.filesystem.getDirectoryItems('engine', '*.lua')
+    local directoryItems = love.filesystem.getDirectoryItems('engine')
     for i,file in ipairs(directoryItems) do
         local filePath = 'engine/'..file
         local info = love.filesystem.getInfo(filePath)

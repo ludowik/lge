@@ -9,7 +9,7 @@ function restart()
     scene = Scene()
 
     local r = 25
-    local x, y = r, W*0.2
+    local x, y = r, CY-r*#tween.easingFunctions
 
     for name,f in pairs(tween.easing) do
         local obj = Circle(name, f, x, y, r)

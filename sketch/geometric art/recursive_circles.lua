@@ -34,5 +34,5 @@ end
 function draw()
     background(colors.green)
     noStroke()
-    render(W / 2, H / 2, W / 2)
+    render(CX, CY, MIN_SIZE/2)
 end

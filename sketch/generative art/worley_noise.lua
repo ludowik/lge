@@ -61,16 +61,16 @@ function update()
     local pixelShader = [[
         #define MAX_N {MAX_N}
 
-        uniform int pointsCount;
-        uniform vec3 points[MAX_N];
+        uniform highp int pointsCount;
+        uniform highp vec3 points[MAX_N];
 
         uniform highp float d;
-        uniform int frameCount;
-        uniform int n;
+        uniform highp int frameCount;
+        uniform highp int n;
 
-        float distances2D[MAX_N];
-        float distances3D[MAX_N];
-        float distances4D[MAX_N];
+        highp float distances2D[MAX_N];
+        highp float distances3D[MAX_N];
+        highp float distances4D[MAX_N];
         
         void sort(inout float distances[MAX_N], int pointsCount) {
             for (int i=0; i<(pointsCount-1); i++) {
@@ -91,7 +91,7 @@ function update()
 
         vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
             for (int i=0; i<pointsCount; ++i) {
-                vec3 v = vec3(screen_coords, sin(frameCount/360.)*d);
+                vec3 v = vec3(screen_coords, sin(float(frameCount)/360.)*d);
 
                 distances2D[i] = distance(screen_coords, points[i].xy*2.);
                 distances3D[i] = distance(v, points[i]*2.);

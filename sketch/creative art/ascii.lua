@@ -1,24 +1,7 @@
 function setup()
     supportedOrientations(LANDSCAPE)
 
-    -- baseImageList = {
-    --     'resources/images/joconde.png',
-    --     'resources/images/marsu.jpeg',
-    --     'resources/images/wikipedia.png',
-    -- }
-
-    -- TODO : make a global function and more flexible
-    function dir(path, ext)
-        local items = love.filesystem.getDirectoryItems(path)
-        local list = Array()
-        for i,file in ipairs(items) do
-            if file:find(ext) then
-                list:add(file)
-            end
-        end
-        return list
-    end
-    baseImageList = dir('resources/images', '.png')
+    baseImageList = dir('resources/images', 'png')
 
     local function getSource()
         local baseImage = Image('resources/images/'..baseImageList[baseImageIndex])
@@ -54,7 +37,7 @@ function setup()
     end
 
     parameter:watch('characters')
-    parameter:integer('baseImageIndex', 1, #baseImageList, 1, setSource)
+    parameter:integer('baseImageIndex', 1, #baseImageList, #baseImageList, setSource)
     parameter:integer('tileSize', 0, 5, 1)
     parameter:boolean('standardCharactersSet', false,
         function ()
@@ -77,10 +60,6 @@ function defineCharactersSet()
         from = ' .:-=+_?*#%@'
     else
         from = ' -+0#%@'
-
---        for i=32,127 do
---            from = from..string.char(i)
---        end
     end
 
     for i=1,from:len() do
@@ -98,7 +77,7 @@ function defineCharactersSet()
 
     local characters = Array()
     for i=1,from:len() do
-        local character = from:sub(i,i)
+        local character = from:sub(i, i)
 
         setContext(img)
         do
@@ -148,15 +127,15 @@ function draw()
 
     background(colors.black)
 
-    translate(CX, CY)
+    translate(CX, CY-h/2)
 
     spriteMode(CORNER)
     sprite(img, -w, -h)
 
-    drawImage(vec2( 0, -h), ascii, false)
-    drawImage(vec2(-w,  0), ascii, true)
-    drawImage(vec2( 0,  0), pixel)
-    drawImage(vec2( -w,  h), asCircle)
+    drawImage(vec2( 0, -h), mode.ascii, false)
+    drawImage(vec2(-w,  0), mode.ascii, true)
+    drawImage(vec2( 0,  0), mode.pixel)
+    drawImage(vec2(-w,  h), mode.circle)
 end
 
 function drawImage(position, f, reverse)
@@ -211,7 +190,9 @@ function drawImage(position, f, reverse)
     popMatrix()
 end
 
-function ascii(light, reverse, x, y, w, h)
+mode = {}
+
+function mode.ascii(light, reverse, x, y, w, h)
     local i = floor(map(light, 0, 1, 1, characters:len()))
 
     if not reverse then
@@ -223,16 +204,20 @@ function ascii(light, reverse, x, y, w, h)
     text(characters:sub(i, i), x, y)
 end
 
-function pixel(light, reverse, x, y, w, h)
+function mode.pixel(light, reverse, x, y, w, h)
     fill(light)
     noStroke()
+
+    rectMode(CORNER)
     rect(x, y, w, h)
 end
 
-function asCircle(light, reverse, x, y, w, h)
+function mode.circle(light, reverse, x, y, w, h)
     fill(light)
     noStroke()
 
-    circleMode(CENTER)
-    circle(x, y, 5*w)
+    if x%3 == 0 and y%3 then
+        circleMode(CENTER)
+        circle(x, y, 3)
+    end
 end

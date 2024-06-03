@@ -1,18 +1,11 @@
 function setup()
-    fonts = Array()
-
-    local directoryItems = love.filesystem.getDirectoryItems('resources/fonts')
-    for _,fontRef in ipairs(directoryItems) do
-        if fontRef:find('ttf') then
-            fontRef = fontRef:gsub('%.ttf', '')
-            fonts:add(fontRef)
-        end
-    end
+    fonts = dir('resources/fonts', 'ttf')
 
     fontIndex = 1
 
     size = 12
     alphabet = ''
+    
     for i=32,127 do
         if i%size == 0 and #alphabet > 0 then
             alphabet = alphabet..NL
@@ -35,7 +28,9 @@ function draw()
     fontSize(28)
 
     textPosition(0)
-    for index,name in ipairs(fonts) do        
+    for index,name in ipairs(fonts) do
+        name = name:gsub('%.ttf', '')
+
         fontName(name)
         text(name, x, textPosition())
 
@@ -52,7 +47,8 @@ function draw()
     end
     
     textColor(colors.black)
-    fontName(fonts[fontIndex])
+    
+    fontName(fonts[fontIndex]:gsub('%.ttf', ''))
     
     textPosition(0)
     for size=5,80,5 do

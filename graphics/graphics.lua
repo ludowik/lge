@@ -26,6 +26,8 @@ function Graphics.setup()
 end
 
 function Graphics.getSafeArea()
+    local MIN_LEFT, MIN_TOP = 5, 50
+
     deviceOrientation = getSetting('deviceOrientation', PORTRAIT)
     deviceScreenRatio = getSetting('deviceScreenRatio', screenRatios.ipad)
 
@@ -38,12 +40,14 @@ function Graphics.getSafeArea()
         local r = (w + 2*x) / ws
         w = r * ws - 2*x
 
-        if deviceOrientation == LANDSCAPE then
-            x, y = max(x, y), min(x, y)
-            w, h = max(w, h), min(w, h)
-        else
+        if deviceOrientation == PORTRAIT then
             x, y = min(x, y), max(x, y)
-            w, h = min(w, h), max(w, h)
+            x, y = max(x, MIN_LEFT), max(y, MIN_TOP)
+            w, h = min(ws, hs), max(ws, hs)
+        else
+            x, y = max(x, y), min(x, y)
+            x, y = max(x, MIN_TOP), max(y, MIN_LEFT)
+            w, h = max(ws, hs), min(ws, hs)
         end
 
     else
@@ -63,9 +67,9 @@ function Graphics.getSafeArea()
             hs = round(ws / ratio)
         end
 
-        x, y = 5, 50
-        w = ws -- 2*x
-        h = hs -- 2*y
+        x, y = MIN_LEFT, MIN_TOP
+        w = ws
+        h = hs
     end
 
     return x, y, w, h
@@ -88,12 +92,7 @@ function Graphics.initMode()
     
     Graphics.setMode(W, H, getOS() == 'ios')
 
-    if getOS() == 'macos' then
-        refreshRate = flags.refreshrate * 2
-    else
-        refreshRate = flags.refreshrate
-    end
-
+    refreshRate = 60
     devicePixelRatio = love.window.getDPIScale()
 end
 

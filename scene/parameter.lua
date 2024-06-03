@@ -1,7 +1,6 @@
 Parameter = class():extends(Scene)
 
 function Parameter.setup()
-    Parameter.innerMarge = 5
 end
 
 function Parameter:init(layoutMode)
@@ -173,10 +172,13 @@ end
 function Parameter:declareParameter(varName, initValue, callback)
     if type(varName) == 'string' and env[varName] == null then
         env[varName] = initValue
-        if callback then callback() end
+    
     elseif classnameof(varName) == 'Bind' and varName:get() == null then
         varName:set(initValue)
-        if callback then callback() end
+    end
+
+    if callback then
+        callback()
     end
 end
 
@@ -246,7 +248,8 @@ function Parameter:number(label, varName, min, max, initValue, callback)
 end
 
 function Parameter:draw(x, y)
-    self:layout(x, y+self.innerMarge)
+    local innerMarge = 5
+    self:layout(x, y + innerMarge)
     Scene.draw(self)
 end
 

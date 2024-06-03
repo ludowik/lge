@@ -24,4 +24,5 @@ requireLib (..., {
     'memory',
     'quadtree',
     'octree',
+    'dir',
 })
