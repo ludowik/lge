@@ -8,15 +8,16 @@ function request(url, success, fail, parameterTable)
         cache = 'reload',
     })
     
-    if result then
+    if code == 200 then
         if success then 
             success(result, code, headers)
         end
-        
+        return true
+
     else        
-        love.window.showMessageBox('request '..url, 'code '..code, {'OK'})
         if fail then
             fail(result, code, headers)
         end
+        return false
     end
 end

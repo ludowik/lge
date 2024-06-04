@@ -1,5 +1,5 @@
 function setup()
-    env.sketch:setMode(800, 800, true)
+    --env.sketch:setMode(800, 800, true)
 
     m = Mesh()
 

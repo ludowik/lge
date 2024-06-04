@@ -12,7 +12,12 @@ function setup()
     scene = Scene()
     navigate(getSetting('category'))
 
+    uiFontSize = 24
+
     parameter:watch('version')
+    parameter:integer('font size', 'uiFontSize', 12, 32, uiFontSize, function ()
+        navigate(getSetting('category'))
+    end)
 end
 
 function navigate(category)
@@ -25,7 +30,7 @@ function navigate(category)
         link:attrib{
             styles = {
                 fillColor = colors.gray,
-                fontSize = 28
+                fontSize = uiFontSize
             }
         }
 
@@ -46,7 +51,7 @@ function navigate(category)
                 categories[env.__category]:attrib{
                     styles = {
                         fillColor = colors.gray,
-                        fontSize = 28
+                        fontSize = uiFontSize
                     }
                 }
 
@@ -66,7 +71,7 @@ function navigate(category)
         link:attrib{
             styles = {
                 fillColor = colors.transparent,
-                fontSize = 28
+                fontSize = uiFontSize
             }
         }
     end)

@@ -55,6 +55,10 @@ end
 function Sketch:initMenu()
     self.parameter = Parameter('right')
     self.parameter:group(nil, true)
+
+    self.parameter:action('update from local', function ()
+        updateScripts(false)
+    end)
 end
 
 function Sketch:checkReload()

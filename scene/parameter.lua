@@ -33,8 +33,8 @@ function Parameter:initControlBar()
                 strokeColor = colors.transparent,
                 textColor = colors.transparent,
             },
-            fixedPosition = vec2(Anchor(3, 6):pos(0, 0).x, 0),
-            fixedSize = Anchor(3, 8):size(1.25, 1)
+            fixedPosition = vec2(),
+            fixedSize = vec2(MIN_SIZE/3, max(LEFT, TOP)),
         })
 
     self:action('menu',
@@ -47,8 +47,22 @@ function Parameter:initControlBar()
                 strokeColor = colors.transparent,
                 textColor = colors.transparent,
             },
-            fixedPosition = vec2(Anchor(3, 6):pos(1.75, 0).x, 0),
-            fixedSize = Anchor(3, 8):size(1.25, 1)
+            fixedPosition = vec2(W-MIN_SIZE/3, 0),
+            fixedSize = vec2(MIN_SIZE/3, max(LEFT, TOP)),
+        })
+
+    self:action('next sketch',
+        function ()
+            processManager:next()
+        end,
+        {
+            styles = {
+                fillColor = colors.transparent,
+                strokeColor = colors.transparent,
+                textColor = colors.transparent,
+            },
+            fixedPosition = vec2(W-MIN_SIZE/3, H-max(LEFT, TOP)),
+            fixedSize = vec2(MIN_SIZE/3, max(LEFT, TOP)),
         })
 end
 
@@ -67,11 +81,9 @@ function Parameter:addMainMenu()
 
     self:action('update from git', function ()
         updateScripts(true)
-        quit()
     end)
     self:action('update from local', function ()
         updateScripts(false)
-        quit()
     end)
     self:action('reload', reload)
     self:action('restart', restart)

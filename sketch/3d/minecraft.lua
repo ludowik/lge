@@ -1,5 +1,5 @@
 function setup()
-    env.sketch:setMode(1600, 800, true)
+    --env.sketch:setMode(1600, 800, true)
 
     fb = FrameBuffer(600, 600)
     

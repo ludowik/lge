@@ -17,8 +17,8 @@ function setup()
     local w, h = love.window.getDesktopDimensions(1)
 
     scene:add(UI('Screen'):attrib{styles={fillColor=colors.red}})
-    scene:add(UIExpression('desktop dimension', 'string.format("%f , %f", love.window.getDesktopDimensions())'))
-    scene:add(UIExpression('safe area', 'string.format("%f , %f , %f , %f", love.window.getSafeArea())'))
+    scene:add(UIExpression('desktop dimension', 'string.format("%d , %d", love.window.getDesktopDimensions())'))
+    scene:add(UIExpression('safe area', 'string.format("%d , %d , %d , %d", love.window.getSafeArea())'))
     scene:add(UIExpression('position', 'LEFT.." , "..TOP'))
     scene:add(UIExpression('size', 'W.." , "..H'))
     scene:add(UIExpression('ratio', 'getScreenRatio()'))
@@ -41,8 +41,8 @@ function getScreenRatio()
 end
 
 function getFbSize()
-    if fb then
-        imageData = imageData or fb:getImageData()
+    if sketch.fb then
+        imageData = imageData or sketch.fb:getImageData()
         return imageData:getWidth()..' , '..imageData:getHeight()
     end 
 end

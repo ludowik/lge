@@ -1,3 +1,2 @@
 require 'engine'
--- updateScripts(false)
--- restart()
+-- updateScripts(false, restart)

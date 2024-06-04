@@ -103,7 +103,7 @@ function Graphics.setMode(w, h, fullscreen)
     }
 
     if love.getVersion() < 12 then
-        -- params.highdpi = true
+        params.highdpi = true
     end
 
     local ws, hs, flags = love.window.getMode()
