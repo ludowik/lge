@@ -1,16 +1,14 @@
 function setup()
-    N = 20
-    reset()
-end
-
-function reset()
-    parameter:clear()
+    N = 15
+    
     parameter:action('reset', reset)
 
     parameter:integer('d', 1, SIZE*2, SIZE)
     parameter:integer('n', 1, N)
     parameter:integer('N', 2, 100, N, reset)
+end
 
+function reset()
     img = FrameBuffer(W, H)
 
     pointList = Array():forn(N, function ()
@@ -34,9 +32,9 @@ function mapPixels(img, uniforms, pixelShader)
 
     local mesh = love.graphics.newMesh({
         {0, 0, 0, 0, 1, 1, 1, 1},
-        {img.width, 0, 1, 0, 1, 0, 1, 1},
-        {img.width, img.height, 1, 1, 1, 1, 0, 1},
-        {0, img.height, 0, 1, 1, 1, 1, 1}
+        {W, 0, 1, 0, 1, 0, 1, 1},
+        {W, H, 1, 1, 1, 1, 0, 1},
+        {0, H, 0, 1, 1, 1, 1, 1}
     }, 'fan')
 
     img:setContext()
@@ -47,9 +45,14 @@ function mapPixels(img, uniforms, pixelShader)
 end
 
 function update()
-    -- pointList:foreach(function (v)
-    --     v:add(vec3.randomAngle())
-    -- end)
+    pointList:foreach(function (v)
+        local d = vec3(
+            noise(deltaTime+v.x*2.23)*4-2,
+            noise(deltaTime+v.y*5.23)*4-2,
+            0
+        )
+        v:add(d) -- vec3.randomAngle())
+    end)
 
     local uniforms = {
         points = pointList,
@@ -61,7 +64,6 @@ function update()
     local pixelShader = [[
         #define MAX_N {MAX_N}
 
-        uniform highp int pointsCount;
         uniform highp vec3 points[MAX_N];
 
         uniform highp float d;
@@ -72,10 +74,10 @@ function update()
         highp float distances3D[MAX_N];
         highp float distances4D[MAX_N];
         
-        void sort(inout float distances[MAX_N], int pointsCount) {
-            for (int i=0; i<(pointsCount-1); i++) {
+        void sort(inout float distances[MAX_N]) {
+            for (int i=0; i<MAX_N-1; i++) {
                 int min_idx = i;
-                for (int j=i+1; j<(pointsCount); j++) {
+                for (int j=i+1; j<MAX_N; j++) {
                     if (distances[j] < distances[min_idx]) {
                         min_idx = j;
                     }
@@ -90,23 +92,23 @@ function update()
         }
 
         vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
-            for (int i=0; i<pointsCount; ++i) {
+            for (int i=0; i<MAX_N; ++i) {
                 vec3 v = vec3(screen_coords, sin(float(frameCount)/360.)*d);
 
                 distances2D[i] = distance(screen_coords, points[i].xy*2.);
                 distances3D[i] = distance(v, points[i]*2.);
-                distances2D[i] = distance(screen_coords, points[i].zz*2.);
+                distances4D[i] = distance(screen_coords, points[i].zz*2.);
             }
 
-            sort(distances2D, pointsCount);
-            sort(distances3D, pointsCount);
-            sort(distances4D, pointsCount);
+            sort(distances2D);
+            sort(distances3D);
+            sort(distances4D);
             
             float r = map(distances2D[n], 0., d, 0. , 1.);
             float g = map(distances3D[n], 0., d, 1. , 0.);
             float b = map(distances4D[n], 0., d, 0.2, 0.8);
             
-            return vec4(r, g, b, 1.);
+            return vec4(r, g, g, 1.);
         }
     ]]
 

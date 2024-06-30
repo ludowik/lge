@@ -22,17 +22,34 @@ function Parameter:randomizeParameter()
 end
 
 function Parameter:initControlBar()
+    local styles = {
+        fillColor = colors.transparent,
+        strokeColor = colors.transparent,
+        textColor = colors.transparent,
+    }
+
+    if fused() then
+        self:action('menu',
+            function ()
+                if mouse.elapsedTime > 5 then
+                    toggleFused()
+                end
+            end,
+            {
+                styles = styles,
+                fixedPosition = vec2(W-MIN_SIZE/3, 0),
+                fixedSize = vec2(MIN_SIZE/3, max(LEFT, TOP)),
+            })
+        return
+    end
+
     self:action('sketches',
         function ()
             openSketches()
             engine.parameter.visible = false
         end,
         {
-            styles = {
-                fillColor = colors.transparent,
-                strokeColor = colors.transparent,
-                textColor = colors.transparent,
-            },
+            styles = styles,
             fixedPosition = vec2(),
             fixedSize = vec2(MIN_SIZE/3, max(LEFT, TOP)),
         })
@@ -42,12 +59,18 @@ function Parameter:initControlBar()
             engine.parameter.visible = not engine.parameter.visible
         end,
         {
-            styles = {
-                fillColor = colors.transparent,
-                strokeColor = colors.transparent,
-                textColor = colors.transparent,
-            },
+            styles = styles,
             fixedPosition = vec2(W-MIN_SIZE/3, 0),
+            fixedSize = vec2(MIN_SIZE/3, max(LEFT, TOP)),
+        })
+
+    self:action('previous sketch',
+        function ()
+            processManager:previous()
+        end,
+        {
+            styles = styles,
+            fixedPosition = vec2(0, H-max(LEFT, TOP)),
             fixedSize = vec2(MIN_SIZE/3, max(LEFT, TOP)),
         })
 
@@ -56,59 +79,69 @@ function Parameter:initControlBar()
             processManager:next()
         end,
         {
-            styles = {
-                fillColor = colors.transparent,
-                strokeColor = colors.transparent,
-                textColor = colors.transparent,
-            },
+            styles = styles,
             fixedPosition = vec2(W-MIN_SIZE/3, H-max(LEFT, TOP)),
             fixedSize = vec2(MIN_SIZE/3, max(LEFT, TOP)),
         })
 end
 
-function Parameter:addUnfusedMenu()
-    self.menu = self:group('main')
-    self:action('fused', function () toggleFused() end)
-end
-
 function Parameter:addMainMenu()
     self.menu = self:group('main')
 
-    self:action('instrument', function ()
-        instrument:instrumentFunctions()
-        instrument.active = not instrument.active
-    end)
+    self:space()
+    self:action('fused', function () toggleFused() end)
 
+    self:space()
     self:action('update from git', function ()
         updateScripts(true)
     end)
     self:action('update from local', function ()
         updateScripts(false)
     end)
+
+    self:space()
     self:action('reload', reload)
     self:action('restart', restart)
+
+    self:space()
+    self:action('instrument', function ()
+        instrument:instrumentFunctions()
+        instrument.active = not instrument.active
+    end)
+
+    self:space()
     self:action('exit', exit)
 end
 
 function Parameter:addNavigationMenu()
     self:group('navigation')
     
-    self:action('fused', function () toggleFused() end)
+    self:space()
     self:action('next', function () processManager:next() end)
     self:action('previous', function () processManager:previous() end)
+
+    self:space()
     self:action('random', function () processManager:random() end)
+
+    self:space()
     self:action('loop', function() processManager:loopProcesses() end)
 
+    self:space()
+    self:action('info', function() processManager:setSketch('info') end)
+
+    self:space()
     self:link('web version', 'https://ludowik.github.io/lge/build/lovejs/lge-lovejs/lge')
 end
 
 function Parameter:addCaptureMenu()
     self:group('capture')
 
+    self:space()
     self:action('pause', Graphics.noLoop)
-    self:action('frame', Graphics.redraw)
+    self:action('1x frame', Graphics.redraw)
     self:action('resume', Graphics.loop)
 
+    self:space()
     self:action('capture image', function ()
         captureImage()
     end)
@@ -195,7 +228,9 @@ function Parameter:declareParameter(varName, initValue, callback)
 end
 
 function Parameter:space()
-    self.currentGroup:add(UI())
+    local ui = UI()
+    ui.fixedSize = vec2(0, 5)
+    self.currentGroup:add(ui)
 end
 
 function openURL(url)    

@@ -165,10 +165,10 @@ end
 
 function ortho(left, right, bottom, top, near, far)
     local l = left or 0
-    local r = right or W or 400
+    local r = right or W
 
     local b = bottom or 0
-    local t = top or H or 400
+    local t = top or H
 
     local n = near or -1000
     local f = far or 1000

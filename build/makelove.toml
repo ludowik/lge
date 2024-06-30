@@ -4,18 +4,18 @@ build_directory = "./build"
 love_version = "11.4"
 
 love_files = [
-    "./engine/*.lua",
-    "./events/*.lua",
-    "./graphics/*.lua",
-    "./graphics/shaders/*.glsl",
-    "./lib/*.lua",
-    "./lua/*.lua",
-    "./maths/*.lua",
-    "./misc/*.lua",
-    "./resources/*.*",
-    "./scene/*.lua",
-    "./sketch/*.lua",
     "./conf.lua",
+    "./engine/*",
+    "./events/*",
+    "./graphics/*",
+    "./graphics/shaders/*",
+    "./lib/*",
+    "./lua/*",
+    "./maths/*",
+    "./misc/*",
+    "./resources/*",
+    "./scene/*",
+    "./sketch/*",
     "./main.lua",
 ]
 

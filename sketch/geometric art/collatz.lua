@@ -16,7 +16,7 @@ function setup()
             nextValue = 1
         end)
 
-    parameter:integer('len', 1, 100, 10, function ()
+    parameter:integer('len', SIZE/10, SIZE, 50, function ()
             nextValue = 1
         end)
 end
@@ -26,8 +26,8 @@ function collatz()
         nextValue = nextValue + 1
         value = nextValue
 
-        -- clr = Color.random()
-        -- clr.a = 0.05
+        clr = Color.random()
+        clr.a = 0.1
 
         angle = 0
         x1, y1, x2, y2 = 0, 0, 0, 0
@@ -59,7 +59,7 @@ function draw()
     if nextValue == 1 then
         background(0)
     else
-        background(0, 0, 0, 0.005)
+        background(0, 0, 0, 0.01)
     end
     
     translate(CX, CY)

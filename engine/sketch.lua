@@ -55,10 +55,6 @@ end
 function Sketch:initMenu()
     self.parameter = Parameter('right')
     self.parameter:group(nil, true)
-
-    self.parameter:action('update from local', function ()
-        updateScripts(false)
-    end)
 end
 
 function Sketch:checkReload()
@@ -127,20 +123,24 @@ function Sketch:presentSketch(force)
 
     if getOrigin() == BOTTOM_LEFT then
         love.graphics.scale(1, -1)
-        love.graphics.translate(0, -H)
+        love.graphics.translate(0, -(H/devicePixelRatio))
     end
+
+    local fb = self.fb
+    local canvas = fb.canvas
+    local texture = fb.texture or fb.canvas 
 
     local ws, hs, flags = love.window.getMode()
 
-    local sx = self.size.x / self.fb.canvas:getWidth()
-    local sy = self.size.y / self.fb.canvas:getHeight()
+    local sx = self.size.x / canvas:getWidth()
+    local sy = self.size.y / canvas:getHeight()
 
-    local scale = min(ws/self.fb.canvas:getWidth(), hs/self.fb.canvas:getHeight())
+    local scale = min(ws/canvas:getWidth(), hs/canvas:getHeight())
 
-    love.graphics.draw(self.fb.canvas,
+    love.graphics.draw(texture,
         0, -- self.position.x,
         0, -- self.position.y,
-        0, -- rotation
+        0, -- no rotation
         scale * sx, -- scale x
         scale * sy) -- scale y
 

@@ -70,26 +70,34 @@ function love.filedropped(file)
     end
 end
 
+function scaleMouseProperties(...)
+    local values = Array()
+    for i,v in ipairs{...} do
+        values:add(v*devicePixelRatio)
+    end
+    return values:unpack()
+end
+
 if getOS() == 'ios' then
     local touches = {}
 
     function love.touchpressed(id, x, y, dx, dy, pressure)
+        x, y = scaleMouseProperties(x, y)
         touches[id] = {
             moved = false
         }
-
         eventManager:mousepressed(id, x, y, 0)
     end
 
     function love.touchmoved(id, x, y, dx, dy, pressure)
+        x, y = scaleMouseProperties(x, y)
         touches[id].moved = true
-
         eventManager:mousemoved(id, x, y)
     end
 
     function love.touchreleased(id, x, y, dx, dy, pressure)
+        x, y = scaleMouseProperties(x, y)
         eventManager:mousereleased(id, x, y, touches[id].presses)
-
         touches[id] = nil
     end
 
@@ -105,20 +113,28 @@ if getOS() == 'ios' then
 
 else
     function love.mousepressed(x, y, button, istouch, presses)
+        x, y = scaleMouseProperties(x, y)
         eventManager:mousepressed(button, x, y, presses)
     end
 
     function love.mousemoved(x, y, dx, dy, istouch)
+        x, y = scaleMouseProperties(x, y)
         eventManager:mousemoved(mouse.id, x, y)
     end
 
     function love.mousereleased(x, y, button, istouch, presses)
+        x, y = scaleMouseProperties(x, y)
         eventManager:mousereleased(button, x, y, presses)
     end
 
 	function love.wheelmoved(dx, dy)
+        dx, dy = scaleMouseProperties(dx, dy)
 		eventManager:wheelmoved(dx, dy)
 	end
+end
+
+function love.textinput(text)
+    eventManager:textinput(text)
 end
 
 function love.keypressed(key, scancode, isrepeat)

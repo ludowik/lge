@@ -8,6 +8,8 @@ end
 function FontManager.getFont()
     local fontName = FontManager.fontName or ''
     local fontSize = FontManager.fontSize or 22
+
+    fontSize = fontSize * devicePixelRatio
     
     local ref = fontName..'.'..fontSize
     if not FontManager.fonts[ref] then

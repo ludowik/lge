@@ -5,7 +5,7 @@ function load(reload)
     classSetup()
     classUnitTesting()
 
-    if getOS() == 'ios' then
+    if getOS() == 'ios' and not fused() then
         processManager:setSketch('sketches')
     else
         processManager:setSketch(getSetting('sketch', 'sketches'))
