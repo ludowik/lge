@@ -1,6 +1,16 @@
 function setup()
+	parameter:action('random', function ()
+		seedValue = time()
+		setSetting('seedValue', seedValue)
+		reset()
+	end)
+
+	reset()
+end
+
+function reset()
 	local seedValue = getSetting('seedValue', time())
-	seed(12813324.6) -- seedValue)
+	seed(seedValue)	
 
     balls = Array():forn(50, function (i)
         return i
@@ -32,8 +42,6 @@ function setup()
 	end
 	
 	assert(#balls == 0)
-
-	setSetting('seedValue', seedValue)
 end
 
 function draw()
