@@ -87,11 +87,10 @@ function Pixels:draw()
     seed = 56494446
 
     local fragment = Pixels.noiseFunctions[noiseFunctionIndex]
-
-    self.img:getImageData()
     
     local w, h = self.img.imageData:getWidth(), self.img.imageData:getHeight()
-    self.img.imageData:mapPixel(function (x, y)
+
+    self.img:mapPixel(function (x, y)
         local r, g, b, a = fragment(x, y, w, h)
         return r, (g or r), (b or r), (a or 1)
     end)

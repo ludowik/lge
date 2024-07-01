@@ -30,7 +30,7 @@ function EventManager:mousereleased(id, x, y, presses)
     mouse:released(id, x, y, 0)
     
     if eventManager.currentObject then
-        if mouse.move:len() <= 1 then -- and mouse.elapsedTime < 0.15
+        if mouse.move:len() <= 25 then -- and mouse.elapsedTime < 0.15
             mouse.presses = 1
             if eventManager.currentObject:click(mouse) then
                 eventManager.currentObject = nil
@@ -47,6 +47,10 @@ function EventManager:wheelmoved(dx, dy)
     if _G.env.sketch.wheelmoved then
         _G.env.sketch:wheelmoved(dx, dy)
     end
+end
+
+function EventManager:textinput(text)
+    self:search(text)
 end
 
 function EventManager:keypressed(key, scancode, isrepeat)
@@ -122,9 +126,10 @@ function EventManager:keypressed(key, scancode, isrepeat)
     
     elseif key == 'pagedown' then
         processManager:next()
-    
-    else
+
+    elseif key == 'backspace' then
         self:search(key)
+
     end
 end
 
@@ -138,18 +143,20 @@ end
 local searchText = ''
 local searchTime = 0
 
-function EventManager:search(key)
+function EventManager:search(text)
     if time() - searchTime > 2 then
         searchText = ''
     end
 
     searchTime = time()
     
-    if key == 'backspace' then
+    if text == 'backspace' then
         searchText = searchText:sub(1, searchText:len()-1)
     else
-        searchText = searchText..key
+        searchText = searchText..text
     end
+
+    echo(searchText)
 
     local sketches = processManager:findSketches(searchText)
     if #sketches == 1 then

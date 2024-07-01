@@ -4,7 +4,7 @@ end
 
 function rects()
     local size = 50
-    local n = 10
+    local n = MAX_SIZE / size
 
     for j = -n, n do
         for i = (-n - j % 2), (n + j % 2), 2 do

@@ -1,10 +1,13 @@
 function setup()
     parameter:action('reset', reset)    
     parameter:integer('branches', 2, 6, 2, reset)
+
+    noLoop()
 end
 
 function reset()
     shape = nil
+    redraw()
 end
 
 function drawbranches(ax, ay, aa, x, y, a, l, level)
@@ -47,8 +50,6 @@ function drawbranches(ax, ay, aa, x, y, a, l, level)
 end
 
 function draw()
-    seed(984564)
-
     background(colors.black)
     scale(1, -1)
     translate(0, -H * 0.95)

@@ -206,7 +206,8 @@ function Graphics2d.point(x, y)
         love.graphics.setColor(stroke():rgba())
     end
 
-    love.graphics.ellipse('fill', x, y, strokeSize() / 2, strokeSize() / 2)
+    local r = strokeSize() / 2
+    love.graphics.circle('fill', x+r, y+r, r)
 end
 
 function Graphics2d.points(...)
@@ -381,6 +382,7 @@ function Graphics2d.textSize(str, limit)
     str = tostring(str)
 
     local font = FontManager.getFont()
+    
     love.graphics.setFont(font)
 
     local w, h

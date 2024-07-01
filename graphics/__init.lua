@@ -2,6 +2,8 @@ requireLib (..., {
     'color',
     'shader',
     'context',
+    'font',
+    'font_icons',
     'graphics',
     'graphics2d',
     'graphics3d',
@@ -14,7 +16,5 @@ requireLib (..., {
     'light',
     'material',
     'image',
-    'font',
-    'font_icons',
     'anchor',
 })

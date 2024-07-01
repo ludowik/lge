@@ -3,7 +3,9 @@ Graphics = class()
 function Graphics.setup()
     push2globals(Graphics)
 
-    font = love.graphics.newFont(25)
+    devicePixelRatio = love.window.getDPIScale()
+
+    font = FontManager.getFont()
 
     screenRatios = Array{
         ipad = 3/4,
@@ -21,7 +23,7 @@ function Graphics.setup()
     Graphics.initMode()
     Graphics.lights = {
         Light.sun(),
-        --Light.ambient(colors.white, 0.8),
+        Light.ambient(colors.white, 0.8),
     }
 end
 
@@ -72,6 +74,8 @@ function Graphics.getSafeArea()
         h = hs
     end
 
+    x, y, w, h = devicePixelRatio*x, devicePixelRatio*y, devicePixelRatio*w, devicePixelRatio*h
+
     return x, y, w, h
 end
 
@@ -90,26 +94,29 @@ function Graphics.initMode()
 
     SIZE = MIN_SIZE
     
-    Graphics.setMode(W, H, getOS() == 'ios')
+    Graphics.setMode(W, H)
 
     refreshRate = 60
-    devicePixelRatio = love.window.getDPIScale()
 end
 
-function Graphics.setMode(w, h, fullscreen)
+function Graphics.setMode(w, h)
     local params = {
-        msaa = 3,
-        fullscreen = fullscreen,
+        msaa = 5,
+        fullscreen = getOS() == 'ios',
     }
 
     if love.getVersion() < 12 then
-        params.highdpi = true
+        highdpi = true
     end
 
     local ws, hs, flags = love.window.getMode()
     if not Graphics.initializedScreen or ws ~= w or h ~= h then
         Graphics.initializedScreen = true
-        love.window.setMode(w, h, params)
+
+        love.window.setMode(
+            w/devicePixelRatio,
+            h/devicePixelRatio,
+            params)
     end
 end
 

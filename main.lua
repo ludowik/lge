@@ -1,2 +1,5 @@
 require 'engine'
--- updateScripts(false, restart)
+
+if love.filesystem.getIdentity() == 'update' then
+    updateScripts(false, restart)
+end

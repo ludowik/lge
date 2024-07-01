@@ -26,16 +26,14 @@ end
 function Engine.initParameter()
     engine.parameter = Parameter('right')
 
-    if fused() then
-        engine.parameter:addUnfusedMenu()
-    else
+    if not fused() then        
         engine.parameter:addMainMenu()
         engine.parameter:addNavigationMenu()
         engine.parameter:addCaptureMenu()
-
-        engine.navigation = Parameter('left')
-        engine.navigation:initControlBar()
     end
+
+    engine.navigation = Parameter('left')
+    engine.navigation:initControlBar()
 
     engine.parameter:group('sketch', true)
 end
@@ -55,7 +53,7 @@ function Engine.contains(mouse)
     local object = engine.parameter:contains(mouse.position)
     if object then return object end
 
-    local object = not fused() and engine.navigation:contains(mouse.position)
+    local object = engine.navigation:contains(mouse.position)
     if object then return object end
 
     local sketch = processManager:current()
@@ -67,14 +65,7 @@ function Engine.update(dt)
     engine.components:update(dt)
 end
 
-function Engine.redraw()
-    local sketch = processManager:current()
-    if sketch.loopMode == 'none' then
-        sketch.loopMode = 'redraw'
-    end
-end
-redraw = Engine.redraw
-
+local __echo
 function echo(txt)
     __echo = txt
     __echoElapsedTime = 3
@@ -88,17 +79,21 @@ function Engine.draw()
 
     resetMatrix(true)
     resetStyle()
+
+    scale(1/devicePixelRatio, 1/devicePixelRatio)
     
+    engine.navigation:draw(0, 0)
+
+    if fused() then
+        return
+    end
+
     engine.parameter:draw(0, TOP)
 
     if instrument.active then
         instrument:draw()
     end
 
-    if not fused() then
-        engine.navigation:draw(0, 0)
-    end
-    
     local fps = getFPS()
     if fps < refreshRate * 0.95 then -- or fps > refreshRate * 1.05 then
         fontName('arial')
@@ -109,10 +104,10 @@ function Engine.draw()
         text(fps, W - w / 2 - UI.innerMarge, TOP / 2)
     end
 
-    if __echo then        
+    if __echo then
         textMode(CORNER)
         fontSize(32)
-        text(__echo..' '..W..'/'..H, 25, 25)
+        text(__echo, 25, 25)
 
         __echoElapsedTime = __echoElapsedTime - timeManager.deltaTime
         if __echoElapsedTime <= 0 then
@@ -121,6 +116,14 @@ function Engine.draw()
         end
     end
 end
+
+function Engine.redraw()
+    local sketch = processManager:current()
+    if sketch.loopMode == 'none' then
+        sketch.loopMode = 'redraw'
+    end
+end
+redraw = Engine.redraw
 
 function toggleFused()
     setSetting('fused', not fused())

@@ -25,21 +25,22 @@ end
 
 Particle = class()
 
-Particle.DISTANCE = 50
-
-Particle.n = 0
+function Particle.setup()
+    Particle.DISTANCE = 50 * devicePixelRatio
+    Particle.n = 0
+end
 
 function Particle:init()
     Particle.n = Particle.n + 1
 
-    self.clr = Color.hsl(Particle.n / 1024)
+    self.clr = Color.hsl((Particle.n%1024) / 1024)
     self.clr.a = 0.8
 
     self.position = vec2()
     self.angle = PI/13 + TAU/3 * randomInt(1, 3)
     self.speed = random(50, 150)
     self.distance = Particle.DISTANCE
-    self.chanceToDie = 0.1
+    self.chanceToDie = 0.05
 end
 
 function Particle:update(dt)

@@ -4,7 +4,8 @@ function FrameBuffer:init(w, h, format, clr)
     self.format = format or 'normal'
     self.canvas = love.graphics.newCanvas(w, h, {
         msaa = 5,
-        format = self.format
+        format = self.format,
+        dpiscale = 1,
     })
     
     self:setContext()
@@ -54,11 +55,8 @@ end
 
 function FrameBuffer:getImageData()
     if self.imageData then
-        self.needUpdate = true
         return
     end
-
-    local getImageData = love.graphics.readbackTexture or self.canvas.newImageData
 
     local restoreCanvas = false
     if love.graphics.getCanvas() == self.canvas then
@@ -66,11 +64,14 @@ function FrameBuffer:getImageData()
         love.graphics.setCanvas()
     end
 
+    local getImageData = love.graphics.readbackTexture or self.canvas.newImageData
     self.imageData = getImageData(self.canvas)
 
     if restoreCanvas then
         love.graphics.setCanvas(self.canvas)
     end
+
+    self.needUpdate = true
 
     return self.imageData
 end
@@ -79,16 +80,22 @@ function FrameBuffer:update()
     if self.imageData and (self.texture == nil or self.needUpdate == true) then
         self.needUpdate = false
 
+        if self.texture then
+            self.texture:release()
+        end
+
         self.texture = love.graphics.newImage(self.imageData, {
-            dpiscale = devicePixelRatio
+            dpiscale = 1, -- devicePixelRatio
         })
-        self.texture:setWrap('repeat')
+        -- self.texture:setWrap('repeat')
     end
 end
 
 function FrameBuffer:mapPixel(f)
     self:getImageData()
     self.imageData:mapPixel(f)
+    self.needUpdate = true
+    self:update()
 end
 
 function FrameBuffer:set(x, y, clr, ...)
@@ -132,7 +139,7 @@ function Image:init(filename, ...)
     end
 
     self.texture = love.graphics.newImage(filename, {
-        dpiscale = devicePixelRatio,
+        dpiscale = 1, -- devicePixelRatio,
     })
 
     local w, h =  self.texture:getDimensions()

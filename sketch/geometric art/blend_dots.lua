@@ -1,5 +1,5 @@
 function setup()
-    setOrigin(BOTTOM_LEFT)
+    --setOrigin(BOTTOM_LEFT)
     
     xx = 0
     yy = 0
@@ -16,10 +16,10 @@ function draw()
 
     noStroke()
 
-    local radius = 14
+    local radius = SIZE / 40
     local dx = 0
 
-    local dt = deltaTime * 50
+    local dt = deltaTime * 60
 
     t = t + dt
 
