@@ -107,12 +107,16 @@ function EventManager:keypressed(key, scancode, isrepeat)
         
         elseif key == 'down' then
             processManager:next()
+
         end
 
     elseif key == 'f1' then
         local name = sketch.__className:replace('_', '+')
         openURL(('https://www.google.com/search?q=%s&lr=lang_en'):format(name))
         
+    elseif key == 'f2' then
+        line = line == Graphics2d.line and myline or Graphics2d.line
+    
     elseif key == 'pageup' then
         processManager:previous()
     

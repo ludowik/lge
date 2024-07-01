@@ -14,9 +14,9 @@ function draw()
     strokeSize(size)
 
     for i,l in ipairs(lines) do
-        stroke(l[5])
-        line(l[1], l[2], l[3], l[4])
+        -- stroke(l[5])
+        -- line(l[1], l[2], l[3], l[4])
     end
 
-    --mylines(lines)
+    mylines(lines)
 end
