@@ -19,15 +19,11 @@ flat out int instanceID;
 vec4 position(mat4 , vec4 ) {
     vec4 vp = vec4(VertexPosition.xyz, 1.);
 
-    color = strokeColor;
+    vp = vp * vec4(InstanceScale, 1.) + vec4(InstancePosition, 0.);
+    vp += normalize(vec4(-InstanceScale.y, InstanceScale.x, 0., 0.) * VertexTexCoord.x) * (strokeSize / 2.);
 
-    if (useInstanced == 1.) {
-        vp = vp * vec4(InstanceScale, 1.) + vec4(InstancePosition, 0.);
-        vp += normalize(vec4(-InstanceScale.y, InstanceScale.x, 0., 0.) * VertexTexCoord.x) * (strokeSize / 2.);
-
-        color *= InstanceColor;
-        instanceID = gl_InstanceID;
-    }
+    color = InstanceColor;
+    instanceID = gl_InstanceID;
 
     vertexPos = vec3(vp);
     fragmentPos = vec3(matrixModel * vp);

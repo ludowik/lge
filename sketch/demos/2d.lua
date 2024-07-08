@@ -17,8 +17,6 @@ function Sketch2d:draw()
         anchor = Anchor(nil, 16*W/H)
     end
 
-    stroke(0.25)
-
     anchor:draw()
 
     stroke(0.5)
