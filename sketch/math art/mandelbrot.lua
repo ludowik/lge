@@ -34,7 +34,7 @@ function prepare()
     local image_x = floor((x2 - x1) * zoom)
     local image_y = floor((y2 - y1) * zoom)
 
-    img = img or FrameBuffer(even(image_x/devicePixelRatio+1), even(image_y/devicePixelRatio+1))
+    img = img or FrameBuffer(even(image_x+1), even(image_y+1))
     
     local y_start, y_end
     if drawAll then

@@ -49,7 +49,7 @@ function update(dt)
         end
         shader:sendUniforms{
             iChannel0 = shaderChannel[0].texture,
-            iMouse = vec4(mouse.position.x, mouse.position.y, mouse.startPosition.x, mouse.startPosition.y),
+            iMouse = vec4(mouse.position.x, H-mouse.position.y, mouse.startPosition.x, mouse.startPosition.y),
             TIMESCALE = 1.,
             SHAPE_SIZE = SHAPE_SIZE,
             SMOOTHNESS = SMOOTHNESS,

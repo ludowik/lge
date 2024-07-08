@@ -35,9 +35,8 @@ function setup()
 end
 
 local function getPixel(source, x, y, clr, defaultColor)
-    if (
-        0 <= x and x < source.width  * devicePixelRatio and
-        0 <= y and y < source.height * devicePixelRatio )
+    if (0 <= x and x < source.width and
+        0 <= y and y < source.height)
     then
         return Color(source:getPixel(x, y, clr))
     end
@@ -45,9 +44,8 @@ local function getPixel(source, x, y, clr, defaultColor)
 end
 
 local function setPixel(source, x, y, clr)
-    if (
-        0 <= x and x < source.width  * devicePixelRatio and
-        0 <= y and y < source.height * devicePixelRatio )
+    if (0 <= x and x < source.width and
+        0 <= y and y < source.height)
     then
         source:setPixel(x, y, clr)
     end
@@ -66,8 +64,8 @@ function Image.Filter:process(source, target)
 end
 
 function Image.Filter:run(source, target)
-    for y=0,source.height * devicePixelRatio -1 do
-        for x=0,source.width * devicePixelRatio -1 do
+    for y=0,source.height-1 do
+        for x=0,source.width-1 do
             local res = self:fragment(x, y, getPixel(source, x, y))
             if res then
                 target:setPixel(x, y, res)
@@ -275,8 +273,8 @@ function Image.Filter.Sort:init()
 end
 
 function Image.Filter.Sort:run(source, target)
-    for y=0,source.height * devicePixelRatio -1 do
-        for x=0,source.width * devicePixelRatio -1 do
+    for y=0,source.height-1 do
+        for x=0,source.width-1 do
             local clr = getPixel(source, x, y)
             local clrKey = tostring(clr)
 
@@ -349,8 +347,8 @@ function Image.Filter.PopArt:init()
 end
 
 function Image.Filter.PopArt:run(source, target)
-    for y=0,source.height * devicePixelRatio -1 do
-        for x=0,source.width * devicePixelRatio -1 do
+    for y=0,source.height-1 do
+        for x=0,source.width-1 do
             local clr = getPixel(source, x, y)
         end
     end

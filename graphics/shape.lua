@@ -1,5 +1,6 @@
 Shape = class()
 
+POINTS = 'points'
 LINES = 'lines'
 CLOSE = 'close'
 
@@ -20,12 +21,17 @@ function Shape:draw()
        love.graphics.setShader(self.shader.program)
     end
     
-    if self.type == LINES then
+    if self.type == POINTS then
+        points(self.vertices)
+
+    elseif self.type == LINES then
         for i=1,#self.vertices,4 do
             line(self.vertices[i], self.vertices[i+1], self.vertices[i+2], self.vertices[i+3])
         end
+
     elseif self.mode == CLOSE then
         polygon(self.vertices)
+
     else
         polyline(self.vertices)
     end
