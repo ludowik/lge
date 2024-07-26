@@ -1,3 +1,5 @@
+require 'helper'
+require 'syntax'
 require 'engine'
 
 if love.filesystem.getIdentity() == 'update' then
