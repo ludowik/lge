@@ -4,7 +4,7 @@ max = math.max
 function math.clamp(value, minIn, maxIn)
     return math.min(math.max(value, minIn), maxIn)
 end
-clamp  = math.clamp
+clamp = math.clamp
 
 function math.map(value, minIn, maxIn, minOut, maxOut)
     value = math.clamp(value, minIn, maxIn)
