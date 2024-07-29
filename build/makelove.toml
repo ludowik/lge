@@ -4,7 +4,6 @@ build_directory = "./build"
 love_version = "11.4"
 
 love_files = [
-    "./conf.lua",
     "./engine/*",
     "./events/*",
     "./graphics/*",
@@ -16,6 +15,7 @@ love_files = [
     "./resources/*",
     "./scene/*",
     "./sketch/*",
+    "./conf.lua",
     "./main.lua",
 ]
 

@@ -1,6 +1,9 @@
 require 'lua.debug'
 require 'lua.require'
 
+require 'lua.helper'
+require 'lua.helper_syntax'
+
 requireLib (..., {
     'table',
     'string',
