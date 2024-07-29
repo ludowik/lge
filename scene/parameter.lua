@@ -295,6 +295,9 @@ function Parameter:number(label, varName, min, max, initValue, callback)
 end
 
 function Parameter:draw(x, y)
+    x = x or 0
+    y = y or 0
+
     local innerMarge = 5
     self:layout(x, y + innerMarge)
     Scene.draw(self)

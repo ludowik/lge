@@ -31,7 +31,7 @@ function Graphics.getSafeArea()
     local MIN_LEFT, MIN_TOP = 5, 50
 
     deviceOrientation = getSetting('deviceOrientation', PORTRAIT)
-    deviceScreenRatio = getSetting('deviceScreenRatio', screenRatios.ipad)
+    deviceScreenRatio = getSetting('deviceScreenRatio', screenRatios.iphone)
 
     local x, y, w, h
     if getOS() == 'ios' then

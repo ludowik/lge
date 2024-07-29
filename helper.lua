@@ -1,5 +1,6 @@
 module(..., package.seeall)
 
+-- enhance syntax of lua
 local function load(moduleName)
     local errmsg = ''
     
@@ -11,7 +12,7 @@ local function load(moduleName)
         if file then
             -- Compile and return the module
             local contents = file:read("*a")
-            contents = contents:gsub('global ', ' ')
+            contents = contents:gsub('global ', '_G. ')
             return assert(loadstring(assert(contents), fileName))
         end
 
