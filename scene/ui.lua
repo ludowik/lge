@@ -2,7 +2,7 @@ UI = class():extends(Rect, MouseEvent, KeyboardEvent)
 
 UI.innerMarge = 6
 UI.styles = {
-    fontSize = 18
+    fontSize = 22
 }
 
 function UI:init(label)

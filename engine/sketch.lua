@@ -180,7 +180,8 @@ function Sketch:drawGameOver()
     stroke(colors.white)
     fill(colors.black)
 
-    fontSize(50)
+    fontSize(W / 4)
+    
     local gameOver = 'Game Over'
     local w, h = textSize(gameOver)
 
