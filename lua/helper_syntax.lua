@@ -1,2 +1,2 @@
 global __version__ = 12
-print(__version)
+print(__version__)
