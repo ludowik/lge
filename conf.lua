@@ -16,6 +16,8 @@ function love.conf(t)
         t.window.resizable = true
 	end
 
+    t.window.width = 375
+    t.window.height = 812
     
     love.filesystem.setRequirePath('?.lua;?/init.lua;?/__init.lua')
 end

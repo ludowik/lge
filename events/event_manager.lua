@@ -7,39 +7,40 @@ end
 
 function EventManager:init()
     self.currentObject = nil
+    self.touches = {}
 end
 
 function EventManager:mousepressed(id, x, y, presses)
     mouse:pressed(id, x, y, 0)
 
-    eventManager.currentObject = Engine.contains(mouse)
-    if eventManager.currentObject then
-        eventManager.currentObject:mousepressed(mouse)
+    self.touches[id] = Engine.contains(mouse)
+    if self.touches[id] then
+        self.touches[id]:mousepressed(mouse)
     end
 end
 
 function EventManager:mousemoved(id, x, y)
     mouse:moved(id, x, y)
     
-    if eventManager.currentObject then
-        eventManager.currentObject:mousemoved(mouse)
+    if self.touches[id] then
+        self.touches[id]:mousemoved(mouse)
     end
 end
 
 function EventManager:mousereleased(id, x, y, presses)
     mouse:released(id, x, y, 0)
     
-    if eventManager.currentObject then
+    if self.touches[id] then
         if mouse.move:len() <= 25 then -- and mouse.elapsedTime < 0.15
             mouse.presses = 1
-            if eventManager.currentObject:click(mouse) then
-                eventManager.currentObject = nil
+            if self.touches[id]:click(mouse) then
+                self.touches[id] = nil
                 return
             end
         end
         
-        eventManager.currentObject:mousereleased(mouse)
-        eventManager.currentObject = nil
+        self.touches[id]:mousereleased(mouse)
+        self.touches[id] = nil
     end
 end
 

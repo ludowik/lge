@@ -12,20 +12,22 @@ function Solitaire:init()
 
     self.deckList = Array()
 
+    local ny = 3
+
     self.deck = Deck(0, 0)
     self.deckList:push(self.deck)
-    self.deck.position:set(6 * Card.wcard + 7 * Card.margin, Card.hcard * 1.5)
+    self.deck.position:set(6 * Card.wcard + 7 * Card.margin, Card.hcard * ny)
 
     self.wast = Wast(Card.wcard / 3, 0)
     self.deckList:push(self.wast)
-    self.wast.position:set(4 * Card.wcard + 7 * Card.margin, Card.hcard * 1.5)
+    self.wast.position:set(4 * Card.wcard + 7 * Card.margin, Card.hcard * ny)
 
     self.piles = Node()
     for i in range(4) do
         local deck = Pile(0, 0)
         self.deckList:push(deck)
         self.piles:add(deck)
-        deck.position:set((i - 1) * Card.wcard + i * Card.margin, Card.hcard * 1.5)
+        deck.position:set((i - 1) * Card.wcard + i * Card.margin, Card.hcard * ny)
     end
 
     self.rows = Node()
@@ -33,7 +35,7 @@ function Solitaire:init()
         local deck = Row(0, Card.wtext + Card.margin)
         self.deckList:push(deck)
         self.rows:add(deck)
-        deck.position:set((i - 1) * Card.wcard + i * Card.margin, Card.hcard * 2.5 + 2 * Card.margin)
+        deck.position:set((i - 1) * Card.wcard + i * Card.margin, Card.hcard * (ny+1) + 2 * Card.margin)
     end
 
     self.parameter:boolean('auto', Bind(self, 'autoPlay'), true)

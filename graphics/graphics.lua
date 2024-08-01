@@ -3,8 +3,6 @@ Graphics = class()
 function Graphics.setup()
     push2globals(Graphics)
 
-    devicePixelRatio = love.window.getDPIScale()
-
     font = FontManager.getFont()
 
     screenRatios = Array{
@@ -27,64 +25,16 @@ function Graphics.setup()
     }
 end
 
-function Graphics.getSafeArea()
-    local MIN_LEFT, MIN_TOP = 5, 50
-
-    deviceOrientation = getSetting('deviceOrientation', PORTRAIT)
-    deviceScreenRatio = getSetting('deviceScreenRatio', screenRatios.iphone)
-
-    local x, y, w, h
-    if getOS() == 'ios' then
-        local ws, hs, flags = love.window.getMode()
-
-        x, y, w, h = love.window.getSafeArea()
-        
-        local r = (w + 2*x) / ws
-        w = r * ws - 2*x
-
-        if deviceOrientation == PORTRAIT then
-            x, y = min(x, y), max(x, y)
-            x, y = max(x, MIN_LEFT), max(y, MIN_TOP)
-            w, h = min(ws, hs), max(ws, hs)
-        else
-            x, y = max(x, y), min(x, y)
-            x, y = max(x, MIN_TOP), max(y, MIN_LEFT)
-            w, h = max(ws, hs), min(ws, hs)
-        end
-
-    else
-        local ws, hs = love.window.getDesktopDimensions(1) -- displayindex
-
-        local ratio = deviceScreenRatio
-        if deviceOrientation == LANDSCAPE then
-            ratio = 1 / ratio
-        end
-
-        local p = 0.85
-        if floor(hs * p * ratio) <= ws then
-            hs = round(hs * p)
-            ws = round(hs * ratio)
-        else
-            ws = round(ws * p)
-            hs = round(ws / ratio)
-        end
-
-        x, y = MIN_LEFT, MIN_TOP
-        w = ws
-        h = hs
-    end
-
-    x, y, w, h = devicePixelRatio*x, devicePixelRatio*y, devicePixelRatio*w, devicePixelRatio*h
-
-    return x, y, w, h
-end
-
 function Graphics.initMode()
     love.window.setVSync(1)
 
-    local ws, hs, flags = love.window.getMode()
+    deviceOrientation = getSetting('deviceOrientation', PORTRAIT)
+    --deviceScreenRatio = getSetting('deviceScreenRatio', screenRatios.iphone)
 
-    LEFT, TOP, W, H = Graphics.getSafeArea()
+    _, _, WS, HS = Graphics.getPhysicalArea()
+    Graphics.setMode(WS, HS)
+
+    LEFT, TOP, W, H = getVirtualArea()
 
     CX = W/2
     CY = H/2
@@ -93,29 +43,55 @@ function Graphics.initMode()
     MAX_SIZE = max(W, H)
 
     SIZE = MIN_SIZE
-    
-    Graphics.setMode(W, H)
 
+    SCALE = min(WS/W, HS/H)
+    
     refreshRate = 60
 end
 
-function Graphics.setMode(w, h)
-    local params = {
-        msaa = 5,
-        fullscreen = getOS() == 'ios',
-    }
-
-    if love.getVersion() < 12 then
-        highdpi = true
+function Graphics.getPhysicalArea()
+    local x, y, w, h
+    if getOS() == 'ios' then
+        x, y = love.window.getSafeArea()
+        w, h = love.window.getDesktopDimensions(1)
+    else
+        x, y, w, h = 0, 0, 375, 812
     end
 
+    dpiscale = 1
+    deviceScreenRatio = min(w/h, h/w)
+    
+    if deviceOrientation == PORTRAIT then
+        return min(x, y), max(x, y), min(w, h), max(w, h)
+    end
+
+    return max(x, y), min(x, y), max(w, h), min(w, h)
+end
+
+function getVirtualArea()    
+    local x, y, w, h = 5, 50, 512
+    h = even(w / deviceScreenRatio)
+
+    if deviceOrientation == PORTRAIT then
+        return x, y, w, h
+    end
+
+    return y, x, h, w
+end
+
+function Graphics.setMode(w, h)    
     local ws, hs, flags = love.window.getMode()
     if not Graphics.initializedScreen or ws ~= w or h ~= h then
         Graphics.initializedScreen = true
 
+        local params = {
+            msaa = 3,
+            fullscreen = getOS() == 'ios',
+        }
+
         love.window.setMode(
-            w/devicePixelRatio,
-            h/devicePixelRatio,
+            w,
+            h,
             params)
     end
 end

@@ -15,7 +15,7 @@ function updateScripts(fromGit, onSuccess)
             love.filesystem.setIdentity('lge')
             love.filesystem.write('lge.love', result)
             love.filesystem.setIdentity(identity)
-            onSuccess = onSuccess or quit
+            onSuccess = onSuccess or restart
             if onSuccess then onSuccess() end
         end,
         function (result, code, headers)

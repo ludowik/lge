@@ -25,7 +25,6 @@ function setup()
             function ()
                 background(colors.white)
                 spriteMode(CENTER)
-                scale(1/devicePixelRatio)
                 sprite(baseImage, size/2, size/2, ws, hs)
             end)
 

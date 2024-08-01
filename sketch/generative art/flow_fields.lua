@@ -6,8 +6,12 @@ function FlowFields:init()
     self.parameter:action('reset', function() self:initGrid() end)
     self.parameter:boolean('lines', false, redraw)
 
-    self.parameter:number('step', 0.0001, 0.01, 0.002)
-    self.parameter:integer('pixelRatio', 4, 16, 8, function () self:reset() end)
+    self.parameter:number('step', 0.001, 0.1, 0.01)
+    self.parameter:integer('pixelRatio', 4, 16, 6, function () self:reset() end)
+end
+
+function FlowFields:resize()
+    self:reset()
 end
 
 function FlowFields:reset()

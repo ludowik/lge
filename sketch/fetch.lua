@@ -4,7 +4,7 @@ function setup()
     ip = getSetting('ip', 15)
     
     actions:integer('ip', 1, 25, ip, function() setSetting('ip', ip) end)
-    actions:action('load from local', updateScripts)
+    actions:action('load from local', function() updateScripts() end)
 end
 
 function draw()

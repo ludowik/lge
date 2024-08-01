@@ -3,10 +3,12 @@ Triomino = class() : extends(Sketch)
 function Triomino:init()
     Sketch.init(self)
 
-    self.anchor = Anchor(12)
+    N = 9
+
+    self.anchor = Anchor(N+1)
 
     cellSize = self.anchor:size(1).x
-    cellScale = 0.7
+    cellScale = 0.65
 
     self.minos = Array{
         Mino("1, 1"),
@@ -29,14 +31,17 @@ function Triomino:init()
     }
 
     self:initGame()
+    self:loadGame()
+
+    self.parameter:action('new game', function () self:initGame() end)
 
     self.parameter:watch('Lines', Bind(self, 'lines'))
     self.parameter:watch('Score', Bind(self, 'score'))
 end
 
 function Triomino:initGame()
-    self.grid = TriominoGrid(10, 10)
-    self.grid.position = self.anchor:pos(1, (self.anchor.nj-10)/2)
+    self.grid = TriominoGrid(N, N)
+    self.grid.position = self.anchor:pos(0.5, (self.anchor.nj-N)/2)
     
     self.stack = Node()
     self.stack:add(Node())
@@ -45,14 +50,67 @@ function Triomino:initGame()
 
     for i,v in self.stack:ipairs() do
         v.position = self.anchor:pos(
-            i*12/4,
-            10+3/4*(self.anchor.nj-10))
+            i*self.anchor.ni/4,
+            N+3/4*(self.anchor.nj-N))
+        v.oldPosition = v.position:clone()
     end
 
     self.lines = 0
     self.score = 0 
 
     self:completeStack()
+end
+
+function Triomino:loadGame()
+    local status, result = xpcall(
+        function ()
+            return self:__loadGame()
+        end, nilf)
+        
+    if status then
+        return result
+    end
+end
+
+function Triomino:__loadGame()
+    self.grid:clear()
+    
+    -- load data
+    local data = loadData('triomino')
+    if not data or not data.cells then return false end
+
+    -- use data to restore the game
+    for k,value in pairs(data.cells) do
+        local index = tonumber(k)
+        local i, j = (index-1)%N+1, floor((index-1)/N)+1
+        if value ~= 0 then
+            self.grid:set(i, j, Color(value))
+        end
+    end
+
+    self.lines = data.lines or 0
+    self.score = data.score or 0
+
+    return true
+end
+
+function Triomino:saveGame()
+    print('save')
+
+    -- generate data to save
+    local data = {
+        cells = Array(),
+        lines = self.lines,
+        score = self.score,
+    }
+
+    self.grid:foreach(function (cell, i, j)
+        local k = self.grid:offset(i, j)
+        data.cells[k] = cell.value or 0
+    end)
+
+    -- save data
+    saveData('triomino', data)
 end
 
 function Triomino:completeStack()
@@ -67,24 +125,36 @@ function Triomino:completeStack()
 end
 
 function Triomino:click(mouse)
-    self.mino = self.stack:contains(mouse.position)
-    if self.mino then
-        self.mino.grid = self.mino.grid:rotate(mouse.id == 1)
-        self.mino.grid.rotation = (mouse.id == 1 and -1 or 1) * PI/2
-        animate(self.mino.grid, {rotation = 0}, 1/6)
-        self:updateShadow(self.mino)
+    -- DEBUG
+    -- echo('click', self.mino, mouse.id)
+    local mino = self.mino or self.stack:contains(mouse.position)
+    if mino then
+        mino.grid = mino.grid:rotate(mouse.id == 1)
+        mino.grid.rotation = (mouse.id == 1 and -1 or 1) * PI/2
+        animate(mino.grid, {rotation = 0}, 1/6)
+        self:updateShadow(mino)
     end
 end
 
 function Triomino:mousepressed(mouse)
+    if self.mino then return end
+
     self.mino = self.stack:contains(mouse.position)
     if self.mino then
-        self.mino.node.oldPosition = self.mino.node.position:clone()
+        -- DEBUG
+        -- echo('select', self.mino, mouse.id)
+        self.mino.mouse_id = mouse.id
+        
+        self.mino.node.position:add(vec2(0, -self.mino.size.y))
+        self.mino.grid.scale = 1
     end
 end
 
 function Triomino:mousemoved(mouse)
-    if self.mino then
+    if self.mino and self.mino.mouse_id == mouse.id then
+        -- DEBUG
+        -- echo('moved', self.mino, mouse.id)
+
         self.mino.node.position:add(mouse.deltaPos)
         self.mino.grid.scale = 1
 
@@ -93,32 +163,45 @@ function Triomino:mousemoved(mouse)
 end
 
 function Triomino:mousereleased(mouse)
-    if self.mino then
-        local cellPosition = self:getAvailableMove(self.mino)
-        
+    if self.mino and self.mino.mouse_id == mouse.id then
+        -- DEBUG
+        -- echo('released', self.mino, mouse.id)
+
+        local cellPosition = self:getAvailableMove(self.mino)        
         if cellPosition then
-            self:pushMino(self.mino)
+            self:pushMino(self.mino, cellPosition)
             self:deleteLinesAndRows()
 
             self.mino.node:clear()
         end
         
-        self.mino.node.position = self.mino.node.oldPosition
+        self.mino.node.position:set(self.mino.node.oldPosition)
         self.mino.grid.scale = cellScale
+        self.mino.mouse_id = nil
 
+        self.mino = nil
         self.shadow = nil
 
         self:completeStack()
+
+        self:saveGame()
     end
 end
 
-function Triomino:getAvailableMove(mino)
-    mino = mino or self.current
-
+function Triomino:getCellPosition(mino)
     local grid = mino.grid
     local position = mino.position
 
-    local cellPosition = ((position - self.grid.position) / cellSize):ceil() - vec2(1, 1)
+    local cellPosition = ((position + vec2(cellSize, cellSize)/2 - self.grid.position) / cellSize):ceil() - vec2(1, 1)
+
+    return cellPosition
+end
+
+function Triomino:getAvailableMove(mino)
+    local grid = mino.grid
+    local position = mino.position
+
+    local cellPosition = self:getCellPosition(mino)
     local x, y = cellPosition.x, cellPosition.y
 
     local availableMove = true
@@ -152,11 +235,11 @@ function Triomino:updateShadow(mino)
     end
 end
 
-function Triomino:pushMino(mino)
+function Triomino:pushMino(mino, cellPosition)
     local grid = mino.grid
     local position = mino.position
 
-    local cellPosition = ((position - self.grid.position) / cellSize):ceil() - vec2(1, 1)
+    -- local cellPosition = self:getCellPosition(mino)
     local x, y = cellPosition.x, cellPosition.y
 
     grid:foreach(function (block, i, j)
@@ -227,7 +310,7 @@ function Triomino:deleteRow(i)
 end
 
 function Triomino:draw()
-    background()
+    background(colors.white)
 
     self.grid:draw(true, self.grid.position)
 
@@ -237,7 +320,7 @@ function Triomino:draw()
     
     self.stack:draw()
 
-    grid2d(cellSize)
+    -- grid2d(cellSize)
 end
 
 Mino = class() : extends(Rect)
@@ -261,7 +344,7 @@ function Mino:init(init)
     self.grid.scale = cellScale
     self.grid.rotation = 0
     
-    self.clr = Color.random()
+    self.clr = palette:random()
 
     for i = 0, #arg-1, 2 do
         local c = arg[i+1]
@@ -280,6 +363,12 @@ function Mino:draw()
     end
 
     self.grid:draw(false, self.position, self.size)
+    
+    -- DEBUG
+    -- if self.node then
+    --     textColor(colors.black)
+    --     text(self.mouse_id, self.position.x, self.position.y)
+    -- end
 end
 
 TriominoGrid = class() : extends(Grid)
@@ -324,7 +413,6 @@ function TriominoGrid:draw(border, position, size)
         end
 
         circleMode(CENTER)
-
         circle((i-(self.w+1)/2)*cellSize, (j-(self.h+1)/2)*cellSize, cellSize/2-marge)
     end)
 

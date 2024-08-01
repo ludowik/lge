@@ -1,5 +1,10 @@
 function setup()
-    values = Array():forn(W, function ()
+    parameter:action('reset', reset)
+    reset()
+end
+
+function reset()
+        values = Array():forn(W, function ()
        return random() * SIZE / 4
     end)
 

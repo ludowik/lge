@@ -32,6 +32,14 @@ function Array:addArray(t)
     return self
 end 
 
+function Array:concat(sep)
+    local txt = ''
+    for i=1,#self do
+        txt = txt..tostring(self[i])..sep
+    end
+    return txt:trim(sep)
+end
+
 function Array:removeIfTrue(f)
     for i, v in ipairs(self, true) do
         if f(v) then

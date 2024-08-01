@@ -73,7 +73,7 @@ end
 function scaleMouseProperties(...)
     local values = Array()
     for i,v in ipairs{...} do
-        values:add(v*devicePixelRatio)
+        values:add(v/SCALE)
     end
     return values:unpack()
 end
@@ -84,19 +84,24 @@ if getOS() == 'ios' then
     function love.touchpressed(id, x, y, dx, dy, pressure)
         x, y = scaleMouseProperties(x, y)
         touches[id] = {
-            moved = false
+            presses = 1,
+            moved = false,
+            mouse = Mouse()
         }
+        mouse = touches[id].mouse
         eventManager:mousepressed(id, x, y, 0)
     end
 
     function love.touchmoved(id, x, y, dx, dy, pressure)
         x, y = scaleMouseProperties(x, y)
         touches[id].moved = true
+        mouse = touches[id].mouse
         eventManager:mousemoved(id, x, y)
     end
 
     function love.touchreleased(id, x, y, dx, dy, pressure)
         x, y = scaleMouseProperties(x, y)
+        mouse = touches[id].mouse
         eventManager:mousereleased(id, x, y, touches[id].presses)
         touches[id] = nil
     end
@@ -112,6 +117,10 @@ if getOS() == 'ios' then
     end
 
 else
+    class().setup = function ()
+        mouse = mouse or Mouse()
+    end
+
     function love.mousepressed(x, y, button, istouch, presses)
         x, y = scaleMouseProperties(x, y)
         eventManager:mousepressed(button, x, y, presses)

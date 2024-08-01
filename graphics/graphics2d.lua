@@ -4,8 +4,13 @@ function Graphics2d.setup()
     push2globals(Graphics2d)
 end
 
-function Graphics2d.background(clr, ...)
-    clr = Color.fromParam(clr, ...) or colors.black
+function Graphics2d.getBackgroundColor()
+    return Graphics2d.backgroundColor
+end
+
+function Graphics2d.background(_clr, ...)
+    local clr = Color.fromParam(_clr, ...) or colors.black
+    Graphics2d.backgroundColor = clr
     love.graphics.setColor(clr.r, clr.g, clr.b, clr.a)
     love.graphics.rectangle('fill', 0, 0, W, H)
 end

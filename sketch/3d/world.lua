@@ -27,8 +27,8 @@ function setup()
     
     m.uniforms.useHeightMap = true
     m.uniforms.tex = img.texture
-    m.uniforms.texWidth = img.width * devicePixelRatio
-    m.uniforms.texHeight = img.height * devicePixelRatio
+    m.uniforms.texWidth = img.width
+    m.uniforms.texHeight = img.height
 
     m.uniforms.useLight = true
     m.uniforms.useLightAmbient = true

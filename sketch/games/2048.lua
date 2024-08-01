@@ -60,7 +60,9 @@ function The2048:__loadGame()
     for k,value in pairs(data.cells) do
         local index = tonumber(k)
         local i, j = (index-1)%4+1, floor((index-1)/4)+1
-        self:setCell(i, j, self:newCell(i, j, value))
+        if value ~= 0 then
+            self:setCell(i, j, self:newCell(i, j, value))
+        end
     end
 
     self.score = data.score or 0
@@ -69,7 +71,7 @@ function The2048:__loadGame()
     return true
 end
 
-function The2048:saveGame(data)
+function The2048:saveGame()
     -- generate data to save
     local data = {
         cells = Array(),
@@ -79,7 +81,7 @@ function The2048:saveGame(data)
 
     self.grid:foreach(function (cell, i, j)
         local k = self.grid:offset(i, j)
-        data.cells[k] = cell.value
+        data.cells[k] = cell.value or 0
     end)
 
     -- save data
@@ -321,7 +323,7 @@ function The2048:draw()
     local innerMarge = 5
     local center, size
     
-    center = vec2(CX, CY)
+    center = vec2(CX, CY + SIZE / 4.5)
     size = self.cellSize * 4
 
     noStroke()
@@ -379,6 +381,8 @@ function Tile:draw(position, cellSize)
     noStroke()
     fill(The2048.colors[getPowerOf2(value)] or The2048.defaultColor)
     rect(0, 0, cellSize.x - Tile.innerMarge, cellSize.y - Tile.innerMarge, Tile.innerMarge)
+
+    fontSize(24)
 
     if value <= 4 then
         textColor(The2048.textColor)
