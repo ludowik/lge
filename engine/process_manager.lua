@@ -69,7 +69,7 @@ function ProcessManager:setCurrentSketch(processIndex)
 
     love.window.setTitle(sketch.env.__name)
 
-    Graphics.setMode(sketch.size.x, sketch.size.y)
+    --Graphics.setMode(sketch.size.x, sketch.size.y)
 
     sketch.fb:setContext()
     sketch.fb:background()

@@ -17,10 +17,9 @@ function setup()
     local w, h = love.window.getDesktopDimensions(1)
 
     scene:add(UI('Screen'):attrib{styles={fillColor=colors.red}})
-    scene:add(UIExpression('desktop dimension', 'string.format("%d , %d", love.window.getDesktopDimensions())'))
-    scene:add(UIExpression('safe area', 'string.format("%d , %d , %d , %d", love.window.getSafeArea())'))
-    scene:add(UIExpression('position', 'LEFT.." , "..TOP'))
-    scene:add(UIExpression('size', 'W.." , "..H'))
+    scene:add(UIExpression('desktop dimension', 'string.format("%d, %d", love.window.getDesktopDimensions())'))
+    scene:add(UIExpression('safe area', 'string.format("%d, %d, %d, %d", love.window.getSafeArea())'))
+    scene:add(UIExpression('virtual area', 'LEFT..", "..TOP..", "..W..", "..H'))
     scene:add(UIExpression('screen ratio', 'getScreenRatio()'))
     scene:add(UIExpression('fb size', 'getFbSize()'))
     scene:add(UIExpression('dpi scale', 'love.window.getDPIScale()'))
@@ -34,6 +33,11 @@ function setup()
     scene:add(UIExpression('move', 'mouse.move'))
     scene:add(UIExpression('move len', 'mouse.move:len()'))
     scene:add(UIExpression('delay', 'mouse.elapsedTime'))
+end
+
+function draw()
+    scene:layout(LEFT, TOP)
+    scene:draw()
 end
 
 function getScreenRatio()

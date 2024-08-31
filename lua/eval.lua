@@ -1,5 +1,3 @@
-global = {}
-
 function evaluateExpression(expression)
     return evaluateCode("return "..tostring(expression))
 end

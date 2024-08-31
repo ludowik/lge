@@ -13,7 +13,7 @@ function Tetris:init()
         down = vec2(0, 1),
     }
 
-    self.tetriminos = Array {
+    self.tetriminos = Array{
         Tetrimino('I', { 0, 1, 2, 3, 4, 0, 0 }, colors.blue:lighten()),
         Tetrimino('O', { 0, 2, 3, -4, 0, 2, 3, 0 }, colors.yellow:darken()),
         Tetrimino('T', { 0, 2, 0, 1, 2, 3 }, colors.purple),

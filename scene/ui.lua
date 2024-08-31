@@ -1,8 +1,8 @@
 UI = class():extends(Rect, MouseEvent, KeyboardEvent)
 
-UI.innerMarge = 6
+UI.innerMarge = 8
 UI.styles = {
-    fontSize = 18
+    fontSize = 22
 }
 
 function UI:init(label)
@@ -11,7 +11,7 @@ function UI:init(label)
 
     self.label = label
 
-    self.styles = Array {
+    self.styles = Array{
         fillColor = Color(0.5, 0.5),
         textColor = colors.white,
         fontSize = UI.styles.fontSize,

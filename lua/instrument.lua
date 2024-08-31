@@ -165,7 +165,7 @@ function Instrument:draw()
     textColor(colors.white)
         
     fontName('arial')
-    fontSize(15)
+    fontSize(18)
 
     self.functions:sort(function (a, b)    
         return a.elapsedTimeByFrameAvg > b.elapsedTimeByFrameAvg

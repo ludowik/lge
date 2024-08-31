@@ -26,7 +26,7 @@ end
 Particle = class()
 
 function Particle.setup()
-    Particle.DISTANCE = 50 * devicePixelRatio
+    Particle.DISTANCE = 50
     Particle.n = 0
 end
 

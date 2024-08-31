@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <script src="js/lib/p5.min.js"></script>        
+        <script src="js/lib/fengari-web.js"></script>        
+
+    </head>
+
+    <body>
+        <script>
+            console.clear()
+
+            function setup() {
+                createCanvas(200, 200)
+            }
+
+            function draw() {
+                fengari.load('return draw')();
+                background(deltaTime*10);
+            }
+        </script>
+
+        <script type="application/lua" async>
+            print("Hello World!")
+            function draw()
+                print("Hello World!")
+            end
+        </script>
+
+    </body>
+
+</html>

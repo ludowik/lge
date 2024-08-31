@@ -3,7 +3,8 @@ function updateScripts(fromGit, onSuccess)
     if fromGit then
         url = 'https://ludowik.github.io/lge'
     else
-        url = 'http://192.168.1.15:8080'
+        local ip = getSetting('ip', 15)
+        url = 'http://192.168.1.'..ip..':8080'
     end
     
     url = url..'/build/love/lge.love'
@@ -14,7 +15,7 @@ function updateScripts(fromGit, onSuccess)
             love.filesystem.setIdentity('lge')
             love.filesystem.write('lge.love', result)
             love.filesystem.setIdentity(identity)
-            onSuccess = onSuccess or quit
+            onSuccess = onSuccess or restart
             if onSuccess then onSuccess() end
         end,
         function (result, code, headers)

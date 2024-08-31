@@ -6,6 +6,7 @@ end
 function Parameter:init(layoutMode)
     Scene.init(self)
     self.currentGroup = self
+    self.currentMenu = self
     self.visible = true
     self.layoutMode = layoutMode or 'right'
 end
@@ -42,7 +43,7 @@ function Parameter:initControlBar()
             })
         return
     end
-
+    
     self:action('sketches',
         function ()
             openSketches()
@@ -66,7 +67,9 @@ function Parameter:initControlBar()
 
     self:action('previous sketch',
         function ()
-            processManager:previous()
+            if engine.parameter.currentMenu and engine.parameter.currentMenu.label == 'navigation' then
+                processManager:previous()
+            end
         end,
         {
             styles = styles,
@@ -76,7 +79,9 @@ function Parameter:initControlBar()
 
     self:action('next sketch',
         function ()
-            processManager:next()
+            if engine.parameter.currentMenu and engine.parameter.currentMenu.label == 'navigation' then
+                processManager:next()
+            end
         end,
         {
             styles = styles,
@@ -86,6 +91,10 @@ function Parameter:initControlBar()
 end
 
 function Parameter:addMainMenu()
+    self:action('update from local', function ()
+        updateScripts(false)
+    end)
+    
     self.menu = self:group('main')
 
     self:space()
@@ -102,6 +111,9 @@ function Parameter:addMainMenu()
     self:space()
     self:action('reload', reload)
     self:action('restart', restart)
+
+    self:space()
+    self:action('info', function() processManager:setSketch('info') end)
 
     self:space()
     self:action('instrument', function ()
@@ -127,9 +139,6 @@ function Parameter:addNavigationMenu()
     self:action('loop', function() processManager:loopProcesses() end)
 
     self:space()
-    self:action('info', function() processManager:setSketch('info') end)
-
-    self:space()
     self:link('web version', 'https://ludowik.github.io/lge/build/lovejs/lge-lovejs/lge')
 end
 
@@ -153,6 +162,7 @@ end
 
 function Parameter:openGroup(group)
     self:setStateForAllGroups('close', false)
+    self.currentMenu = group
     group.state = 'open'
     group.visible = true
 end
@@ -177,6 +187,7 @@ end
 
 function Parameter:group(label, open)
     local newGroup = Node()
+    newGroup.label = label
 
     if open then
         self:openGroup(newGroup)
@@ -295,6 +306,9 @@ function Parameter:number(label, varName, min, max, initValue, callback)
 end
 
 function Parameter:draw(x, y)
+    x = x or 0
+    y = y or 0
+
     local innerMarge = 5
     self:layout(x, y + innerMarge)
     Scene.draw(self)
@@ -309,7 +323,7 @@ function captureImage()
 end
 
 function captureLogo()
-    local size = 1024 / devicePixelRatio
+    local size = 1024
     local fb = FrameBuffer(size, size)
     render2context(fb,
         function ()

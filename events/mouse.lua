@@ -95,5 +95,3 @@ function Mouse:getDirection(minLen)
 
     return self.direction
 end
-
-mouse = Mouse()

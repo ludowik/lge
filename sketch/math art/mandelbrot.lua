@@ -63,8 +63,8 @@ function prepare()
                 i = i + 1
             end
 
-            if (x-1 >= 0 and x-1 < img.width * devicePixelRatio and
-                y-1 >= 0 and y-1 < img.height * devicePixelRatio)
+            if (x-1 >= 0 and x-1 < img.width and
+                y-1 >= 0 and y-1 < img.height)
             then
                 if i == iteration_max then
                     img:setPixel(x-1, y-1, colors.black)

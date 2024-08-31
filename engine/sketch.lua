@@ -85,6 +85,8 @@ function Sketch:updateSketch(dt)
 end
 
 function Sketch:drawSketch(force)
+    scale(1/2, 1/2)
+
     self:renderSketch()
     self:presentSketch(force)
 end
@@ -123,7 +125,7 @@ function Sketch:presentSketch(force)
 
     if getOrigin() == BOTTOM_LEFT then
         love.graphics.scale(1, -1)
-        love.graphics.translate(0, -(H/devicePixelRatio))
+        love.graphics.translate(0, -H)
     end
 
     local fb = self.fb
@@ -135,14 +137,12 @@ function Sketch:presentSketch(force)
     local sx = self.size.x / canvas:getWidth()
     local sy = self.size.y / canvas:getHeight()
 
-    local scale = min(ws/canvas:getWidth(), hs/canvas:getHeight())
-
     love.graphics.draw(texture,
         0, -- self.position.x,
         0, -- self.position.y,
         0, -- no rotation
-        scale * sx, -- scale x
-        scale * sy) -- scale y
+        SCALE * sx, -- scale x
+        SCALE * sy) -- scale y
 
     -- TODO : gérer un zoom
     -- TODO : gérer une translation
@@ -162,7 +162,7 @@ function Sketch:draw()
 
     local scene = self.scene or env.scene
     if scene then
-        scene:layout()
+        scene:layout(scene.position.x, scene.position.y)
         scene:draw()
     else
         fontSize(W / 4)
@@ -181,6 +181,7 @@ function Sketch:drawGameOver()
     fill(colors.black)
 
     fontSize(50)
+    
     local gameOver = 'Game Over'
     local w, h = textSize(gameOver)
 

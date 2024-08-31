@@ -5,11 +5,13 @@ function load(reload)
     classSetup()
     classUnitTesting()
 
-    if getOS() == 'ios' and not fused() then
+    if getSetting('assertLoadIsKO') then
         processManager:setSketch('sketches')
     else
+        setSetting('assertLoadIsKO', true)
         processManager:setSketch(getSetting('sketch', 'sketches'))
     end
+    setSetting('assertLoadIsKO', nil)
 end
 
 local environments = nil

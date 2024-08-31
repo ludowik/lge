@@ -25,6 +25,14 @@ function Color.setup()
 
         transparent = Color(0, 0, 0, 0),
     }
+
+    palette = Array{
+        colors.yellow,
+        colors.magenta,
+        colors.cyan,
+        colors.orange,
+        colors.purple,
+    }
 end
 
 function Color:init(...)

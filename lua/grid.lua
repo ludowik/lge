@@ -41,7 +41,6 @@ function Grid:offset(x, y)
     end
 end
 
-
 function Grid:setCell(x, y, cell)
     local offset = self:offset(x, y)
     if offset == -1 then

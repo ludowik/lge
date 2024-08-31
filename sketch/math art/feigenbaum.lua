@@ -52,6 +52,7 @@ function draw()
         end
     end
 
-    strokeSize(1/devicePixelRatio)
+    strokeSize(1)
+    
     points(data)
 end

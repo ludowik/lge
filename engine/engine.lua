@@ -65,9 +65,15 @@ function Engine.update(dt)
     engine.components:update(dt)
 end
 
-local __echo
-function echo(txt)
-    __echo = txt
+local __echo = nil
+function echo(...)
+    __echo = __echo or Array()
+    local line = Array.concat({...}, ', ')
+    if #__echo > 0 and __echo[#__echo].line == line then
+        __echo[#__echo].count = __echo[#__echo].count + 1
+    else
+        __echo:add({line=line, count=1})
+    end
     __echoElapsedTime = 3
 end
 
@@ -80,7 +86,7 @@ function Engine.draw()
     resetMatrix(true)
     resetStyle()
 
-    scale(1/devicePixelRatio, 1/devicePixelRatio)
+    scale(SCALE)
     
     engine.navigation:draw(0, 0)
 
@@ -105,9 +111,21 @@ function Engine.draw()
     end
 
     if __echo then
-        textMode(CORNER)
+        fontName('arial')
         fontSize(32)
-        text(__echo, 25, 25)
+
+        textColor(getBackgroundColor():contrast())
+        textMode(CORNER)
+
+        local txt = ''
+        for _,line in ipairs(__echo) do
+            txt = txt..line.line
+            if line.count > 1 then
+                txt = txt..' ('..line.count..')'
+            end
+            txt = txt..NL
+        end
+        text(txt, 25, 25)
 
         __echoElapsedTime = __echoElapsedTime - timeManager.deltaTime
         if __echoElapsedTime <= 0 then
