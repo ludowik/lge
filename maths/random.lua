@@ -6,19 +6,22 @@ seed = function (value)
     return love.math.setRandomSeed(value)
 end
 
+__math = love and love.math or math
+__random = __math.random
+
 random = function (min, max)
     if min and max then 
-        return love.math.random() * (max-min) + min
+        return __random() * (max-min) + min
     elseif min then         
-        return love.math.random() * min
+        return __random() * min
     else
-        return love.math.random()
+        return __random()
     end
 end
-randomInt = love.math.random
+randomInt = __random
 
-noise = love.math.simplexNoise or love.math.perlinNoise or love.math.noise
-noiseSeed = love.math.setRandomSeed
+noise = __math.simplexNoise or __math.perlinNoise or __math.noise or __math.random
+noiseSeed = __math.setRandomSeed or __math.seed
 
-simplexNoise = love.math.simplexNoise or love.math.noise
-perlinNoise = love.math.perlinNoise or love.math.noise
+simplexNoise = __math.simplexNoise or __math.noise or __math.random
+perlinNoise = __math.perlinNoise or __math.noise or __math.random

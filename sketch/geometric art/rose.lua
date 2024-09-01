@@ -13,6 +13,7 @@ function draw()
     translate(CX, CY)
 
     stroke(colors.gray)
+
     line(-W, 0, W, 0)
     line(0, -H, 0, H)
 
@@ -34,7 +35,7 @@ function draw()
             else
                 noFill()
                 beginShape()
-                for angle = 0, TAU * n, 0.05 do
+                for angle = 0, TAU * n, 0.15 do
                     local r = radius * cos(angle * m / n)
                     vertex(
                         x + r * cos(angle),
