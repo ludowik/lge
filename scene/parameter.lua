@@ -139,7 +139,7 @@ function Parameter:addNavigationMenu()
     self:action('loop', function() processManager:loopProcesses() end)
 
     self:space()
-    self:link('web version', 'https://ludowik.github.io/lge/build/lovejs/lge-lovejs/lge')
+    self:link('web version', 'https://ludowik.github.io/lge')
 end
 
 function Parameter:addCaptureMenu()

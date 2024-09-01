@@ -1,33 +1,42 @@
 <!DOCTYPE html>
 <html>
-    <head>
 
-        <script src="js/lib/p5.min.js"></script>        
-        <script src="js/lib/fengari-web.js"></script>        
+<head>
 
-    </head>
+    <script src="js/lib/fengari-web.js"></script>
+    <script src="js/lib/p5.min.js"></script>
 
-    <body>
-        <script>
-            console.clear()
+</head>
 
-            function setup() {
-                createCanvas(200, 200)
+<body>
+
+    <script type="application/lua" src="js.lua" async></script>
+    <script async>
+        console.clear();
+
+        var needSetup = true;
+
+        function setup() {
+            createCanvas(256, 256 * 16 / 9);
+        }
+
+        function draw() {
+            if (needSetup) {
+                needSetup = false;
+                fengari.load('return __setup()')();
             }
+            fengari.load('return __draw()')();
+        }
 
-            function draw() {
-                fengari.load('return draw')();
-                background(deltaTime*10);
-            }
-        </script>
+        function mousePressed() {
+            fengari.load('return mousepressed()')();
+        }
 
-        <script type="application/lua" async>
-            print("Hello World!")
-            function draw()
-                print("Hello World!")
-            end
-        </script>
+        function mouseReleased() {
+            fengari.load('return mousereleased()')();
+        }
+    </script>
 
-    </body>
+</body>
 
 </html>

@@ -114,7 +114,7 @@ function Engine.draw()
         fontName('arial')
         fontSize(32)
 
-        textColor(getBackgroundColor():contrast())
+        textColor((getBackgroundColor() or colors.black):contrast())
         textMode(CORNER)
 
         local txt = ''
