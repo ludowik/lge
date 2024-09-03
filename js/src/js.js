@@ -12,10 +12,15 @@ function draw() {
     print('call draw');
     if (needSetup) {
         var setup = fengari.load('return __setup')();
+        var update = fengari.load('return __update')();
         var draw = fengari.load('return __draw')();
         if (setup || draw) {
             if (setup) setup();
-            if (draw) draw();
+            if (update) update();
+            if (draw) {
+                background(0, 0, 0)
+                draw();
+            }
             needSetup = false;
         }
     } else {

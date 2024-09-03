@@ -72,7 +72,7 @@ end
 function Particle:draw()
     stroke(self.clr)
     strokeSize(4)
-
+    
     function step(dt)
         self:update(dt)
         point(self.position.x, self.position.y)

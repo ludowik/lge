@@ -74,6 +74,7 @@ function circle(...)
     return js.global:circle(...)
 end
 
+POINTS = js.global.POINTS
 CLOSE = js.global.CLOSE
 function beginShape(...)
     return js.global:beginShape(...)

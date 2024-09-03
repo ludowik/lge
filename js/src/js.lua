@@ -25,6 +25,8 @@ require 'scene.node'
 require 'scene.scene'
 require 'scene.parameter'
 
+require 'engine.sketch'
+
 require 'js.src.graphics'
 require 'js.src.transform'
 
@@ -68,24 +70,51 @@ function __setup()
 
     parameter = Parameter('right')
 
+    if __sketch then
+        print('sketch')
+        if __sketch.setup then 
+            __sketch.setup()
+        end
+        
+        sketch = __sketch()
+        return
+    end
+
     return setup and setup()
 end
 
-function __draw()
+function __update()
     deltaTime = js.global.deltaTime / 1000
     elapsedTime = elapsedTime + deltaTime
 
+    if sketch then
+        if sketch.update then
+            sketch:update(deltaTime)
+        end
+        return
+    end
+    return update and update(deltaTime)
+end
+
+function __draw()
     blendMode(NORMAL)
 
     js.global:ellipseMode(js.global.RADIUS)
     js.global:angleMode(js.global.RADIANS)
     js.global:colorMode(js.global.RGB, 1)
 
-    local result = draw and draw()
+    local result
+    if sketch then
+        if sketch.draw then
+            sketch:draw()
+        end
+    else
+        result = draw and draw()
+    end
 
     --parameter:draw()
 
     return result
 end
 
-require 'sketch.geometric art.blinking_circles'
+require 'sketch.geometric art.hexagone'

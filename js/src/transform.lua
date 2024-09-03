@@ -3,6 +3,10 @@ function pushMatrix()
     js.global:push()
 end
 
+function popMatrix()
+    js.global:pop()
+end
+
 function translate(...)
     return js.global:translate(...)
 end
