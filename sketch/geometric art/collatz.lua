@@ -64,7 +64,7 @@ function draw()
     
     translate(CX, CY)
 
-    for i=1,100 do
+    for i=1,10 do
         collatz()
     end
 end
