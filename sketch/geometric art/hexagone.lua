@@ -11,7 +11,7 @@ function Hexagone:update(dt)
     if random() < 0.5 then
         self.particles:add(Particle())
     end
-    self.particles:removeIfTrue(function (item) return item.state == 'dead' end )
+    self.particles:removeIfTrue(function (item) return item.state == 'dead' end)
 end
 
 function Hexagone:draw()

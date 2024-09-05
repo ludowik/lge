@@ -4,7 +4,7 @@ function Sketch.setup()
     Sketch.fb = nil    
 end
 
-function Sketch:init()
+function Sketch:init()    
     env.sketch = self
 
     self:setMode(W, H)

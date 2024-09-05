@@ -2,11 +2,18 @@ js = require 'js'
 
 require 'lua.require'
 require 'lua.class'
+require 'lua.table'
 require 'lua.array'
 require 'lua.string'
+require 'lua.index'
+require 'lua.state'
+require 'lua.attrib'
+require 'lua.iter'
+require 'lua.grid'
 
 require 'maths.math'
 require 'maths.vec2'
+require 'maths.vec3'
 require 'maths.rect'
 require 'maths.random'
 
@@ -17,21 +24,22 @@ require 'events.mouse_event'
 require 'events.event_manager'
 
 require 'scene.bind'
-require 'scene.layout'
 require 'scene.ui'
 require 'scene.ui_button'
 require 'scene.ui_slider'
+require 'scene.layout'
 require 'scene.node'
 require 'scene.scene'
 require 'scene.parameter'
+require 'scene.animate'
 
+require 'engine.environment'
 require 'engine.sketch'
+require 'engine.sketch_loader'
+require 'engine.process_manager'
 
 require 'js.src.graphics'
 require 'js.src.transform'
-
-Color.setup()
---EventManager.setup()
 
 function loop()
     return js.global:loop()
@@ -66,12 +74,9 @@ function __setup()
 
     elapsedTime = 0
 
-    env = _G
-
     parameter = Parameter('right')
 
     if __sketch then
-        print('sketch')
         if __sketch.setup then 
             __sketch.setup()
         end
@@ -88,8 +93,8 @@ function __update()
     elapsedTime = elapsedTime + deltaTime
 
     if sketch then
-        if sketch.update then
-            sketch:update(deltaTime)
+        if sketch.updateSketch then
+            sketch:updateSketch(deltaTime)
         end
         return
     end
@@ -105,8 +110,8 @@ function __draw()
 
     local result
     if sketch then
-        if sketch.draw then
-            sketch:draw()
+        if sketch.drawSketch then
+            sketch:drawSketch()
         end
     else
         result = draw and draw()
@@ -117,4 +122,57 @@ function __draw()
     return result
 end
 
-require 'sketch.geometric art.hexagone'
+love = {
+    keyboard = {
+        setKeyRepeat = function ()
+        end,
+    },
+    graphics = {
+        getCanvas = function ()    
+        end,
+
+        setCanvas = function ()    
+        end,
+
+        clear = function ()
+        end,
+
+        setWireframe = function ()
+        end,
+
+        setShader = function ()
+        end,
+        
+        setDepthMode = function ()
+        end,
+
+        setColor = function ()
+        end,
+
+        setBlendMode = function ()            
+        end,
+    },
+    filesystem = {
+        getInfo = function ()
+            return {
+                modtime = 0
+            }
+        end
+    },
+}
+
+FrameBuffer = class()
+
+Color.setup()
+
+classSetup(_G)
+
+setfenv = function ()
+end
+
+env = declareSketch('lines', 'sketch.geometric art.lines')
+loadSketch(env)
+classSetup(env)
+
+sketch = env.sketch
+

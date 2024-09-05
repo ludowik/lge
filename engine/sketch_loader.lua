@@ -53,6 +53,8 @@ function declareSketches(reload)
 end
 
 function declareSketch(name, itemPath, category, reload)    
+    environments = environments or Array()
+
     if reload then
         local requirePath = itemPath:gsub('%/', '%.'):gsub('%.lua', '')
         environments[requirePath] = nil
@@ -76,6 +78,8 @@ function declareSketch(name, itemPath, category, reload)
         environments[name] = env
     end
     processManager:add(env)
+    
+    return env
 end
 
 function isSketch(klass)

@@ -2,12 +2,13 @@ class().setup = function ()
     seed(os.time())
 end
 
-seed = function (value)
-    return love.math.setRandomSeed(value)
-end
-
 __math = love and love.math or math
 __random = __math.random
+__seed = __math.setRandomSeed or __math.randomseed
+
+seed = function (value)
+    return __seed(value)
+end
 
 random = function (min, max)
     if min and max then 
@@ -21,7 +22,7 @@ end
 randomInt = __random
 
 noise = __math.simplexNoise or __math.perlinNoise or __math.noise or __math.random
-noiseSeed = __math.setRandomSeed or __math.seed
+noiseSeed = __math.setRandomSeed or __math.randomseed
 
 simplexNoise = __math.simplexNoise or __math.noise or __math.random
 perlinNoise = __math.perlinNoise or __math.noise or __math.random

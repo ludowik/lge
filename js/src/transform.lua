@@ -7,6 +7,13 @@ function popMatrix()
     js.global:pop()
 end
 
+function resetMatrix()
+    js.global:resetMatrix()
+end
+
+function resetStyle()
+end
+
 function translate(...)
     return js.global:translate(...)
 end

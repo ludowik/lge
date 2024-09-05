@@ -9,7 +9,6 @@ function setup() {
 }
 
 function draw() {
-    print('call draw');
     if (needSetup) {
         var setup = fengari.load('return __setup')();
         var update = fengari.load('return __update')();
@@ -24,6 +23,7 @@ function draw() {
             needSetup = false;
         }
     } else {
+        fengari.load('return __update()')();
         fengari.load('return __draw()')();
     }
 }

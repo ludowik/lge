@@ -14,6 +14,7 @@ function Node:__tostring()
 end
 
 function Node:add(item)
+    self.items = self.items or Array()
     self.items:add(item)
     return self
 end

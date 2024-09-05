@@ -87,3 +87,9 @@ end
 function endShape(...)
     js.global:endShape(...)
 end
+
+Graphics = {
+    loop,
+    noLoop,
+    redraw,
+}
