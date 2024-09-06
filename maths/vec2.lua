@@ -1,6 +1,5 @@
 vec2 = class()
 
-local ffi = try_require 'ffi'
 if ffi then
     ffi.cdef [[
         typedef union vec2 {

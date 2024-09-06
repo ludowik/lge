@@ -1,7 +1,5 @@
 if getOS() == 'web' then return end
 
-local ffi = try_require 'ffi'
-
 Pixels = class() : extends(Sketch)
 
 function Pixels:init()

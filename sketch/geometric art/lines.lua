@@ -1,6 +1,6 @@
 function setup()
     vertices = Array()
-    colors = Array()
+    palette = Array()
     
     reset()
 end
@@ -8,7 +8,7 @@ end
 function reset()
     for i=1,6 do
         vertices:add(vec2.randomInScreen())
-        colors:add(Color.random())
+        palette:add(Color.random())
     end
 
     function nextPosition(i)
@@ -26,7 +26,7 @@ function reset()
     function nextColor(i)
         local easing = randomInt(1, #tween.easingFunctions)
         animate(
-            colors[i],
+            palette[i],
             Color.random(),
             random(0.8, 1.5),
             tween.easingFunctions[easing],
@@ -51,11 +51,11 @@ function draw()
 
         local n = #vertices
         for i=1,n-1 do
-            stroke(colors[i])
+            stroke(palette[i])
             line(vertices[i].x, vertices[i].y, vertices[i+1].x, vertices[i+1].y)
         end
 
-        stroke(colors[n])
+        stroke(palette[n])
         line(vertices[n].x, vertices[n].y, vertices[1].x, vertices[1].y)
     end
 

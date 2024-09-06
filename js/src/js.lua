@@ -1,6 +1,9 @@
+package.path = './?.lua;./?/init.lua;./lua/5.3/?.lua;./lua/5.3/?/init.lua'
+
 js = require 'js'
 
 require 'lua.require'
+
 require 'lua.class'
 require 'lua.table'
 require 'lua.array'
@@ -53,7 +56,7 @@ function noise(...)
     return js.global:noise(...)
 end
 
-function __setup()
+function __init()
     window = js.global
 
     W = js.global.innerWidth
@@ -75,7 +78,9 @@ function __setup()
     elapsedTime = 0
 
     parameter = Parameter('right')
+end
 
+function __setup()
     if __sketch then
         if __sketch.setup then 
             __sketch.setup()
@@ -123,18 +128,39 @@ function __draw()
 end
 
 love = {
-    keyboard = {
-        setKeyRepeat = function ()
-        end,
+    window = {
+        getMode = function ()
+        end
     },
+
     graphics = {
-        getCanvas = function ()    
+        getCanvas = function ()
+            return {
+                getWidth = function ()
+                    return W
+                end,
+                getHeight = function ()
+                    return H
+                end
+            }
         end,
 
         setCanvas = function ()    
         end,
 
         clear = function ()
+        end,
+
+        origin = function ()
+        end,
+
+        translate = function ()
+        end,
+
+        scale = function ()
+        end,
+
+        draw = function ()
         end,
 
         setWireframe = function ()
@@ -152,6 +178,12 @@ love = {
         setBlendMode = function ()            
         end,
     },
+
+    keyboard = {
+        setKeyRepeat = function ()
+        end,
+    },
+
     filesystem = {
         getInfo = function ()
             return {
@@ -163,16 +195,27 @@ love = {
 
 FrameBuffer = class()
 
-Color.setup()
+function FrameBuffer:init(w, h)
+    self.width = w or W
+    self.height = h or H
+
+    self.canvas = js.global:createImage(self.width, self.height)
+end
+
+function FrameBuffer:setPixel(x, y, clr, ...)
+    self.canvas:set(x, y, clr, ...)
+end
 
 classSetup(_G)
 
 setfenv = function ()
 end
 
-env = declareSketch('lines', 'sketch.geometric art.lines')
-loadSketch(env)
-classSetup(env)
+function loadASketch()
+    env = declareSketch('lines', 'sketch.geometric art.voronoy')
+    loadSketch(env)
+    classSetup(env)
 
-sketch = env.sketch
+    sketch = env.sketch
+end
 

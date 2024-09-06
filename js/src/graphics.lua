@@ -1,5 +1,5 @@
 function background(clr, ...)
-    clr = Color.fromParam(clr, ...)
+    clr = Color.fromParam(clr, ...) or colors.black
     return js.global:background(clr.r, clr.g, clr.b, clr.a)
 end
 
@@ -37,7 +37,7 @@ end
 
 function textColor(clr, ...)
     clr = Color.fromParam(clr, ...)
-    return js.global:stroke(clr.r, clr.g, clr.b, clr.a)
+    return js.global:fill(clr.r, clr.g, clr.b, clr.a)
 end
 
 function fontSize(size)

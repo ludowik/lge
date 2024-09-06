@@ -1,6 +1,8 @@
 require 'lua.debug'
 require 'lua.require'
 
+ffi = try_require 'ffi'
+
 -- require 'lua.helper'
 -- require 'lua.helper_syntax'
 
