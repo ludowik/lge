@@ -10,6 +10,8 @@ function setup() {
 
 function draw() {
     if (needSetup) {
+        var setup = fengari.load('return __init()')();
+        fengari.load('return loadASketch()')();
         var setup = fengari.load('return __setup')();
         var update = fengari.load('return __update')();
         var draw = fengari.load('return __draw')();

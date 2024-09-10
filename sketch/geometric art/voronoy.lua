@@ -54,18 +54,18 @@ function draw()
 
             image:setPixel(x-1, y-1, minDistance/255, minDistance/255, minDistance/255, 1)
             
---                    pixels[i  ] = minDistance
---                    pixels[i+1] = minDistance
---                    pixels[i+2] = minDistance
+            -- pixels[i  ] = minDistance
+            -- pixels[i+1] = minDistance
+            -- pixels[i+2] = minDistance
 
---                    pixels[i+3] = 255
+            -- pixels[i+3] = 255
 
             i = i + 4
 
         end
     end
 
---        image:makeTexture()
+    -- image:makeTexture()
 
     spriteMode(CORNER)
     sprite(image, 0, 0)

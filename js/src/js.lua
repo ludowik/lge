@@ -3,6 +3,7 @@ package.path = './?.lua;./?/init.lua;./lua/5.3/?.lua;./lua/5.3/?/init.lua'
 js = require 'js'
 
 require 'lua.require'
+
 require 'lua.class'
 require 'lua.table'
 require 'lua.array'
@@ -55,7 +56,7 @@ function noise(...)
     return js.global:noise(...)
 end
 
-function __setup()
+function __init()
     window = js.global
 
     W = js.global.innerWidth
@@ -77,7 +78,9 @@ function __setup()
     elapsedTime = 0
 
     parameter = Parameter('right')
+end
 
+function __setup()
     if __sketch then
         if __sketch.setup then 
             __sketch.setup()
@@ -151,10 +154,10 @@ love = {
         origin = function ()
         end,
 
-        scale = function ()
+        translate = function ()
         end,
 
-        translate = function ()
+        scale = function ()
         end,
 
         draw = function ()
@@ -195,16 +198,27 @@ function FrameBuffer:init()
     self.canvas = love.graphics.getCanvas()
 end
 
-Color.setup()
+function FrameBuffer:init(w, h)
+    self.width = w or W
+    self.height = h or H
+
+    self.canvas = js.global:createImage(self.width, self.height)
+end
+
+function FrameBuffer:setPixel(x, y, clr, ...)
+    self.canvas:set(x, y, clr, ...)
+end
 
 classSetup(_G)
 
 setfenv = function ()
 end
 
-env = declareSketch('lines', 'sketch.geometric art.lines')
-loadSketch(env)
-classSetup(env)
+function loadASketch()
+    env = declareSketch('lines', 'sketch.geometric art.voronoy')
+    loadSketch(env)
+    classSetup(env)
 
-sketch = env.sketch
+    sketch = env.sketch
+end
 
