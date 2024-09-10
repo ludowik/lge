@@ -1,3 +1,5 @@
+package.path = './?.lua;./?/init.lua;./lua/5.3/?.lua;./lua/5.3/?/init.lua'
+
 js = require 'js'
 
 require 'lua.require'
@@ -123,18 +125,39 @@ function __draw()
 end
 
 love = {
-    keyboard = {
-        setKeyRepeat = function ()
-        end,
+    window = {
+        getMode = function ()
+        end
     },
+    
     graphics = {
-        getCanvas = function ()    
+        getCanvas = function ()
+            return {
+                getWidth = function ()
+                    return W
+                end,
+                getHeight = function ()
+                    return H
+                end,
+            }
         end,
 
         setCanvas = function ()    
         end,
 
         clear = function ()
+        end,
+
+        origin = function ()
+        end,
+
+        scale = function ()
+        end,
+
+        translate = function ()
+        end,
+
+        draw = function ()
         end,
 
         setWireframe = function ()
@@ -152,6 +175,12 @@ love = {
         setBlendMode = function ()            
         end,
     },
+
+    keyboard = {
+        setKeyRepeat = function ()
+        end,
+    },
+    
     filesystem = {
         getInfo = function ()
             return {
@@ -162,6 +191,9 @@ love = {
 }
 
 FrameBuffer = class()
+function FrameBuffer:init()
+    self.canvas = love.graphics.getCanvas()
+end
 
 Color.setup()
 

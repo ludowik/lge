@@ -1,5 +1,3 @@
-local ffi = try_require 'ffi'
-
 function setup()
     size = even(CX)
     img = FrameBuffer(size, size)

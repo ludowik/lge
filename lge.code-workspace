@@ -17,6 +17,7 @@
         "debug.console.fontSize": 14,
         "Lua.diagnostics.disable": [
             "lowercase-global"
-        ]
+        ],
+        "liveServer.settings.multiRootWorkspaceName": "lge"
     }
 }
