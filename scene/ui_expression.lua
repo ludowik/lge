@@ -20,7 +20,9 @@ function UIExpression:evaluateExpression()
     
     local type_expression = type(expression)
     if type_expression == 'string' then
-        return self:formatValue((loadstring('return ' .. expression)()))
+        local f = loadstring('return (env or _G).' .. expression)
+        local ok, result = pcall(f)
+        return self:formatValue(ok and result or 'err')
 
     elseif type_expression == 'table' then
         return self:formatValue(expression)

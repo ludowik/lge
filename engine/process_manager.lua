@@ -61,7 +61,7 @@ function ProcessManager:setCurrentSketch(processIndex)
     if not sketch then return end
 
     _G.env = sketch.env
-    setfenv(0, _G.env)
+    --setfenv(0, _G.env)
 
     sketch:resume()
 
@@ -141,6 +141,7 @@ function ProcessManager:updateLoop(dt)
         self:next()
 
         local sketch = processManager:current()
+        assert(sketch)
 
         local delay = LOOP_PROCESS_DELAY
         local dt = LOOP_PROCESS_DT
@@ -171,8 +172,8 @@ function ProcessManager:updateLoop(dt)
 
         if sketch == self.__loopProcesses.startProcess then
             self.__loopProcesses = nil
+        else
+            self:updateLoop(dt)
         end
-
-        self:updateLoop(dt)
     end
 end
