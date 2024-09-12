@@ -30,10 +30,18 @@ function draw() {
     }
 }
 
-function mousePressed() {
-    fengari.load('return mousepressed()')();
+function mousePressed(event) {
+    __event = event;
+    fengari.load('return __mousepressed()')();
 }
 
-function mouseReleased() {
-    fengari.load('return mousereleased()')();
+function mouseReleased(event) {
+    __event = event;
+    fengari.load('return __mousereleased()')();
+}
+
+function keyPressed() {
+    __key = key;
+    print(key)
+    fengari.load('return __keypressed()')();
 }

@@ -13,6 +13,7 @@ require 'lua.state'
 require 'lua.attrib'
 require 'lua.iter'
 require 'lua.grid'
+require 'lua.function'
 
 require 'maths.math'
 require 'maths.vec2'
@@ -30,6 +31,7 @@ require 'scene.bind'
 require 'scene.ui'
 require 'scene.ui_button'
 require 'scene.ui_slider'
+require 'scene.ui_expression'
 require 'scene.layout'
 require 'scene.node'
 require 'scene.scene'
@@ -97,9 +99,9 @@ function __update()
     deltaTime = js.global.deltaTime / 1000
     elapsedTime = elapsedTime + deltaTime
 
-    if sketch then
-        if sketch.updateSketch then
-            sketch:updateSketch(deltaTime)
+    if env.sketch then
+        if env.sketch.updateSketch then
+            env.sketch:updateSketch(deltaTime)
         end
         return
     end
@@ -109,14 +111,13 @@ end
 function __draw()
     blendMode(NORMAL)
 
-    js.global:ellipseMode(js.global.RADIUS)
     js.global:angleMode(js.global.RADIANS)
     js.global:colorMode(js.global.RGB, 1)
 
     local result
-    if sketch then
-        if sketch.drawSketch then
-            sketch:drawSketch()
+    if env.sketch then
+        if env.sketch.drawSketch then
+            env.sketch:drawSketch()
         end
     else
         result = draw and draw()
@@ -125,6 +126,37 @@ function __draw()
     --parameter:draw()
 
     return result
+end
+
+local function touchFromEvent(event)
+    return {
+            position = {
+                x = event.clientX,
+                y = event.clientY
+            }
+        }
+end
+
+function __mousepressed()
+    if mousepressed then
+        mousepressed(touchFromEvent(js.global.__event))
+    end
+end
+
+function __mousereleased()
+    if mousereleased then
+        mousereleased(touchFromEvent(js.global.__event))
+    end
+end
+
+function  __keypressed()
+    if sketch.keypressed then
+        sketch:keypressed(js.global.__key)
+    end
+end
+
+function saveData()
+    
 end
 
 love = {
@@ -202,11 +234,19 @@ function FrameBuffer:init(w, h)
     self.width = w or W
     self.height = h or H
 
-    self.canvas = js.global:createImage(self.width, self.height)
+    self.canvas = {
+        img = js.global:createImage(self.width, self.height),
+        getWidth = function ()
+            return self.width
+        end,
+        getHeight = function ()
+            return self.height
+        end
+    }
 end
 
 function FrameBuffer:setPixel(x, y, clr, ...)
-    self.canvas:set(x, y, clr, ...)
+    self.canvas.image:set(x, y, clr, ...)
 end
 
 classSetup(_G)
@@ -214,11 +254,12 @@ classSetup(_G)
 setfenv = function ()
 end
 
-function loadASketch()
-    env = declareSketch('lines', 'sketch.geometric art.voronoy')
-    loadSketch(env)
-    classSetup(env)
+unpack = table.unpack
 
-    sketch = env.sketch
+function loadASketch()
+    env = declareSketch('lines', 'sketch.games.2048')
+    loadSketch(env)
+    __sketch = The2048
+    classSetup(env)
 end
 
