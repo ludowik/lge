@@ -70,8 +70,8 @@ function rect(...)
     return js.global:rect(...)
 end
 
-function circle(...)
-    return js.global:circle(...)
+function circle(x, y, r)
+    return js.global:circle(x, y, r*2)
 end
 
 POINTS = js.global.POINTS
@@ -86,6 +86,15 @@ end
 
 function endShape(...)
     js.global:endShape(...)
+end
+
+function spriteMode(...)
+    js.global:imageMode(...)
+end
+
+function sprite(img)
+    img.canvas.img:updatePixels()
+    js.global:image(img.canvas.img)
 end
 
 Graphics = {

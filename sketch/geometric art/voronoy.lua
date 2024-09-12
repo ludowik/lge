@@ -32,8 +32,8 @@ function draw()
 
     local w, h = image.width, image.height
     
-    for y=1,h do
-        for x=1,w do
+    for y=1,h,8 do
+        for x=1,w,8 do
 
             minDistance = maxDistance
 
