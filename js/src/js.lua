@@ -164,7 +164,7 @@ love = {
         getMode = function ()
         end
     },
-
+    
     graphics = {
         getCanvas = function ()
             return {
@@ -173,7 +173,7 @@ love = {
                 end,
                 getHeight = function ()
                     return H
-                end
+                end,
             }
         end,
 
@@ -215,7 +215,7 @@ love = {
         setKeyRepeat = function ()
         end,
     },
-
+    
     filesystem = {
         getInfo = function ()
             return {
@@ -226,6 +226,9 @@ love = {
 }
 
 FrameBuffer = class()
+function FrameBuffer:init()
+    self.canvas = love.graphics.getCanvas()
+end
 
 function FrameBuffer:init(w, h)
     self.width = w or W
