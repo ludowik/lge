@@ -95,8 +95,6 @@ function Triomino:__loadGame()
 end
 
 function Triomino:saveGame()
-    print('save')
-
     -- generate data to save
     local data = {
         cells = Array(),

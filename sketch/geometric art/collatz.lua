@@ -13,12 +13,12 @@ function setup()
     clr.a = 0.1
 
     parameter:number('rotation', 0, TAU, rotation, function (value)
-            nextValue = 1
-        end)
+        nextValue = 1
+    end)
 
     parameter:integer('len', SIZE/10, SIZE, 50, function ()
-            nextValue = 1
-        end)
+        nextValue = 1
+    end)
 end
 
 function collatz()    

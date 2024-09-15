@@ -71,7 +71,6 @@ function ProcessManager:setCurrentSketch(processIndex)
     if not sketch then return end
 
     _G.env = sketch.env
-    --setfenv(0, _G.env)
 
     sketch:resume()
 
@@ -141,7 +140,7 @@ function ProcessManager:update(dt)
 
     if self.__loopProcesses then
         self:updateLoop(dt)
-    else
+    elseif sketch then
         sketch:updateSketch(dt)
     end
 end

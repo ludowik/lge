@@ -1,4 +1,5 @@
 NL = '\n'
+TAB = '\t'
 
 string.__format = string.format
 

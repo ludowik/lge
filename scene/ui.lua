@@ -45,7 +45,7 @@ end
 
 function UI:formatValue(value)
     if self.intValue then
-        return string.format('%d', value)
+        return string.format('%.0f', value)
     else
         if value <= 0.01 then
             return string.format('%f', value)

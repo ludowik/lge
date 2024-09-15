@@ -104,7 +104,7 @@ class 'Function'
 
 function Function:init(t)
     self.label = t[1]
-    self.f = t[2]
+    self.f = t[2] or noise
     self.param = Array(t.param)
     self.range = Array(t.range)
 

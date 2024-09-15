@@ -1,5 +1,5 @@
 function load(reload)
-    declareSketches(reload)
+    declareSketches(nil, reload)
     --loadSketches()
 
     classSetup()
@@ -17,31 +17,41 @@ end
 local environments = nil
 environmentsList = nil
 
-function declareSketches(reload)
+function enumSketches()
+    local list = Array()
+
     local function scan(path, category)
         local directoryItems = love.filesystem.getDirectoryItems(path)
         for _,itemName in ipairs(directoryItems) do
             local name = itemName:gsub('%.lua', '')
-            local itemPath = path..'/'..itemName
+            local filePath = path..'/'..itemName
 
-            local info = love.filesystem.getInfo(itemPath)
+            local info = love.filesystem.getInfo(filePath)
             if info.type == 'directory' then
-                local infoInit = love.filesystem.getInfo(itemPath..'/'..'__init.lua')
+                local infoInit = love.filesystem.getInfo(filePath..'/'..'__init.lua')
                 if infoInit then
-                    declareSketch(name, itemPath, category, reload)
+                    list:add{name=name, filePath=filePath, category=category}
                 else
-                    -- recursive scan
-                    scan(itemPath, itemName)
+                    scan(filePath, itemName)
                 end
             else
-                declareSketch(name, itemPath, category, reload)
+                list:add{name=name, filePath=filePath, category=category}
             end
         end
     end
     
-    environments = Array()
-    
     scan('sketch')
+
+    return list
+end
+
+function declareSketches(list, reload)
+    list = list or enumSketches()
+
+    environments = Array()
+    for i,v in ipairs(list) do
+        declareSketch(v.name, v.filePath, v.category, reload)
+    end
 
     environmentsList = Array()
     for k,env in pairs(environments) do
@@ -52,18 +62,18 @@ function declareSketches(reload)
     end)
 end
 
-function declareSketch(name, itemPath, category, reload)    
+function declareSketch(name, filePath, category, reload)    
     environments = environments or Array()
 
     if reload then
-        local requirePath = itemPath:gsub('%/', '%.'):gsub('%.lua', '')
+        local requirePath = filePath:gsub('%/', '%.'):gsub('%.lua', '')
         environments[requirePath] = nil
         package.loaded[requirePath] = nil
     end
     
     if environments[name] then return environments[name] end
 
-    local env = Environment(name, itemPath, category)
+    local env = Environment(name, filePath, category)
     
     for k,v in pairs(env) do
         if isSketch(v) then
@@ -98,10 +108,9 @@ function loadSketch(env)
     if env.sketch then return end
 
     _G.env = env
-    env.env = env
 
     if env.__sketch then
-        if env.__sketch.setup then 
+        if env.__sketch.setup then
             env.__sketch.setup()
         end
         

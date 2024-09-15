@@ -14,7 +14,7 @@ function draw() {
 
     if (needLoad) {
         var init = fengari.load('return __init')();
-        var loadASketch = fengari.load('return loadASketch')();
+        var loadASketch = fengari.load('return __loadASketch')();
         if (init && loadASketch) {
             init();
             loadASketch();
@@ -24,7 +24,6 @@ function draw() {
     }
 
     if (needSetup) {
-        var setup = fengari.load('return __setup')();
         var update = fengari.load('return __update')();
         var draw = fengari.load('return __draw')();
         if (setup || draw) {

@@ -37,7 +37,9 @@ end
 fract = math.fract
 
 sqrt = math.sqrt
-pow = math.pow
+pow = math.pow or function (a, b)
+    return a^b
+end
 
 sin = math.sin
 cos = math.cos
@@ -75,7 +77,7 @@ function even(value)
     return value + value % 2
 end
 
-function odd()
+function odd(value)
     value = round(value)
     return value + value % 2 - 1
 end

@@ -2,6 +2,12 @@ function setup()
     supportedOrientations(LANDSCAPE)
 
     baseImageList = dir('resources/images', 'png')
+    
+    if #baseImageList == 0 then
+        baseImageList =  {
+            'joconde.png'
+        }
+    end
 
     local function getSource()
         local baseImage = Image('resources/images/'..baseImageList[baseImageIndex])

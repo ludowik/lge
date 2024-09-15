@@ -21,6 +21,16 @@ function Engine.load()
     engine.components:add(eventManager)
     engine.components:add(processManager)
     engine.components:add(instrument)
+
+    -- local sketchesList = '{' .. NL
+    -- environmentsList:foreach(function (env)
+    --     sketchesList = sketchesList .. TAB .. ("{name='{__name}', filePath='{__requirePath}'},"):format(env) .. NL
+    -- end)
+    -- sketchesList = sketchesList  .. '}'
+
+    -- love.filesystem.write('sketches_list.lua', sketchesList)
+
+    -- exit()
 end
 
 function Engine.initParameter()

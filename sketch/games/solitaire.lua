@@ -429,7 +429,8 @@ function Card:draw()
         sprite(self.img,
             x + wcard / 2,
             y + hcard - wcard / 2 - margin,
-            wcard * .7, wcard * .7)
+            wcard * .7,
+            wcard * .7)
     else
         strokeSize(0.5)
         stroke(colors.black)

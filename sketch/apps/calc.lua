@@ -63,11 +63,11 @@ function setup()
     addButton('0', 1, row, colors.blue, 2)
     addButton(',', 3, row, colors.blue)
 
-    parameter:watch('calc.acc1')
-    parameter:watch('calc.acc2')
-    parameter:watch('calc.decimalPart')
-    parameter:watch('calc.operator')
-    parameter:watch('calc.sign')
+    parameter:watch('acc1', 'calc.acc1')
+    parameter:watch('acc2', 'calc.acc2')
+    parameter:watch('decimal part', 'calc.decimalPart')
+    parameter:watch('operator', 'calc.operator or "none"')
+    parameter:watch('sign', 'calc.sign')
 end
 
 function action(ui)

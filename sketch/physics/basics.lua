@@ -172,7 +172,7 @@ function Body:update(dt)
     self.position = self.position + self.linearVelocity * dt
     
     -- linear damping
-    self.linearVelocity = self.linearVelocity * math.pow(self.damping, dt)
+    self.linearVelocity = self.linearVelocity * pow(self.damping, dt)
 
     -- reset acceleration
     self.acceleration:set()

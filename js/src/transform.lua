@@ -11,6 +11,9 @@ function resetMatrix()
     js.global:resetMatrix()
 end
 
+function resetMatrixContext()
+end
+
 function resetStyle()
 end
 

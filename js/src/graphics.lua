@@ -23,6 +23,10 @@ function circleMode(...)
     return js.global:ellipseMode(...)
 end
 
+function ellipseMode(...)
+    return js.global:ellipseMode(...)
+end
+
 function fill(clr, ...)
     clr = Color.fromParam(clr, ...)
     return js.global:fill(clr.r, clr.g, clr.b, clr.a)
@@ -43,6 +47,12 @@ function textColor(clr, ...)
     clr = Color.fromParam(clr, ...)
     return js.global:fill(clr.r, clr.g, clr.b, clr.a)
 end
+
+function tint(clr, ...)
+    clr = Color.fromParam(clr, ...)
+    return js.global:tint(clr.r, clr.g, clr.b, clr.a)
+end
+function noTint() js.global:noTint() end
 
 function fontName(name)
     return js.global:textFont(name)
@@ -78,8 +88,24 @@ function point(...)
     return js.global:point(...)
 end
 
+function points(data)
+    beginShape(POINTS)
+    for i=1,#data,2 do
+        vertex(data[i], data[i+1])
+    end
+    endShape()
+end
+
 function line(...)
     return js.global:line(...)
+end
+
+function polyline(data)
+    beginShape(LINES)
+    for i=1,#data,2 do
+        vertex(data[i], data[i+1])
+    end
+    endShape()
 end
 
 function rect(...)
@@ -90,27 +116,56 @@ function circle(x, y, r)
     return js.global:circle(x, y, r*2)
 end
 
+function ellipse(x, y, w, h)
+    return js.global:ellipse(x, y, w, h)
+end
+
 POINTS = js.global.POINTS
+LINES = js.global.LINES
+
 CLOSE = js.global.CLOSE
-function beginShape(...)
-    return js.global:beginShape(...)
+
+Shape = class()
+
+function Shape:init(kind)
+    self.kind = kind or js.global.LINES
+    self.vertices = Array()
+end
+
+function Shape:add(...)
+    self.vertices:add{...}
+end
+
+function Shape:draw()
+    js.global:beginShape(self.kind)
+    self.vertices:foreach(function (arg)
+        vertex(table.unpack(arg))
+    end)
+    js.global:endShape(__shape.mode)
+end
+
+function beginShape(kind)
+    __shape = Shape(kind)
 end
 
 function vertex(...)
-    return js.global:vertex(...)
+    __shape:add(...)
 end
 
-function endShape(...)
-    js.global:endShape(...)
+function endShape(mode)
+    __shape.mode = mode
+    __shape:draw()
+    return __shape
 end
 
 function spriteMode(...)
     js.global:imageMode(...)
 end
 
-function sprite(img)
-    img.canvas.img:updatePixels()
-    js.global:image(img.canvas.img)
+function sprite(img, x, y, w, h)
+    img:draw(
+        x or 0,
+        y or 0, w, h)
 end
 
 Graphics = {
