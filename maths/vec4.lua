@@ -201,3 +201,8 @@ function vec4:normalizeInPlace(norm)
     self.w = self.w * ratio
     return self
 end
+
+function xyzw(x, ...)
+    if type(x) == 'number' then return x, ... end
+    return x.x, x.y, (x.z or 0), (x.w or 0)
+end

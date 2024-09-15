@@ -11,8 +11,12 @@ end
 
 CENTER = js.global.CENTER
 CORNER = js.global.CORNER
-function rectMode(...)
-    return js.global:rectMode(...)
+function rectMode(mode)
+    if mode == CENTER then
+        return js.global:rectMode(js.global.CENTER)
+    else
+        return js.global:rectMode(js.global.CORNER)
+    end
 end
 
 function circleMode(...)
@@ -40,16 +44,28 @@ function textColor(clr, ...)
     return js.global:fill(clr.r, clr.g, clr.b, clr.a)
 end
 
+function fontName(name)
+    return js.global:textFont(name)
+end
+
 function fontSize(size)
     return js.global:textSize(size)
 end
 
-function textMode(...)
-    return js.global:textAlign(...)
+function textMode(mode, ...)
+    if mode == CENTER then
+        return js.global:textAlign(js.global.CENTER, js.global.CENTER)
+    else
+        return js.global:textAlign(js.global.LEFT, js.global.TOP)
+    end
 end
 
-function text(...)
-    return js.global:text(...)
+function text(txt, x, y)
+    return js.global:text(txt, x, y)
+end
+
+function textPosition()
+    return 0
 end
 
 function textSize(...)

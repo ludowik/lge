@@ -236,6 +236,11 @@ function vec2:draw()
     circle(self.x, self.y, 5)
 end
 
+function xy(x, ...)
+    if type(x) == 'number' then return x, ... end
+    return x.x, x.y
+end
+
 function vec2.unitTest()
     assert(vec2(1,2) == vec2(1,2))
     assert(vec2():set(1,2) == vec2(1,2))

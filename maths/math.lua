@@ -43,7 +43,7 @@ sin = math.sin
 cos = math.cos
 
 tan = math.tan
-atan2 = math.atan2
+atan2 = math.atan2 or math.atan
 
 rad = math.rad
 deg = math.deg

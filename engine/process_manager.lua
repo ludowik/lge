@@ -4,6 +4,16 @@ function ProcessManager.setup()
     processManager = ProcessManager()
 end
 
+function ProcessManager.openSketches()
+    local sketch = processManager:current()
+    if sketch.__className ~= 'sketches' then            
+        processManager:setSketch('Sketches')
+        engine.parameter.visible = false
+    else
+        sketch.env.navigate()
+    end
+end
+
 function ProcessManager:init()
     self.processIndex = 1
 end

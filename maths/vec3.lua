@@ -224,3 +224,8 @@ function vec3:rotate(angle)
         self.y,
         s * self.z + c * self.z)
 end
+
+function xyz(x, ...)
+    if type(x) == 'number' then return x, ... end
+    return x.x, x.y, (x.z or 0)
+end

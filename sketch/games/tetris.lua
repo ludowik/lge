@@ -503,8 +503,9 @@ function TetrisGrid:draw(shadow, luminosity)
     Grid.draw(self, 0, 0, function(cell, i, j)
         if not cell.value then return end
 
+        local __rect = rect
         local function rect(marge, border)
-            Graphics2d.rect(
+            __rect(
                 (i - 1) * cellSize - marge,
                 (j - 1) * cellSize - marge,
                 cellSize + 2 * marge,

@@ -1,30 +1,163 @@
-package.path = './?.lua;./?/init.lua;./lua/5.3/?.lua;./lua/5.3/?/init.lua'
-
 js = require 'js'
+
+package.path = './?.lua;./?/__init.lua;./lua/5.3/?.lua;./lua/5.3/?/init.lua'
+
+loadstring = load
+
+arg = {
+}
+
+io = {
+    stdout = {
+        setvbuf = function ()
+        end
+    }
+}
+
+love = {
+    getVersion = function ()
+        return 0, 9, 0, 'p5'
+    end,
+
+    system = {
+        getOS = function ()
+            return 'web'
+        end,
+    },
+
+    window = {
+        getMode = function ()
+        end,
+    },
+    
+    graphics = {
+        getCanvas = function ()
+            return {
+                getWidth = function ()
+                    return W
+                end,
+                getHeight = function ()
+                    return H
+                end,
+            }
+        end,
+
+        setCanvas = function ()    
+        end,
+
+        reset = function ()
+        end,
+
+        clear = function ()
+        end,
+
+        origin = function ()
+        end,
+
+        translate = function ()
+        end,
+
+        scale = function ()
+        end,
+
+        draw = function ()
+        end,
+
+        present = function ()
+        end,
+
+        setWireframe = function ()
+        end,
+
+        setShader = function ()
+        end,
+        
+        setDepthMode = function ()
+        end,
+
+        setColor = function ()
+        end,
+
+        setBlendMode = function ()            
+        end,
+    },
+
+    keyboard = {
+        setKeyRepeat = function ()
+        end,
+    },
+    
+    filesystem = {
+        getInfo = function ()
+            return {
+                modtime = 0
+            }
+        end,
+
+        getDirectoryItems = function ()
+            return {}    
+        end,
+
+        getSaveDirectory = function ()
+            return ''
+        end,
+
+        createDirectory = function ()
+        end,
+
+        write = function (fileName, data)
+            js.global.localStorage:setItem(fileName, data)
+        end,
+
+        read = function (filename)
+            return js.global.localStorage:getItem(filename)
+        end,
+
+        load = function (filename)
+            local data = love.filesystem.read(filename)
+            return loadstring(data)
+        end
+    },
+
+    mouse ={
+        isDown = function ()
+            return true
+        end,
+    },
+
+    timer = {
+        getTime = function ()
+            return js.global.Date:now()
+        end,
+
+        getFPS = function ()
+            return js.global:getTargetFrameRate()
+        end,
+    },
+    
+    touch = {
+        getTouches = function ()
+            return js.global.touches
+        end
+    }
+}
 
 require 'lua.require'
 
-require 'lua.class'
-require 'lua.table'
-require 'lua.array'
-require 'lua.string'
-require 'lua.index'
-require 'lua.state'
-require 'lua.attrib'
-require 'lua.iter'
-require 'lua.grid'
-require 'lua.function'
+require 'lua'
 
 require 'maths.math'
 require 'maths.vec2'
 require 'maths.vec3'
 require 'maths.rect'
+require 'maths.types'
 require 'maths.random'
 
 require 'graphics.color'
 require 'graphics.anchor'
 
 require 'events.mouse_event'
+require 'events.mouse'
 require 'events.event_manager'
 
 require 'scene.bind'
@@ -38,6 +171,7 @@ require 'scene.scene'
 require 'scene.parameter'
 require 'scene.animate'
 
+require 'engine.engine'
 require 'engine.environment'
 require 'engine.sketch'
 require 'engine.sketch_loader'
@@ -67,19 +201,23 @@ function __init()
     CX = W/2
     CY = H/2
 
-    MIN_SIZE = min(W, H)
-    MAX_SIZE = max(W, H)
+    local ratio = 9/16
+
+    MIN_SIZE = min(min(W, H), max(W, H)*ratio)
+    MAX_SIZE = max(max(W, H), min(W, H)/ratio)
 
     SIZE = MIN_SIZE
 
     SCALE = 1
-
+    
     LEFT = 5
-    TOP = 5
+    TOP = 50
 
+    refreshRate = 60
+    
     elapsedTime = 0
 
-    parameter = Parameter('right')
+    engine.load()
 end
 
 function __setup()
@@ -99,13 +237,7 @@ function __update()
     deltaTime = js.global.deltaTime / 1000
     elapsedTime = elapsedTime + deltaTime
 
-    if env.sketch then
-        if env.sketch.updateSketch then
-            env.sketch:updateSketch(deltaTime)
-        end
-        return
-    end
-    return update and update(deltaTime)
+    engine.update(deltaTime)
 end
 
 function __draw()
@@ -114,39 +246,20 @@ function __draw()
     js.global:angleMode(js.global.RADIANS)
     js.global:colorMode(js.global.RGB, 1)
 
-    local result
-    if env.sketch then
-        if env.sketch.drawSketch then
-            env.sketch:drawSketch()
-        end
-    else
-        result = draw and draw()
-    end
-
-    --parameter:draw()
-
-    return result
-end
-
-local function touchFromEvent(event)
-    return {
-            position = {
-                x = event.clientX,
-                y = event.clientY
-            }
-        }
+    engine.draw()
 end
 
 function __mousepressed()
-    if mousepressed then
-        mousepressed(touchFromEvent(js.global.__event))
-    end
+    mouse = Mouse()
+    eventManager:mousepressed(0, js.global.__event.x, js.global.__event.y)
+end
+
+function __mousemoved()
+    eventManager:mousemoved(0, js.global.__event.x, js.global.__event.y)
 end
 
 function __mousereleased()
-    if mousereleased then
-        mousereleased(touchFromEvent(js.global.__event))
-    end
+    eventManager:mousereleased(0, js.global.__event.x, js.global.__event.y)
 end
 
 function  __keypressed()
@@ -154,76 +267,6 @@ function  __keypressed()
         sketch:keypressed(js.global.__key)
     end
 end
-
-function saveData()
-    
-end
-
-love = {
-    window = {
-        getMode = function ()
-        end
-    },
-    
-    graphics = {
-        getCanvas = function ()
-            return {
-                getWidth = function ()
-                    return W
-                end,
-                getHeight = function ()
-                    return H
-                end,
-            }
-        end,
-
-        setCanvas = function ()    
-        end,
-
-        clear = function ()
-        end,
-
-        origin = function ()
-        end,
-
-        translate = function ()
-        end,
-
-        scale = function ()
-        end,
-
-        draw = function ()
-        end,
-
-        setWireframe = function ()
-        end,
-
-        setShader = function ()
-        end,
-        
-        setDepthMode = function ()
-        end,
-
-        setColor = function ()
-        end,
-
-        setBlendMode = function ()            
-        end,
-    },
-
-    keyboard = {
-        setKeyRepeat = function ()
-        end,
-    },
-    
-    filesystem = {
-        getInfo = function ()
-            return {
-                modtime = 0
-            }
-        end
-    },
-}
 
 FrameBuffer = class()
 function FrameBuffer:init()
@@ -257,9 +300,11 @@ end
 unpack = table.unpack
 
 function loadASketch()
-    env = declareSketch('lines', 'sketch.games.2048')
+    env = declareSketch('lines', 'sketch.games.triomino')
     loadSketch(env)
-    __sketch = The2048
+    __sketch = Triomino
     classSetup(env)
 end
+
+INIT = true
 
