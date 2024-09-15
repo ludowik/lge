@@ -27,4 +27,5 @@ end
 local major, minor, revision, codename = love.getVersion()
 local str = string.format("%d.%d.%d - %s", major, minor, revision, codename)
 log('Löve version', str)
+log('Lua version', _VERSION)
 log('Save data Directory', love.filesystem.getSaveDirectory())

@@ -9,7 +9,15 @@ function Environment:init(name, itemPath, category)
     setfenv(0, self)
     
     local requirePath = itemPath:gsub('%/', '%.'):gsub('%.lua', '')
-    require(requirePath)
+    require(requirePath, self)
+
+    -- local requireFile = package.searchpath(requirePath, love.filesystem.getRequirePath()) 
+    -- local chunk = loadfile(requireFile)
+    -- assert(chunk)
+
+    -- print(debug.setupvalue(chunk, 2, self))
+    -- --setfenv(chunk, self)
+    -- chunk(requirePath)
 
     self.__name = name
     self.__className = name:gsub('sketch%.', '')

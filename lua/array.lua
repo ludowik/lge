@@ -33,11 +33,13 @@ function Array:addArray(t)
 end 
 
 function Array:concat(sep)
+    sep = sep or ''
+
     local txt = ''
     for i=1,#self do
         txt = txt..tostring(self[i])..sep
     end
-    return txt:trim(sep)
+    return txt --:trim(sep)
 end
 
 function Array:removeIfTrue(f)
