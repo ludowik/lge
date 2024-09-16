@@ -227,7 +227,7 @@ function Asteroid:draw()
     translate(self.position.x, self.position.y)
 
     fontSize(9)
-    stroke(colors.red)
+    textColor(colors.red)
     textMode(CENTER)
     text(floor(self.boundingBox:getArea()), 0, 0)
 

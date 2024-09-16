@@ -142,6 +142,10 @@ love = {
 
         setKeyRepeat = function ()
         end,
+
+        setTextInput = function (activate)
+
+        end
     },
 
     timer = {

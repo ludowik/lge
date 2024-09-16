@@ -71,7 +71,10 @@ function textMode(mode, ...)
 end
 
 function text(txt, x, y)
-    return js.global:text(txt, x, y)
+    js.global:push()
+    js.global:noStroke()
+    js.global:text(txt, x, y)
+    js.global:pop()
 end
 
 function textPosition()
