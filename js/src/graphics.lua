@@ -81,7 +81,7 @@ end
 function textSize(...)
     return
         js.global:textWidth(...),
-        js.global:textAscent(...) + js.global:textDescent(...)
+        js.global:textAscent(...) --+ js.global:textDescent(...)
 end
 
 function point(...)
@@ -128,7 +128,7 @@ CLOSE = js.global.CLOSE
 Shape = class()
 
 function Shape:init(kind)
-    self.kind = kind or js.global.LINES
+    self.kind = kind or js.global.TRIANGLES_FAN
     self.vertices = Array()
 end
 
@@ -139,9 +139,9 @@ end
 function Shape:draw()
     js.global:beginShape(self.kind)
     self.vertices:foreach(function (arg)
-        vertex(table.unpack(arg))
+        js.global:vertex(table.unpack(arg))
     end)
-    js.global:endShape(__shape.mode)
+    js.global:endShape(self.mode)
 end
 
 function beginShape(kind)
@@ -167,9 +167,3 @@ function sprite(img, x, y, w, h)
         x or 0,
         y or 0, w, h)
 end
-
-Graphics = {
-    loop,
-    noLoop,
-    redraw,
-}

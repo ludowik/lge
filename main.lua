@@ -5,7 +5,6 @@ if love.filesystem.getIdentity() == 'update' then
 end
 
 -- dir('resources/fonts'):foreach(function (fname, index)
---     print('resources/fonts/'..fname)
 --     os.rename('resources/fonts/'..fname, 'resources/fonts/'..fname:lower())
 -- end)
 

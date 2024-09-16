@@ -100,7 +100,7 @@ function Graphics.setMode(w, h)
 end
 
 function Graphics:rotateScreen()
-    initMode()
+    Graphics.initMode()
 
     local sketch = processManager:current()
 

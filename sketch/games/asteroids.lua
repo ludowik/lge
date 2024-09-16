@@ -120,6 +120,8 @@ end
 function Ship:draw()
     translate(self.position.x, self.position.y)
     rotate(self.angle)
+
+    stroke(colors.blue)
     Object.draw(self)
 end
 

@@ -1,6 +1,4 @@
-if getOS() == 'ios' or not love.audio then
-    return
-end
+if getOS() == 'ios' or not love.audio then return end
 
 function setup()    
     devices = love.audio.getRecordingDevices()

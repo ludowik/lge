@@ -90,23 +90,21 @@ function Parameter:initControlBar()
         })
 end
 
-function Parameter:addMainMenu()
-    self:action('update from local', function ()
-        updateScripts(false)
-    end)
-    
+function Parameter:addMainMenu()    
     self.menu = self:group('main')
 
     self:space()
     self:action('fused', function () toggleFused() end)
 
-    self:space()
-    self:action('update from git', function ()
-        updateScripts(true)
-    end)
-    self:action('update from local', function ()
-        updateScripts(false)
-    end)
+    if getOS() == 'ios' then
+        self:space()
+        self:action('update from git', function ()
+            updateScripts(true)
+        end)
+        self:action('update from local', function ()
+            updateScripts(false)
+        end)
+    end
 
     self:space()
     self:action('reload', reload)

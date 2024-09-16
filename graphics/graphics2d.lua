@@ -374,12 +374,6 @@ function Graphics2d.text(str, x, y, limit, align)
     local sx, sy = 1, styles.origin == BOTTOM_LEFT and -1 or 1
     love.graphics.draw(text, x, y, 0, sx, sy)
 
-    -- if limit then
-    --     love.graphics.printf(str, x, y, limit, align, 0, sx, sy)
-    -- else
-    --     love.graphics.print(str, x, y, 0, sx, sy)
-    -- end
-
     return ws, hs
 end
 

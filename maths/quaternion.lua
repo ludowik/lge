@@ -1,3 +1,5 @@
+if getOS() == 'web' then return end
+
 Quaternion = class()
 
 function Quaternion:init(w, x, y, z)
