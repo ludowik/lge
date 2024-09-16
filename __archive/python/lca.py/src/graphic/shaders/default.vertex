@@ -1,0 +1,52 @@
+#version 120
+
+attribute vec3 VertexPosition;
+attribute vec3 VertexTranslation;
+attribute vec4 VertexColor;
+attribute vec2 VertexTexCoord;
+
+attribute float ID;
+attribute mat4 model_matrix2;
+
+uniform mat4 model_matrix;
+uniform mat4 view_matrix;
+uniform mat4 projection_matrix;
+
+uniform int useTranslation;
+
+uniform int render_mode;
+
+uniform vec3 position;
+uniform vec3 size;
+
+varying vec4 vColor;
+varying vec2 vTexCoord;
+
+int stroke_width = 20;
+
+void main() {
+    ID;
+    model_matrix2;
+
+    vec3 vertexPosition = VertexPosition * size + position;
+
+    //if (render_mode == 0)
+        gl_Position = model_matrix * vec4(vertexPosition.xyz, 1.0);
+    //else
+    //    gl_Position = model_matrix2 * vec4(vertexPosition.xyz, 1.0);
+
+    /*if (useTranslation == 1) {
+        vec4 orientation = normalize(vec4(size.y, -size.x, 0.0, 0.0)) * stroke_width / 2.0;
+
+        orientation.x *= VertexTranslation.x;
+        orientation.y *= VertexTranslation.y;
+
+        gl_Position += vec4(orientation.xy, 0.0, 0.0);
+    }
+    */
+
+    gl_Position = projection_matrix * view_matrix * gl_Position;
+
+    vColor = VertexColor;
+    vTexCoord = VertexTexCoord;
+}

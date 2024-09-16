@@ -1,0 +1,26 @@
+#version 120
+
+#define white vec4(1.0, 1.0, 1.0, 1.0)
+#define red   vec4(1.0, 0.0, 0.0, 1.0)
+#define green vec4(0.0, 1.0, 0.0, 1.0)
+#define blue  vec4(0.0, 0.0, 1.0, 1.0)
+
+uniform int useTextureAlpha;
+uniform int useTexture;
+uniform sampler2D texture0;
+
+uniform vec4 stroke_color;
+uniform vec4 fill_color;
+uniform vec4 tint_color;
+
+varying vec4 vColor;
+varying vec2 vTexCoord;
+
+void main() {
+    if (useTextureAlpha == 1)
+        gl_FragColor = tint_color * vec4(1.0, 1.0, 1.0, texture2D(texture0, vTexCoord).a);
+    else if (useTexture == 1)
+        gl_FragColor = tint_color * texture2D(texture0, vTexCoord);
+    else
+        gl_FragColor = stroke_color;
+}

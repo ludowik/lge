@@ -201,3 +201,11 @@ function vec4:normalizeInPlace(norm)
     self.w = self.w * ratio
     return self
 end
+
+function vec4:dot(v)
+    return (
+        self.x * v.x +
+        self.y * v.y +
+        self.z * v.z
+    )
+end

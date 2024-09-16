@@ -12,6 +12,31 @@ function math.map(value, minIn, maxIn, minOut, maxOut)
 end
 map = math.map
 
+--- TODO check this 3 new functions
+function math.smoothstep(edge0, edge1, x)
+    -- Scale, bias and saturate x to 0..1 range
+    x = clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0)
+
+    -- Evaluate polynomial
+    return x * x * (3 - 2 * x)
+end
+smoothstep = math.smoothstep
+
+function math.smootherstep(edge0, edge1, x)
+    -- Scale, and clamp x to 0..1 range
+    x = clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0)
+
+    -- Evaluate polynomial
+    return x * x * x * (x * (x * 6 - 15) + 10)
+end
+smootherstep = math.smootherstep
+
+function math.quotient(dividend, divisor)
+    return __ceil(dividend / divisor)
+end
+quotient = math.quotient
+
+
 abs = math.abs
 
 function math.sign(value)

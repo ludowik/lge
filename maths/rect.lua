@@ -5,6 +5,10 @@ function Rect:init(x, y, w, h)
     self.size = vec2(w, h)
 end
 
+function Rect:__tostring()
+    return tostring(self.position)..'/'..tostring(self.size)
+end
+
 function Rect:setPosition(...)
     self.position:set(...)
     return self
@@ -40,7 +44,8 @@ function Rect:contains(position)
     end
 end
 
-function Rect.intersect(r1, r2)
+function Rect:intersect(r2)
+	r1 = self
     if (r1.position.x > r2.position.x + r2.size.x or        
         r2.position.x > r1.position.x + r1.size.x or
         r1.position.y > r2.position.y + r2.size.y or

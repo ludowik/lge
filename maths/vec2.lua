@@ -236,6 +236,91 @@ function vec2:draw()
     circle(self.x, self.y, 5)
 end
 
+function vec2:dot(v)
+    return (
+        self.x * v.x +
+        self.y * v.y
+    )
+end
+
+--- TODO : check this new functions
+function vec2:crossByScalar(s)
+    return vec2(s * self.y, -s * self.x)
+end
+
+function vec2:crossFromScalar(s)
+    return vec2(-s * self.y, s * self.x)
+end
+
+function vec2.fx(p1, p2)
+    local dx, dy = p2.x - p1.x, p2.y - p1.y
+    if dx == 0 then
+        return p2.x, 0
+    end
+    local a = dy / dx
+    local b = p2.y - (a * p2.x)
+    return a, b
+end
+
+function vec2.intersection(line1, line2)
+    local a1, b1 = vec2.fx(line1[1], line1[2])
+    local a2, b2 = vec2.fx(line2[1], line2[2])
+
+    local x = (b2 - b1) / (a1 - a2)
+    local y = a1 * x + b1
+
+    return x, y
+end
+
+local ORDER = 'counter-clockwise'
+
+function vec2.enclosedAngle(v1, v2, v3)
+    local a1 = __atan2(v1.y - v2.y, v1.x - v2.x)
+    local a2 = __atan2(v3.y - v2.y, v3.x - v2.x)
+
+    local da
+    if ORDER == 'clockwise' then
+        da = __degrees(a2 - a1)
+    else
+        da = __degrees(a1 - a2)
+    end
+
+    if da < -180 then
+        da = da + 360
+    elseif da > 180 then
+        da = da - 360
+    end
+
+    return da
+end
+
+-- Determines if a vector |v| is inside a triangle described by the vectors
+-- |v1|, |v2| and |v3|.
+function vec2.isInsideTriangle(v, v1, v2, v3)
+    local a1
+    local a2
+
+    a1 = vec2.enclosedAngle(v1, v2, v3)
+    a2 = vec2.enclosedAngle(v, v2, v3)
+    if a2 > a1 or a2 < 0 then
+        return false
+    end
+
+    a1 = vec2.enclosedAngle(v2, v3, v1)
+    a2 = vec2.enclosedAngle(v, v3, v1)
+    if a2 > a1 or a2 < 0 then
+        return false
+    end
+
+    a1 = vec2.enclosedAngle(v3, v1, v2)
+    a2 = vec2.enclosedAngle(v, v1, v2)
+    if a2 > a1 or a2 < 0 then
+        return false
+    end
+
+    return true
+end
+
 function vec2.unitTest()
     assert(vec2(1,2) == vec2(1,2))
     assert(vec2():set(1,2) == vec2(1,2))

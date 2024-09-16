@@ -8,4 +8,5 @@ requireLib(..., {
     'box',
     'math',
     'types',
+    'collision'
 })
