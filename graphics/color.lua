@@ -57,6 +57,10 @@ function Color.fromParam(clr, ...)
     return Color(clr, ...)
 end
 
+function Color.fromArray(t)
+    return Color(t[1], t[2], t[3], t[4])
+end
+
 function Color.hexa(hexa)
     local r, g, b
 

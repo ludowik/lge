@@ -121,7 +121,7 @@ end
 -- from probability of 2 random integers being coprime
 EstimatePI_coprime = class() : extends(EstimatePI)
 
-local MAX = 10^10
+local MAX = 2^16
 local MAX_HALF = MAX / 2
 
 function EstimatePI_coprime:init()

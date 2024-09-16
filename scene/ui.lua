@@ -45,7 +45,7 @@ end
 
 function UI:formatValue(value)
     if self.intValue then
-        return string.format('%d', value)
+        return string.format('%.0f', value)
     else
         if value <= 0.01 then
             return string.format('%f', value)
@@ -78,7 +78,7 @@ function UI:draw()
     self:drawFront()
 end
 
-function UI:drawBack()    
+function UI:drawBack()
     if self.styles.strokeColor then
         strokeSize(self.styles.strokeSize)
         stroke(self.styles.strokeColor)
@@ -97,6 +97,8 @@ function UI:drawBack()
     end
 
     local r = self.styles.radiusBorder or 4
+
+    rectMode(CORNER)
     rect(self.position.x, self.position.y, self.size.x, self.size.y, r)
 end
 
@@ -114,9 +116,15 @@ function UI:drawFront()
 
     if self.styles.mode == CENTER then
         textMode(CENTER)
-        text(self:getLabel(), self.position.x + self.size.x / 2, self.position.y + self.size.y / 2, wrapSize, wrapAlign)
+        text(self:getLabel(),
+            self.position.x + self.size.x / 2,
+            self.position.y + self.size.y / 2,
+            wrapSize, wrapAlign)
     else
         textMode(CORNER)
-        text(self:getLabel(), self.position.x + UI.innerMarge, self.position.y, wrapSize, wrapAlign)
+        text(self:getLabel(), 
+            self.position.x + UI.innerMarge,
+            self.position.y,
+            wrapSize, wrapAlign)
     end
 end

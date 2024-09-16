@@ -54,6 +54,9 @@ function Graphics.getPhysicalArea()
     if getOS() == 'ios' then
         x, y = love.window.getSafeArea()
         w, h = love.window.getDesktopDimensions(1)
+    elseif getOS() == 'osx' then
+        x, y, w, h = 0, 0, 0, 1024
+        w = even(h*screenRatios.iphone)
     else
         x, y, w, h = 0, 0, 375, 812
     end

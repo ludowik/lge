@@ -321,6 +321,11 @@ function vec2.isInsideTriangle(v, v1, v2, v3)
     return true
 end
 
+function xy(x, ...)
+    if type(x) == 'number' then return x, ... end
+    return x.x, x.y
+end
+
 function vec2.unitTest()
     assert(vec2(1,2) == vec2(1,2))
     assert(vec2():set(1,2) == vec2(1,2))

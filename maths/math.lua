@@ -62,13 +62,15 @@ end
 fract = math.fract
 
 sqrt = math.sqrt
-pow = math.pow
+pow = math.pow or function (a, b)
+    return a^b
+end
 
 sin = math.sin
 cos = math.cos
 
 tan = math.tan
-atan2 = math.atan2
+atan2 = math.atan2 or math.atan
 
 rad = math.rad
 deg = math.deg
@@ -100,7 +102,7 @@ function even(value)
     return value + value % 2
 end
 
-function odd()
+function odd(value)
     value = round(value)
     return value + value % 2 - 1
 end

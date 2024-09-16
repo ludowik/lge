@@ -21,8 +21,8 @@ random = function (min, max)
 end
 randomInt = __random
 
-noise = __math.simplexNoise or __math.perlinNoise or __math.noise or __math.random
+noise = __math.simplexNoise or __math.perlinNoise or __math.noise
 noiseSeed = __math.setRandomSeed or __math.randomseed
 
-simplexNoise = __math.simplexNoise or __math.noise or __math.random
-perlinNoise = __math.perlinNoise or __math.noise or __math.random
+simplexNoise = __math.simplexNoise or __math.noise
+perlinNoise = __math.perlinNoise or __math.noise

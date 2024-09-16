@@ -1,9 +1,11 @@
 local settingsFileName = 'settings'
 local settings
 
-love.filesystem.createDirectory('data')
-love.filesystem.createDirectory('logo')
-love.filesystem.createDirectory('image')
+class().setup = function ()
+    love.filesystem.createDirectory('data')
+    love.filesystem.createDirectory('logo')
+    love.filesystem.createDirectory('image')
+end
 
 function saveSettings()
     saveFile(settingsFileName, settings)

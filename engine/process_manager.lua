@@ -4,6 +4,16 @@ function ProcessManager.setup()
     processManager = ProcessManager()
 end
 
+function ProcessManager.openSketches()
+    local sketch = processManager:current()
+    if sketch.__className ~= 'sketches' then            
+        processManager:setSketch('Sketches')
+        engine.parameter.visible = false
+    else
+        sketch.env.navigate()
+    end
+end
+
 function ProcessManager:init()
     self.processIndex = 1
 end
@@ -61,7 +71,6 @@ function ProcessManager:setCurrentSketch(processIndex)
     if not sketch then return end
 
     _G.env = sketch.env
-    --setfenv(0, _G.env)
 
     sketch:resume()
 
@@ -131,7 +140,7 @@ function ProcessManager:update(dt)
 
     if self.__loopProcesses then
         self:updateLoop(dt)
-    else
+    elseif sketch then
         sketch:updateSketch(dt)
     end
 end

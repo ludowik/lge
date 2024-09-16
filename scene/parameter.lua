@@ -46,7 +46,7 @@ function Parameter:initControlBar()
     
     self:action('sketches',
         function ()
-            openSketches()
+            ProcessManager.openSketches()
             engine.parameter.visible = false
         end,
         {

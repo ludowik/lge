@@ -18,6 +18,7 @@ function Sketch:init()
 
     self.tweenManager = TweenManager()
     self.scene = nil
+    self.loopMode = 'loop'
 end
 
 function Sketch:__tostring()
@@ -58,7 +59,7 @@ function Sketch:initMenu()
 end
 
 function Sketch:checkReload()
-    local fileInfo = love.filesystem.getInfo(env.__sourceFile)
+    local fileInfo = love.filesystem.getInfo(env.__filePath)
     if fileInfo.modtime > env.__modtime then
         env.__modtime = fileInfo.modtime
         engine.reload(true)
@@ -67,6 +68,7 @@ end
 
 function Sketch:updateSketch(dt)
     if self.loopMode == 'none' then return end
+
     self:checkReload()
 
     if env.__autotest and self.autotest then

@@ -96,7 +96,7 @@ function EventManager:keypressed(key, scancode, isrepeat)
             instrument:toggleState()
 
         elseif key == 's' then
-            openSketches()
+            ProcessManager.openSketches()
 
         elseif key == 'l' or key == 'kpenter' then
             processManager:loopProcesses()

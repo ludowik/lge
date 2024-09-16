@@ -14,8 +14,10 @@ if arg[#arg] == 'vsc_debug' then
         end
     end
 
-    function debugBreak()
-        lldebugger.requestBreak()
+    function breakpoint(check)
+        if check then
+            lldebugger.requestBreak()
+        end
     end
 
 -- elseif arg[#arg] == '-debug' then

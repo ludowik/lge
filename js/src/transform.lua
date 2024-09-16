@@ -11,15 +11,18 @@ function resetMatrix()
     js.global:resetMatrix()
 end
 
+function resetMatrixContext()
+end
+
 function resetStyle()
 end
 
 function translate(...)
-    return js.global:translate(...)
+    return js.global:translate(xyz(...))
 end
 
 function scale(...)
-    return js.global:scale(...)
+    return js.global:scale(xyz(...))
 end
 
 function rotate(...)

@@ -11,6 +11,8 @@ function Quadtree:init(mode, checkNode, areaSize)
     self.maxObject = 3
     self.areaSize = areaSize
 
+    self.node = QuadtreeNode(self, 0, 0, 0, 0)
+
     self.level = 0
     self.addNode = 0
 end
