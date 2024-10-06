@@ -13,10 +13,10 @@ function setup()
         end
     end
 
-    local directoryItems = love.filesystem.getDirectoryItems(path..'/shadertoy')
+    local directoryItems = love.filesystem.getDirectoryItems(path..'/shaders_toy')
     for _,itemName in ipairs(directoryItems) do
         local name = itemName:gsub('%.glsl', '')
-        shaders:add(ShaderToy(name, path..'/shadertoy'))
+        shaders:add(ShaderToy(name, path..'/shaders_toy'))
     end
 
     shaderChannel = {
@@ -32,7 +32,7 @@ function setup()
 
     shaderIndex = getSetting('shaderIndex', 1)
 
-    parameter:integer('shader', 'shaderIndex', 1, #shaders, #shaders, function ()
+    parameter:integer('shader', 'shaderIndex', 1, #shaders, shaderIndex, function ()
         setSetting('shaderIndex', shaderIndex)
     end)
 
@@ -85,5 +85,16 @@ function draw()
         fontSize(12)
         textColor(colors.gray)
         text(shader.errorMsg, 0, CY, W)
+    end
+end
+
+function keypressed(key)
+    if key == 'right' then
+        shaderIndex = shaders:nextIndex(shaderIndex)
+        setSetting('shaderIndex', shaderIndex)
+
+    elseif key == 'left' then
+        shaderIndex = shaders:previousIndex(shaderIndex)
+        setSetting('shaderIndex', shaderIndex)
     end
 end

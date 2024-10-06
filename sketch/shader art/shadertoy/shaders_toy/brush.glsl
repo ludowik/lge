@@ -303,7 +303,7 @@ vec2 getuv_centerX(vec2 fragCoord, vec2 newTL, vec2 newSize)
     return ret + vec2(newTL.x - (newWidth - newSize.x) / 2.0, newTL.y);
 }
 
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
+void mainImage(out vec4 fragColor, in vec2 fragCoord )
 {
 	vec2 uvSignature = (fragCoord / iResolution.y * 2.0) - 1.;
     mouse = getuv_centerX(iMouse.xy, vec2(-1,-1), vec2(2,2));// (iMouse.xy / iResolution.y * 2.0) - 1.;

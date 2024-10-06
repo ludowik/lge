@@ -44,7 +44,7 @@ float fbm(vec2 uv)
 //#define BLUE_FLAME
 //#define GREEN_FLAME
 
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
+void mainImage(out vec4 fragColor, in vec2 fragCoord )
 {
 	vec2 uv = fragCoord.xy / iResolution.xy;
 	vec2 q = uv;

@@ -30,6 +30,11 @@ function Sketch:setMode(w, h, persistence)
 
     self.persistence = persistence
 
+    SCALE_CANVAS = 1
+
+    w = w / SCALE_CANVAS
+    h = h / SCALE_CANVAS
+    
     if self.persistence then
         self.fb = FrameBuffer(w, h)
     else
@@ -87,10 +92,12 @@ function Sketch:updateSketch(dt)
 end
 
 function Sketch:drawSketch(force)
-    scale(1/2, 1/2)
-
-    self:renderSketch()
-    self:presentSketch(force)
+    if self.directDraw then
+        self:draw()
+    else
+        self:renderSketch()
+        self:presentSketch(force)
+    end
 end
 
 function Sketch:renderSketch()
@@ -101,11 +108,14 @@ function Sketch:renderSketch()
         stencil = false,
         depth = true,
     })
+    
     love.graphics.clear(false, false, true)
     love.graphics.setWireframe(env.__wireframe and true or false)
 
     resetMatrix(true)
     resetStyle(getOrigin())
+
+    scale(1/SCALE_CANVAS, 1/SCALE_CANVAS)
 
     self:draw()
 
@@ -123,21 +133,21 @@ function Sketch:presentSketch(force)
     love.graphics.setColor(colors.white:rgba())
     love.graphics.setBlendMode('replace')
 
-    love.graphics.origin()
-
-    if getOrigin() == BOTTOM_LEFT then
-        love.graphics.scale(1, -1)
-        love.graphics.translate(0, -H)
-    end
-
     local fb = self.fb
     local canvas = fb.canvas
-    local texture = fb.texture or fb.canvas 
+    local texture = fb.texture or fb.canvas
 
     local ws, hs, flags = love.window.getMode()
 
     local sx = self.size.x / canvas:getWidth()
     local sy = self.size.y / canvas:getHeight()
+
+    love.graphics.origin()
+
+    if getOrigin() == BOTTOM_LEFT then
+        love.graphics.scale(1, -1)
+        love.graphics.translate(0, -H*SCALE*sy)
+    end
 
     love.graphics.draw(texture,
         0, -- self.position.x,

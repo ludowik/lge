@@ -111,6 +111,7 @@ function Parameter:addMainMenu()
     self:action('restart', restart)
 
     self:space()
+    self:action('sketches', function() processManager:setSketch('sketches') end)
     self:action('info', function() processManager:setSketch('info') end)
 
     self:space()

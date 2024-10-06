@@ -60,7 +60,7 @@ float fbm( vec3 p )
 
 
 
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
+void mainImage(out vec4 fragColor, in vec2 fragCoord )
 {
 	float time = iTime * 0.1;
 

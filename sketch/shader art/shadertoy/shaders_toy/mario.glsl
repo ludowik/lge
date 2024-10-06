@@ -1393,7 +1393,7 @@ void DrawScanline( inout vec3 color, vec2 uv )
     color *= scanline * grille * 1.2;
 }
 
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
+void mainImage(out vec4 fragColor, in vec2 fragCoord )
 {
     // we want to see at least 224x192 (overscan) and we want multiples of pixel size
     float resMultX  = floor( iResolution.x / 224.0 );

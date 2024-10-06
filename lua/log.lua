@@ -16,6 +16,13 @@ function warning(value, msg)
 end
 
 function log(k, v)
+    if type(k) == 'table' then
+        for _k, v in pairs(k) do
+            print(_k..' : '..tostring(v))
+        end
+        return
+    end
+
     k = tostring(k)
     if v then
         print(k..' : '..tostring(v))

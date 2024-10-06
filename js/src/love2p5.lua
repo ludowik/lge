@@ -120,7 +120,8 @@ love = {
         end,
 
         read = function (filename)
-            return js.global.localStorage:getItem(filename)
+            local data = js.global.localStorage:getItem(filename)
+            return data
         end,
 
         load = function (filename)

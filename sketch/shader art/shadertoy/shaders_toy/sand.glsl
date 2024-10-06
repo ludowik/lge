@@ -181,7 +181,7 @@ float shadow(in vec3 ro, in vec3 rd, in float mint, in float tmax)
 }
 
 
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
+void mainImage(out vec4 fragColor, in vec2 fragCoord )
 
 {	
 	vec2 p = fragCoord.xy/iResolution.xy-0.5;

@@ -22,7 +22,7 @@ function Engine.load()
     engine.components:add(processManager)
     engine.components:add(instrument)
 
-    if true then
+    if false then
         local sketchesList = '{' .. NL
         environmentsList:foreach(function (env)
             if not env.__category or not env.__category:inList{'3d', 'pixel art', 'shader art'} then

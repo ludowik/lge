@@ -108,6 +108,18 @@ function Array:last()
     return self[#self]
 end
 
+function Array:nextIndex(i)
+    i = i + 1
+    if i > #self then i = 1 end
+    return i
+end
+
+function Array:previousIndex(i)
+    i = i - 1
+    if i < 1 then i = #self end
+    return i
+end
+
 function Array:next(item)
     local i = self:indexOf(item) or #self
     if i < #self then

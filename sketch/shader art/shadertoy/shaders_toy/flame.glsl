@@ -45,7 +45,7 @@ vec4 raymarch(vec3 org, vec3 dir)
 	return vec4(p,glow);
 }
 
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
+void mainImage(out vec4 fragColor, in vec2 fragCoord )
 {
 	vec2 v = -1.0 + 2.0 * fragCoord.xy / iResolution.xy;
 	v.x *= iResolution.x/iResolution.y;

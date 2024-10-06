@@ -99,14 +99,12 @@ end
 function Shader:compile()
     self.errorMsg = nil
     
-    log('Compile shader : '..self.name)
-
     local status, result = xpcall(
         function ()
             return love.graphics.newShader(self.pixelShader.code, self.vertexShader.code)
         end,
         function (msg)
-            log(msg)
+            log('Compile shader '..self.name, msg)
             self.errorMsg = msg
         end)
 
