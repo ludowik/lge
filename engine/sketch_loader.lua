@@ -163,3 +163,20 @@ function loadSketch(env)
         end
     end
 end
+
+function saveSketchesList()
+    local sketchesList = '{' .. NL
+    environmentsList:foreach(function (env)
+        if env.__category then
+            if not env.__category:inList{'3d', 'pixel art', 'shader art'} then
+                sketchesList = sketchesList .. TAB .. ("{name='{__name}', filePath='{__requirePath}', category='{__category}'},"):format(env) .. NL
+            end
+        else
+            sketchesList = sketchesList .. TAB .. ("{name='{__name}', filePath='{__requirePath}'},"):format(env) .. NL
+        end
+    end)
+    sketchesList = sketchesList  .. '}'
+
+    
+    love.filesystem.write('sketches_list.lua', sketchesList)
+end
