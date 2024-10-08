@@ -10,7 +10,7 @@
 float beat = 0.;
 float mb(vec2 p1, vec2 p0) { return (0.04+beat)/(pow(p1.x-p0.x,2.)+pow(p1.y-p0.y,2.)); }
 
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
+void mainImage(out vec4 fragColor, in vec2 fragCoord )
 {
 	float ct = 9.0;
 	if ((ct > 8.0 && ct < 33.5)

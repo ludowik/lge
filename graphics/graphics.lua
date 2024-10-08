@@ -54,9 +54,11 @@ function Graphics.getPhysicalArea()
     if getOS() == 'ios' then
         x, y = love.window.getSafeArea()
         w, h = love.window.getDesktopDimensions(1)
+        
     elseif getOS() == 'osx' then
         x, y, w, h = 0, 0, 0, 1024
         w = even(h*screenRatios.iphone)
+    
     else
         x, y, w, h = 0, 0, 375, 812
     end
@@ -71,7 +73,7 @@ function Graphics.getPhysicalArea()
     return max(x, y), min(x, y), max(w, h), min(w, h)
 end
 
-function getVirtualArea()    
+function getVirtualArea()
     local x, y, w, h = 5, 50, 512
     h = even(w / deviceScreenRatio)
 
@@ -88,7 +90,7 @@ function Graphics.setMode(w, h)
         Graphics.initializedScreen = true
 
         local params = {
-            msaa = 3,
+            msaa = 2,
             fullscreen = getOS() == 'ios',
         }
 

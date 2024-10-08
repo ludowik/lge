@@ -308,7 +308,7 @@ float AO(vec2 p, float dist, float radius, float intensity)
 /////////////////
 
 
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
+void mainImage(out vec4 fragColor, in vec2 fragCoord )
 {
 	vec2 p = fragCoord.xy + vec2(0.5);
 	vec2 c = iResolution.xy / 2.0;

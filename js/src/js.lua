@@ -54,15 +54,21 @@ function __init()
 
     local ratio = 9/16
 
-    MIN_SIZE = min(min(W, H), max(W, H)*ratio)
-    MAX_SIZE = max(max(W, H), min(W, H)/ratio)
+    if W == max(W, H) then
+        H = W * ratio
+    else
+        W = H * ratio
+    end
+
+    MIN_SIZE = min(W, H)
+    MAX_SIZE = max(W, H)
 
     SIZE = MIN_SIZE
 
     SCALE = 1
     
-    LEFT = 20
-    TOP = 10
+    LEFT = (js.global.innerWidth - W)/2
+    TOP = (js.global.innerHeight - H)/2
 
     refreshRate = 60
     
@@ -226,7 +232,7 @@ function __loadASketch()
 
     classSetup()
 
-    processManager:setSketch('asteroids')
+    processManager:setSketch(getSetting('sketch', 'sketches'))
 end
 
 INIT = true

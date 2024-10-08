@@ -104,7 +104,7 @@ float Voronesque( in vec3 p ){
 }
 
 
-void mainImage( out vec4 fragColor, in vec2 fragCoord ){
+void mainImage(out vec4 fragColor, in vec2 fragCoord ){
 
     // Screen coordinates, plus some movement about the center.
     vec2 uv = (fragCoord.xy - iResolution.xy*0.5)/iResolution.y + vec2(0.5*cos(iTime*0.5), 0.25*sin(iTime*0.5));

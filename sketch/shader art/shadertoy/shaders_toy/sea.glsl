@@ -155,7 +155,7 @@ float heightMapTracing(vec3 ori, vec3 dir, out vec3 p) {
 }
 
 // main
-void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
+void mainImage(out vec4 fragColor, in vec2 fragCoord ) {
     EPSILON_NRM = 0.1 / iResolution.x;
     SEA_TIME = iTime * SEA_SPEED;
     

@@ -20,10 +20,6 @@ function saveFile(fileName, table)
 end
 
 function loadSettings()
-    if getOS() == 'web' then
-        return {}
-    end
-    
     return loadFile(settingsFileName) or {
         sketch = 'Hexagone'
     }
@@ -44,6 +40,7 @@ function loadFile(fileName)
 end
 
 settings = loadSettings()
+log(settings)
 
 function setSetting(name, value)
     settings[name] = value

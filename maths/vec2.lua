@@ -243,6 +243,13 @@ function vec2:dot(v)
     )
 end
 
+function vec2:fract()
+    return vec2(
+        self.x-floor(self.x),
+        self.y-floor(self.y)
+    )
+end
+
 --- TODO : check this new functions
 function vec2:crossByScalar(s)
     return vec2(s * self.y, -s * self.x)

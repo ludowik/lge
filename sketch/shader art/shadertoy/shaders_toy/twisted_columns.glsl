@@ -31,7 +31,7 @@ vec4 segment( float x0, float x1, vec2 uv, float id, float time, float f )
 
 const int numSamples = 6;
 
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
+void mainImage(out vec4 fragColor, in vec2 fragCoord )
 {
 	vec2 uv = (-iResolution.xy+2.0*fragCoord.xy) / max(iResolution.x,iResolution.y);
 

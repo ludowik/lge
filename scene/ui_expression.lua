@@ -20,7 +20,8 @@ function UIExpression:evaluateExpression()
     
     local type_expression = type(expression)
     if type_expression == 'string' then
-        local f = loadstring('return (env or _G).' .. expression)
+        local f = loadstring('return ' .. expression)
+        setfenv(f, env)
         local ok, result = pcall(f)
         return self:formatValue(ok and result or 'err')
 

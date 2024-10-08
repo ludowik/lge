@@ -248,7 +248,7 @@ vec3 render( in vec3 ro, in vec3 rd )
 
 
 
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
+void mainImage(out vec4 fragColor, in vec2 fragCoord )
 {
 	freqs[0] = texture( iChannel0, vec2( 0.01, 0.25 ) ).x;
 	freqs[1] = texture( iChannel0, vec2( 0.07, 0.25 ) ).x;

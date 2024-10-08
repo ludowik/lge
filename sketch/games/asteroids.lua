@@ -24,6 +24,10 @@ function action(dt)
     ship.linearForce = vec2()
     ship.angularForce = 0
     
+    if love.mouse.isDown() then
+        ship.angularForce = map(mouse.position.y - H/2, -H/2, H/2, -2*PI, 2*PI)
+    end
+
     if love.keyboard.isDown('right') then
         ship.angularForce = PI
     end

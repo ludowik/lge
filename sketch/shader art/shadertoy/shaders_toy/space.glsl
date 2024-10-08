@@ -629,7 +629,7 @@ void BlockRender(in vec2 fragCoord)
 }
 #endif
 
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
+void mainImage(out vec4 fragColor, in vec2 fragCoord )
 {
 #ifdef NON_REALTIME_HQ_RENDER
     // Optionally render a non-realtime scene with high quality

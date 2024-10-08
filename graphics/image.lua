@@ -4,7 +4,7 @@ function FrameBuffer:init(w, h, format, clr)
     self.format = format or 'normal'
     self.canvas = love.graphics.newCanvas(w, h, {
         format = self.format,
-        msaa = 3,
+        msaa = 2,
         dpiscale = dpiscale,
     })
     
@@ -12,8 +12,8 @@ function FrameBuffer:init(w, h, format, clr)
     self:background(clr or colors.transparent)
     self:resetContext()
     
-    self.width = w
-    self.height = h
+    self.width = self.canvas:getWidth()
+    self.height = self.canvas:getHeight()
 end
 
 function FrameBuffer:copy(fb)
