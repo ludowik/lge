@@ -5,6 +5,9 @@ function setup()
     radius = diameter / 2.5
     
     roses = {}
+
+    m = 1
+    n = 1
 end
 
 function draw()
@@ -22,11 +25,24 @@ function draw()
     fontSize(10)
     textMode(CENTER)
 
-    for m = 1,9 do
-        local x = radius + diameter * (m-1) - (9 * diameter) / 2
+    m = m + 0.1
 
-        for n = 1,9 do
+    if m > 9 then
+        m = 1
+        n = n + 0.1
+    end
+
+    radius = MIN_SIZE / 2
+
+    --for m = 1,9 do
+    do
+        local x = radius + diameter * (m-1) - (9 * diameter) / 2
+        x = 0
+
+        do
+        --for n = 1,9 do
             local y = radius + diameter * (n-1) - (9 * diameter) / 2
+            y = 0
 
             noFill()
             
@@ -35,7 +51,7 @@ function draw()
             else
                 noFill()
                 beginShape()
-                for angle = 0, TAU * n, 0.15 do
+                for angle = 0, TAU * n, 0.01 do
                     local r = radius * cos(angle * m / n)
                     vertex(
                         x + r * cos(angle),

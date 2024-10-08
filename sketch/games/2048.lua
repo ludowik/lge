@@ -113,8 +113,7 @@ function The2048:addCell(level)
         return
     end
 
---    local i, j = unpack(availablePosition:random())
-    local i, j = unpack(availablePosition[1])
+    local i, j = unpack(availablePosition:random())
     local value = Array{2, 4}:random()
     local newCell = self:newCell(i, j, value)
     self:setCell(i, j, newCell)
