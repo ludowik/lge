@@ -1,3 +1,9 @@
+for i,v in ipairs(arg) do
+    print(v)
+end 
+
+print(...)
+
 require 'engine'
 
 if love.filesystem.getIdentity() == 'update' then

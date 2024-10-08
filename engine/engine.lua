@@ -22,19 +22,7 @@ function Engine.load()
     engine.components:add(processManager)
     engine.components:add(instrument)
 
-    if false then
-        local sketchesList = '{' .. NL
-        environmentsList:foreach(function (env)
-            if not env.__category or not env.__category:inList{'3d', 'pixel art', 'shader art'} then
-                sketchesList = sketchesList .. TAB .. ("{name='{__name}', filePath='{__requirePath}', category='{__category}'},"):format(env) .. NL
-            end
-        end)
-        sketchesList = sketchesList  .. '}'
-
-        love.filesystem.write('sketches_list.lua', sketchesList)
-
-        exit()
-    end
+    saveSketchesList()
 end
 
 function Engine.initParameter()
