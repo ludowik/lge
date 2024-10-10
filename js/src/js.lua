@@ -76,14 +76,14 @@ function __init()
 
     mouse = Mouse()
 
-    engine.load()
+    Engine.load()
 end
 
 function __update()
     deltaTime = js.global.deltaTime / 1000
     elapsedTime = elapsedTime + deltaTime
 
-    engine.update(deltaTime)
+    Engine.update(deltaTime)
 end
 
 function __draw()
@@ -92,7 +92,7 @@ function __draw()
     js.global:angleMode(js.global.RADIANS)
     js.global:colorMode(js.global.RGB, 1)
 
-    engine.draw()
+    Engine.draw()
 end
 
 function __mousepressed()
@@ -227,7 +227,7 @@ end
 
 
 function __loadASketch()
-    local sketchesList = require 'sketches_list'
+    local sketchesList = require 'sketches_list'    
     declareSketches(sketchesList)
 
     classSetup()
