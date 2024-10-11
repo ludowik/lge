@@ -55,7 +55,7 @@ function setup()
 end
 
 function defineCharactersSet()
-    fontName('arial')
+    fontName(DEFAULT_FONT_NAME)
     fontSize(20)
 
     local sw, sh = 0, 0
@@ -198,7 +198,7 @@ end
 mode = {}
 
 function mode.ascii(light, reverse, x, y, w, h)
-    local i = floor(map(light, 0, 1, 1, characters:len()))
+    local i = math.floor(map(light, 0, 1, 1, characters:len()))
 
     if not reverse then
         i = characters:len() -  i + 1

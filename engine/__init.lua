@@ -1,7 +1,6 @@
 require 'lua'
 require 'lib'
 require 'maths'
-require 'misc'
 
 requireLib (..., {
     'love',

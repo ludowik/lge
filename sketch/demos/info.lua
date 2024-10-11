@@ -36,6 +36,8 @@ function setup()
 end
 
 function draw()
+    background()
+    
     scene:layout(LEFT, TOP)
     scene:draw()
 end

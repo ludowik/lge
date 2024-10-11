@@ -1,5 +1,12 @@
 function setup()
-    fonts = dir('resources/fonts', 'ttf')
+    if getOS() == 'web' then
+        fonts = {
+            'Courier New',
+            'Verdana',
+        }
+    else        
+        fonts = dir('resources/fonts', 'ttf')
+    end
 
     fontIndex = 1
 

@@ -104,7 +104,7 @@ function Engine.draw()
 
     local fps = getFPS()
     if fps < refreshRate * 0.95 then -- or fps > refreshRate * 1.05 then
-        fontName('arial')
+        fontName(DEFAULT_FONT_NAME)
         fontSize(18)
         local w, h = textSize(fps)
         textColor(colors.red)
@@ -113,7 +113,7 @@ function Engine.draw()
     end
 
     if __echo then
-        fontName('arial')
+        fontName(DEFAULT_FONT_NAME)
         fontSize(32)
 
         textColor((getBackgroundColor() or colors.black):contrast())

@@ -5,8 +5,9 @@ end
 
 ADD = js.global.ADD
 NORMAL = js.global.BLEND
-function blendMode(...)
-    return js.global:blendMode(...)
+MULTIPLY = js.global.MULTIPLY
+function blendMode(mode)
+    return js.global:blendMode(mode)
 end
 
 CENTER = js.global.CENTER
@@ -54,8 +55,13 @@ function tint(clr, ...)
 end
 function noTint() js.global:noTint() end
 
+local __fontName = DEFAULT_FONT_NAME
 function fontName(name)
-    return js.global:textFont(name)
+    if name then
+        __fontName = __fontName or name
+        js.global:textFont(name)
+    end
+    return __fontName
 end
 
 function fontSize(size)
@@ -70,15 +76,23 @@ function textMode(mode, ...)
     end
 end
 
+local __y = 0
+
 function text(txt, x, y)
+    y = y or 0
+
+    local ws, hs = textSize(str)
+    textPosition(y + hs)
+
     js.global:push()
     js.global:noStroke()
     js.global:text(txt, x, y)
     js.global:pop()
 end
 
-function textPosition()
-    return 0
+function textPosition(y)
+    if y then __y = y end
+    return __y
 end
 
 function textSize(...)
@@ -169,4 +183,7 @@ function sprite(img, x, y, w, h)
     img:draw(
         x or 0,
         y or 0, w, h)
+end
+
+function zLevel()
 end

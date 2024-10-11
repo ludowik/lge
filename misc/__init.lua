@@ -1,3 +1,0 @@
-requireLib (..., {
-    'id',
-})

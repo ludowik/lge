@@ -8,17 +8,20 @@ require 'js.src.love2p5'
 
 require 'lua.require'
 require 'lua'
+require 'lib'
 require 'maths'
 
 require 'graphics.color'
 require 'graphics.anchor'
 require 'graphics.font'
+require 'graphics.font_icons'
 require 'graphics.graphics'
 Graphics.setup = nil
 
 require 'events'
 require 'scene'
 
+require 'engine.version'
 require 'engine.engine'
 require 'engine.environment'
 require 'engine.sketch'
@@ -55,9 +58,9 @@ function __init()
     local ratio = 9/16
 
     if W == max(W, H) then
-        H = W * ratio
-    else
         W = H * ratio
+    else
+        H = W / ratio
     end
 
     MIN_SIZE = min(W, H)
@@ -161,7 +164,8 @@ function FrameBuffer:init(w, h)
     }
 end
 
-function FrameBuffer:getImageData()    
+function FrameBuffer:getImageData()
+    return self.canvas
 end
 
 function FrameBuffer:release()    
@@ -183,9 +187,15 @@ function FrameBuffer:background()
     js.global:background(0, 0, 0, 1)
 end
 
+function FrameBuffer:update()
+end
+
 function FrameBuffer:draw()
 --    self.canvas.img:updatePixels()
     js.global:image(self.canvas.img)
+end
+
+function FrameBuffer:mapPixel()
 end
 
 
@@ -193,16 +203,30 @@ Image = class()
 
 function Image:init(name)
     self.canvas = js.global:loadImage(name)
+    self.texture = {
+        setFilter = function ()
+        end,
+    }
 
     self.width = self.canvas.width
     self.height = self.canvas.height
+end
+
+function Image:update()
 end
 
 function Image:draw(x, y, w, h)
     js.global:image(self.canvas, x, y, w, h)
 end
 
-function FrameBuffer:mapPixel()
+function Image:getImageData()
+    return self.canvas
+end
+
+
+Mesh = class()
+
+function Mesh:draw()
 end
 
 
@@ -211,6 +235,7 @@ classSetup(_G)
 unpack = table.unpack
 
 function collectgarbage()
+    return 1
 end
 
 function setContext() 
@@ -225,14 +250,14 @@ end
 function supportedOrientations()
 end
 
-
 function __loadASketch()
-    local sketchesList = require 'sketches_list'    
+    local sketchesList = require 'engine.sketch_list'    
     declareSketches(sketchesList)
 
     classSetup()
 
     processManager:setSketch(getSetting('sketch', 'sketches'))
+    --processManager:setSketch('sketches')    
 end
 
 INIT = true

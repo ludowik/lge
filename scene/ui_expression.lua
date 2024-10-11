@@ -23,6 +23,10 @@ function UIExpression:evaluateExpression()
         local f = loadstring('return ' .. expression, nil, 't', (_G.env or _G))
         if setfenv then setfenv(f, env) end
         local ok, result = pcall(f)
+        if not ok then
+            log(expression, result)
+            stop()
+        end
         return self:formatValue(ok and result or 'err')
 
     elseif type_expression == 'table' then

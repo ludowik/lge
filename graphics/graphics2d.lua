@@ -347,13 +347,13 @@ function Graphics2d.text(str, x, y, limit, align)
         align = align or 'left'
     end
 
-    local mode = textMode()
     local ws, hs = textSize(str, limit)
 
     textPosition(y + hs)
     
     love.graphics.setColor(Graphics2d.textColor():rgba())
 
+    local mode = textMode()
     if mode == CENTER then
         x, y = x - ws / 2, y - hs / 2
     end

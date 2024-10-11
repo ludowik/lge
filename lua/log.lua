@@ -31,6 +31,13 @@ function log(k, v)
     end
 end
 
+function fatal(check)
+    if not check then
+        log(debug.traceback())
+        stop()
+    end
+end
+
 local major, minor, revision, codename = love.getVersion()
 local str = string.format("%d.%d.%d - %s", major, minor, revision, codename)
 log('Löve version', str)

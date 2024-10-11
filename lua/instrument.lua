@@ -164,7 +164,7 @@ function Instrument:draw()
     stroke(colors.white)
     textColor(colors.white)
         
-    fontName('arial')
+    fontName(DEFAULT_FONT_NAME)
     fontSize(18)
 
     self.functions:sort(function (a, b)    

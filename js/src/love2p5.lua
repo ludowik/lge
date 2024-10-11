@@ -17,16 +17,36 @@ love = {
         getOS = function ()
             return 'web'
         end,
+
+        getPowerInfo = function ()
+            return 'unknown', 0, 0
+        end,
     },
 
     math = math,
 
     window = {
         getMode = function ()
+            return math.floor(W), math.floor(H)
         end,
 
         setTitle = function (title)
             js.global.title = title
+        end,
+
+        getDesktopDimensions = function ()
+            return math.floor(W), math.floor(H)
+        end,
+
+        getSafeArea = function ()
+            return math.floor(LEFT), math.floor(TOP), math.floor(W), math.floor(H)
+        end,
+
+        getDPIScale = function ()
+            return 1
+        end,
+
+        setVSync = function ()
         end,
     },
     
@@ -85,6 +105,10 @@ love = {
         end,
 
         newFont = function ()
+        end,
+
+        inverseTransformPoint = function (...)
+            return ...
         end,
     },
 

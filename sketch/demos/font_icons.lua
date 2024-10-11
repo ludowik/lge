@@ -53,7 +53,7 @@ function draw()
         col = col + 1
     end
 
-    fontName('arial')
+    fontName(DEFAULT_FONT_NAME)
     fontSize(hMax/4)
 
     textMode(CENTER)

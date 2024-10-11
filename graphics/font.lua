@@ -3,6 +3,9 @@ FontManager = class()
 function FontManager.setup()
     FontManager.fonts = Array()
     FontManager.path = 'resources/fonts'
+
+    DEFAULT_FONT_NAME = 'arial'
+    DEFAULT_FONT_SIZE = 12
 end
 
 function FontManager.getFont()

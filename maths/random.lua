@@ -2,7 +2,7 @@ class().setup = function ()
     seed(os.time())
 end
 
-__math = love and love.math or math
+__math = math or (love and love.math)
 __random = __math.random
 __seed = __math.setRandomSeed or __math.randomseed
 

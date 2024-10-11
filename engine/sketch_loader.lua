@@ -165,12 +165,14 @@ function loadSketch(env)
 end
 
 function saveSketchesList()
-    if getOS ~= 'osx' then return end
+    if getOS() ~= 'osx' and getOS() ~= 'windows' then return end
     
     local sketchesList = 'return {' .. NL
     environmentsList:foreach(function (env)
         if env.__category then
-            if not env.__category:inList{'3d', 'pixel art', 'shader art'} then
+            if  not env.__category:inList{'3d', 'pixel art', 'shader art'} and
+                not env.__name:inList{'geojson'}
+            then
                 sketchesList = sketchesList .. TAB .. ("{name='{__name}', filePath='{__requirePath}', category='{__category}'},"):format(env) .. NL
             end
         else
@@ -179,9 +181,7 @@ function saveSketchesList()
     end)
     sketchesList = sketchesList  .. '}'
 
-    -- love.filesystem.write('sketches_list.lua', sketchesList)
-
-    local f = io.open('sketches_list.lua', 'wt')
+    local f = io.open('engine/sketch_list.lua', 'wt')
     f:write(sketchesList)
     f:close()
 end

@@ -62,9 +62,10 @@ end
 fract = math.fract
 
 sqrt = math.sqrt
-pow = math.pow or function (a, b)
+math.pow = math.pow or function (a, b)
     return a^b
 end
+pow = math.pow
 
 sin = math.sin
 cos = math.cos

@@ -21,7 +21,6 @@ return {
 	{name='easings', filePath='sketch.demos.easings', category='demos'},
 	{name='font_icons', filePath='sketch.demos.font_icons', category='demos'},
 	{name='fonts', filePath='sketch.demos.fonts', category='demos'},
-	{name='geojson', filePath='sketch.demos.geojson', category='demos'},
 	{name='graph', filePath='sketch.demos.graph', category='demos'},
 	{name='info', filePath='sketch.demos.info', category='demos'},
 	{name='interpreter', filePath='sketch.demos.interpreter', category='demos'},
