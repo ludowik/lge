@@ -1,5 +1,6 @@
 function setup()
     size = even(CX)
+
     img = FrameBuffer(size, size)
 
     if ffi then
@@ -27,36 +28,36 @@ function setup()
 end
 
 function update()
-    for i=1,50 do
+    local n = getOS() == 'web' and 20 or 50
+    for i=1,n do
         updatePiles()
     end
 end
 
 function updatePiles()
-    if frameCount % 2 == 0 then return end
-    local num
-    
     for x=1,size do
+        local column = sandpiles[x]
+        local nextColumn = nextpiles[x]
         for y=1,size do
-            num = sandpiles[x][y]
+            local num = column[y]
             if num <= 3 then
-                nextpiles[x][y] = num
+                nextColumn[y] = num
             else
-                nextpiles[x][y] = num - 4
+                nextColumn[y] = num - 4
             end
         end
     end
 
     for x=2,size-1 do
+        local column = sandpiles[x]
+        local nextColumn = nextpiles[x]
         for y=2,size-1 do
-            num = sandpiles[x][y]
+            local num = column[y]
             if num > 3 then
-                --nextpiles[x][y] = nextpiles[x][y] + num - 4
-
                 nextpiles[x+1][y] = nextpiles[x+1][y] + 1
                 nextpiles[x-1][y] = nextpiles[x-1][y] + 1
-                nextpiles[x][y+1] = nextpiles[x][y+1] + 1
-                nextpiles[x][y-1] = nextpiles[x][y-1] + 1
+                nextColumn[y+1] = nextColumn[y+1] + 1
+                nextColumn[y-1] = nextColumn[y-1] + 1
             end
         end
     end
@@ -67,13 +68,11 @@ end
 function draw()
     background(colors.white)
 
-    local column, num, clr
+    img:mapPixel(
+        function (x, y)
+            local num, clr
+            num = sandpiles[x+1][y+1]
 
-    img:mapPixel(function (x, y, r, g, b, a)            
-            column = sandpiles[x+1]
-            num = column[y+1]
-
-            clr = colors.white
             if num == 1 then
                 clr = colors.red
             elseif num == 2 then
@@ -82,12 +81,16 @@ function draw()
                 clr = colors.blue
             elseif num > 3 then
                 clr = colors.gray
+            else
+                clr = colors.white
             end
 
             return clr.r, clr.g, clr.b, 1
         end)
 
     translate(CX, CY)
+
+    scale(4)
 
     spriteMode(CENTER)
     sprite(img)

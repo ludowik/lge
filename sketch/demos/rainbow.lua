@@ -41,7 +41,7 @@ function Rainbow:draw()
     pushMatrix()
     do
         translate(CX - w/2, h * 2)
-        strokeSize(2)
+        noStroke()
         rectMode(CORNER)
         for hue=0,w-1 do
             for saturation=0,w-1 do

@@ -1,3 +1,6 @@
+TOP_LEFT = 'top_left'
+BOTTOM_LEFT = 'bottom_left'
+
 function background(clr, ...)
     clr = Color.fromParam(clr, ...) or colors.black
     return js.global:background(clr.r, clr.g, clr.b, clr.a)
@@ -137,6 +140,10 @@ function ellipse(x, y, w, h)
     return js.global:ellipse(x, y, w, h)
 end
 
+function arc(x, y, rx, ry, a1, a2)
+    return js.global:arc(x, y, 2*rx, 2*ry, a1, a2)
+end
+
 POINTS = js.global.POINTS
 LINES = js.global.LINES
 
@@ -175,6 +182,10 @@ function endShape(mode)
     return __shape
 end
 
+function scaleShape(scaleFactor)
+    __shape.scaleFactor = scaleFactor
+end
+
 function spriteMode(...)
     js.global:imageMode(...)
 end
@@ -186,4 +197,10 @@ function sprite(img, x, y, w, h)
 end
 
 function zLevel()
+end
+
+function box()
+end
+
+function boxBorder()
 end

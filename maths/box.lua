@@ -59,11 +59,13 @@ function Box.intersect(r1, r2)
 end
 
 function Box:draw()
+    noStroke()
     fill(self.clr or colors.white)
     box(self.position.x, self.position.y, self.position.z, self.size.x, self.size.y, self.size.z)
 end
 
 function Box:drawBorder()
     stroke(self.clr or colors.white)
+    noFill()
     boxBorder(self.position.x, self.position.y, self.position.z, self.size.x, self.size.y, self.size.z)
 end

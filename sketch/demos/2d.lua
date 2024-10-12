@@ -24,10 +24,11 @@ function Sketch2d:draw()
     line(0, 0, W, H)
 	line(0, H, W, 0)
 	
-	circle(CX, CY, CX)
+    noFill()
+
+    circle(CX, CY, CX)
 	circle(CX, CY, CY)
     
-    noFill()
 	rect(0, 0, W, H)
 
     local pos = anchor:pos(2, 2)

@@ -1,6 +1,4 @@
-function setup()
-    --setOrigin(BOTTOM_LEFT)
-    
+function setup()    
     xx = 0
     yy = 0
 

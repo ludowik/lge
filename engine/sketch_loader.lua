@@ -171,7 +171,7 @@ function saveSketchesList()
     environmentsList:foreach(function (env)
         if env.__category then
             if  not env.__category:inList{'3d', 'pixel art', 'shader art'} and
-                not env.__name:inList{'geojson'}
+                not env.__name:inList{'geojson', 'worley_noise', 'myline', 'micro', 'mouse'}
             then
                 sketchesList = sketchesList .. TAB .. ("{name='{__name}', filePath='{__requirePath}', category='{__category}'},"):format(env) .. NL
             end

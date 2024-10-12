@@ -93,8 +93,9 @@ end
 
 function FrameBuffer:mapPixel(f)
     self:getImageData()
-    self.imageData:mapPixel(f)
     self.needUpdate = true
+    
+    self.imageData:mapPixel(f)
     self:update()
 end
 

@@ -192,7 +192,10 @@ love = {
     audio = {
         newSource = function ()
             return {}
-        end
+        end,
+
+        setVolume = function ()
+        end,
     },
 
     event = {

@@ -1,9 +1,9 @@
 function setup()
-    ratio = 0.5
+    ratio = 0.1
 
     sizeW = even(W * ratio)
     sizeH = even(H * ratio)
-
+    
     buf1 = Buffer('float'):resize(sizeW*sizeH)
     buf2 = Buffer('float'):resize(sizeW*sizeH)
 
@@ -61,10 +61,11 @@ end
 function draw()
     background()
 
-    scale(1/ratio, 1/ratio)
+    translate(LEFT, TOP)
+    scale(1/ratio)
 
     spriteMode(CORNER)
-    sprite(img, 0, 0)
+    sprite(img)
 
     noFill()
 

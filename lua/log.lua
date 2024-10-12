@@ -31,6 +31,10 @@ function log(k, v)
     end
 end
 
+function here()
+    log('here')
+end
+
 function fatal(check)
     if not check then
         log(debug.traceback())

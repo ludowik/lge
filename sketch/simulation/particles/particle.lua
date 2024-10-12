@@ -18,7 +18,7 @@ function Particle:update(dt)
 end
 
 function Particle:draw()
-    local r = randomInt(ceil(self.life/2))
+    local r = randomInt(max(1, ceil(self.life/2)))
     tint(self.life, r, r, 50)
 
     local size = map(self.life, 0, MAX_LIFE, 5, 25)

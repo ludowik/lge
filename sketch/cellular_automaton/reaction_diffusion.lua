@@ -89,6 +89,7 @@ function ReactionDiffusion:init()
 end
 
 function ReactionDiffusion:update(dt)
+    local n = getOS() == 'web' and 5 or 15
     for i=1,15 do
         self:updateImage(dt)
     end

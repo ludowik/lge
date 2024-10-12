@@ -77,6 +77,7 @@ function ProcessManager:setCurrentSketch(processIndex)
     setSetting('sketch', sketch.env.__name)
 
     love.window.setTitle(sketch.env.__name)
+    log(sketch.env.__name)
 
     --Graphics.setMode(sketch.size.x, sketch.size.y)
 
@@ -182,7 +183,7 @@ function ProcessManager:updateLoop(dt)
         if sketch == self.__loopProcesses.startProcess then
             self.__loopProcesses = nil
         else
-            self:updateLoop(dt)
+            --self:updateLoop(dt)
         end
     end
 end

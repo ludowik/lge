@@ -63,5 +63,6 @@ end
 
 function Rect:draw()
     stroke(self.clr or colors.white)
+    noFill()
     rect(self.position.x, self.position.y, self.size.x, self.size.y)
 end

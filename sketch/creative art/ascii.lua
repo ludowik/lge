@@ -70,11 +70,12 @@ function defineCharactersSet()
     for i=1,from:len() do
         local character = from:sub(i,i)
         local w, h = textSize(character)
-        sw = max(w, sw)
-        sh = max(h, sh)
+        sw = max(math.floor(w), sw)
+        sh = max(math.floor(h), sh)
     end
 
     local img = FrameBuffer(sw, sh)
+    
     local cx, cy = floor(sw/2), floor(sh/2)
 
     textMode(CENTER)
@@ -167,11 +168,12 @@ function drawImage(position, f, reverse)
 
     img:getImageData()
 
-    for x=0,img.width,w do
+    for x=0,img.width-1,w do
 
-        for y=0,img.height,h do
+        for y=0,img.height-1,h do
 
             local r, g, b, a, n = 0, 0, 0, 0, 0, n
+
             for dx=0,w-1 do
                 if x+dx >= img.width then break end
 

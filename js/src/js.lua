@@ -30,6 +30,7 @@ require 'engine.process_manager'
 
 require 'js.src.graphics'
 require 'js.src.transform'
+require 'js.src.audio'
 
 function loop()
     Graphics.loop()
@@ -49,6 +50,8 @@ end
 function __init()
     window = js.global
 
+    window:frameRate(30)
+
     W = js.global.innerWidth
     H = js.global.innerHeight
 
@@ -62,6 +65,9 @@ function __init()
     else
         H = W / ratio
     end
+
+    W = math.floor(W)
+    H = math.floor(H)
 
     MIN_SIZE = min(W, H)
     MAX_SIZE = max(W, H)
@@ -83,10 +89,11 @@ function __init()
 end
 
 function __update()
-    deltaTime = js.global.deltaTime / 1000
-    elapsedTime = elapsedTime + deltaTime
+    env.deltaTime = js.global.deltaTime / 1000
+    env.elapsedTime = env.elapsedTime + env.deltaTime
+    env.frameCount = env.frameCount + 1
 
-    Engine.update(deltaTime)
+    Engine.update(env.deltaTime)
 end
 
 function __draw()
@@ -116,6 +123,7 @@ local keys = {
     ['ArrowUp'] = 'up',
     ['ArrowLeft'] = 'left',
     ['ArrowRight'] = 'right',
+    ['Control'] = 'lctrl',
     [' '] = 'space',
 }
 
@@ -126,21 +134,18 @@ function  __isKeyDown(key)
 end
 
 function  __keypressed()
-    local key = keys[js.global.__key] or key
+    local key = keys[js.global.__key] or js.global.__key
     keysDown[key] = true
     eventManager:keypressed(key)
 end
 
 function  __keyreleased()
-    local key = keys[js.global.__key] or key
+    local key = keys[js.global.__key] or js.global.__key
     keysDown[key] = false
     eventManager:keyreleased(key)
 end
 
 FrameBuffer = class()
-function FrameBuffer:init()
-    self.canvas = love.graphics.getCanvas()
-end
 
 function FrameBuffer:init(w, h)
     self.width = w or W
@@ -162,40 +167,80 @@ function FrameBuffer:init(w, h)
             return self.height
         end,
     }
+
+    self.pixelDensity = self.canvas.img:pixelDensity()
 end
 
 function FrameBuffer:getImageData()
+    if self.pixels then return self.canvas end
+    self.canvas.img:loadPixels()
+    self.pixels = self.canvas.img.pixels
     return self.canvas
 end
 
 function FrameBuffer:release()    
 end
 
-function FrameBuffer:setPixel(x, y, clr, ...)
-    self.canvas.img:set(x, y, clr, ...)
+function FrameBuffer:setPixel(x, y, r, g, b, a)
+    if type(r) == 'table' then r, g, b, a = r.r, r.g, r.b, r.a end
+    self:getImageData()
+    local d = self.pixelDensity
+    local offset = 4 * (x + y * self.width) * d
+    self.pixels[offset+0] = r * 255
+    self.pixels[offset+1] = g * 255
+    self.pixels[offset+2] = b * 255
+    self.pixels[offset+3] = (a or 1) * 255
 end
 
 function FrameBuffer:getPixel(x, y)
-    local clr = self.canvas.img:get(x, y)
-    return clr[0], clr[1], clr[2], clr[3]
+    self:getImageData()
+    local d = self.pixelDensity
+    local offset = 4 * (x + y * self.width) * d
+    return
+        self.pixels[offset+0] / 255,
+        self.pixels[offset+1] / 255,
+        self.pixels[offset+2] / 255,
+        self.pixels[offset+3] / 255
 end
 
 function FrameBuffer:setContext()
 end
 
 function FrameBuffer:background()
-    js.global:background(0, 0, 0, 1)
+    self.canvas.img:reset(0, 0, 0, 1)
 end
 
 function FrameBuffer:update()
+    if self.pixels then
+        self.canvas.img:updatePixels()
+    end
 end
 
-function FrameBuffer:draw()
---    self.canvas.img:updatePixels()
-    js.global:image(self.canvas.img)
+function FrameBuffer:draw(x, y, w, h)
+    self:update()
+    js.global:image(self.canvas.img, x, y, w or self.width, h or self.height)
 end
 
-function FrameBuffer:mapPixel()
+function FrameBuffer:mapPixel(f)
+    self:getImageData()
+
+    local d = 4 * self.pixelDensity
+    local offset = 0
+    local r, g, b, a
+    local pixels = self.pixels
+
+    for y=0,self.height-1 do
+        for x=0,self.width-1 do
+            r, g, b, a = f(x, y)
+
+            pixels[offset+0] = r * 255
+            pixels[offset+1] = g * 255
+            pixels[offset+2] = b * 255
+            pixels[offset+3] = (a or 1) * 255
+
+            offset = offset + d
+        end
+    end
 end
 
 
@@ -248,6 +293,25 @@ function render2context()
 end
 
 function supportedOrientations()
+end
+
+function request()
+end
+
+math.newRandomGenerator = class()
+
+function math.newRandomGenerator:setSeed(seed)
+    self.seed = seed
+end
+
+function math.newRandomGenerator:random(...)
+    return random(...)
+end
+
+love.math.setRandomSeed = math.randomseed
+love.math.setSeed = math.randomseed
+love.math.randomNormal = function ()
+    return js.global:randomGaussian()
 end
 
 function __loadASketch()
