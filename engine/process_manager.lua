@@ -59,38 +59,46 @@ function ProcessManager:getSketch(index)
 end
 
 function ProcessManager:setCurrentSketch(processIndex)
+    -- pause current sketch
     local sketch = self:current()
     if sketch then sketch:pause() end
 
-    collectgarbage('collect')
-    
+    -- select next sketch
     self.processIndex = processIndex
-    loadSketch(self.items[self.processIndex])
+    local env = self.items[self.processIndex]
+
+    setSetting('sketch', env.__name)
+    log(env.__name)
+    love.window.setTitle(env.__name)
+
+    -- load if not
+    loadSketch(env)
     
+    -- failed ?
     local sketch = self:current()
     if not sketch then return end
 
+    -- set global environment
     _G.env = sketch.env
 
+    -- resume sketch
     sketch:resume()
 
-    setSetting('sketch', sketch.env.__name)
-
-    love.window.setTitle(sketch.env.__name)
-    log(sketch.env.__name)
-
-    --Graphics.setMode(sketch.size.x, sketch.size.y)
-
-    sketch.fb:setContext()
-    sketch.fb:background()
-    resetContext()
-
+    -- reset instrumentation
     if instrument then
         instrument:reset()
     end
 
+    -- adjust global menu
     engine.parameter.items[#engine.parameter.items].items[1].label = sketch.env.__name
     engine.parameter.items[#engine.parameter.items].items[2] = sketch.parameter.items[1]
+
+    -- clear drawing areas and force on redraw
+    sketch.fb:setContext()
+    sketch.fb:background()
+    
+    resetContext()
+    background()
 
     redraw()
 end

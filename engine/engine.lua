@@ -129,7 +129,7 @@ function Engine.draw()
         end
         text(txt, 25, 25)
 
-        __echoElapsedTime = __echoElapsedTime - timeManager.deltaTime
+        __echoElapsedTime = __echoElapsedTime - env.deltaTime
         if __echoElapsedTime <= 0 then
             __echo = nil
             __echoElapsedTime = nil

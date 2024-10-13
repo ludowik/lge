@@ -1,24 +1,26 @@
+local __require = require
 function require(module, env)
-    if env then _G.env = env end
-
     if package.loaded[module] then
         return package.loaded[module]
     end
 
-    local file = package.searchpath(module, love.filesystem.getRequirePath()) 
-    if not file then return end
+    local res
+    if env then _G.env = env end
 
-    local chunk = loadfile(file, 'bt', (_G.env or _G))
-    assert(chunk)
+    if setfenv then
+        setfenv(0, (_G.env or _G))
+        res = __require(module)
+    
+    else        
+        local file = package.searchpath(module, love.filesystem.getRequirePath()) 
+        if not file then return end
 
-    if _G.env and setfenv then
-        setfenv(chunk, _G.env)
+        local chunk = loadfile(file, 'bt', (_G.env or _G))
+        assert(chunk)
+        res = chunk(module)
     end
 
-    local res = chunk(module)
-
     if env then _G.env = nil end
-
     return res
 end
 

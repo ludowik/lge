@@ -47,7 +47,7 @@ function mousePressed(event) {
     __event = {
         x: event.clientX,
         y: event.clientY,
-    }
+    };
     fengari.load('return __mousepressed()')();
 }
 
@@ -55,7 +55,7 @@ function touchStarted() {
     __event = {
         x: touches[0].x,
         y: touches[0].y,
-    }
+    };
     fengari.load('return __mousepressed()')();
 }
 
@@ -63,7 +63,7 @@ function mouseDragged(event) {
     __event = {
         x: event.clientX,
         y: event.clientY,
-    }
+    };
     fengari.load('return __mousemoved()')();
 }
 
@@ -71,7 +71,7 @@ function touchMoved() {
     __event = {
         x: touches[0].x,
         y: touches[0].y,
-    }
+    };
     fengari.load('return __mousemoved()')();
 }
 
@@ -79,12 +79,17 @@ function mouseReleased(event) {
     __event = {
         x: event.clientX,
         y: event.clientY,
-    }
+    };
     fengari.load('return __mousereleased()')();
 }
 
 function touchEnded() {
-   fengari.load('return __mousereleased()')();
+    fengari.load('return __mousereleased()')();
+}
+
+function keyTyped() {
+    __key = key;
+    fengari.load('return __textinput()')();
 }
 
 function keyPressed() {

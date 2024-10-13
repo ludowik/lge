@@ -175,7 +175,7 @@ love = {
 
     timer = {
         getTime = function ()
-            return js.global.Date:now()
+            return js.global.Date:now() / 1000.
         end,
 
         getFPS = function ()
@@ -199,7 +199,8 @@ love = {
     },
 
     event = {
-        quit = function ()
+        quit = function (mode)
+            js.global.location:reload()
         end
     }
 }

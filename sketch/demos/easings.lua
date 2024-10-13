@@ -1,11 +1,11 @@
 function setup()
     parameter:link('What is...', 'https://easings.net')
-    parameter:action('restart', restart)
+    parameter:action('restart', init)
 
-    restart()
+    init()
 end
 
-function restart()
+function init()
     scene = Scene()
 
     local r = 25

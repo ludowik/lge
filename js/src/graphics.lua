@@ -1,9 +1,14 @@
 TOP_LEFT = 'top_left'
 BOTTOM_LEFT = 'bottom_left'
 
+local __backgroundColor
 function background(clr, ...)
-    clr = Color.fromParam(clr, ...) or colors.black
-    return js.global:background(clr.r, clr.g, clr.b, clr.a)
+    __backgroundColor = Color.fromParam(clr, ...) or colors.black
+    return js.global:background(__backgroundColor:unpack())
+end
+
+function getBackgroundColor()
+    return __backgroundColor
 end
 
 ADD = js.global.ADD

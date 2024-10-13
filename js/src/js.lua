@@ -48,9 +48,7 @@ function noise(...)
 end
 
 function __init()
-    window = js.global
-
-    window:frameRate(30)
+    js.global:frameRate(30)
 
     W = js.global.innerWidth
     H = js.global.innerHeight
@@ -85,7 +83,7 @@ function __init()
 
     mouse = Mouse()
 
-    Engine.load()
+    return Engine.load()
 end
 
 function __update()
@@ -93,7 +91,7 @@ function __update()
     env.elapsedTime = env.elapsedTime + env.deltaTime
     env.frameCount = env.frameCount + 1
 
-    Engine.update(env.deltaTime)
+    return Engine.update(env.deltaTime)
 end
 
 function __draw()
@@ -102,7 +100,7 @@ function __draw()
     js.global:angleMode(js.global.RADIANS)
     js.global:colorMode(js.global.RGB, 1)
 
-    Engine.draw()
+    return Engine.draw()
 end
 
 function __mousepressed()
@@ -131,6 +129,11 @@ keysDown = {}
 
 function  __isKeyDown(key)
     return keysDown[key]
+end
+
+function  __textinput()
+    local key = js.global.__key
+    eventManager:search(key)
 end
 
 function  __keypressed()
@@ -321,7 +324,7 @@ function __loadASketch()
     classSetup()
 
     processManager:setSketch(getSetting('sketch', 'sketches'))
-    --processManager:setSketch('sketches')    
+    processManager:setSketch('particles')    
 end
 
 INIT = true

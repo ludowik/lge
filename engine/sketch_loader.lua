@@ -182,6 +182,8 @@ function saveSketchesList()
     sketchesList = sketchesList  .. '}'
 
     local f = io.open('engine/sketch_list.lua', 'wt')
-    f:write(sketchesList)
-    f:close()
+    if f then
+        f:write(sketchesList)
+        f:close()
+    end
 end
