@@ -49,6 +49,7 @@ end
 
 function __init()
     js.global:frameRate(30)
+    js.global:textAlign(js.global.LEFT, js.global.TOP)
 
     W = js.global.innerWidth
     H = js.global.innerHeight
@@ -74,8 +75,8 @@ function __init()
 
     SCALE = 1
     
-    LEFT = (js.global.innerWidth - W)/2
-    TOP = (js.global.innerHeight - H)/2
+    LEFT = 5
+    TOP = 5
 
     refreshRate = 60
     
@@ -324,7 +325,7 @@ function __loadASketch()
     classSetup()
 
     processManager:setSketch(getSetting('sketch', 'sketches'))
-    processManager:setSketch('particles')    
+    --processManager:setSketch('particles')    
 end
 
 INIT = true

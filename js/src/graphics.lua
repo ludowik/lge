@@ -76,25 +76,33 @@ function fontSize(size)
     return js.global:textSize(size)
 end
 
+local __textMode
 function textMode(mode, ...)
-    if mode == CENTER then
-        return js.global:textAlign(js.global.CENTER, js.global.CENTER)
-    else
-        return js.global:textAlign(js.global.LEFT, js.global.TOP)
-    end
+    __textMode = mode or __textMode
+    return __textMode
 end
 
 local __y = 0
 
-function text(txt, x, y)
+function text(str, x, y, limit, align)    
     y = y or 0
 
     local ws, hs = textSize(str)
     textPosition(y + hs)
 
+    local mode = textMode()
+    if mode == CENTER then
+        x = x - ws / 2
+        y = y - hs / 2
+    end
+
+    if not limit and align == 'right' then
+        x = x - ws
+    end
+
     js.global:push()
     js.global:noStroke()
-    js.global:text(txt, x, y)
+    js.global:text(str, x, y)
     js.global:pop()
 end
 
@@ -106,7 +114,7 @@ end
 function textSize(...)
     return
         js.global:textWidth(...),
-        js.global:textAscent(...) --+ js.global:textDescent(...)
+        js.global:textAscent(...) + js.global:textDescent(...)
 end
 
 function point(...)
