@@ -157,6 +157,7 @@ function EventManager:search(text)
         searchText = searchText..text
     end
 
+    echoClear()
     echo(searchText)
 
     local sketches = processManager:findSketches(searchText)

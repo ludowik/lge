@@ -48,7 +48,8 @@ function setSetting(name, value)
 end
 
 function getSetting(name, defaultValue)
-    return settings[name] or defaultValue
+    if settings[name] == nil then return defaultValue end
+    return settings[name]
 end
 
 setSetting('testBoolean', true)

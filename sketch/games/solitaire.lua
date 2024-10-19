@@ -3,9 +3,11 @@ Solitaire = class():extends(Sketch)
 -- TODO : trouver un autre moyen pour pointer globalement sur le jeu (à la place de env.sketch)
 -- TODO : trouver un autre moyen pour adresser items (count and last)
 
--- TODO : pouvoir revenir en arrière
 -- TODO : gérér un décalage entre les cartes sur tous les déplacements (du tas vers le wast, en mode auto...)
 -- TODO : trouver d'autres icônes sans fioritures sur les couleurs
+
+-- TODO : pouvoir revenir en arrière
+-- TODO : renew deck when cards miss
 
 function Solitaire:init()
     Sketch.init(self)
@@ -39,7 +41,10 @@ function Solitaire:init()
     end
 
     self.parameter:boolean('auto', Bind(self, 'autoPlay'), true)
-    self.parameter:boolean('x3', Bind(self, 'play3Card'), true)
+    self.parameter:boolean('x3', Bind(self, 'play3Card'), getSetting('play3Card', true),
+        function ()
+            setSetting('play3Card', self.play3Card)
+        end)
     self.parameter:action('Nouvelle donne', function() self:newGame() end)
 
     self.scene = Scene()
@@ -150,9 +155,10 @@ function Solitaire:update(dt)
             local lastCard = self.rows.items[i].items:last()
             if lastCard then
                 local validMoves = Array()
-                lastCard:getValidMovesFor(validMoves, self.piles.items)
+                lastCard:getValidMovesFor(validMoves, self.piles.items, true)
                 if #validMoves == 1 then
                     lastCard:move2(validMoves[1], countCard)
+                    lastCard.autoPlay = true
                     countCard = countCard + 1
                 end
             end
@@ -306,11 +312,16 @@ end
 
 Pile = class():extends(Deck)
 
+function Pile:init(...)
+    Deck.init(self, ...)
+    self.pile = true
+end
+
 function Pile:isMoveable(card)
     return card == self.items:last()
 end
 
-function Pile:isValidMove(card, toDeck)
+function Pile:isValidMove(card, toDeck, autoPlay)
     if not card.faceUp then return false end
     if #toDeck.items == 0 then
         if card.value == AS then
@@ -318,7 +329,14 @@ function Pile:isValidMove(card, toDeck)
         end
     else
         local last = toDeck.items:last()
-        if card.value == last.value + 1 and card.suit.name == last.suit.name and card == card.deck.items:last() then
+        if (card.value == last.value + 1 and 
+            card.suit.name == last.suit.name and 
+            card == card.deck.items:last() and
+            (
+                not autoPlay or
+                card.autoPlay == nil
+            ))
+        then
             return true
         end
     end
@@ -384,7 +402,7 @@ function Card:animate(count)
 
     self.tween = animate(self.position, self.nextPosition, {
         delayBeforeStart = count / 60,
-        delay = 30 / 60
+        delay = 20 / 60
     }, tween.easing.quadOut, function() self.tween = nil end)    
 end
 
@@ -463,6 +481,9 @@ function Card:click()
     else
         local toDeck = self:getFirstValidMove()
         if toDeck then
+            if self.deck.pile then
+                self.autoPlay = false
+            end
             self:move2(toDeck)
         end
     end
@@ -514,9 +535,9 @@ function Card:getValidMoves()
     return validMoves
 end
 
-function Card:getValidMovesFor(validMoves, items)
+function Card:getValidMovesFor(validMoves, items, autoPlay)
     for _, item in ipairs(items) do
-        if item:isValidMove(self, item) then
+        if item:isValidMove(self, item, autoPlay) then
             validMoves:add(item)
         end
     end

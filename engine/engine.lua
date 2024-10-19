@@ -67,7 +67,15 @@ function Engine.update(dt)
     engine.components:update(dt)
 end
 
-local __echo = nil
+-- TODO : manage by class
+local __echo = Array()
+local __echoElapsedTime = 0
+
+function echoClear()
+    __echo = Array()
+    __echoElapsedTime = 0
+end
+
 function echo(...)
     __echo = __echo or Array()
     local line = Array.concat({...}, ', ')
@@ -77,6 +85,17 @@ function echo(...)
         __echo:add({line=line, count=1})
     end
     __echoElapsedTime = 3
+end
+
+function echoUpdate(dt)
+    __echoElapsedTime = __echoElapsedTime - dt
+    if __echoElapsedTime <= 0 then
+        echoClear()
+    end
+end
+
+function echoDraw()
+    
 end
 
 function Engine.draw()
@@ -113,6 +132,8 @@ function Engine.draw()
     end
 
     if __echo then
+        echoUpdate(env.deltaTime)
+
         fontName(DEFAULT_FONT_NAME)
         fontSize(32)
 
@@ -128,12 +149,6 @@ function Engine.draw()
             txt = txt..NL
         end
         text(txt, 25, 25)
-
-        __echoElapsedTime = __echoElapsedTime - env.deltaTime
-        if __echoElapsedTime <= 0 then
-            __echo = nil
-            __echoElapsedTime = nil
-        end
     end
 end
 

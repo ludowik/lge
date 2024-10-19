@@ -6,10 +6,9 @@ requireLib (..., {
     'keyboard',
 })
 
-cpu = CPU()
-mem = Memory()
-
 function setup()
+    cpu = CPU()
+    mem = Memory()
 end
 
 function draw()
