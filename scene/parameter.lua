@@ -29,6 +29,8 @@ function Parameter:initControlBar()
         textColor = colors.transparent,
     }
 
+    local fixedSize = vec2(MIN_SIZE/3, max(LEFT, TOP, MIN_SIZE/3))
+
     if fused() then
         self:action('menu',
             function ()
@@ -39,8 +41,9 @@ function Parameter:initControlBar()
             {
                 styles = styles,
                 fixedPosition = vec2(W-MIN_SIZE/3, 0),
-                fixedSize = vec2(MIN_SIZE/3, max(LEFT, TOP)),
+                fixedSize = fixedSize,
             })
+
         return
     end
     
@@ -52,7 +55,7 @@ function Parameter:initControlBar()
         {
             styles = styles,
             fixedPosition = vec2(),
-            fixedSize = vec2(MIN_SIZE/3, max(LEFT, TOP)),
+            fixedSize = fixedSize,
         })
 
     self:action('menu',
@@ -62,7 +65,7 @@ function Parameter:initControlBar()
         {
             styles = styles,
             fixedPosition = vec2(W-MIN_SIZE/3, 0),
-            fixedSize = vec2(MIN_SIZE/3, max(LEFT, TOP)),
+            fixedSize = fixedSize,
         })
 
     self:action('previous sketch',
@@ -74,7 +77,7 @@ function Parameter:initControlBar()
         {
             styles = styles,
             fixedPosition = vec2(0, H-max(LEFT, TOP)),
-            fixedSize = vec2(MIN_SIZE/3, max(LEFT, TOP)),
+            fixedSize = fixedSize,
         })
 
     self:action('next sketch',
@@ -86,7 +89,7 @@ function Parameter:initControlBar()
         {
             styles = styles,
             fixedPosition = vec2(W-MIN_SIZE/3, H-max(LEFT, TOP)),
-            fixedSize = vec2(MIN_SIZE/3, max(LEFT, TOP)),
+            fixedSize = fixedSize,
         })
 end
 

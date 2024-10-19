@@ -136,6 +136,7 @@ function loadSketch(env)
             'pause',
             'resume',
             'resize',
+            'release',
             'update',
             'draw',
             'autotest',

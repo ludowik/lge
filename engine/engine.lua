@@ -47,6 +47,9 @@ function Engine.reload(reload)
 end
 
 function Engine.quit()
+    local sketch = processManager:current()
+    if sketch and sketch.release then sketch:release() end
+    
     engine.components:release()
     quit()
 end

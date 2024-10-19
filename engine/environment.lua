@@ -11,6 +11,8 @@ function Environment:init(name, filePath, category)
     local requirePath = filePath:gsub('%/', '%.'):gsub('%.lua', '')
     require(requirePath, self)
 
+    classSetup(self)
+
     self.__name = name
     self.__className = name:gsub('sketch%.', '')
     self.__category = category

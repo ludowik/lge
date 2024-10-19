@@ -279,7 +279,7 @@ function Mesh:draw()
 end
 
 
-classSetup(_G)
+classSetup()
 
 unpack = table.unpack
 

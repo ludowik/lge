@@ -15,7 +15,7 @@ function warning(value, msg)
     end
 end
 
-function log(k, v)
+function log(k, v, ...)
     if type(k) == 'table' then
         for _k, v in pairs(k) do
             print(_k..' : '..tostring(v))
@@ -25,7 +25,7 @@ function log(k, v)
 
     k = tostring(k)
     if v then
-        print(k..' : '..tostring(v))
+        print(k..' : '..tostring(v), ...)
     else
         print(k)
     end

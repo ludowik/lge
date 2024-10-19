@@ -1,6 +1,7 @@
 function setup()
     if getOS() == 'web' then
         fonts = {
+            'Arial',
             'Courier New',
             'Verdana',
         }
@@ -20,7 +21,7 @@ function setup()
         alphabet = alphabet..string.char(i)
     end    
 
-    parameter:watch('fontIndex')
+    parameter:integer('fontIndex', 1, #fonts)
 end
 
 function autotest()
@@ -30,16 +31,15 @@ end
 function draw()
     background(colors.white)
 
-    local x = 0
+    local x = LEFT
+
+    local top = TOP
+    textPosition(top)
 
     fontSize(28)
-
-    textPosition(0)
+    
     for index,name in ipairs(fonts) do
         name = name:gsub('%.ttf', '')
-
-        fontName(name)
-        text(name, x, textPosition())
 
         if index == fontIndex then
             textColor(colors.red)
@@ -47,24 +47,27 @@ function draw()
             textColor(colors.black)
         end
 
+        fontName(name)
+        text(name, x, textPosition())
+        
         if textPosition() > H then
             x = x + Anchor(4):size(1,1).x
             textPosition(0)
         end
     end
     
-    textColor(colors.black)
-    
+    textPosition(top)
+
+    textColor(colors.black)    
     fontName(fonts[fontIndex]:gsub('%.ttf', ''))
     
-    textPosition(0)
-    for size=5,80,5 do
+    for size=12,50,3 do
         fontSize(size)
         text(fontName(), W/3, textPosition())
     end
 
     fontSize(24)
-    text(alphabet, W*2/3)
+    text(alphabet, W*2/3, top)
 end
 
 function keypressed(key)

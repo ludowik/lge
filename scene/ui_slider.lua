@@ -32,9 +32,9 @@ function UISlider:draw()
     noStroke()
 
     local r = 5
-    fill(self.styles.fillColor:alpha(0.6))    
-    rect(0, 0, self.size.y, self.size.y, r)
-    rect(self.size.x - self.size.y, 0, self.size.y, self.size.y, r)
+    fill(self.styles.fillColor:alpha(0.8))    
+    rect(0, 0, self.size.y-1, self.size.y, r*2, 0, 0, r*2)
+    rect(self.size.x - self.size.y + 1, 0, self.size.y-1, self.size.y, 0, r*2, r*2, 0)
 
     fill(self.styles.fillColor)
     rect(self.size.y, 0, self.size.x - 2 * self.size.y, self.size.y)
@@ -46,6 +46,7 @@ function UISlider:draw()
     line(x, 0, x, self.size.y)
 
     fontSize(self.styles.fontSize * .7)
+    textColor(self.styles.textColor)
     textMode(CORNER)
     text(tostring(self.label), self.size.y, 0)
 

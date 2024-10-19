@@ -1,4 +1,5 @@
 return {
+	{name='cards', filePath='sketch.cards'},
 	{name='fetch', filePath='sketch.fetch'},
 	{name='oric', filePath='sketch.oric'},
 	{name='sketches', filePath='sketch.sketches'},

@@ -240,10 +240,15 @@ function Graphics2d.polyline(vertices)
 end
 
 function Graphics2d.polygon(vertices)
-    if stroke() and #vertices >= 4 then
+    if #vertices < 4 then return end
+    if stroke() then
         love.graphics.setColor(stroke():rgba())
         love.graphics.setLineWidth(strokeSize())
         love.graphics.polygon('line', vertices)
+    end
+    if fill() then
+        love.graphics.setColor(fill():rgba())
+        love.graphics.polygon('fill', vertices)
     end
 end
 

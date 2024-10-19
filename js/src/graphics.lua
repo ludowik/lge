@@ -66,8 +66,8 @@ function noTint() js.global:noTint() end
 local __fontName = DEFAULT_FONT_NAME
 function fontName(name)
     if name then
-        __fontName = __fontName or name
-        js.global:textFont(name)
+        __fontName = name
+        js.global:textFont(__fontName)
     end
     return __fontName
 end
@@ -114,7 +114,7 @@ end
 function textSize(...)
     return
         js.global:textWidth(...),
-        js.global:textAscent(...) + js.global:textDescent(...)
+        js.global:textAscent(...) + js.global:textDescent(...)  /2
 end
 
 function point(...)

@@ -11,7 +11,9 @@ end
 
 function Bind:get()
     local object = self.object or _G.env or _G
-    return object[self.ref]
+    local result = object[self.ref]
+    if result then return result end
+    return evaluateExpression(self.ref) or nil
 end
 
 function Bind:set(value)

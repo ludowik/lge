@@ -3,8 +3,10 @@ python3 -m http.server 8080
 
 
 -- TODO
+
 engine
-- full scrfeen mode
+- application settings
+- full screen mode
 - review restart method (release all before restart ? or more virtual restart ?)
 - detect scripts error and execution error to change the current sketch to "sketches" for the next launch
 - fusion of sketch and process manager (a process is a sketch)
@@ -23,6 +25,3 @@ fonctions activables des sketches
 - 2 fingers pinch gesture => zoom up or down
 - 2 fingers swipe gesture => translate screen
 - 1 touch / release => pause / resume
-
-lca deposit
-- finalize the import phase
