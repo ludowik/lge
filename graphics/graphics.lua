@@ -29,7 +29,6 @@ function Graphics.initMode()
     love.window.setVSync(1)
 
     deviceOrientation = getSetting('deviceOrientation', PORTRAIT)
-    --deviceScreenRatio = getSetting('deviceScreenRatio', screenRatios.iphone)
 
     _, _, WS, HS = Graphics.getPhysicalArea()
     Graphics.setMode(WS, HS)
@@ -84,13 +83,14 @@ function getVirtualArea()
     return y, x, h, w
 end
 
-function Graphics.setMode(w, h)    
+function Graphics.setMode(w, h)
     local ws, hs, flags = love.window.getMode()
+    
     if not Graphics.initializedScreen or ws ~= w or h ~= h then
         Graphics.initializedScreen = true
 
         local params = {
-            msaa = 2,
+            msaa = 5,
             fullscreen = getOS() == 'ios',
         }
 
@@ -99,6 +99,29 @@ function Graphics.setMode(w, h)
             h,
             params)
     end
+end
+
+function Graphics.toggleFullScreen()
+    local ws, hs, flags = love.window.getMode()
+    if not flags.fullscreen then
+        flags.fullscreen = true
+        Graphics.flags = {
+            x = flags.x,
+            y = flags.y,
+            ws = ws,
+            hs = hs,
+        }
+    else
+        flags.fullscreen = false
+        flags.x = Graphics.flags.x
+        flags.y = Graphics.flags.y
+        ws = Graphics.flags.ws
+        hs = Graphics.flags.hs
+    end
+    love.window.setMode(
+        ws,
+        hs,
+        flags)
 end
 
 function Graphics:rotateScreen()

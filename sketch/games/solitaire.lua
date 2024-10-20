@@ -6,24 +6,29 @@ Solitaire = class() : extends(Sketch)
 function Solitaire:init()
     Sketch.init(self)
 
-    local ny = 3
+    self:resize()
+    self:initParameters()
+end
 
+function Solitaire:resize()
+    self:initScene()
+    self:loadGame()
+end
+
+function Solitaire:initScene()
     self.deckList = Array()
 
     self.deck = Deck(0, 0)
     self.deckList:push(self.deck)
-    self.deck.position:set(6 * Card.wcard + 7 * Card.margin, Card.hcard * ny)
 
     self.wast = Wast(Card.wcard / 3, 0)
     self.deckList:push(self.wast)
-    self.wast.position:set(4 * Card.wcard + 7 * Card.margin, Card.hcard * ny)
 
     self.piles = Node()
     for i in range(4) do
         local deck = Pile(0, 0)
         self.deckList:push(deck)
         self.piles:add(deck)
-        deck.position:set((i - 1) * Card.wcard + i * Card.margin, Card.hcard * ny)
     end
 
     self.rows = Node()
@@ -31,18 +36,43 @@ function Solitaire:init()
         local deck = Row(0, Card.wtext + Card.margin)
         self.deckList:push(deck)
         self.rows:add(deck)
-        deck.position:set((i - 1) * Card.wcard + i * Card.margin, Card.hcard * (ny+1) + 2 * Card.margin)
     end
+
+    self:initPosition()
     
     self.scene = Scene()
     self.scene:add(self.rows)
     self.scene:add(self.piles)
     self.scene:add(self.wast)
     self.scene:add(self.deck)
+end
 
-    self:loadGame()
+function Solitaire:initPosition()
+    local ny = 3
 
-    self:initParameters()
+    Card.initSize()
+
+    local y
+    if deviceOrientation == LANDSCAPE then
+        y = Card.hcard
+    else
+        y = Card.hcard * ny
+    end
+    
+    self.wast.dx, self.wast.dy = Card.wcard / 3, 0
+
+    self.deck:changePosition(vec2(6 * Card.wcard + 7 * Card.margin, y))
+    self.wast:changePosition(vec2(4 * Card.wcard + 7 * Card.margin, y))
+
+    for i in range(self.piles:count()) do
+
+        self.piles.items[i].dx, self.piles.items[i].dy = 0, Card.wtext + Card.margin
+        self.piles.items[i]:changePosition(vec2((i - 1) * Card.wcard + i * Card.margin, y))
+    end
+
+    for i in range(self.rows:count()) do
+        self.rows.items[i]:changePosition(vec2((i - 1) * Card.wcard + i * Card.margin, y + Card.hcard + 2 * Card.margin))
+    end
 end
 
 function Solitaire:initParameters()
@@ -52,6 +82,7 @@ function Solitaire:initParameters()
             setSetting('play3Card', self.play3Card)
         end)
     self.parameter:action('Nouvelle donne', function() self:newGame() end)
+    self.parameter:action('Rejouer donne', function() self:newGame(self.seedValue) end)
 
     self.parameter:action(Bind('#sketch.movesBack'), function ()
         self:undo()
@@ -75,11 +106,11 @@ function Solitaire:resetGame()
     self:resetHistory()
 end
 
-function Solitaire:newGame()
+function Solitaire:newGame(seedValue)
     self:resetGame()
 
     self.deck:create()
-    self.deck:shuffle()
+    self.deck:shuffle(seedValue)
 
     local index = 1
     local countCard = 0
@@ -106,12 +137,17 @@ function Solitaire:newGame()
     self:saveGame()
 end
 
+function Solitaire:nextSeedValue()
+    return randomInt(2^16)
+end
+
 function Solitaire:saveGame()
     saveData('solitaire', self:serialize())
 end
 
 function Solitaire:serialize()
     return {
+        seedValue = self.seedValue,
         deck = self.deck:serialize(),
         wast = self.wast:serialize(),
         rows = {
@@ -136,6 +172,8 @@ function Solitaire:loadGame()
     local data = loadData('solitaire')
     if data and data.deck and data.wast and data.rows and data.piles then
         self:resetGame()
+
+        self.seedValue = data.seedValue or self:nextSeedValue()
 
         Array.foreach(data.deck, function(card)
             self.deck:push(Card(card.value, card.suit, card.faceUp))
@@ -249,16 +287,21 @@ function Deck:reset()
     self.items = Array()
 end
 
+function Deck:changePosition(position)
+    self.position:set(position)
+end
+
+
 AS = 1
 VALET = 11
 QUEEN = 12
 KING = 13
 
 suits = {
-    spade = { name = 'pique', color = 'black' },
     heart = { name = 'coeur', color = 'red' },
     diamond = { name = 'carreau', color = 'red' },
     club = { name = 'trefle', color = 'black' },
+    spade = { name = 'pique', color = 'black' },
 }
 
 function Deck:click()
@@ -294,16 +337,20 @@ function Deck:create()
     end
 end
 
-function Deck:shuffle()
+function Deck:shuffle(seedValue)
     local items = self.items
     self.items = Array()
+
+    sketch.seedValue = seedValue or sketch:nextSeedValue()
+    seed(sketch.seedValue)
+
     for _ in range(#items) do
         local i = randomInt(1, #items)
         self:push(items:remove(i))
     end
 end
 
-function Deck:isMoveable(card)
+function Deck:isMoveable()
     return true
 end
 
@@ -421,7 +468,15 @@ end
 Card = class() : extends(Rect)
 
 function Card.setup()
-    Card.size = Anchor(7):size(1, 1):floor()
+    Card.initSize()
+end
+
+function Card.initSize()
+    if deviceOrientation == LANDSCAPE then
+        Card.size = Anchor(nil, 8):size(1, 1):floor()
+    else
+        Card.size = Anchor(7):size(1, 1):floor()
+    end
     Card.size.y = floor(Card.size.x * 1.5)
 
     Card.margin = 3

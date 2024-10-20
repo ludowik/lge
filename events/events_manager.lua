@@ -31,7 +31,7 @@ function EventManager:mousereleased(id, x, y, presses)
     mouse:released(id, x, y, 0)
     
     if self.touches[id] then
-        if mouse.move:len() <= 25 then -- and mouse.elapsedTime < 0.15
+        if mouse.move:len() <= 25 and mouse.elapsedTime < 0.5 then
             mouse.presses = 1
             if self.touches[id]:click(mouse) then
                 self.touches[id] = nil
@@ -76,15 +76,6 @@ function EventManager:keypressed(key, scancode, isrepeat)
             setSetting('deviceOrientation', deviceOrientation)
             rotateScreen()
 
-        elseif key == '^' then
-            if deviceScreenRatio == screenRatios.ipad then
-                deviceScreenRatio = screenRatios.iphone
-            else
-                deviceScreenRatio = screenRatios.ipad
-            end
-            setSetting('deviceScreenRatio', deviceScreenRatio)
-            rotateScreen()
-
         elseif key == 't' then
             env.__autotest = not env.__autotest
             love.window.setVSync(env.__autotest and 0 or 1)
@@ -121,6 +112,12 @@ function EventManager:keypressed(key, scancode, isrepeat)
         
     elseif key == 'f2' then
         line = line == Graphics2d.line and myline or Graphics2d.line
+
+    elseif key == 'f11' then
+        toggleFullScreen()        
+
+    elseif key == 'f12' then
+        instrument:toggleState()
     
     elseif key == 'pageup' then
         processManager:previous()

@@ -2,7 +2,8 @@ UI = class():extends(Rect, MouseEvent, KeyboardEvent)
 
 UI.innerMarge = 8
 UI.styles = {
-    fontSize = 22
+    fontSize = 24,
+    fontName = DEFAULT_FONT_NAME,
 }
 
 function UI:init(label)
@@ -47,7 +48,7 @@ function UI:formatValue(value)
     if self.intValue then
         return string.format('%.0f', value)
     else
-        if value <= 0.01 then
+        if abs(value) <= 0.01 then
             return string.format('%f', value)
         else
             return string.format('%.2f', value)
@@ -55,8 +56,9 @@ function UI:formatValue(value)
     end
 end
 
-function UI:fontSize()
+function UI:fontStyle()
     fontSize(self.styles.fontSize)
+    fontName(self.styles.fontName)
 end
 
 function UI:computeSize()
@@ -65,7 +67,7 @@ function UI:computeSize()
         return
     end
 
-    self:fontSize()
+    self:fontStyle()
 
     local w, h = textSize(self:getLabel())
     self.size:set(w + 2 * UI.innerMarge, h)
@@ -109,7 +111,7 @@ function UI:drawFront()
         textColor(self.styles.textColor)
     end
 
-    self:fontSize()
+    self:fontStyle()
 
     local wrapSize = self.styles.wrapSize
     local wrapAlign = self.styles.wrapAlign

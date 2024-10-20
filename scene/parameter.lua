@@ -29,7 +29,7 @@ function Parameter:initControlBar()
         textColor = colors.transparent,
     }
 
-    local fixedSize = vec2(MIN_SIZE/3, max(LEFT, TOP, MIN_SIZE/3))
+    local fixedSize = vec2(MIN_SIZE/3, max(LEFT, TOP, MIN_SIZE/5))
 
     if fused() then
         self:action('menu',
@@ -40,7 +40,7 @@ function Parameter:initControlBar()
             end,
             {
                 styles = styles,
-                fixedPosition = vec2(W-MIN_SIZE/3, 0),
+                fixedPosition = vec2(W-fixedSize.x, 0),
                 fixedSize = fixedSize,
             })
 
@@ -64,7 +64,7 @@ function Parameter:initControlBar()
         end,
         {
             styles = styles,
-            fixedPosition = vec2(W-MIN_SIZE/3, 0),
+            fixedPosition = vec2(W-fixedSize.x, 0),
             fixedSize = fixedSize,
         })
 
@@ -76,7 +76,7 @@ function Parameter:initControlBar()
         end,
         {
             styles = styles,
-            fixedPosition = vec2(0, H-max(LEFT, TOP)),
+            fixedPosition = vec2(0, H-fixedSize.y),
             fixedSize = fixedSize,
         })
 
@@ -88,7 +88,7 @@ function Parameter:initControlBar()
         end,
         {
             styles = styles,
-            fixedPosition = vec2(W-MIN_SIZE/3, H-max(LEFT, TOP)),
+            fixedPosition = vec2(W-fixedSize.x, H-fixedSize.y),
             fixedSize = fixedSize,
         })
 end
@@ -119,8 +119,9 @@ function Parameter:addMainMenu()
 
     self:space()
     self:action('instrument', function ()
-        instrument:instrumentFunctions()
-        instrument.active = not instrument.active
+        -- instrument:instrumentFunctions()
+        -- instrument.active = not instrument.active
+        instrument:toggleState()
     end)
 
     self:space()

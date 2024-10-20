@@ -11,7 +11,7 @@ function setup()
 
     grid:reset()
 
-    state = 'paused'
+    state = 'active'
     drawDelete = true
 
     sizeCell = vec2(CELLS_SIZE, CELLS_SIZE)
@@ -73,11 +73,11 @@ end
 function GolGrid:reset()
     self:clear()
 
-    self:loadSchema(schemas.repliqua)
+    --self:loadSchema(schemas.repliqua)
 
-    -- for i=1,CELLS_COUNT.x do
-    --     self:addLife()
-    -- end
+    for i=1,CELLS_COUNT.x do
+        self:addLife()
+    end
 
     self.size = vec2()
     self.position = vec2()

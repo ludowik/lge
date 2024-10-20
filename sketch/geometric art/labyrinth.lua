@@ -3,8 +3,8 @@ function setup()
 end
 
 function reset()
-    local w = randomInt(32, 128)
-    local h = randomInt(32, 128)
+    local w = 40
+    local h = 90
 
     w = w + w % 2 - 1
     h = h + h % 2 - 1
@@ -168,7 +168,7 @@ function draw()
     
     local w = min(
         W / grid.w,
-        H / grid.h)
+        H / grid.h) - 1
     
     noStroke()
 
@@ -188,7 +188,7 @@ function draw()
                 elseif type.distance then
                     fill(Color.hsl(type.distance))
                 elseif type.value == 0 then
-                    fill(colors.white)
+                    noFill() --fill(colors.white)
                 else
                     fill(Color.hsl((type.value or 0)/n))
                 end

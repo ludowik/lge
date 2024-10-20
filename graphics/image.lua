@@ -4,7 +4,7 @@ function FrameBuffer:init(w, h, format, clr)
     self.format = format or 'normal'
     self.canvas = love.graphics.newCanvas(w, h, {
         format = self.format,
-        msaa = 2,
+        msaa = 5,
         dpiscale = dpiscale,
     })
     
@@ -55,7 +55,7 @@ end
 
 function FrameBuffer:getImageData()
     if self.imageData then
-        return
+        return self.imageData
     end
 
     local restoreCanvas = false

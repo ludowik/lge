@@ -16,6 +16,7 @@ require 'graphics.anchor'
 require 'graphics.font'
 require 'graphics.font_icons'
 require 'graphics.graphics'
+require 'graphics.shape'
 Graphics.setup = nil
 
 require 'events'
@@ -56,17 +57,6 @@ function __init()
 
     CX = W/2
     CY = H/2
-
-    local ratio = 9/16
-
-    if W == max(W, H) then
-        W = H * ratio
-    else
-        H = W / ratio
-    end
-
-    W = math.floor(W)
-    H = math.floor(H)
 
     MIN_SIZE = min(W, H)
     MAX_SIZE = max(W, H)

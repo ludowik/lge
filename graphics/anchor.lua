@@ -28,6 +28,7 @@ function Anchor:pos(i, j)
 
     if i < 0 then i = self.ni + i end
     if j < 0 then j = self.nj + j end
+    
     return vec2(
         floor((i)*(W/self.ni)),
         floor((j)*(H/self.nj)))

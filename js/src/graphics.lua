@@ -157,46 +157,12 @@ function arc(x, y, rx, ry, a1, a2)
     return js.global:arc(x, y, 2*rx, 2*ry, a1, a2)
 end
 
-POINTS = js.global.POINTS
-LINES = js.global.LINES
-
-CLOSE = js.global.CLOSE
-
-Shape = class()
-
-function Shape:init(kind)
-    self.kind = kind or js.global.TRIANGLES_FAN
-    self.vertices = Array()
-end
-
-function Shape:add(...)
-    self.vertices:add{...}
-end
-
-function Shape:draw()
-    js.global:beginShape(self.kind)
-    self.vertices:foreach(function (arg)
-        js.global:vertex(table.unpack(arg))
-    end)
-    js.global:endShape(self.mode)
-end
-
-function beginShape(kind)
-    __shape = Shape(kind)
-end
-
-function vertex(...)
-    __shape:add(...)
-end
-
-function endShape(mode)
-    __shape.mode = mode
-    __shape:draw()
-    return __shape
-end
-
-function scaleShape(scaleFactor)
-    __shape.scaleFactor = scaleFactor
+function polygon(vertices)
+    js.global:beginShape()
+    for i=1,#vertices,2 do
+        js.global:vertex(vertices[i], vertices[i+1])
+    end
+    js.global:endShape(CLOSE)
 end
 
 function spriteMode(...)
