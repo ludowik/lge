@@ -54,21 +54,19 @@ function Solitaire:initPosition()
 
     Card.initSize()
 
-    local y
+    local x, y
     if deviceOrientation == LANDSCAPE then
-        y = Card.hcard
+        x = 0
+        y = Card.margin
     else
+        x = 0
         y = Card.hcard * ny
     end
     
-    self.wast.dx, self.wast.dy = Card.wcard / 3, 0
-
-    self.deck:changePosition(vec2(6 * Card.wcard + 7 * Card.margin, y))
     self.wast:changePosition(vec2(4 * Card.wcard + 7 * Card.margin, y))
+    self.deck:changePosition(vec2(6 * Card.wcard + 7 * Card.margin, y))
 
     for i in range(self.piles:count()) do
-
-        self.piles.items[i].dx, self.piles.items[i].dy = 0, Card.wtext + Card.margin
         self.piles.items[i]:changePosition(vec2((i - 1) * Card.wcard + i * Card.margin, y))
     end
 
@@ -376,9 +374,10 @@ function Deck:push(card, count)
         card.nextPosition:set(self.position.x, self.position.y)
     else
         local lastCard = self.items[#self.items]
+        local dy = lastCard.faceUp and self.dy or self.dy/2
         card.nextPosition:set(
             lastCard.nextPosition.x + self.dx,
-            lastCard.nextPosition.y + self.dy)
+            lastCard.nextPosition.y + dy)
     end
 
     if card.tween then
@@ -475,13 +474,18 @@ end
 
 function Card.initSize()
     if deviceOrientation == LANDSCAPE then
-        Card.size = Anchor(nil, 8):size(1, 1):floor()
+        Card.size = Anchor(nil, 7):size(1, 1):floor()
+        Card.margin = 3
     else
         Card.size = Anchor(7):size(1, 1):floor()
+        Card.margin = 3
     end
     Card.size.y = floor(Card.size.x * 1.5)
 
+<<<<<<< HEAD
     Card.margin = Card.size / 10
+=======
+>>>>>>> fb7218bd90ae9b4ff24410ee5d4e0456dd4e57c3
     Card.radius = 5
 
     Card.wcard = Card.size.x - Card.margin
