@@ -1,7 +1,9 @@
 Solitaire = class() : extends(Sketch)
 
--- TODO : trouver d'autres icônes sans fioritures sur les couleurs
--- TODO : gestion de l'historique aussi sur le tas ?
+-- TODO : Trouver d'autres icônes sans fioritures sur les couleurs
+-- TODO : Gestion de l'historique aussi sur le tas ?
+-- TODO : Gestion du score
+-- TODO : Undo encore possible après avoir pioché ?
 
 function Solitaire:init()
     Sketch.init(self)
@@ -479,7 +481,7 @@ function Card.initSize()
     end
     Card.size.y = floor(Card.size.x * 1.5)
 
-    Card.margin = 3
+    Card.margin = Card.size / 10
     Card.radius = 5
 
     Card.wcard = Card.size.x - Card.margin

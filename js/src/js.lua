@@ -49,7 +49,9 @@ function noise(...)
 end
 
 function __init()
-    js.global:frameRate(30)
+    refreshRate = 30
+
+    js.global:frameRate(refreshRate)
     js.global:textAlign(js.global.LEFT, js.global.TOP)
 
     W = js.global.innerWidth
@@ -67,8 +69,6 @@ function __init()
     
     LEFT = 5
     TOP = 5
-
-    refreshRate = 60
     
     elapsedTime = 0
 

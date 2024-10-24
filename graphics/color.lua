@@ -476,7 +476,7 @@ function Color.unitTest()
     assert(clr.b == 0)
     assert(clr.a == 1)
 
-    clr = Color(.2, .4, .6, 1.0)
+    clr = Color(0.2, 0.4, 0.6, 1.0)
     assert(clr.r == 0.2)
     assert(clr.g == 0.4)
     assert(clr.b == 0.6)
