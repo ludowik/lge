@@ -1,4 +1,8 @@
 function setup()
+    resize()
+end
+
+function resize()    
     local anchor = Anchor(32)
     size = anchor:size(1, 1).x
     m = ceil(anchor.ni/2)
@@ -6,6 +10,8 @@ function setup()
 end
 
 function draw()
+    background(0, 0, 0, 0.05)
+
     translate(CX, CY)
     
     for j = -n,n do

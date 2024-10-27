@@ -31,6 +31,7 @@ function Engine.initParameter()
     if not fused() then        
         engine.parameter:addMainMenu()
         engine.parameter:addNavigationMenu()
+        engine.parameter:addScreenMenu()
         engine.parameter:addCaptureMenu()
     end
 
@@ -58,8 +59,10 @@ function Engine.contains(mouse)
     local object = engine.parameter:contains(mouse.position)
     if object then return object end
 
-    local object = engine.navigation:contains(mouse.position)
-    if object then return object end
+    if engine.parameter.currentMenu and engine.parameter.currentMenu.label == 'navigation' then                
+        local object = engine.navigation:contains(mouse.position)
+        if object then return object end
+    end
 
     local sketch = processManager:current()
     local object = sketch:contains(mouse.position)
@@ -130,8 +133,8 @@ function Engine.draw()
         fontSize(18)
         local w, h = textSize(fps)
         textColor(colors.red)
-        textMode(CENTER)
-        text(fps, W - w / 2 - UI.innerMarge, TOP / 2)
+        textMode(CORNER)
+        text(fps, LEFT, TOP)
     end
 
     if __echo then

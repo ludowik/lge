@@ -12,6 +12,8 @@ function Graphics.setup()
         iphone_4 = 3/4,
     }
 
+    screenRatio = getSetting('screenRatio', screenRatios.ipad)
+
     TOP_LEFT = 'top_left'
     BOTTOM_LEFT = 'bottom_left'
 
@@ -23,6 +25,16 @@ function Graphics.setup()
         Light.sun(),
         Light.ambient(colors.white, 0.8),
     }
+end
+
+function Graphics.setDeviceOrientation(orientation)
+    deviceOrientation = orientation
+    setSetting('deviceOrientation', deviceOrientation)
+    Graphics.updateScreen()
+end
+
+function Graphics.toggleDeviceOrientation()
+    Graphics.setDeviceOrientation(deviceOrientation == PORTRAIT and LANDSCAPE or PORTRAIT)
 end
 
 function Graphics.initMode()
@@ -50,14 +62,25 @@ end
 
 function Graphics.getPhysicalArea()
     local x, y, w, h
+
     if getOS() == 'ios' then
         x, y = love.window.getSafeArea()
         w, h = love.window.getDesktopDimensions(1)
         
     elseif getOS() == 'osx' then
         x, y, w, h = 0, 0, 0, 1024
-        w = even(h*screenRatios.iphone)
+        w = even(h*screenRatio)
     
+    elseif getOS() == 'windows' then
+        local ws, hs, flags = love.window.getMode()
+        if flags.fullscreen then
+            x, y, w, h = 0, 0, ws, hs
+            deviceOrientation = w < h and PORTRAIT or LANDSCAPE
+        else
+            x, y, w, h = 0, 0, 0, 812
+            w = even(h*screenRatio)
+        end
+
     else
         x, y, w, h = 0, 0, 375, 812
     end
@@ -86,12 +109,12 @@ end
 function Graphics.setMode(w, h)
     local ws, hs, flags = love.window.getMode()
     
-    if not Graphics.initializedScreen or ws ~= w or h ~= h then
+    if not Graphics.initializedScreen or ws ~= w or hs ~= h then
         Graphics.initializedScreen = true
 
         local params = {
             msaa = 5,
-            fullscreen = getOS() == 'ios',
+            fullscreen = getOS() == 'ios' or flags.fullscreen,
         }
 
         love.window.setMode(
@@ -99,6 +122,11 @@ function Graphics.setMode(w, h)
             h,
             params)
     end
+end
+
+function Graphics.isFullScreen()
+    local _, _, flags = love.window.getMode()
+    return flags.fullscreen
 end
 
 function Graphics.toggleFullScreen()
@@ -118,13 +146,16 @@ function Graphics.toggleFullScreen()
         ws = Graphics.flags.ws
         hs = Graphics.flags.hs
     end
+
     love.window.setMode(
         ws,
         hs,
         flags)
+
+    Graphics.updateScreen()
 end
 
-function Graphics:rotateScreen()
+function Graphics.updateScreen()
     Graphics.initMode()
 
     local sketch = processManager:current()
@@ -144,6 +175,11 @@ end
 function Graphics.loop()
     local sketch = processManager:current()
     sketch.loopMode = 'loop'
+end
+
+function Graphics.toggleLoop()
+    local sketch = processManager:current()
+    sketch.loopMode = sketch.loopMode == 'loop' and 'none' or 'loop'
 end
 
 function Graphics.supportedOrientations(orientation)

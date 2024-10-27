@@ -2,18 +2,21 @@ Solitaire = class() : extends(Sketch)
 
 -- TODO : Trouver d'autres icônes sans fioritures sur les couleurs
 -- TODO : Gestion de l'historique aussi sur le tas ?
--- TODO : Gestion du score
--- TODO : Undo encore possible après avoir pioché ?
 
 function Solitaire:init()
     Sketch.init(self)
 
-    self:resize()
+    self:initScene()
+    self:initPosition()
+    
+    self:loadGame()
+
     self:initParameters()
 end
 
 function Solitaire:resize()
-    self:initScene()
+    self:saveGame()
+    self:initPosition()
     self:loadGame()
 end
 
@@ -39,14 +42,14 @@ function Solitaire:initScene()
         self.deckList:push(deck)
         self.rows:add(deck)
     end
-
-    self:initPosition()
     
     self.scene = Scene()
     self.scene:add(self.rows)
     self.scene:add(self.piles)
     self.scene:add(self.wast)
     self.scene:add(self.deck)
+
+    self.score = 0
 end
 
 function Solitaire:initPosition()
@@ -54,41 +57,37 @@ function Solitaire:initPosition()
 
     Card.initSize()
 
-    local x, y
-    if deviceOrientation == LANDSCAPE then
-        x = 0
-        y = Card.margin
-    else
-        x = 0
-        y = Card.hcard * ny
-    end
-    
-    self.wast:changePosition(vec2(4 * Card.wcard + 7 * Card.margin, y))
-    self.deck:changePosition(vec2(6 * Card.wcard + 7 * Card.margin, y))
+    local estimateW = 7 * Card.wcard + 8 * Card.margin
+    local estimateH = 2 * Card.wcard + 2 * Card.margin + 10 * (Card.wtext + Card.margin)
+
+    local x, y    
+    x = (W - estimateW) / 2
+    y = (H - estimateH) / 2
+
+    self.wast:changePosition(vec2(x + 4 * Card.wcard + 6 * Card.margin, y))
+    self.deck:changePosition(vec2(x + 6 * Card.wcard + 7 * Card.margin, y))
 
     for i in range(self.piles:count()) do
-        self.piles.items[i]:changePosition(vec2((i - 1) * Card.wcard + i * Card.margin, y))
+        self.piles.items[i]:changePosition(vec2(x + (i - 1) * Card.wcard + i * Card.margin, y))
     end
 
     for i in range(self.rows:count()) do
-        self.rows.items[i]:changePosition(vec2((i - 1) * Card.wcard + i * Card.margin, y + Card.hcard + 2 * Card.margin))
+        self.rows.items[i]:changePosition(vec2(x + (i - 1) * Card.wcard + i * Card.margin, y + Card.hcard + 2 * Card.margin))
     end
 end
 
 function Solitaire:initParameters()
-    self.parameter:boolean('auto', Bind(self, 'autoPlay'), true)
-    self.parameter:boolean('x3', Bind(self, 'play3Card'), getSetting('play3Card', true),
+    self.parameter:boolean('Auto', Bind(self, 'autoPlay'), true)
+    self.parameter:boolean('3 cartes', Bind(self, 'play3Card'), getSetting('play3Card', true),
         function ()
             setSetting('play3Card', self.play3Card)
         end)
+    self.parameter:watch('Score', Bind(self, 'score'))        
     self.parameter:action('Nouvelle donne', function() self:newGame() end)
-    self.parameter:action('Rejouer donne', function() self:newGame(self.seedValue) end)
+    self.parameter:action('Rejouer', function() self:newGame(self.seedValue) end)
 
-    self.parameter:action(Bind('#sketch.movesBack'), function ()
+    self.parameter:action(Bind('"Annuler " .. #sketch.movesBack'), function ()
         self:undo()
-    end)
-    self.parameter:action(Bind('#sketch.movesForward'), function ()
-        self:redo()
     end)
 end
 
@@ -148,6 +147,7 @@ end
 function Solitaire:serialize()
     return {
         seedValue = self.seedValue,
+        score = self.score,
         deck = self.deck:serialize(),
         wast = self.wast:serialize(),
         rows = {
@@ -174,6 +174,7 @@ function Solitaire:loadGame()
         self:resetGame()
 
         self.seedValue = data.seedValue or self:nextSeedValue()
+        self.score = data.score or 0
 
         Array.foreach(data.deck, function(card)
             self.deck:push(Card(card.value, card.suit, card.faceUp))
@@ -200,6 +201,7 @@ function Solitaire:resetHistory()
 end
 
 function Solitaire:undo()
+    sketch:movement('undo')
     self:exec(self.movesBack, self.movesForward)
 end
 
@@ -213,6 +215,31 @@ function Solitaire:exec(from, to)
     to:push(move)
     move.moveFromTo(move.card, move.toDeck, move.fromDeck, i)
     move.toDeck, move.fromDeck = move.fromDeck, move.toDeck
+end
+
+function Solitaire:movement(type, fromDeck, toDeck)
+    if type == 'faceup' then
+        self.score = self.score + 10
+        log('faceup')
+
+    elseif type == 'movement' then
+        if fromDeck.__className == 'Wast' and toDeck.__className == 'Row' then
+            self.score = self.score + 10
+            log('Wast to Row')
+
+        elseif toDeck.__className == 'Pile' then
+            self.score = self.score + 10
+            log('to Pile')
+
+        elseif fromDeck.__className == 'Pile' and toDeck.__className == 'Row' then
+            self.score = self.score  - 5
+            log('Pile to Row')
+        end
+    
+    elseif type == 'undo' then
+        self.score = self.score  - 20
+        log('undo')
+    end
 end
 
 function Solitaire:update(dt)
@@ -461,6 +488,7 @@ end
 
 function Row:update()
     if #self.items > 0 and self.items:last().faceUp == false then
+        sketch:movement('faceup')
         self.items:last().faceUp = true
     end
 end
@@ -475,18 +503,13 @@ end
 function Card.initSize()
     if deviceOrientation == LANDSCAPE then
         Card.size = Anchor(nil, 7):size(1, 1):floor()
-        Card.margin = 3
     else
         Card.size = Anchor(7):size(1, 1):floor()
-        Card.margin = 3
     end
     Card.size.y = floor(Card.size.x * 1.5)
 
-<<<<<<< HEAD
-    Card.margin = Card.size / 10
-=======
->>>>>>> fb7218bd90ae9b4ff24410ee5d4e0456dd4e57c3
-    Card.radius = 5
+    Card.margin = Card.size.x / 10
+    Card.radius = Card.size.x / 12
 
     Card.wcard = Card.size.x - Card.margin
     Card.hcard = Card.size.y - Card.margin
@@ -526,49 +549,40 @@ function Card:draw()
 
     local size = Card.size
 
-    local margin = Card.margin
+    local innerMargin = Card.wcard / 20
     local radius = Card.radius
 
     local wcard = Card.wcard
     local hcard = Card.hcard
     local wtext = Card.wtext
 
-    if self.faceUp then
-        strokeSize(0.5)
-        stroke(colors.black)
-        fill(colors.white)
-        rectMode(CORNER)
-        rect(x, y, wcard, hcard, Card.radius)
+    strokeSize(0.5)
+    stroke(colors.black)
+    fill(self.faceUp and (self.suit.color == 'red' and Color(1, 0.9, 0.9) or Color(0.9, 0.9, 0.9)) or colors.blue)
+    rectMode(CORNER)
+    rect(x, y, wcard, hcard, Card.radius)
 
-        fontName('comic')
+    if self.faceUp then
+        fontName('arial')
         fontSize(wtext)
 
         textMode(CENTER)
-        textColor(colors.black)
-        text(labels[self.value],
-            x + wtext / 2 + margin,
-            y + wtext / 2 + margin)
-
         textColor(self.suit.color == 'red' and colors.red or colors.black)
+        text(labels[self.value],
+            x + wtext / 2 + innerMargin,
+            y + wtext / 2 + innerMargin)
 
         spriteMode(CENTER)
         sprite(self.img,
-            x + wcard - wtext / 2 - margin,
-            y + wtext / 2 + margin,
+            x + wcard - wtext / 2 - innerMargin,
+            y + wtext / 2 + innerMargin,
             wtext, wtext)
 
         sprite(self.img,
             x + wcard / 2,
-            y + hcard - wcard / 2 - margin,
+            y + hcard - wcard / 2 - innerMargin,
             wcard * .7,
             wcard * .7)
-
-    else
-        strokeSize(0.5)
-        stroke(colors.black)
-        fill(colors.blue)
-        rectMode(CORNER)
-        rect(x, y, wcard, hcard, Card.radius)
     end
 end
 
@@ -592,6 +606,7 @@ function Card:click()
             card.faceUp = true
             card:moveFromTo(sketch.deck, sketch.wast, i)
         end
+        sketch:resetHistory()
 
     else
         local toDeck = self:getFirstValidMove()
@@ -616,6 +631,7 @@ function Card:moveTo(toDeck, countCard)
         moveFromTo = Card.moveFromTo,
     })
 
+    sketch:movement('movement', self.deck, toDeck)
     self:moveFromTo(self.deck, toDeck, countCard)
 end
 

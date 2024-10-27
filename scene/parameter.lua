@@ -50,7 +50,6 @@ function Parameter:initControlBar()
     self:action('sketches',
         function ()
             ProcessManager.openSketches()
-            engine.parameter.visible = false
         end,
         {
             styles = styles,
@@ -70,9 +69,7 @@ function Parameter:initControlBar()
 
     self:action('previous sketch',
         function ()
-            if engine.parameter.currentMenu and engine.parameter.currentMenu.label == 'navigation' then
-                processManager:previous()
-            end
+            processManager:previous()
         end,
         {
             styles = styles,
@@ -82,9 +79,7 @@ function Parameter:initControlBar()
 
     self:action('next sketch',
         function ()
-            if engine.parameter.currentMenu and engine.parameter.currentMenu.label == 'navigation' then
-                processManager:next()
-            end
+            processManager:next()
         end,
         {
             styles = styles,
@@ -126,6 +121,25 @@ function Parameter:addMainMenu()
 
     self:space()
     self:action('exit', exit)
+end
+
+function Parameter:addScreenMenu()
+    if getOS():inList{'web', 'osx'} then return end
+
+    self:group('screen')
+
+    self:action('Portrait', function () setDeviceOrientation(PORTRAIT) end)
+    self:action('Paysage', function () setDeviceOrientation(LANDSCAPE) end)
+
+    self:space()
+    for k,v in pairs(screenRatios) do
+        self:action(k, function ()
+            screenRatio = v
+            setSetting('screenRatio', screenRatio)
+            Sketch.fb = nil
+            Graphics.initMode()
+        end)
+    end
 end
 
 function Parameter:addNavigationMenu()

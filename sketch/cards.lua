@@ -122,8 +122,7 @@ function draw()
     img = img or Image('resources/images/pique.png')
 
     local clr = colors.black
-    local imageData = img:getImageData()
-    imageData:mapPixel(function (x, y, r, g, b, a)
+    img:mapPixel(function (x, y, r, g, b, a)
         return clr.r, clr.g, clr.b, a
     end)
 

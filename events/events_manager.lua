@@ -68,13 +68,7 @@ function EventManager:keypressed(key, scancode, isrepeat)
             engine.reload(true)
 
         elseif key == 'o' then
-            if deviceOrientation == PORTRAIT then
-                deviceOrientation = LANDSCAPE
-            else
-                deviceOrientation = PORTRAIT
-            end
-            setSetting('deviceOrientation', deviceOrientation)
-            rotateScreen()
+            Graphics.toggleDeviceOrientation()
 
         elseif key == 't' then
             env.__autotest = not env.__autotest
@@ -112,6 +106,12 @@ function EventManager:keypressed(key, scancode, isrepeat)
         
     elseif key == 'f2' then
         line = line == Graphics2d.line and myline or Graphics2d.line
+
+    elseif key == 'f5' then
+        ProcessManager.openSketches()
+
+    elseif key == 'f6' then
+        Graphics.toggleLoop()
 
     elseif key == 'f11' then
         toggleFullScreen()        

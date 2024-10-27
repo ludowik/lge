@@ -1,8 +1,8 @@
 function setup()
-    scene = Scene()
+    resize()
+end
 
-    anchor = Anchor(4)
-
+function resize()
     function addLabel(label, i, j, clr, len)
         addInterface(UIExpression, label, i, j, clr, len)
     end
@@ -28,7 +28,10 @@ function setup()
         return instance
     end
 
-    local row = anchor.nj - anchor.ni - 0.5
+    scene = Scene()
+    anchor = Anchor(deviceOrientation == PORTRAIT and 4 or 10)
+
+    local row = deviceOrientation == PORTRAIT and (anchor.nj - anchor.ni - 0.5) or (0)
 
     calc = Calc()
 

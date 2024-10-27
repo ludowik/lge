@@ -212,7 +212,7 @@ function Graphics2d.point(x, y)
     end
 
     local r = strokeSize() / 2
-    love.graphics.circle('fill', x+r, y+r, r)
+    love.graphics.circle('fill', x, y, r)
 end
 
 function Graphics2d.points(...)
@@ -410,7 +410,20 @@ function Graphics2d.spriteSize(image)
     return texture:getWidth(), texture:getHeight()
 end
 
+Graphics2d.__imageCache = {}
+function Graphics2d.image(filePath)
+    local cache = Graphics2d.__imageCache
+    if not cache[filePath] then
+        cache[filePath] = Image(filePath)
+    end
+    return cache[filePath]
+end
+
 function Graphics2d.sprite(image, x, y, w, h, ox, oy, ow, oh)
+    if type(image) == 'string' then
+        image = Graphics2d.image(image)
+    end
+
     x = x or 0
     y = y or 0
 

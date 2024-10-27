@@ -26,5 +26,4 @@ function KeyboardEvent:init()
 end
 
 function KeyboardEvent:keypressed(key, scancode, isrepeat)
-    self:click(mouse)
 end

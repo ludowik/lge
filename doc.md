@@ -5,8 +5,8 @@ python3 -m http.server 8080
 -- TODO
 
 engine
+- use new buffer
 - application settings
-- full screen mode
 - review restart method (release all before restart ? or more virtual restart ?)
 - detect scripts error and execution error to change the current sketch to "sketches" for the next launch
 - fusion of sketch and process manager (a process is a sketch)

@@ -3,6 +3,7 @@ return {
 	{name='fetch', filePath='sketch.fetch'},
 	{name='oric', filePath='sketch.oric'},
 	{name='sketches', filePath='sketch.sketches'},
+	{name='voxel_space', filePath='sketch.voxel_space'},
 	{name='calc', filePath='sketch.apps.calc', category='apps'},
 	{name='icon', filePath='sketch.apps.icon', category='apps'},
 	{name='logo', filePath='sketch.apps.logo', category='apps'},

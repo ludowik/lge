@@ -50,7 +50,13 @@ end
 
 function FrameBuffer:background(clr, ...)
     clr = Color.fromParam(clr, ...) or colors.black
+
+    local previous = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.canvas)
     love.graphics.clear(clr.r, clr.g, clr.b, clr.a)
+    love.graphics.setCanvas(previous)
+
+    self.imageData = nil
 end
 
 function FrameBuffer:getImageData()
@@ -140,7 +146,8 @@ function Image:init(filename, ...)
     end
 
     self.texture = love.graphics.newImage(filename, {
-        dpiscale = dpiscale,
+        --dpiscale = dpiscale,
+        linear = true
     })
 
     local w, h =  self.texture:getDimensions()

@@ -143,6 +143,7 @@ function loadSketch(env)
             'mousepressed',
             'mousemoved',
             'mousereleased',
+            'click',
             'keypressed',
             'wheelmoved',
         }) do

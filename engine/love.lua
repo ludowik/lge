@@ -107,13 +107,7 @@ if getOS() == 'ios' then
     end
 
     function love.displayrotated(index, orientation)
-        if orientation:startWith('landscape') then
-            deviceOrientation = LANDSCAPE
-        else
-            deviceOrientation = PORTRAIT
-        end
-        setSetting('deviceOrientation', deviceOrientation)
-        rotateScreen()
+        setDeviceOrientation(orientation:startWith('landscape') and LANDSCAPE or PORTRAIT)
     end
 
 else
