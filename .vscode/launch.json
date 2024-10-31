@@ -13,7 +13,7 @@
             },
             "windows": {
                 "program": {
-                    "command": "C:/Users/lmilhau/Documents/Divers/love2d/love.exe",
+                    "command": "C:/Users/lmilhau/Documents/Perso/Divers/love2d/love.exe",
                 },
             },
             "env": {

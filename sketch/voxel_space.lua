@@ -14,37 +14,22 @@ function setup()
         horizon = 50,
         angle = PI,
         tilt = 1.5,
-        zFar = 250, -- how far i can see
+        zFar = 350, -- how far i can see
         fov = 45, -- field of view
     }
 
     w, h = 320, 200
     img = FrameBuffer(w, h)
 
-    colorsImage = Image('resources/images/map0.color.png')
-    heightImage = Image('resources/images/map0.height.png')
-
-    colorsMap = {}
-    heightMap = {}
-    for y = 0,size-1 do
-        local yy = y * size
-        for x = 0,size-1 do
-            colorsMap[x + yy] = {
-                colorsImage:getPixel(x, y)
-            }
-
-            heightMap[x + yy] = heightImage:getPixel(x, y) * 256
-        end
-    end
+    --map = MapCache('map0')
+    map = MapNoise()
 
     SCALE = MIN_SIZE/1024/2
 end
 
 function click()
     camera.position = mouse.position / SCALE
-
-    local offset = getOffset(camera.position.x, camera.position.y)
-    camera.z = heightMap[offset] + 50
+    camera.z = map:getHeight(camera.position.x, camera.position.y) + 50
 end
 
 function mousemoved(mouse)
@@ -78,8 +63,7 @@ function update(key)
         camera.horizon = camera.horizon - 5
     end
 
-    local offset = getOffset(camera.position.x, camera.position.y)
-    camera.z = heightMap[offset] + 50
+    camera.z = map:getHeight(camera.position.x, camera.position.y) + 50
 end
 
 function draw()
@@ -87,8 +71,10 @@ function draw()
 
     scale(SCALE)
 
-    sprite(colorsImage)
-    sprite(heightImage, 0, 1024)
+    if map.color then
+        sprite(map.color)
+        sprite(map.height, 0, 1024)
+    end
 
     stroke(colors.green)
     strokeSize(30)
@@ -96,16 +82,6 @@ function draw()
     point(camera.position.x, camera.position.y+1024)
 
     render()
-end
-
-function getOffset(x, y)
-    while x < 0 do x = x + ceil(abs(x)/size)*size end
-    x = x % size
-
-    while y < 0 do y = y + ceil(abs(y)/size)*size end
-    y = y % size
-    
-    return floor(x) + floor(y) * size, x, y
 end
 
 function render()
@@ -120,6 +96,7 @@ function render()
 
     img:getImageData()
 
+    local pointsList = Array()
     for x=0,w-1 do
         local lean = (camera.tilt * (x / w - 0.5) + 0.5) * h / 6
 
@@ -135,12 +112,10 @@ function render()
             rx = rx + delta.x
             ry = ry + delta.y
 
-            local offset, xx, yy = getOffset(rx, ry)
-
-            local clr = colorsMap[offset]
+            local clr, xx, yy = map:getColor(rx, ry)
             if clr then
 
-                local height = (camera.z - heightMap[offset]) / z * 100.  + camera.horizon
+                local height = (camera.z - map:getHeight(rx, ry)) / z * 100.  + camera.horizon
                 if height < maxHeight then
                     height = floor(clamp(height, 0, maxHeight))
                     for y=height+lean,maxHeight+lean-1 do
@@ -153,13 +128,96 @@ function render()
 
             end
 
-            stroke(0, 1, 0, 1)
-            point(xx, yy)
+            pointsList:add(xx)
+            pointsList:add(yy)
         end
     end
+
+    stroke(0, 1, 0, 1)
+    points(pointsList)
 
     translate(size, size/2)
     scale(4, 4)
 
     sprite(img)
+end
+
+Map = class()
+
+function Map:init(filename)
+    self.color = Image('resources/images/'..filename..'.color.png')
+    self.height = Image('resources/images/'..filename..'.height.png')
+    self.size = self.color.width
+end
+
+function Map:getOffset(x, y)
+    local size = self.size
+
+    while x < 0 do x = x + ceil(abs(x)/size)*size end
+    x = x % size
+
+    while y < 0 do y = y + ceil(abs(y)/size)*size end
+    y = y % size
+    
+    return floor(x) + floor(y) * size, x, y
+end
+
+function Map:getColor(x, y)
+    local offset, x, y = self:getOffset(x, y)
+    local r, g, b, a = self.color:getPixel(x, y)
+    return {r, g, b, a}, x, y
+end
+
+function Map:getHeight(x, y)
+    local offset, x, y = self:getOffset(x, y)
+    local r, g, b, a = self.height:getPixel(x, y)
+    return r*256, x, y
+end
+
+
+MapCache = class() : extends(Map)
+
+function MapCache:init(filename)
+    Map.init(self, filename)
+    
+    self.colorMap = {}
+    self.heightMap = {}
+    for y = 0,size-1 do
+        local yy = y * size
+        for x = 0,size-1 do
+            self.colorMap[x + yy] = {
+                self.color:getPixel(x, y)
+            }
+
+            self.heightMap[x + yy] = self.height:getPixel(x, y) * 256
+        end
+    end
+end
+
+function MapCache:getColor(x, y)
+    local offset, x, y = self:getOffset(x, y)
+    return self.colorMap[offset], x, y
+end
+
+function MapCache:getHeight(x, y)
+    local offset, x, y = self:getOffset(x, y)
+    return self.heightMap[offset], x, y
+end
+
+
+MapNoise = class() : extends(Map)
+
+function MapNoise:init(filename)
+    self.size = 1024
+end
+
+function MapNoise:getColor(x, y)
+    local offset, x, y = self:getOffset(x, y)
+    local n = noise(x/100, y/100) 
+    return {n, n, n}
+end
+
+function MapNoise:getHeight(x, y)
+    local offset, x, y = self:getOffset(x, y)
+    return noise(x/100, y/100) * 30
 end
