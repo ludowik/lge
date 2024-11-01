@@ -295,7 +295,7 @@ function Model.computeNormals(vertices, indices)
     return normals
 end
 
-function Model.centerVertices(vertices, indices)
+function Model.getMinMax(vertices, indices)
     local minx, miny, minz =  math.maxinteger,  math.maxinteger,  math.maxinteger
     local maxx, maxy, maxz = -math.maxinteger, -math.maxinteger, -math.maxinteger
 
@@ -321,6 +321,13 @@ function Model.centerVertices(vertices, indices)
 
         updateMinMax(v)
     end
+
+    return minx, miny, minz, maxx, maxy, maxz
+end
+
+function Model.centerVertices(vertices, indices)
+    local minx, miny, minz, maxx, maxy, maxz = Model.getMinMax(vertices, indices)
+    local n = indices and #indices or #vertices
 
     local d = -vec3(
         minx + (maxx - minx) / 2,
@@ -347,33 +354,10 @@ function Model.centerVertices(vertices, indices)
 end
 
 function Model.normalize(vertices, indices)
-    local minx, miny, minz =  math.maxinteger,  math.maxinteger,  math.maxinteger
-    local maxx, maxy, maxz = -math.maxinteger, -math.maxinteger, -math.maxinteger
-
-    local function updateMinMax(v)
-        minx = min(minx, v.x)
-        miny = min(miny, v.y)
-        minz = min(minz, v.z)
-
-        maxx = max(maxx, v.x)
-        maxy = max(maxy, v.y)
-        maxz = max(maxz, v.z)
-    end
-
+    local minx, miny, minz, maxx, maxy, maxz = Model.getMinMax(vertices, indices)
     local n = indices and #indices or #vertices
-    
-    local v
-    for i=1,n do
-        if indices then
-            v = vec3.fromArray(vertices[indices[i]])
-        else
-            v = vec3.fromArray(vertices[i])
-        end
 
-        updateMinMax(v)
-    end
-
-    local scale = 1 / min(
+    local scale = 1 / max(
         (maxx - minx),
         (maxy - miny),
         (maxz - minz))

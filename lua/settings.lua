@@ -40,7 +40,6 @@ function loadFile(fileName)
 end
 
 settings = loadSettings()
-log(settings)
 
 function setSetting(name, value)
     settings[name] = value

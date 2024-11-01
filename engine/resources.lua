@@ -1,11 +1,34 @@
 local resources = {}
-function getResource(from, init, valid, release)
-    local res = resources[from]
-    if (not res) or (valid and not valid(from, res)) then
-        if res and release then release(res) end
-        assert(init)
-        resources[from] = {init(from)}
+
+function getResource(resType, resRef, createRes, isValidRes, releaseRes)
+    resources[resType] = resources[resType] or {}
+
+    local resInfo = resources[resType][resRef]
+    if (not resInfo) or (isValidRes and not isValidRes(resRef, res)) then
+        if resInfo and releaseRes then
+            releaseRes(resInfo.res)
+        end
+        
+        assert(createRes)
+        resources[resType][resRef] = {
+            res = {createRes(resRef)},
+            create = createRes,
+            isValid = isValidRes,
+            release = releaseRes,
+        }
     end
 
-    return unpack(resources[from])
+    return unpack(resources[resType][resRef].res)
+end
+
+function releaseResource(resName)
+    if not resources[resName] then
+        return
+    end
+    for i,v in ipairs(resources[resName]) do
+        if v.releaseRes then
+            v.releaseRes(r.res)
+        end
+    end
+    resources[resName] = {}
 end

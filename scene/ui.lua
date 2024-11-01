@@ -1,6 +1,8 @@
 UI = class():extends(Rect, MouseEvent, KeyboardEvent)
 
 UI.innerMarge = 8
+UI.outerMarge = 4
+
 UI.styles = {
     fontSize = 24,
     fontName = DEFAULT_FONT_NAME,

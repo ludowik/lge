@@ -3,18 +3,18 @@ function setup()
 
     m.instances = Array()
 
-    local size = 30
+    local size = 25
     for x=-size,size do
         for y=-size,size do
             for z=-size,size do
-                m.instances:add({x, y, z, 0.25, 0.25, 0.25, 1, 1, 1, 1})
+                m.instances:add({x, y, z, 0.5, 0.5, 0.5, 1, 1, 1, 1})
             end
         end
     end
 
     m.instancesBuffer = m:instancedBuffer(m.instances)
 
-    local distance = 100
+    local distance = 50
     camera(vec3(distance, distance, distance))
 end
 

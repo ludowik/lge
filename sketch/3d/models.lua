@@ -1,6 +1,6 @@
 function setup()
     models = Array()
-
+    
     local directoryItems = love.filesystem.getDirectoryItems('resources/models')
     for _,modelName in ipairs(directoryItems) do
         local model = Model.load(modelName)
@@ -9,7 +9,7 @@ function setup()
             models:add(model)
         end
     end
-
+    
     lights = {
         Light.sun()
     }
@@ -21,7 +21,8 @@ function setup()
     parameter:link('OpenGL', 'https://learnopengl.com/lighting/basic-lighting')
     parameter:link('Models', 'https://poly.pizza')
 
-    parameter:integer('model', 'modelIndex', 1, #models, 1)
+    parameter:integer('model index', 'modelIndex', 1, #models, 1)
+    parameter:watch('model', 'models[modelIndex].fileName')
     
     parameter:boolean('material', 'materialMode', false)
     parameter:boolean('texture', 'withTexture', false)

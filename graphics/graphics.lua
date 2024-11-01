@@ -65,19 +65,15 @@ function Graphics.getPhysicalArea()
 
     if getOS() == 'ios' then
         x, y = love.window.getSafeArea()
-        w, h = love.window.getDesktopDimensions(1)
-        
-    elseif getOS() == 'osx' then
-        x, y, w, h = 0, 0, 0, 1024
-        w = even(h*screenRatio)
-    
-    elseif getOS() == 'windows' then
+        w, h = love.window.getDesktopDimensions(love.window.getDisplayCount())
+            
+    elseif getOS():inList{'osx', 'windows'} then
         local ws, hs, flags = love.window.getMode()
         if flags.fullscreen then
             x, y, w, h = 0, 0, ws, hs
             deviceOrientation = w < h and PORTRAIT or LANDSCAPE
         else
-            x, y, w, h = 0, 0, 0, 812
+            x, y, w, h = 0, 0, 0, getOS() == 'osx' and 1024 or 812
             w = even(h*screenRatio)
         end
 
@@ -115,6 +111,7 @@ function Graphics.setMode(w, h)
         local params = {
             msaa = 5,
             fullscreen = getOS() == 'ios' or flags.fullscreen,
+            displayindex = love.window.getDisplayCount(),
         }
 
         love.window.setMode(

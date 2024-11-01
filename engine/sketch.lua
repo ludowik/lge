@@ -35,6 +35,7 @@ function Sketch:setMode(w, h, persistence)
     w = w / SCALE_CANVAS
     h = h / SCALE_CANVAS
     
+    -- love.graphics.setDefaultFilter('nearest', 'nearest')
     if self.persistence then
         self.fb = FrameBuffer(w, h)
     else
@@ -221,7 +222,7 @@ function Sketch:mousemoved(mouse)
     local camera = self.cam
     if camera then
         if camera.mode == MODEL then
-            -- camera.angleX = camera.angleX + mouse.deltaPos.y * TAU / (CX)
+            camera.angleX = camera.angleX + mouse.deltaPos.y * TAU / (CX)
             camera.angleY = camera.angleY + mouse.deltaPos.x * TAU / (CX)
         else
             local direction = camera.target - camera.eye 
@@ -249,8 +250,7 @@ function Sketch:wheelmoved(dx, dy)
     local camera = self.cam
     if camera then
         local direction = camera.target - camera.eye 
-        camera.eye.x = camera.eye.x + dx / 10.
-        camera.eye.y = camera.eye.y + dy / 10.
+        camera.eye = camera.eye + direction * dy / 10
         camera.target:set(camera.eye + direction)
     end
 

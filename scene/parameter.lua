@@ -124,7 +124,7 @@ function Parameter:addMainMenu()
 end
 
 function Parameter:addScreenMenu()
-    if getOS():inList{'web', 'osx'} then return end
+    if getOS():inList{'web', 'ios'} then return end
 
     self:group('screen')
 
@@ -145,6 +145,8 @@ end
 function Parameter:addNavigationMenu()
     self:group('navigation')
     
+    self:action('sketches', function() processManager:setSketch('sketches') end)
+
     self:space()
     self:action('next', function () processManager:next() end)
     self:action('previous', function () processManager:previous() end)
@@ -257,7 +259,7 @@ end
 
 function Parameter:space()
     local ui = UI()
-    ui.fixedSize = vec2(0, 5)
+    ui.fixedSize = vec2(0, 4 * UI.outerMarge)
     self.currentGroup:add(ui)
 end
 
@@ -326,8 +328,7 @@ function Parameter:draw(x, y)
     x = x or 0
     y = y or 0
 
-    local innerMarge = 5
-    self:layout(x, y + innerMarge)
+    self:layout(x, y + UI.outerMarge)
     Scene.draw(self)
 end
 

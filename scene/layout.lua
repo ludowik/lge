@@ -36,11 +36,11 @@ function Layout:layout(_x, _y, align)
             end
 
             -- compute next y
-            y = y + item.size.y + UI.innerMarge
+            y = y + item.size.y + UI.outerMarge
 
             -- compute node size
             w = max(w, item.size.x)
-            h = h + item.size.y + UI.innerMarge
+            h = h + item.size.y + UI.outerMarge
         end
 
         if self.state == 'close' then break end

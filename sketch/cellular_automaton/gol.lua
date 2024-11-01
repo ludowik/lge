@@ -1,5 +1,5 @@
 function setup()
-    CELLS_SIZE = floor(W/60)
+    CELLS_SIZE = floor(W/128)
     CELLS_COUNT = vec2(
         floor(W/CELLS_SIZE),
         floor(H/CELLS_SIZE))
@@ -178,26 +178,17 @@ function GolGrid:draw()
     translate(x, y)
     scale(self.scale, self.scale)
 
-    stroke(colors.gray)
-    strokeSize(0.5)
-
-    -- for i=0,grid.w do
-    --     line(w*i, 0, w*i, h*grid.h)
-    -- end
-
-    -- for j=0,grid.h do
-    --     line(0, h*j, w*grid.w, h*j)
-    -- end
+    noStroke()
 
     rectMode(CORNER)
 
     self:foreach(function (cell, i, j)
         if cell.value or (cell.lastDelete and drawDelete) then
             if cell.lastDelete then
-                fill(colors.red)
+                fill(colors.gray)
 
             elseif cell.lastCreate then
-                fill(colors.blue)
+                fill(colors.green)
 
             else
                 fill(colors.black)

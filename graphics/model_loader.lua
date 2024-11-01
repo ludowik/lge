@@ -4,14 +4,17 @@ function Model.load(fileName)
     local info = love.filesystem.getInfo(filePath)
     if info and info.type == 'directory' then
         local model = Model.load(fileName..'/'..fileName..'.obj')
-        model.image = Image(filePath..'/'..fileName..'.png')
+        model.fileName = fileName
+        if love.filesystem.getInfo(filePath..'/'..fileName..'.png') then
+            model.image = Image(filePath..'/'..fileName..'.png')
+        end
         return model
     end
+
     if not fileName:find('obj') then
         return
     end
-
-
+    
     local content = love.filesystem.read(filePath)
     if not content then return end
 
@@ -106,16 +109,18 @@ function Model.load(fileName)
         end
     end
 
-    local m = Mesh()
-    m.indices = indices
-    m.texCoords = texCoords
-    m.vertices = vertices
+    local model = Mesh()
+    model.indices = indices
+    model.texCoords = texCoords
+    model.vertices = vertices
 
     if #normals > 0 then
-        m.normals = normals
+        model.normals = normals
     else
-        m.normals = Model.computeNormals(vertices, indices)
+        model.normals = Model.computeNormals(vertices, indices)
     end
     
-    return m
+    model.fileName = fileName
+    
+    return model
 end

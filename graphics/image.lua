@@ -61,6 +61,7 @@ end
 
 function FrameBuffer:getImageData()
     if self.imageData then
+        -- self.pointerData = ffi.cast('uint8_t*', self.imageData:getFFIPointer())
         return self.imageData
     end
 
@@ -72,6 +73,7 @@ function FrameBuffer:getImageData()
 
     local getImageData = love.graphics.readbackTexture or self.canvas.newImageData
     self.imageData = getImageData(self.canvas)
+    -- self.pointerData = ffi.cast('uint8_t*', self.imageData:getFFIPointer())
 
     if restoreCanvas then
         love.graphics.setCanvas(self.canvas)
@@ -93,7 +95,6 @@ function FrameBuffer:update()
         self.texture = love.graphics.newImage(self.imageData, {
             dpiscale = dpiscale,
         })
-        -- self.texture:setWrap('repeat')
     end
 end
 
@@ -109,14 +110,19 @@ function FrameBuffer:set(x, y, clr, ...)
     error('unsupported => use setPixel')
 end
 
-function FrameBuffer:setPixel(x, y, clr, ...)
+function FrameBuffer:setPixel(x, y, r, g, b, a)
     self:getImageData()
     self.needUpdate = true
 
-    if type(clr) == 'table' then
-        self.imageData:setPixel(x, y, clr:rgba())
+    if type(r) == 'table' then
+        self.imageData:setPixel(x, y, r:rgba())
     else
-        self.imageData:setPixel(x, y, clr, ...)
+        self.imageData:setPixel(x, y, r, g, b, a)
+        -- local offset = (x + y * self.width) * 4
+        -- self.pointerData[offset+0] = r * 255
+        -- self.pointerData[offset+1] = g * 255
+        -- self.pointerData[offset+2] = b * 255
+        -- self.pointerData[offset+3] = (a or 1) * 255
     end
 end
 

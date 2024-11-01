@@ -100,7 +100,7 @@ function Mesh:drawInstanced(instances, instancedBuffer)
     
     local n = #instances
 
-    instancedBuffer = getResource(instances, function (instances)
+    instancedBuffer = getResource('mesh', instances, function (instances)
         return self:instancedBuffer(instances)
     end)
         

@@ -371,7 +371,7 @@ function Graphics2d.text(str, x, y, limit, align)
 
     local newText = love.graphics.newTextBatch or love.graphics.newText
 
-    local text = getResource(tostring(font)..str, function ()
+    local text = getResource('font', tostring(font)..str, function ()
         local text = newText(font, str)
         return text
     end)

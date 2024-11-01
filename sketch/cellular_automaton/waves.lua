@@ -1,8 +1,12 @@
 function setup()
-    ratio = 0.1
+    resize()
+end
 
-    sizeW = even(W * ratio)
-    sizeH = even(H * ratio)
+function resize()
+    ratio = 0.25
+
+    sizeW = even(W * ratio) + 4
+    sizeH = even(H * ratio) + 4
     
     buf1 = Buffer('float'):resize(sizeW*sizeH)
     buf2 = Buffer('float'):resize(sizeW*sizeH)
@@ -13,37 +17,30 @@ function setup()
     img:background()
 end
 
-function update(dt)
+function update()
     step()
 
-    if random() > 0.95 then
+    if random() >= 0.99 then
         waterDrop(randomInt(sizeW), randomInt(sizeH))
     end
 end
 
 function step()
-    local index, offset, value, brigthness
-
-    index = getOffset(2, 2-1)
+    local index = getOffset(2, 2-1)
 
     for y=2,sizeH-1 do        
         for x=2,sizeW-1 do
-            value = (
+            local value = (( 
                 buf1[index-1] +
                 buf1[index+1] +
                 buf1[index-sizeW] +
                 buf1[index+sizeW]
-                ) * 0.5 - buf2[index]
-
-            value = value * damping
+                ) * 0.5 - buf2[index]) * damping
 
             buf2[index] = value
 
-            brigthness = 128 + value * 128
-
-            offset = (index -1) * 4
-
-            img:setPixel(x-1, y-1, brigthness, brigthness, brigthness)
+            local brigthness = (1-value)
+            img:setPixel(x-1, y-1, brigthness, brigthness, brigthness, brigthness)
 
             index = index + 1
         end
@@ -55,22 +52,17 @@ function step()
 end
 
 function getOffset(x, y)
-    return round(x) + round(y) * sizeW
+    return x + y * sizeW
 end
 
 function draw()
     background()
 
-    translate(LEFT, TOP)
     scale(1/ratio)
+    translate(-1, -1)
 
     spriteMode(CORNER)
     sprite(img)
-
-    noFill()
-
-    rectMode(CORNER)
-    rect(0, 0 , sizeW, sizeH)
 end
 
 function mousereleased(touch)
@@ -78,6 +70,6 @@ function mousereleased(touch)
 end
 
 function waterDrop(x, y, h)
-    local offset = getOffset(x, y)
+    local offset = getOffset(round(x), round(y))
     buf1[offset] = h or random(100, 1000)
 end

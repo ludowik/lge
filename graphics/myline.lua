@@ -7,7 +7,7 @@ function mylines(lines)
     mesh = mesh or Mesh(Model.line(0, 0, 1, 1))
     mesh.shader = Graphics3d.shaders.line
 
-    local data = getResource(lines, function (lines)
+    local data = getResource('line', lines, function (lines)
         local data = Array()
         for _,line in ipairs(lines) do
             if type(line[5]) == 'number' then

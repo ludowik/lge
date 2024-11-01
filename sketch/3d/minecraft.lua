@@ -1,9 +1,10 @@
 function setup()
-    --env.sketch:setMode(1600, 800, true)
-
-    fb = FrameBuffer(600, 600)
+    local size = 320
+    fb = FrameBuffer(size, size)
     
-    parameter:number('ratio', 1, 100, 50)
+    parameter:number('ratio', 1, 100, 50, function ()
+        releaseResource('univers')
+    end)
 
     sizeUnivers = 400
 
@@ -50,13 +51,13 @@ function block.terrain(x, y,z)
 end
 
 function getUnivers(getBlock, size)
-    return getResource(getBlock, function ()
+    return getResource('univers', getBlock, function ()
         return createUnivers(getBlock, size)
     end)
 end
 
 function createUnivers(getBlock, size)
-    seed(51)
+    seed(time())
 
     local positions = Array()
     local blocks = Array()
@@ -75,55 +76,59 @@ function createUnivers(getBlock, size)
 end
 
 function getPosition(i, j, size)
-    return (i-1)*size, (j-1)*size, size, size
+    return (i-1)*size, (j-1)*2*size, size, size
 end
 
 function draw()
     background()
 
-    local sizeScreen = W / 4
+    local size
+    if deviceOrientation == PORTRAIT then
+        size = min(W/2, H/4)
+    else
+        size = min(W/4, H/2)
+    end
 
-    function univers(i, getBlock)
+    function univers(i, j, getBlock)
         local positions, blocks = getUnivers(getBlock, sizeUnivers)
 
         -- draw direct 2d
-        pushMatrix()    
-
-        translate(getPosition(i, 1, sizeScreen))
-        scale(sizeScreen/sizeUnivers)
-
+        pushMatrix()
+        translate(getPosition(i, j, size))
+        scale(size/sizeUnivers)
         points(positions)
-
         popMatrix()
 
-        -- draw 3d in fb        
+        -- draw 3d in fb
         setContext(fb, true)
         resetMatrixContext()
-        
-        perspective()
-        
         light(true)
-
+        perspective()        
         love.graphics.clear(0, 0, 0, 1, true, false, 1)
         block.mesh:drawInstanced(blocks)
-
         resetContext()
 
         -- draw fb
         pushMatrix()
-        resetMatrix()
-
-        translate(getPosition(i, 1, sizeScreen))
-
-        love.graphics.draw(fb.canvas, 0, sizeScreen, 0, sizeScreen/fb.width, sizeScreen/fb.height)
-
+        translate(getPosition(i, j, size))
+        love.graphics.draw(fb.canvas, 0, size, 0, size/fb.width, size/fb.height)
         popMatrix()
     end
 
-    univers(1, block.random)
-    univers(2, block.simplex)
-    univers(3, block.perlin)
-    univers(4, block.terrain)
+    if deviceOrientation == PORTRAIT then
+        translate((W-size*2)/2, (H-size*4)/2)
+        univers(1, 1, block.random)
+        univers(2, 1, block.simplex)
+        univers(1, 2, block.perlin)
+        univers(2, 2, block.terrain)
+
+    else
+        translate((W-size*4)/2, (H-size*2)/2)
+        univers(1, 1, block.random)
+        univers(2, 1, block.simplex)
+        univers(3, 1, block.perlin)
+        univers(4, 1, block.terrain)
+    end
 end
 
 function createTexture()
