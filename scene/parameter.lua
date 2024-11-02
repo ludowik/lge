@@ -137,7 +137,7 @@ function Parameter:addScreenMenu()
             screenRatio = v
             setSetting('screenRatio', screenRatio)
             Sketch.fb = nil
-            Graphics.initMode()
+            Graphics.updateScreen()
         end)
     end
 end

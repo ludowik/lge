@@ -16,7 +16,6 @@ end
 
 function Hexagone:draw()
     background(0, 0.05)
-
     translate(CX, CY)
 
     self.particles:draw()

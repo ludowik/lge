@@ -7,7 +7,7 @@ function FlowFields:init()
     self.parameter:boolean('lines', false, redraw)
 
     self.parameter:number('step', 0.001, 0.1, 0.01)
-    self.parameter:integer('pixelRatio', 4, 16, 6, function () self:reset() end)
+    self.parameter:integer('pixelRatio', 1, 16, 6, function () self:reset() end)
 end
 
 function FlowFields:resize()
@@ -66,7 +66,7 @@ function FlowFields:draw()
 
     local vec = vec2()
 
-    scale(self.sketchPixelRatio)
+    scale(2*self.sketchPixelRatio)
 
     if lines then        
         strokeSize(1)

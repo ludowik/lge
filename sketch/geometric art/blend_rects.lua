@@ -1,5 +1,4 @@
 function setup()
-    noLoop()
 end
 
 function rects()

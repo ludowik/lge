@@ -33,6 +33,7 @@ end
 function Firework:draw()
     background(51)
     noStroke()
+
     self.particles:draw()
 end
 
@@ -87,8 +88,6 @@ function ParticleFirework:update(dt)
 end
 
 function ParticleFirework:draw()
-    noStroke()
-    fill(self.clr)
-    
+    fill(self.clr)    
     circle(self.position.x, self.position.y, self.radius * self.life)
 end

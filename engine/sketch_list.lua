@@ -39,6 +39,7 @@ return {
 	{name='viewer', filePath='sketch.demos.viewer', category='demos'},
 	{name='2048', filePath='sketch.games.2048', category='games'},
 	{name='asteroids', filePath='sketch.games.asteroids', category='games'},
+	{name='chess', filePath='sketch.games.chess', category='games'},
 	{name='morpion', filePath='sketch.games.morpion', category='games'},
 	{name='solitaire', filePath='sketch.games.solitaire', category='games'},
 	{name='sudoku', filePath='sketch.games.sudoku', category='games'},

@@ -152,7 +152,7 @@ function Image:init(filename, ...)
     end
 
     self.texture = love.graphics.newImage(filename, {
-        --dpiscale = dpiscale,
+        dpiscale = dpiscale,
         linear = true
     })
 

@@ -1,4 +1,4 @@
-Chess = class()
+Chess = class() : extends(Sketch)
 
 function Chess.setup()
     pieces = {

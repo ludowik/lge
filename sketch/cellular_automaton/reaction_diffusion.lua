@@ -21,14 +21,14 @@ function ReactionDiffusion:init()
     gridInIterate = Array()
     gridOutIterate = Array()
 
-    local dpiscale = 1
+    local scale = 1
     
     for i=2,n-1 do
         for j=2,m-1 do
             local cellIn = gridIn:get(i, j)
             gridInIterate:push(cellIn)
-            cellIn.x = floor((i - i % dpiscale) / dpiscale) - 1
-            cellIn.y = floor((j - j % dpiscale) / dpiscale) - 1
+            cellIn.x = floor((i - i % scale) / scale) - 1
+            cellIn.y = floor((j - j % scale) / scale) - 1
             cellIn.North = gridIn:get(i, j+1)
             cellIn.NE    = gridIn:get(i+1, j+1)
             cellIn.East  = gridIn:get(i+1, j)
@@ -40,8 +40,8 @@ function ReactionDiffusion:init()
 
             local cellOut = gridOut:get(i, j)
             gridOutIterate:push(gridOut:get(i, j))
-            cellOut.x = floor((i - i % dpiscale) / dpiscale) - 1
-            cellOut.y = floor((j - j % dpiscale) / dpiscale) - 1
+            cellOut.x = floor((i - i % scale) / scale) - 1
+            cellOut.y = floor((j - j % scale) / scale) - 1
             cellOut.North = gridOut:get(i, j+1)
             cellOut.NE    = gridOut:get(i+1, j+1)
             cellOut.East  = gridOut:get(i+1, j)

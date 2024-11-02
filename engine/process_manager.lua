@@ -7,7 +7,7 @@ end
 function ProcessManager.openSketches()
     local sketch = processManager:current()
     if sketch.__className ~= 'sketches' then            
-        processManager:setSketch('Sketches')
+        processManager:setSketch('sketches')
         engine.parameter.visible = false
     else
         sketch.env.navigate()
@@ -94,6 +94,11 @@ function ProcessManager:setCurrentSketch(processIndex)
     engine.parameter.items[#engine.parameter.items].items[2] = sketch.parameter.items[1]
 
     -- clear drawing areas and force on redraw
+    local W = sketch.env.__W or sketch.env.W
+    if W ~= sketch.env.W then
+        Graphics.updateScreen()
+    end
+
     sketch.fb:setContext()
     sketch.fb:background()
     
@@ -101,6 +106,8 @@ function ProcessManager:setCurrentSketch(processIndex)
     background()
 
     redraw()
+
+    sketch.env.__W = W
 end
 
 function ProcessManager:current()

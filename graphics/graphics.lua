@@ -55,7 +55,7 @@ function Graphics.initMode()
 
     SIZE = MIN_SIZE
 
-    SCALE = min(WS/W, HS/H)
+    SCALE = max(WS/W, HS/H)
     
     refreshRate = 60
 end
@@ -92,7 +92,7 @@ function Graphics.getPhysicalArea()
 end
 
 function getVirtualArea()
-    local x, y, w, h = 5, 50, 512
+    local x, y, w, h = 5, 50, 640
     h = even(w / deviceScreenRatio)
 
     if deviceOrientation == PORTRAIT then
