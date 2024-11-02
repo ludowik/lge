@@ -5,6 +5,10 @@ function setup()
     
     actions:integer('ip', 1, 25, ip, function() setSetting('ip', ip) end)
     actions:action('load from local', function() updateScripts() end)
+
+    actions:space()
+    
+    actions:action('load from git', function() updateScripts(true) end)
 end
 
 function draw()

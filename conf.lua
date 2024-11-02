@@ -6,10 +6,9 @@ function love.conf(t)
         t.audio.mixwithsystem = true
     end
 
-    if false then
-        if t.highdpi ~= nil then t.highdpi = true end
-        if t.window.highdpi ~= nil then t.window.highdpi = true end
-    end
+    local highdpi = false
+    if t.highdpi ~= nil then t.highdpi = highdpi end
+    if t.window.highdpi ~= nil then t.window.highdpi = highdpi end
 
     if love._os == "iOS" then
 		t.window.borderless = true

@@ -20,14 +20,15 @@ function UIExpression:evaluateExpression()
     
     local type_expression = type(expression)
     if type_expression == 'string' then
-        local f = loadstring('return ' .. expression, nil, 't', (_G.env or _G))
+        local f, err = loadstring('return ' .. expression, nil, 't', (_G.env or _G))
+        if not f then log(expression, err) return err end
+    
         if setfenv then setfenv(f, env) end
+        
         local ok, result = pcall(f)
-        if not ok then
-            log(expression, result)
-            stop()
-        end
-        return self:formatValue(ok and result or 'err')
+        if not ok then log(expression, result) return result end
+        
+        return self:formatValue(ok and result)
 
     elseif type_expression == 'table' then
         return self:formatValue(expression)

@@ -66,6 +66,12 @@ function draw()
         materials = materials,
     }
 
-    model.image = model.image or (withTexture and Image('resources/images/joconde.png'))
+    if withTexture then
+        model.image = model.image or model.__image or image('resources/images/joconde.png')
+    else
+        model.__image = model.image
+        model.image = nil
+    end
+
     model:draw()
 end

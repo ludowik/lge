@@ -9,7 +9,9 @@ function load(reload)
         processManager:setSketch('sketches')
     else
         setSetting('assertLoadIsKO', true)
-        processManager:setSketch(getSetting('sketch', 'sketches'))
+        if not processManager:setSketch(getSetting('sketch', 'sketches')) then
+            processManager:next()
+        end
     end
     setSetting('assertLoadIsKO', nil)
 end
@@ -86,8 +88,8 @@ function declareSketch(name, filePath, category, reload)
 
     if env.__sketch or env.setup or env.draw then
         environments[name] = env
+        processManager:add(env)
     end
-    processManager:add(env)
     
     return env
 end

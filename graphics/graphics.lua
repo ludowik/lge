@@ -92,7 +92,7 @@ function Graphics.getPhysicalArea()
 end
 
 function getVirtualArea()
-    local x, y, w, h = 5, 50, 640
+    local x, y, w, h = 5, 50, 480
     h = even(w / deviceScreenRatio)
 
     if deviceOrientation == PORTRAIT then

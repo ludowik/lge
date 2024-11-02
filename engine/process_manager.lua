@@ -23,7 +23,7 @@ function ProcessManager:setSketch(name)
 
     local index = self:findSketch(name)
     if index then 
-        self:setCurrentSketch(index)
+        return self:setCurrentSketch(index)
     end
 end
 
@@ -93,7 +93,7 @@ function ProcessManager:setCurrentSketch(processIndex)
     engine.parameter.items[#engine.parameter.items].items[1].label = sketch.env.__name
     engine.parameter.items[#engine.parameter.items].items[2] = sketch.parameter.items[1]
 
-    -- clear drawing areas and force on redraw
+    -- clear drawing areas and force redraw
     local W = sketch.env.__W or sketch.env.W
     if W ~= sketch.env.W then
         Graphics.updateScreen()
@@ -108,6 +108,8 @@ function ProcessManager:setCurrentSketch(processIndex)
     redraw()
 
     sketch.env.__W = W
+
+    return sketch
 end
 
 function ProcessManager:current()
@@ -119,8 +121,7 @@ function ProcessManager:previous()
     if processIndex < 1 then
         processIndex = #self.items
     end
-    self:setCurrentSketch(processIndex)
-    return self:current()
+    return self:setCurrentSketch(processIndex)
 end
 
 function ProcessManager:next()
@@ -128,13 +129,11 @@ function ProcessManager:next()
     if processIndex > #self.items then
         processIndex = 1
     end
-    self:setCurrentSketch(processIndex)
-    return self:current()
+    return self:setCurrentSketch(processIndex)
 end
 
 function ProcessManager:random()
-    self:setCurrentSketch(randomInt(#self.items))
-    return self:current()
+    return self:setCurrentSketch(randomInt(#self.items))
 end
 
 local LOOP_PROCESS_DT = 1/60
