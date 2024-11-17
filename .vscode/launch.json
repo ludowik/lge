@@ -9,7 +9,7 @@
             "type": "lua-local",
             "request": "launch",
             "program": {
-                "command": "/Applications/lge.app/Contents/MacOS/lge"
+                "command": "/Applications/love.app/Contents/MacOS/love"
             },
             "windows": {
                 "program": {
@@ -27,7 +27,7 @@
                 "debug",
                 "require",
                 "class",
-                "instrument",                
+                "instrument",
             ],
             "scriptRoots": [
                 "./"

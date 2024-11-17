@@ -317,9 +317,11 @@ end
 
 function set3dMode()
     love.graphics.setFrontFaceWinding('ccw')
-    love.graphics.setMeshCullMode('back')
+    love.graphics.setMeshCullMode('front')
     love.graphics.setDepthMode('less', true)
     love.graphics.clear(true, false, 1)
+
+    setOrigin(BOTTOM_LEFT)
 end
 
 function setTransformation()

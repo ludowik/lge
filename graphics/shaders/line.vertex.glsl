@@ -6,14 +6,15 @@ uniform highp float useInstanced;
 uniform highp float strokeSize;
 uniform highp vec4 strokeColor;
 
+layout(location = 10) in vec3 InstancePosition;
+layout(location = 11) in vec3 InstanceScale;
+layout(location = 12) in vec4 InstanceColor;
+
 varying vec3 vertexPos;
 varying vec3 fragmentPos;
 varying vec4 color;
 varying vec4 vertexProjection;
 
-attribute vec3 InstancePosition;
-attribute vec3 InstanceScale;
-attribute vec4 InstanceColor;
 flat out int instanceID;
 
 vec4 position(mat4 , vec4 ) {
