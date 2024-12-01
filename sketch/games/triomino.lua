@@ -123,8 +123,6 @@ function Triomino:completeStack()
 end
 
 function Triomino:click(mouse)
-    -- DEBUG
-    -- echo('click', self.mino, mouse.id)
     local mino = self.mino or self.stack:contains(mouse.position)
     if mino then
         mino.grid = mino.grid:rotate(mouse.id == 1)
@@ -139,8 +137,6 @@ function Triomino:mousepressed(mouse)
 
     self.mino = self.stack:contains(mouse.position)
     if self.mino then
-        -- DEBUG
-        -- echo('select', self.mino, mouse.id)
         self.mino.mouse_id = mouse.id
         
         self.mino.node.position:add(vec2(0, -self.mino.size.y))
@@ -150,9 +146,6 @@ end
 
 function Triomino:mousemoved(mouse)
     if self.mino and self.mino.mouse_id == mouse.id then
-        -- DEBUG
-        -- echo('moved', self.mino, mouse.id)
-
         self.mino.node.position:add(mouse.deltaPos)
         self.mino.grid.scale = 1
 
@@ -162,9 +155,6 @@ end
 
 function Triomino:mousereleased(mouse)
     if self.mino and self.mino.mouse_id == mouse.id then
-        -- DEBUG
-        -- echo('released', self.mino, mouse.id)
-
         local cellPosition = self:getAvailableMove(self.mino)        
         if cellPosition then
             self:pushMino(self.mino, cellPosition)

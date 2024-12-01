@@ -53,7 +53,11 @@ vec4 position(mat4 , vec4 ) {
     vec4 vp = vec4(VertexPosition.xyz, 1.);
     vec3 vn = VertexNormal;
 
-    color = fillColor * VertexColor;
+    if (useColor == 1.) {
+        color = fillColor * VertexColor;
+    } else {
+        color = fillColor;
+    }
 
     if (useInstanced == 1.) {
         vp = vp * vec4(InstanceScale, 1.) + vec4(InstancePosition, 0.);

@@ -2,7 +2,9 @@ EventManager = class() : extends(MouseEvent, KeyboardEvent)
 
 function EventManager.setup()
     eventManager = EventManager()
+    
     love.keyboard.setKeyRepeat(true)
+    love.keyboard.setTextInput(getOS() ~= 'ios')
 end
 
 function EventManager:init()

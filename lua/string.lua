@@ -186,4 +186,10 @@ function string.unitTest()
     assert(string.formatNumber(6465465, '.', ' ') == '6 465 465')
     assert(string.formatNumber(5.6, ',') == '5,6')
     assert(string.formatNumber(0) == '0')
+
+    assert(string.trim('        ') == '')
+    assert(string.trim(' ab ') == 'ab')
+    assert(string.trim(' a  b ') == 'a b')
+    assert(string.trim(' a   b ') == 'a b')
+    assert(string.trim(' a    b ') == 'a b')
 end

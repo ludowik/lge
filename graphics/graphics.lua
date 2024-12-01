@@ -73,7 +73,8 @@ function Graphics.getPhysicalArea()
             x, y, w, h = 0, 0, ws, hs
             deviceOrientation = w < h and PORTRAIT or LANDSCAPE
         else
-            x, y, w, h = 0, 0, 0, getOS() == 'osx' and 1024 or 812
+            _, h = love.window.getDesktopDimensions(love.window.getDisplayCount())
+            x, y, w, h = 0, 0, 0, h * 0.9
             w = even(h*screenRatio)
         end
 
@@ -109,7 +110,7 @@ function Graphics.setMode(w, h)
         Graphics.initializedScreen = true
 
         local params = {
-            msaa = 5,
+            msaa = 3,
             fullscreen = getOS() == 'ios' or flags.fullscreen,
         }
 

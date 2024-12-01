@@ -71,9 +71,6 @@ function Image.Filter:run(source, target)
                 target:setPixel(x, y, res)
             end
         end
-        if y % 10 == 0 then
-            coroutine.yield()
-        end
     end
 end
 
@@ -364,11 +361,6 @@ end
 
 function setFilter(filter)
     filter():process(source, target)
-
---    env.thread = coroutine.create(
---        function ()
---            filter():run(source, target)
---        end)
 end
 
 function update(dt)

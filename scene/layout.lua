@@ -1,10 +1,10 @@
 Layout = class()
 
-function Layout:layout(_x, _y, align)
+function Layout:layout(_x, _y, _layoutMode)
     local x = _x or 0
     local y = _y or 0
 
-    align = (align or self.layoutMode or 'left'):lower()
+    local layoutMode = (_layoutMode or self.layoutMode or 'left'):lower()
 
     local w, h = 0, 0
 
@@ -14,29 +14,43 @@ function Layout:layout(_x, _y, align)
     end
 
     for _,item in ipairs(self.items) do
-        if item.visible then
+        if item.visible ~= false then
+            -- layout and/or compute size
             if item.layout then
-                item:layout(x, y, align)
-            else
+                item:layout(x, y, layoutMode..';'..(item.layoutMode or ''))
+            elseif item.computeSize then
                 item:computeSize()
+            elseif item.fixedSize then
+                item.size:set(item.fixedSize)
             end
 
             -- alignment
-            if align == 'right' then
-                x = W - item.size.x - LEFT/2
-            elseif align == 'center' then
-                x = CX - item.size.x/2
+            function align(x, y)
+                if layoutMode:contains('right') then
+                    x = W - item.size.x - LEFT/2
+                elseif layoutMode:contains('center') then
+                    x = CX - item.size.x/2
+                end
+                return x, y
             end
+            x, y = align(x, y)
 
             -- set position
             if item.fixedPosition then
-                item.position:set(item.fixedPosition.x, item.fixedPosition.y)
-            else
-                item.position:set(x, y)
+                x, y = item.fixedPosition.x, item.fixedPosition.y
             end
+            item.position:set(x, y)
 
-            -- compute next y
-            y = y + item.size.y + UI.outerMarge
+            -- compute next position
+            function nextPosition(x, y)
+                if layoutMode:contains('horizontal') then
+                    x = x + item.size.x + UI.outerMarge
+                else
+                    y = y + item.size.y + UI.outerMarge
+                end
+                return x, y
+            end
+            x, y = nextPosition(x, y)
 
             -- compute node size
             w = max(w, item.size.x)

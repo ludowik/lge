@@ -2,6 +2,7 @@ function updateScripts(fromGit, onSuccess)
     local url 
     if fromGit then
         url = 'https://ludowik.github.io/lge'
+
     else
         local ip = getSetting('ip', 15)
         url = 'http://192.168.1.'..ip..':8080'

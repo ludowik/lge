@@ -34,8 +34,8 @@ function Mesh:update()
         self.bufs.normals = self:createBuffer(self.normals, 'VertexNormal', 3, 'floatvec3', 'float', 3, self.drawMode, self.usageMode)
     end
 
-    self:attachBuffer(self.bufs.colors, 'VertexColor', 'useColor')
     self:attachBuffer(self.bufs.texCoords, 'VertexTexCoord', 'useTexCoord')
+    self:attachBuffer(self.bufs.colors, 'VertexColor', 'useColor')
     self:attachBuffer(self.bufs.normals, 'VertexNormal', 'useNormal')
 
     if self.image then

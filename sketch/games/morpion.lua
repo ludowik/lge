@@ -123,6 +123,7 @@ function mousereleased(touch)
     if cells.state == 'new game' then
         cells:clear()
         cells.state = 'play'
+        
     elseif players[player].type == 'player' then
         if cells.state == 'play' then
             local x = cells.position.x - cells.cellSize / 2

@@ -114,6 +114,11 @@ function Model.load(fileName)
     model.texCoords = texCoords
     model.vertices = vertices
 
+    if #normals > 0 then
+        model.normals = normals
+    else
+        model.normals = Model.computeNormals(vertices, indices)
+    end
     
     model.fileName = fileName
     

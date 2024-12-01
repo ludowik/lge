@@ -55,7 +55,7 @@ function draw()
     light(lights)
     
     model.uniforms = {        
-        useColor = 1,
+        useColor = true,
         
         useLight = lightMode,
         useLightAmbient = lightAmbient,
@@ -67,9 +67,9 @@ function draw()
     }
 
     if withTexture then
-        model.image = model.image or model.__image or image('resources/images/joconde.png')
+        model.image = model.image or model.__image
     else
-        model.__image = model.image
+        model.__image = model.__image or model.image
         model.image = nil
     end
 

@@ -12,9 +12,7 @@ function reset()
 	local seedValue = getSetting('seedValue', time())
 	seed(seedValue)	
 
-    balls = Array():forn(50, function (i)
-        return i
-    end)
+    balls = Array():forn(50)
 	
 	pronosticList = Array()
 	for n in range(10) do

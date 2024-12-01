@@ -30,5 +30,6 @@ requireLib (..., {
     'quadtree',
     'octree',
     'dir',
-    'id',    
+    'id',
+    'switch',   
 })

@@ -206,7 +206,7 @@ function Model.sphere2(w, h, d)
 
     -- local texCoords = Buffer('vec2')
     -- for s = 1, faces do
-    --     texCoords:addItems(texCoords_face)
+    --     texCoords:addArray(texCoords_face)
     -- end
 
     -- local normals = Buffer('vec3')
@@ -262,7 +262,7 @@ function Model.addPlane(data, f, clr, n)
 end
 
 function Model.computeNormals(vertices, indices)
-    local normals = Buffer('vec3')
+    local normals = Array() -- Buffer('vec3')
 
     local v12, v13 = vec3(), vec3()
 
@@ -379,4 +379,145 @@ function Model.normalize(vertices, indices)
     end
 
     return vertices
+end
+
+function Model.computeIndices(vertices, texCoords, normals, colors)
+    local v = Buffer('vec3')
+    local t = texCoords and Buffer('vec2')
+    local n = normals and Buffer('vec3')
+    local c = colors and Buffer('Color')
+
+    local indices = Buffer('unsigned short')
+    local verticesIndices = {}
+    local nbIndices = 1
+
+    for i=1,#vertices do
+        local find = false
+
+        local key = string.format('%f;%f;%f', vertices[i].x, vertices[i].y, vertices[i].z)
+        if verticesIndices[key] then
+            for _j=1,#verticesIndices[key] do
+                local j = verticesIndices[key][_j]
+                if ((v[j] == vertices[i] ) and
+                    (texCoords == nil or t[j] == texCoords[i]) and
+                    (normals   == nil or n[j] == normals[i]))
+                then
+                    find = j
+                    indices[i] = find -- index from 1
+                    break
+                end
+            end
+        else
+            verticesIndices[key] = table()
+        end
+
+        if not find then
+            v[nbIndices] = vertices[i]
+            if texCoords then
+                t[nbIndices] = texCoords[i]
+            end
+            if normals then
+                n[nbIndices] = normals[i]
+            end
+            if colors then
+                c[nbIndices] = colors[i]
+            end
+
+            indices[i] = nbIndices -- index from 1
+            verticesIndices[key]:add(nbIndices)
+            nbIndices = nbIndices + 1
+        end        
+    end
+
+    return v, t, n, c, indices
+end
+
+function Model.averageNormals(vertices, normals)
+    local t = Buffer('vec3')
+
+    for i=1,#normals do
+        local vertex = vertices[i]
+        local normal = normals[i]
+
+        local ref = vertex.x.."."..vertex.y
+
+        if t[ref] == nil then
+            t[ref] = normal
+        else
+            t[ref] = t[ref] + normal
+        end
+    end
+
+    for i=1,#normals do
+        normals[i]:normalizeInPlace()
+    end
+
+    return t
+end
+
+function Model.gravityCenter(vertices)
+    local v = Point()
+    for i=1,#vertices do
+        v = v + vertices[i]
+    end
+
+    v = v / #vertices
+
+    for i=1,#vertices do
+        vertices[i]:sub(v)
+    end
+end
+
+function Model.transform(vertices, matrix)
+    for i=1,#vertices do
+        vertices[i] = matByVector(matrix, vertices[i]):tovec3()
+    end
+
+    return vertices
+end
+
+function Model.scale(vertices, w, h, e)
+    w = w or 1
+    e = e or h and 1 or w
+    h = h or w
+
+    local m = matrix()
+    m = m:scale(w, h, e)
+
+    return Model.transform(Table.clone(vertices), m)
+end
+
+function Model.translate(vertices, x, y, z)
+    x = x or 0
+    z = z or y and 0 or x
+    y = y or x
+
+    local m = matrix()
+    m = m:translate(x, y, z)
+
+    return Model.transform(Table.clone(vertices), m)
+end
+
+function Model.scaleAndTranslateAndRotate(vertices, x, y, z, w, h, e, ax, ay, az)
+    x = x or 0
+    z = z or y and 0 or x
+    y = y or x
+
+    w = w or 1
+    h = h or w
+    e = e or w
+
+    ax = ax or 0
+    ay = ay or 0
+    az = az or 0
+
+    m1 = translate_matrix(nil, x, y, z)
+
+    m2 = rotate_matrix(nil, ax, 1,0,0, DEGREES)
+    m3 = rotate_matrix(nil, ay, 0,1,0, DEGREES)
+    m4 = rotate_matrix(nil, az, 0,0,1, DEGREES)
+
+    m5 = scale_matrix(nil, w, h, e)
+
+    return Model.transform(vertices:clone(), m1*m2*m3*m4*m5)
 end

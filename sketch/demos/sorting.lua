@@ -4,7 +4,7 @@ function setup()
 end
 
 function reset()
-        values = Array():forn(W, function ()
+    values = Array():forn(W, function ()
        return random() * SIZE / 4
     end)
 

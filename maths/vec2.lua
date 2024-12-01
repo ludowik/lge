@@ -203,6 +203,12 @@ function vec2:ceil()
     return self
 end
 
+function vec2:even()
+    self.x = even(self.x)
+    self.y = even(self.y)
+    return self
+end
+
 function vec2:setHeading(angle)
     self:rotateInPlace(angle - self:heading())
     return self

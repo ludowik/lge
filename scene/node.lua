@@ -44,11 +44,10 @@ function Node:removeIfTrue(f)
 end
 
 function Node:update(dt)
-    -- if self.state == 'open' and #self.items == 1 then return end
     if self.visible == false then return end
 
     for _,item in ipairs(self.items) do
-        if item.visible ~=  false then
+        if item.visible ~= false then
             if item.update then
                 item:update(dt)
             end
@@ -59,11 +58,10 @@ function Node:update(dt)
 end
 
 function Node:draw()
-    -- if self.state == 'open' and #self.items == 1 then return end
     if self.visible == false then return end
 
     for _,item in ipairs(self.items) do
-        if item.visible ~=  false then
+        if item.visible ~= false then
             if item.draw then
                 pushMatrix()
                 item:draw()
@@ -82,7 +80,7 @@ function Node:contains(position)
     end
 
     for _,item in ipairs(self.items, self.reverseSearch) do
-        if item.visible ~=  false and item.contains then
+        if item.visible ~= false and item.contains then
             local result = item:contains(position)
             if result then
                 return result
@@ -102,7 +100,7 @@ end
 
 function Node:mousereleased(mouse)
     local result = self:contains(mouse.position)
-    if result then
+    if result and result.click then
         result:click(mouse)
         return true
     end

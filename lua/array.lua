@@ -14,10 +14,9 @@ function Array:count(f)
 end
 
 Array.add = table.insert
-
 Array.push = table.insert
-Array.pop = table.remove
 
+Array.pop = table.remove
 Array.shift = function(t) return table.remove(t, 1) end
 
 table.unpack = table.unpack or unpack
@@ -37,7 +36,10 @@ function Array:concat(sep)
 
     local txt = ''
     for i=1,#self do
-        txt = txt..tostring(self[i])..sep
+        if i > 1 then 
+            txt = txt..sep
+        end
+        txt = txt..tostring(self[i])
     end
     return txt --:trim(sep)
 end
@@ -51,10 +53,6 @@ function Array:removeIfTrue(f)
     return self
 end
 
-function Array:random()
-    return self[randomInt(1, #self)]
-end
-
 function Array:ipairs()
     return ipairs(self)
 end
@@ -66,7 +64,7 @@ function Array:forn(n, functionOrValue)
         end
     else
         for i in range(n) do
-            self[i] = functionOrValue
+            self[i] = functionOrValue or i
         end
     end
     return self
@@ -126,6 +124,27 @@ function Array:next(item)
         return self[i+1]
     else
         return self[1]
+    end
+end
+
+function Array:random()
+    local i = randomInt(1, #self)
+    return self[i], i
+end
+
+function Array:removeRandom()
+    local i = randomInt(1, #self)
+    return self:remove(i), i
+end
+
+function Array:shuffle(seedValue)
+    if seedValue then
+        seed(seedValue)
+    end
+
+    for _ in range(#self) do
+        local v, i = self:removeRandom()
+        self:push(v)
     end
 end
 
