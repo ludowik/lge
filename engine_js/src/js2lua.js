@@ -4,25 +4,16 @@ function setup() {
     createCanvas(
         screen.width,
         screen.height);
-
-    console.log(
-            screen.width,
-            screen.height+1);
 }
 
 var needLoad = true;
 var needSetup = true;
 
 function draw() {
-    var INIT = fengari.load('return INIT')();
-    if (!INIT) return;
-
     if (needLoad) {
         var init = fengari.load('return __init')();
-        var loadASketch = fengari.load('return __loadASketch')();
-        if (init && loadASketch) {
+        if (init) {
             init();
-            loadASketch();
             needLoad = false;
         }
         return;
@@ -31,8 +22,7 @@ function draw() {
     if (needSetup) {
         var update = fengari.load('return __update')();
         var draw = fengari.load('return __draw')();
-        if (setup || draw) {
-            if (setup) setup();
+        if (update || draw) {
             if (update) update();
             if (draw) {
                 background(0, 0, 0);
@@ -42,7 +32,7 @@ function draw() {
         }
         return;
     }
-
+    
     fengari.load('return __update()')();
     fengari.load('return __draw()')();
 }

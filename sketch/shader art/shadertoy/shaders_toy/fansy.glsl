@@ -119,7 +119,7 @@ vec4 nyan(vec2 p)
 	float ns=3.0;
 	float nt = iTime*ns; nt-=mod(nt,240.0/256.0/6.0); nt = mod(nt,240.0/256.0);
 	float ny = mod(iTime*ns,1.0); ny-=mod(ny,0.75); ny*=-0.05;
-	vec4 color = texture2D(iChannel1,vec2(uv.x/3.0+210.0/256.0-nt+0.05,.5-uv.y-ny));
+	vec4 color = texture(iChannel1,vec2(uv.x/3.0+210.0/256.0-nt+0.05,.5-uv.y-ny));
 	if (uv.x<-0.3) color.a = 0.0;
 	if (uv.x>0.2) color.a=0.0;
 	return color;
@@ -153,7 +153,7 @@ vec3 raymarch(in vec3 from, in vec3 dir)
 #endif		
 	totdist=clamp(totdist,0.,26.);
 	dir.y-=.02;
-	float sunsize=7.-max(0.,texture2D(iChannel0,vec2(.6,.2)).x)*5.; // responsive sun size
+	float sunsize=7.-max(0.,texture(iChannel0,vec2(.6,.2)).x)*5.; // responsive sun size
 	float an=atan(dir.x,dir.y)+iTime*1.5; // angle for drawing and rotating sun
 	float s=pow(clamp(1.0-length(dir.xy)*sunsize-abs(.2-mod(an,.4)),0.,1.),.1); // sun
 	float sb=pow(clamp(1.0-length(dir.xy)*(sunsize-.2)-abs(.2-mod(an,.4)),0.,1.),.1); // sun border

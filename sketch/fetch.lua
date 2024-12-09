@@ -1,7 +1,7 @@
 function setup()
     actions = Parameter(CENTER)
 
-    ip = getSetting('ip', 15)
+    ip = getSetting('ip', 32)
     
     actions:integer('ip', 1, 32, ip, function() setSetting('ip', ip) end)
     actions:action('load from local', function() updateScripts(false) end)

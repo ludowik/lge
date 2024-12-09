@@ -122,11 +122,11 @@ function point(...)
 end
 
 function points(data)
-    beginShape(POINTS)
+    js.global:beginShape(js.global.POINTS)
     for i=1,#data,2 do
-        vertex(data[i], data[i+1])
+        js.global:vertex(data[i], data[i+1])
     end
-    endShape()
+    js.global:endShape()
 end
 
 function line(...)
@@ -134,11 +134,11 @@ function line(...)
 end
 
 function polyline(data)
-    beginShape(LINES)
+    js.global:beginShape(js.global.LINES)
     for i=1,#data,2 do
-        vertex(data[i], data[i+1])
+        js.global:vertex(data[i], data[i+1])
     end
-    endShape()
+    js.global:endShape()
 end
 
 function rect(...)
@@ -158,11 +158,11 @@ function arc(x, y, rx, ry, a1, a2)
 end
 
 function polygon(vertices)
-    js.global:beginShape()
+    js.global:beginShape(js.global.LINES)
     for i=1,#vertices,2 do
         js.global:vertex(vertices[i], vertices[i+1])
     end
-    js.global:endShape(CLOSE)
+    js.global:endShape(js.global.CLOSE)
 end
 
 function spriteMode(...)

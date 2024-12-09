@@ -30,35 +30,44 @@ function setup()
 
     parameter:integer('depth', 'z', 3)
 
-    shaderIndex = getSetting('shaderIndex', 1)
+    shaderIndex = 1 -- getSetting('shaderIndex', 1)
 
     parameter:integer('shader', 'shaderIndex', 1, #shaders, shaderIndex, function ()
         setSetting('shaderIndex', shaderIndex)
     end)
-
+    
     parameter:watch('shader name', 'shaders[shaderIndex].name')
 end
 
 function update(dt)
-    local shader = shaders[shaderIndex]
+    log(id())
+
+    local shader = shader or shaders[shaderIndex]
     shader:update(dt)
+
+    log(id())
 
     if shader.program then
         if not paused then
             shader:sendUniform('iTime', elapsedTime);
         end
+
+        log(id())
+
         shader:sendUniforms{
             iChannel0 = shaderChannel[0].texture,
             iMouse = vec4(mouse.position.x, H-mouse.position.y, mouse.startPosition.x, mouse.startPosition.y),
             TIMESCALE = 1.,
             SHAPE_SIZE = SHAPE_SIZE,
             SMOOTHNESS = SMOOTHNESS,
-            z = z;
+            z = z,
             CAMERA_POS_WORLD = vec3(0., 2., -5.),
             MAX_STEPS = 100,
             MAX_DIST = 100,
             SURF_DIST = 0.01,
         }
+
+        log(id())
     end
 end
 

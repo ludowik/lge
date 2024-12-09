@@ -60,6 +60,10 @@ function Graphics.initMode()
     refreshRate = 60
 end
 
+function scaleMouseProperties(x, y)
+    return x/SCALE, y/SCALE
+end
+
 function Graphics.getPhysicalArea()
     local x, y, w, h
 

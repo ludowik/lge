@@ -70,14 +70,6 @@ function love.filedropped(file)
     end
 end
 
-function scaleMouseProperties(...)
-    local values = Array()
-    for i,v in ipairs{...} do
-        values:add(v/SCALE)
-    end
-    return values:unpack()
-end
-
 if getOS() == 'ios' then
     local touches = {}
 

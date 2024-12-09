@@ -1,4 +1,4 @@
-Array = class():extends(table)
+Array = class() : extends(table)
 
 table.__className = 'table'
 

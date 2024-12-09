@@ -8,4 +8,5 @@
     ],
     "livePreview.defaultPreviewPath": "/index.html",
     "cmake.sourceDirectory": "C:/Users/lmilhau/Documents/Divers/lge/__archive/cpp/lca.cpp",
+    "cmake.ignoreCMakeListsMissing": true,
 }

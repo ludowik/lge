@@ -1,4 +1,4 @@
-Parameter = class():extends(Scene)
+Parameter = class() : extends(Scene)
 
 function Parameter.setup()
 end

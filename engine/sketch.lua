@@ -30,7 +30,7 @@ function Sketch:setMode(w, h, persistence)
 
     self.persistence = persistence
 
-    SCALE_CANVAS = 0.5
+    SCALE_CANVAS = 1
 
     w = w / SCALE_CANVAS
     h = h / SCALE_CANVAS
@@ -83,6 +83,8 @@ function Sketch:updateSketch(dt)
 
     self.tweenManager:update(dt)
 
+    setSetting('assertLoadIsKO', true)
+
     local scene = self.scene or env.scene
     if scene then
         scene:update(dt)
@@ -90,6 +92,8 @@ function Sketch:updateSketch(dt)
     if self.update then
         self:update(dt)
     end
+
+    setSetting('assertLoadIsKO', nil)
 end
 
 function Sketch:drawSketch(force)
@@ -146,7 +150,7 @@ function Sketch:presentSketch(force)
     love.graphics.origin()
 
     if getOrigin() == BOTTOM_LEFT then
-        love.graphics.translate(0, H)
+        love.graphics.translate(0, SCALE * sy * H)
         love.graphics.scale(1, -1)
     end
 

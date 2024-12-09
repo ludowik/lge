@@ -7,7 +7,7 @@ function setup()
 end
 
 local catalog = {
-    '...2...633....54.1..1..398........9....538....3........263..5..5.37....847...1...'
+    '...2...633....54.1..1..398........9....538....3........263..5..5.37....847...1...',
 }
 
 function createGrid()
@@ -56,7 +56,7 @@ function createUI()
 
     parameter:action('create', create)
     parameter:action('resolve', resolve)
-    parameter:action('reset', reset)
+    parameter:action('@refresh', reset)
 end
 
 function create()
@@ -105,7 +105,7 @@ function Cell:init(i, j)
     self.i = i
     self.j = j
 
-    self.block = block_index(i, j)
+    self.block_index = block_index(i, j)
     
     self.value = 0
     self.fixed = false
@@ -136,6 +136,7 @@ function Cell:draw(i, j, cellPosition, cellSize)
             {self.availableValues[self.value], colors.black},
             {true, colors.red},
         }
+        
         textColor(clr)
         textMode(CENTER)
         text(
@@ -164,9 +165,10 @@ function Cell:draw(i, j, cellPosition, cellSize)
                 cellPosition.y)
         end
     end
-
+    
     stroke(colors.gray)
     strokeSize(0.1)
+    noFill()
     rect(cellPosition.x, cellPosition.y, cellSize, cellSize)
 
     stroke(colors.black)
@@ -302,9 +304,12 @@ function generateSudoku(grid, offset, mode, solutions)
             if result and (mode == 'generate' or mode == 'resolve' or solutions > 1) then
                 return result, solutions
             end
-        else
-            coroutine.yield()
 
+        else
+            if routine then
+               coroutine.yield()
+            end
+            
             local list = Array()
             for i=1,#cell.availableValues do
                 if cell.availableValues[i] then

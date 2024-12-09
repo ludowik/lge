@@ -335,13 +335,9 @@ function _lookat(eye, target, up)
 end
 
 function set3dMode()
-    love.graphics.setFrontFaceWinding('ccw')
-
-    if love.getVersion() > 11 then
-        love.graphics.setMeshCullMode('front')
-    else
-        love.graphics.setMeshCullMode('back')
-    end
+    love.graphics.setFrontFaceWinding('cw')
+    
+    love.graphics.setMeshCullMode('back')
 
     love.graphics.setDepthMode('less', true)
     love.graphics.clear(true, false, 1)

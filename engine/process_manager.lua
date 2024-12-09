@@ -1,4 +1,4 @@
-ProcessManager = class():extends(Node)
+ProcessManager = class() : extends(Node)
 
 function ProcessManager.setup()
     processManager = ProcessManager()
@@ -15,6 +15,7 @@ function ProcessManager.openSketches()
 end
 
 function ProcessManager:init()
+    Node.init(self)
     self.processIndex = 1
 end
 
@@ -113,7 +114,7 @@ function ProcessManager:setCurrentSketch(processIndex)
 end
 
 function ProcessManager:current()
-    return self.items[self.processIndex].sketch
+    return self.items[self.processIndex] and self.items[self.processIndex].sketch or nil
 end
 
 function ProcessManager:previous()

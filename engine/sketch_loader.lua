@@ -1,12 +1,17 @@
 function load(reload)
-    declareSketches(nil, reload)
-    --loadSketches()
-
+    if getOS() == 'web' then
+        local sketchesList = require 'engine.sketch_list'
+        declareSketches(sketchesList)
+    else
+        declareSketches(nil, reload)
+        --loadSketches()
+    end
+    
     classSetup()
     classUnitTesting()
-
+    
     if getSetting('assertLoadIsKO') then
-        processManager:setSketch('sketches')
+        processManager:setSketch('sketches')    
     else
         setSetting('assertLoadIsKO', true)
         if not processManager:setSketch(getSetting('sketch', 'sketches')) then
@@ -62,6 +67,8 @@ function declareSketches(list, reload)
     environmentsList:sort(function (a, b)
         return (a.__category or '')..'.'..a.__name < (b.__category or '')..'.'..b.__name
     end)
+
+    return list
 end
 
 function declareSketch(name, filePath, category, reload)    
