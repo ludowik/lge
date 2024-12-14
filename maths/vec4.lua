@@ -1,31 +1,5 @@
 vec4 = class()
 
-if ffi then
-    ffi.cdef [[
-        typedef union vec4 {
-            struct {
-                float x;
-                float y;
-                float z;
-                float w;
-            };
-            float values[4];
-        } vec4;
-    ]]
-
-    ffi.metatype('vec4', vec4)
-
-    function vec4:init(x, y, z, w)
-        self = ffi and ffi.new('vec4') or self
-        self:set(x, y, z, w)
-        return self
-    end
-
-    function vec4:__pairs()
-        return next, {x=self.x, y=self.y, z=self.z, w=self.w}, nil
-    end
-end
-
 function vec4.fromArray(t)
     return vec4(t[1], t[2], t[3], t[4])
 end
@@ -48,6 +22,10 @@ function vec4:set(x, y, z, w)
     self.w = w or 0
 
     return self
+end
+
+function vec4:__pairs()
+    return next, {x=self.x, y=self.y, z=self.z, w=self.w}, nil
 end
 
 function vec4:clone()

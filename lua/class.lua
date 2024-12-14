@@ -3,7 +3,7 @@ function class(__className)
     local __inheritsFrom = nil
     if type(__className) == 'table' then 
         __inheritsFrom = __className
-        __className = ''
+        __className = nil
     end
 
     assert(__className == nil or type(__className) == 'string')
@@ -34,7 +34,7 @@ function class(__className)
     table.insert(classList, klass)
 
     if __className then
-        _G[__className] = klass
+        (_G.env or _G)[__className] = klass
     end
 
     if __inheritsFrom then 

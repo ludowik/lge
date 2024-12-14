@@ -7,14 +7,14 @@ function Buffer:init(type, t)
 end
 
 function Buffer:resize(size)
-    for i in range(size) do
+    for i=1,size do
         self[i] = self[i] or 0
     end
     return self
 end
 
 function Buffer:reset()
-    for i in range(#self) do
+    for i=#self,1,-1 do
         self[i] = nil
     end
 end

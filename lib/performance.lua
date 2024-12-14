@@ -17,3 +17,10 @@ function localGlobalOrBuiltin()
     log('global min', runningTime(function () local min = min end))
     log('math.min', runningTime(function () local min = math.min end))
 end
+
+Performance = class()
+
+function Performance.timeit(name, f)
+    local t = runningTime(f, 100)
+    log(name, t)
+end

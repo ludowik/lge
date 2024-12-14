@@ -59,11 +59,11 @@ end
 
 function Array:forn(n, functionOrValue)
     if type(functionOrValue) == 'function' then
-        for i in range(n) do
+        for i=1,n do
             self[i] = functionOrValue(i)
         end
     else
-        for i in range(n) do
+        for i=1,n do
             self[i] = functionOrValue or i
         end
     end
@@ -142,7 +142,7 @@ function Array:shuffle(seedValue)
         seed(seedValue)
     end
 
-    for _ in range(#self) do
+    for _=1,#self do
         local v, i = self:removeRandom()
         self:push(v)
     end

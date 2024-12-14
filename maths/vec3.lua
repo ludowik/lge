@@ -1,30 +1,5 @@
 vec3 = class()
 
-if ffi then
-    ffi.cdef [[
-        typedef union vec3 {
-            struct {
-                float x;
-                float y;
-                float z;
-            };
-            float values[3];
-        } vec3;
-    ]]
-
-    ffi.metatype('vec3', vec3)
-
-    function vec3:init(x, y, z)
-        self = ffi and ffi.new('vec3') or self
-        self:set(x, y, z)
-        return self
-    end
-
-    function vec3:__pairs()
-        return next, {x=self.x, y=self.y, z=self.z}, nil
-    end
-end
-
 function vec3.fromArray(t)
     return vec3(t[1], t[2], t[3])
 end
@@ -46,6 +21,10 @@ function vec3:set(x, y, z)
     self.z = z or 0
 
     return self
+end
+
+function vec3:__pairs()
+    return next, {x=self.x, y=self.y, z=self.z}, nil
 end
 
 function vec3:clone()

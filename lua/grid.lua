@@ -24,8 +24,8 @@ function Grid:clear(initValueOrCreateCell)
 
     if initValueOrCreateCell == nil then return end
 
-    for i in range(self.w) do
-        for j in range(self.h) do
+    for i=1,self.w do
+        for j=1,self.h do
             if type(initValueOrCreateCell) == 'function' then
                 self:set(i, j, initValueOrCreateCell(i, j))
             else
@@ -103,8 +103,8 @@ function Grid:get(x, y)
 end
 
 function Grid:foreach(f)
-    for j in range(self.h) do
-        for i in range(self.w) do
+    for j=1,self.h do
+        for i=1,self.w do
             local cell = self:getCell(i, j)
             if f(cell, i, j) == -1 then
                 return
@@ -115,8 +115,8 @@ end
 
 function Grid:countCellsWithNoValue()
     local count = 0
-    for x in range(self.w) do
-        for y in range(self.h) do
+    for x=1,self.w do
+        for y=1,self.h do
             local value = self:get(x, y)
             if value == nil then
                 count = count + 1
@@ -162,16 +162,16 @@ function Grid:draw(x, y, drawCellFunction)
     noFill()
     
     if self.borders then
-        for i in range(self.w) do
-            for j in range(self.h) do
+        for i=1,self.w do
+            for j=1,self.h do
                 local cell = self:getCell(i, j)
                 rect(x + (i-1) * cellSize, y + (j-1) * cellSize, cellSize, cellSize)
             end
         end
     end
 
-    for i in range(self.w) do
-        for j in range(self.h) do
+    for i=1,self.w do
+        for j=1,self.h do
             local cell = self:getCell(i, j)
             local cellPosition = vec2(x + (i-1) * cellSize, y + (j-1) * cellSize)
 

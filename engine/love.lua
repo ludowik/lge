@@ -41,9 +41,7 @@ function love.runProc()
 			function ()
 				return mainLoop(unpack(args))
 			end,
-            function (msg)
-				error(msg)
-            end)
+            error)
 		return result
 	end
 end
