@@ -22,7 +22,7 @@ end
 
 function UICheck:computeSize()
     UI.computeSize(self)
-    self.size.x = self.size.x + self.size.y/2 + 2 * self.innerMarge
+    self.size.x = self.size.x + self.size.y/2 + 2 * UI.innerMarge
 end
 
 function UICheck:draw()

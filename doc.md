@@ -10,6 +10,10 @@ engine
 - review restart method (release all before restart ? or more virtual restart ?)
 - detect scripts error and execution error to change the current sketch to "sketches" for the next launch
 - fusion of sketch and process manager (a process is a sketch)
+Général
+left, right, up, down via un click sur l'écran
+pitch to zoom (en étant centré)
+
 
 sketch
 - gérer un zoom

@@ -31,7 +31,7 @@ requireLib (..., {
     'octree',
     'dir',
     'id',
-    'todo',
+    'switch',   
 })
 
 scanTODO()

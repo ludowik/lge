@@ -63,7 +63,8 @@ function __init()
 
     mouse = Mouse()
 
-    return Engine.load()
+    Engine.load()
+    processManager:setSketch(getSetting('sketch', 'sketches'))
 end
 
 function __setMode()
@@ -102,15 +103,18 @@ function __draw()
 end
 
 function __mousepressed()
-    eventManager:mousepressed(0, js.global.__event.x, js.global.__event.y)
+    local x, y = scaleMouseProperties(js.global.__event.x, js.global.__event.y)
+    eventManager:mousepressed(0, x, y)
 end
 
 function __mousemoved()
-    eventManager:mousemoved(0, js.global.__event.x, js.global.__event.y)
+    local x, y = scaleMouseProperties(js.global.__event.x, js.global.__event.y)
+    eventManager:mousemoved(0, x, y)
 end
 
 function __mousereleased()
-    eventManager:mousereleased(0, js.global.__event.x, js.global.__event.y)
+    local x, y = scaleMouseProperties(js.global.__event.x, js.global.__event.y)
+    eventManager:mousereleased(0, x, y)
 end
 
 local keys = {
@@ -259,30 +263,33 @@ function FrameBuffer:mapPixel(f)
 end
 
 
-Image = class()
+Image = class() : extends(FrameBuffer)
 
 function Image:init(name)
-    self.canvas = js.global:loadImage(name)
-    self.texture = {
-        setFilter = function ()
+    FrameBuffer.init(self)
+
+    self.canvas =  {
+        img = js.global:loadImage(name),
+
+        getWidth = function ()
+            return self.width
+        end,
+
+        getHeight = function ()
+            return self.height
         end,
     }
 
-    self.width = self.canvas.width
-    self.height = self.canvas.height
+    self.width = self.canvas.img.width
+    self.height = self.canvas.img.height
 end
 
 function Image:update()
 end
 
 function Image:draw(x, y, w, h)
-    js.global:image(self.canvas, x, y, w, h)
+    js.global:image(self.canvas.img, x, y, w, h)
 end
-
-function Image:getImageData()
-    return self.canvas
-end
-
 
 Mesh = class()
 
@@ -328,15 +335,3 @@ love.math.setSeed = math.randomseed
 love.math.randomNormal = function ()
     return js.global:randomGaussian()
 end
-
-function __loadASketch()
-    local sketchesList = require 'engine.sketch_list'    
-    declareSketches(sketchesList)
-
-    classSetup()
-
-    processManager:setSketch(getSetting('sketch', 'sketches'))
-    --processManager:setSketch('particles')    
-end
-
-INIT = true

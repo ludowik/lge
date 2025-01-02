@@ -1,13 +1,16 @@
-Parameter = class():extends(Scene)
+Parameter = class() : extends(Scene)
 
 function Parameter.setup()
 end
 
 function Parameter:init(layoutMode)
     Scene.init(self)
+
     self.currentGroup = self
     self.currentMenu = self
+    
     self.visible = true
+    
     self.layoutMode = layoutMode or 'right'
 end
 
@@ -96,11 +99,12 @@ function Parameter:addMainMenu()
 
     if getOS() == 'ios' then
         self:space()
-        self:action('update from git', function ()
-            updateScripts(true)
-        end)
         self:action('update from local', function ()
             updateScripts(false)
+        end)
+        self:space()
+        self:action('update from git', function ()
+            updateScripts(true)
         end)
     end
 
@@ -120,6 +124,7 @@ function Parameter:addMainMenu()
     end)
 
     self:space()
+    self:action('quit', quit)
     self:action('exit', exit)
 end
 

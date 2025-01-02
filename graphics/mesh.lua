@@ -27,15 +27,15 @@ end
 
 function Mesh:update()
     if not self.mesh then
-        self.mesh = self:createBuffer(self.vertices, 'VertexPosition', 'floatvec3', 'float', 3, self.drawMode, self.usageMode)
+        self.mesh = self:createBuffer(self.vertices, 'VertexPosition', 0, 'floatvec3', 'float', 3, self.drawMode, self.usageMode)
 
-        self.bufs.colors = self:createBuffer(self.colors, 'VertexColor', 'floatvec4', 'float', 4, self.drawMode, self.usageMode)
-        self.bufs.texCoords = self:createBuffer(self.texCoords, 'VertexTexCoord', 'floatvec2', 'float', 2, self.drawMode, self.usageMode)
-        self.bufs.normals = self:createBuffer(self.normals, 'VertexNormal', 'floatvec3', 'float', 3, self.drawMode, self.usageMode)
+        self.bufs.texCoords = self:createBuffer(self.texCoords, 'VertexTexCoord', 1, 'floatvec2', 'float', 2, self.drawMode, self.usageMode)
+        self.bufs.colors = self:createBuffer(self.colors, 'VertexColor', 2, 'floatvec4', 'float', 4, self.drawMode, self.usageMode)
+        self.bufs.normals = self:createBuffer(self.normals, 'VertexNormal', 3, 'floatvec3', 'float', 3, self.drawMode, self.usageMode)
     end
 
-    self:attachBuffer(self.bufs.colors, 'VertexColor', 'useColor')
     self:attachBuffer(self.bufs.texCoords, 'VertexTexCoord', 'useTexCoord')
+    self:attachBuffer(self.bufs.colors, 'VertexColor', 'useColor')
     self:attachBuffer(self.bufs.normals, 'VertexNormal', 'useNormal')
 
     if self.image then
@@ -46,11 +46,11 @@ function Mesh:update()
     end
 end
 
-function Mesh:createBuffer(buf, bufName, newType, type, size, drawMode, usageMode)
+function Mesh:createBuffer(buf, bufName, location, newType, type, size, drawMode, usageMode)
     if buf and #buf > 0 then
         local format
         if love.getVersion() > 11 then
-            format = {{name=bufName, format=newType}}
+            format = {{name=bufName, format=newType, location=location}}
         else
             format = {{bufName, type, size}}
         end
@@ -119,9 +119,9 @@ function Mesh:instancedBuffer(instances)
     local bufferFormat
     if love.getVersion() > 11 then
         bufferFormat = {
-            {name='InstancePosition', format='floatvec3'},
-            {name='InstanceScale', format='floatvec3'},
-            {name='InstanceColor', format='floatvec4'},
+            {name='InstancePosition', format='floatvec3', location=10},
+            {name='InstanceScale', format='floatvec3', location=11},
+            {name='InstanceColor', format='floatvec4', location=12},
         }
     else
         bufferFormat = {

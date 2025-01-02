@@ -15,17 +15,6 @@ Tween = class()
 
 tween = Array{
     easingFunctions = Array{},
-    easing = Array{
-        linear = function (x) return x end,
-        sinIn = function (x) return 1-cos(x*PI/2) end,        
-        sinOut = function (x) return sin(x*PI/2) end,
-        sinInOut = function (x) return -(cos(PI*x)-1)/2 end,
-        quadIn = function (x) return x^2 end,
-        quadOut = function (x) return 1 - (1-x)^2 end,
-        quadInOut = function (x) return x < 0.5 and (2*x^2) or (1-(-2*x+2)^2/2) end,
-        cubicIn = function (x) return x^3 end,
-        cubicOut = function (x) return 1-(1-x)^3 end
-    },
 
     loop = Array{
         once = 'once',
@@ -85,7 +74,12 @@ function Tween:update(dt)
     end
 
     for k,v in pairs(self.target) do
-        self.source[k] = self.origin[k] + (self.target[k] - self.origin[k]) * self.easing(self.elapsed / self.delay)
+        local t = self.elapsed
+        local b = self.origin[k] 
+        local c = self.target[k] - self.origin[k]
+        local d = self.delay
+        
+        self.source[k] = self.easing(t, b, c, d)
     end
 
     if self.elapsed >= self.delay then

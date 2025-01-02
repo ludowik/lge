@@ -1,4 +1,4 @@
-FlowFields = class():extends(Sketch)
+FlowFields = class() : extends(Sketch)
 
 function FlowFields:init()
     Sketch.init(self)

@@ -30,7 +30,7 @@ love = {
         end,
         
         getMode = function ()
-            return math.floor(W), math.floor(H)
+            return math.floor(W), math.floor(H), {fullscreen = false}
         end,
 
         setTitle = function (title)
@@ -51,6 +51,10 @@ love = {
 
         setVSync = function ()
         end,
+
+        getDisplayCount = function ()
+            return 0
+        end
     },
     
     graphics = {

@@ -1,4 +1,4 @@
-ProcessManager = class():extends(Node)
+ProcessManager = class() : extends(Node)
 
 function ProcessManager.setup()
     processManager = ProcessManager()
@@ -15,6 +15,7 @@ function ProcessManager.openSketches()
 end
 
 function ProcessManager:init()
+    Node.init(self)
     self.processIndex = 1
 end
 
@@ -113,7 +114,7 @@ function ProcessManager:setCurrentSketch(processIndex)
 end
 
 function ProcessManager:current()
-    return self.items[self.processIndex].sketch
+    return self.items[self.processIndex] and self.items[self.processIndex].sketch or nil
 end
 
 function ProcessManager:previous()
@@ -155,49 +156,49 @@ function ProcessManager:update(dt)
 
     if self.__loopProcesses then
         self:updateLoop(dt)
+        
     elseif sketch then
         sketch:updateSketch(dt)
     end
 end
 
 function ProcessManager:updateLoop(dt)
-    if self.__loopProcesses then
-        self:next()
+    if not self.__loopProcesses then return end
+    self:next()
 
-        local sketch = processManager:current()
-        assert(sketch)
+    local sketch = processManager:current()
+    assert(sketch)
 
-        local delay = LOOP_PROCESS_DELAY
-        local dt = LOOP_PROCESS_DT
-        local n = 0
-        local startTime = time()
+    local delay = LOOP_PROCESS_DELAY
+    local dt = LOOP_PROCESS_DT
+    local n = 0
+    local startTime = time()
 
-        sketch.env.__autotest = true
-        love.window.setVSync(0)
-            
-        while true do
-            n = n + 1
+    sketch.env.__autotest = true
+    love.window.setVSync(0)
+        
+    while true do
+        n = n + 1
 
-            sketch:updateSketch(dt)
-            sketch:drawSketch()
+        sketch:updateSketch(dt)
+        sketch:drawSketch()
 
-            love.graphics.present()
-            
-            if time() - startTime > delay or n >= LOOP_PROCESS_N then
-                break
-            end
+        love.graphics.present()
+        
+        if time() - startTime > delay or n >= LOOP_PROCESS_N then
+            break
         end
+    end
 
-        love.window.setVSync(1)
-        sketch.env.__autotest = false
+    love.window.setVSync(1)
+    sketch.env.__autotest = false
 
-        -- captureImage()
-        -- captureLogo()
+    -- captureImage()
+    -- captureLogo()
 
-        if sketch == self.__loopProcesses.startProcess then
-            self.__loopProcesses = nil
-        else
-            --self:updateLoop(dt)
-        end
+    if sketch == self.__loopProcesses.startProcess then
+        self.__loopProcesses = nil
+    else
+        --self:updateLoop(dt)
     end
 end

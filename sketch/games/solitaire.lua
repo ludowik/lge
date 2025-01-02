@@ -365,16 +365,8 @@ function Deck:create()
 end
 
 function Deck:shuffle(seedValue)
-    local items = self.items
-    self.items = Array()
-
     sketch.seedValue = seedValue or sketch:nextSeedValue()
-    seed(sketch.seedValue)
-
-    for _ in range(#items) do
-        local i = randomInt(1, #items)
-        self:push(items:remove(i))
-    end
+    self.items:shuffle(sketch.seedValue)
 end
 
 function Deck:isMoveable()

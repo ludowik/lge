@@ -1,29 +1,5 @@
 vec2 = class()
 
-if ffi then
-    ffi.cdef [[
-        typedef union vec2 {
-            struct {
-                float x;
-                float y;
-            };
-            float values[2];
-        } vec2;
-    ]]
-
-    ffi.metatype('vec2', vec2)
-
-    function vec2:init(x, y)
-        self = ffi and ffi.new('vec2') or self
-        self:set(x, y)
-        return self
-    end
-
-    function vec2:__pairs()
-        return next, {x=self.x, y=self.y}, nil
-    end
-end
-
 function vec2.fromArray(t)
     return vec2(t[1], t[2])
 end
@@ -44,6 +20,10 @@ function vec2:set(x, y)
     self.y = y or 0
 
     return self
+end
+
+function vec2:__pairs()
+    return next, {x=self.x, y=self.y}, nil
 end
 
 function vec2:clone()
@@ -200,6 +180,12 @@ end
 function vec2:ceil()
     self.x = ceil(self.x)
     self.y = ceil(self.y)
+    return self
+end
+
+function vec2:even()
+    self.x = even(self.x)
+    self.y = even(self.y)
     return self
 end
 

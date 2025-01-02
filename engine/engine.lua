@@ -28,7 +28,11 @@ end
 function Engine.initParameter()
     engine.parameter = Parameter('right')
 
-    if not fused() then        
+    engine.parameter:action('update from local', function ()
+        updateScripts(false)
+    end)
+
+    if not fused() then
         engine.parameter:addMainMenu()
         engine.parameter:addNavigationMenu()
         engine.parameter:addScreenMenu()

@@ -1,3 +1,5 @@
+if getOS() == 'web' then return end
+
 Graphics3d = class()
 
 function Graphics3d.setup()

@@ -37,10 +37,11 @@ function Circle:draw()
     stroke(colors.gray)
     strokeSize(1)
     beginShape()
-    for x=0,1,0.1 do
+    for x=0,1,0.05 do
         vertex(
             x*self.size.x,
-            self.position.y + self.size.x-self.easing(x)*self.size.x)
+            self.position.y + self.easing(x, 0, self.size.x, 1)
+        )
     end
     endShape()
 

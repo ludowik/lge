@@ -189,13 +189,13 @@ function ShaderToy:loadCode(shader)
             uniform highp sampler2D iChannel3;         // input channel. XX = 2D/Cube
             uniform highp vec4      iDate;             // (year, month, day, time in seconds)
 
-            varying highp vec3 vPosition;
-            varying highp vec2 vTexCoords;
+            // varying highp vec3 vPosition;
+            // varying highp vec2 vTexCoords;
 
             #define PI 3.14159265359
             
             #define love_texture Texel
-            #define texture2D Texel
+            //#define texture2D texture
             #define precision
             #define highp
             

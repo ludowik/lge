@@ -70,6 +70,9 @@ pow = math.pow
 sin = math.sin
 cos = math.cos
 
+asin = math.asin
+acos = math.acos
+
 tan = math.tan
 atan2 = math.atan2 or math.atan
 

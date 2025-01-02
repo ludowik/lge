@@ -10,4 +10,5 @@ requireLib(..., {
     'scene',
     'parameter',
     'animate',
+    'animate_easings',
 })

@@ -33,7 +33,7 @@ void main() {
     //if (render_mode == 0)
         gl_Position = model_matrix * vec4(vertexPosition.xyz, 1.0);
     //else
-    //    gl_Position = model_matrix2 * vec4(vertexPosition.xyz, 1.0);
+    //  gl_Position = model_matrix2 * vec4(vertexPosition.xyz, 1.0);
 
     /*if (useTranslation == 1) {
         vec4 orientation = normalize(vec4(size.y, -size.x, 0.0, 0.0)) * stroke_width / 2.0;

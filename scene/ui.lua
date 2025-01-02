@@ -1,12 +1,14 @@
-UI = class():extends(Rect, MouseEvent, KeyboardEvent)
+UI = class() : extends(Rect, MouseEvent, KeyboardEvent)
 
-UI.innerMarge = 8
-UI.outerMarge = 4
+function UI.setup()
+    UI.innerMarge = 8
+    UI.outerMarge = 4
 
-UI.styles = {
-    fontSize = 24,
-    fontName = DEFAULT_FONT_NAME,
-}
+    UI.styles = {
+        fontSize = 32,
+        fontName = DEFAULT_FONT_NAME,
+    }
+end
 
 function UI:init(label)
     Rect.init(self)
@@ -17,7 +19,9 @@ function UI:init(label)
     self.styles = Array{
         fillColor = Color(0.5),
         textColor = colors.white,
+
         fontSize = UI.styles.fontSize,
+        fontName = UI.styles.fontName,
     }
 
     self.visible = true
@@ -71,7 +75,13 @@ function UI:computeSize()
 
     self:fontStyle()
 
-    local w, h = textSize(self:getLabel())
+    local label = self:getLabel()
+    if label:startWith('@') then
+        fontName('foundation-icons')
+        label = utf8.char(iconsFont[label:mid(2)])
+    end
+
+    local w, h = textSize(label)
     self.size:set(w + 2 * UI.innerMarge, h)
 end
 
@@ -91,15 +101,16 @@ function UI:drawBack()
     end
 
     if self.styles.fillColor then
-        if eventManager.currentObject == self then
-            fill(colors.red:alpha(0.25))
-        else
-            fill(self.styles.fillColor)
-        end
+        fill(self.styles.fillColor)
     else
         noFill()
     end
 
+
+    if eventManager.currentObject == self then
+        fill(colors.red)
+    end
+    
     local r = self.styles.radiusBorder or 4
 
     rectMode(CORNER)
@@ -118,15 +129,22 @@ function UI:drawFront()
     local wrapSize = self.styles.wrapSize
     local wrapAlign = self.styles.wrapAlign
 
+    local label = self:getLabel()
+    if label:startWith('@') then
+        fontName('foundation-icons')
+        label = utf8.char(iconsFont[label:mid(2)])
+    end
+
     if self.styles.mode == CENTER then
         textMode(CENTER)
-        text(self:getLabel(),
+        text(label,
             self.position.x + self.size.x / 2,
             self.position.y + self.size.y / 2,
             wrapSize, wrapAlign)
+
     else
         textMode(CORNER)
-        text(self:getLabel(), 
+        text(label,
             self.position.x + UI.innerMarge,
             self.position.y,
             wrapSize, wrapAlign)

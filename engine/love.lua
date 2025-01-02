@@ -41,9 +41,7 @@ function love.runProc()
 			function ()
 				return mainLoop(unpack(args))
 			end,
-            function (msg)
-				error(msg)
-            end)
+            error)
 		return result
 	end
 end
@@ -68,14 +66,6 @@ function love.filedropped(file)
         love.filesystem.write('lge.love', file:read())
         restart()
     end
-end
-
-function scaleMouseProperties(...)
-    local values = Array()
-    for i,v in ipairs{...} do
-        values:add(v/SCALE)
-    end
-    return values:unpack()
 end
 
 if getOS() == 'ios' then

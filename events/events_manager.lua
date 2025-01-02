@@ -2,12 +2,27 @@ EventManager = class() : extends(MouseEvent, KeyboardEvent)
 
 function EventManager.setup()
     eventManager = EventManager()
+    
     love.keyboard.setKeyRepeat(true)
+    love.keyboard.setTextInput(getOS() ~= 'ios')
 end
 
 function EventManager:init()
     self.currentObject = nil
+
     self.touches = {}
+end
+
+function EventManager:update(dt)
+    if eventManager.currentObjectTimer == nil then return end
+
+    if not eventManager.currentObjectPressed then
+        eventManager.currentObjectTimer = eventManager.currentObjectTimer - 1
+        if eventManager.currentObjectTimer == 0 then
+            eventManager.currentObjectTimer = nil
+            eventManager.currentObject = self
+        end
+    end
 end
 
 function EventManager:mousepressed(id, x, y, presses)

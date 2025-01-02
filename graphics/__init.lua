@@ -17,4 +17,5 @@ requireLib (..., {
     'material',
     'image',
     'anchor',
+    'geometry',
 })

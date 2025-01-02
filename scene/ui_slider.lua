@@ -1,4 +1,4 @@
-UISlider = class():extends(UIButton)
+UISlider = class() : extends(UIButton)
 
 function UISlider:init(label, varName, minValue, maxValue, callback)
     UIButton.init(self, label, callback)

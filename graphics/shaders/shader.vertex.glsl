@@ -4,28 +4,30 @@ uniform highp mat4 matrixModel;
 uniform highp vec4 strokeColor;
 uniform highp vec4 fillColor;
 
+// layout (location = 0) in vec4 VertexPosition;
+
+uniform highp float useTexCoord;
+// layout (location = 1) in vec4 VertexTexCoord;
+varying vec4 texCoord;
+
+uniform highp float useColor;
+// layout (location = 2) in vec4 VertexColor;
+varying vec4 color;
+
+uniform highp float useNormal;
+layout(location = 3) in vec3 VertexNormal;
+varying vec3 normal;
+
+uniform highp float useInstanced;
+layout(location = 10) in vec3 InstancePosition;
+layout(location = 11) in vec3 InstanceScale;
+layout(location = 12) in vec4 InstanceColor;
+flat out int instanceID;
+
 varying vec3 vertexPos;
 varying vec3 fragmentPos;
 
 varying vec4 vertexProjection;
-
-uniform highp float useColor;
-// attribute vec4 VertexColor;
-varying vec4 color;
-
-uniform highp float useTexCoord;
-//attribute vec4 VertexTexCoord;
-varying vec4 texCoord;
-
-uniform highp float useNormal;
-attribute vec3 VertexNormal;
-varying vec3 normal;
-
-uniform highp float useInstanced;
-attribute vec3 InstancePosition;
-attribute vec3 InstanceScale;
-attribute vec4 InstanceColor;
-flat out int instanceID;
 
 uniform highp float useHeightMap;
 uniform highp float computeHeight;
@@ -51,7 +53,11 @@ vec4 position(mat4 , vec4 ) {
     vec4 vp = vec4(VertexPosition.xyz, 1.);
     vec3 vn = VertexNormal;
 
-    color = fillColor * VertexColor;
+    if (useColor == 1.) {
+        color = fillColor * VertexColor;
+    } else {
+        color = fillColor;
+    }
 
     if (useInstanced == 1.) {
         vp = vp * vec4(InstanceScale, 1.) + vec4(InstancePosition, 0.);

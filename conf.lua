@@ -18,5 +18,5 @@ function love.conf(t)
     t.window.width = 375
     t.window.height = 812
     
-    love.filesystem.setRequirePath('?.lua;?/init.lua;?/__init.lua;')
+    love.filesystem.setRequirePath('?.lua;?/__init.lua;')
 end

@@ -1,0 +1,79 @@
+﻿http://www.iconarchive.com/category/game/chess-icons-by-aha-soft.html
+
+- couleur des pions
+- règle du jeu de dame à la masse
+- pas de régèle pour le jeu peteia => le virer
+
+================================================================================================================================
+Ergonomie & Design
+- Retournement d’une carte gerer l’animation de l’image du dos à l’image de la carte
+
+Divers
+- Faire une application "Alone with the Cards"
+- porter applicaton billard
+- porter applicaton heroes
+
+Framework
+- contrôle : gérer un scroll dans un contrôle (pour les aides par exemple)
+- contrôle calendrier : à la masse
+- améliorer la gestion des touch => onetouch
+- améliorer la section des touch pour la sélection d'un bouton par exemple
+- améliorer la section des touch pour la sélection d'une carte par exemple
+- gérer un touch long pour ouvrir la boite de modification de couleur et changer la couleur de fond par exemple
+- implementer un Arbre AVL dans les objets Collection : Cf. doc algo a la maison
+
+================================================================================================================================
+Launcher
+- nommer les pages
+- améliorer le rendu graphique des onglets
+
+================================================================================================================================
+ViewGame
+- sauver, recharger et controler le timer
+
+================================================================================================================================
+Solitaire
+- rendre paramétrable l'utilisation du talon
+- nombre de carte retourné
+- nombre de tour de talon
+- afficher le temps de jeu
+- Gérer une option pour le nomnbre de carte du talon
+
+Pyramid
+- on arrive à sélectionner la pioche ???
+
+Skipbo
+- organiser les cartes différemment en mode paysage
+
+================================================================================================================================
+Sudoku
+- faire un menu pour sélectionner un chiffre
+- utiliser le livre d'antoine pour en rajouter
+- utiliser une fonte créée à la main...
+
+Chess
+- détecter les branches déja explorées
+- traiter différemment les débuts de parties
+- traiter différemment les fins de parties (exemple fin de partie avec roi-dame contre roi - Cf. iTunes)
+- utiliser nombre de coup possible pour évaluation
+- afficher les évaluations courantes
+- améliorer le système d'évaluation
+- gérer correctement et par option la récursivité sans copie
+- afficher si position en échec
+
+Lines
+- afficher en petit l'endroit ou vont se trouver les billes : on peut nénamoins utiliser ces places
+
+Petteia
+- keskece
+
+Dame
+- coups possibles incomplet et mal foutu
+
+================================================================================================================================
+Color
+- décomposer une couleur : cmjn
+- afficher la couleur en hexa
+
+Lampe
+- utiliser les sliders verticaux

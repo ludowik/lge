@@ -159,6 +159,25 @@ function scale_matrix(m, sx, sy, sz)
     end
 end
 
+local function setMatrix(m, mode, ...)
+    m:setMatrix(mode or 'row', ...)
+end
+
+function matByVector(m, v)
+    local vm = love.math.newTransform()
+    setMatrix(vm, nil,
+        v.x,0,0,0,
+        v.y,0,0,0,
+        v.z,0,0,0,
+        1,0,0,0)
+
+    local res = m * vm
+    local values = {
+        res:getMatrix()
+    }
+    return vec4(values[1], values[5], values[9], values[13])
+end
+
 function applyMatrix(m)
     __modelMatrix:apply(m)
 end
@@ -316,10 +335,14 @@ function _lookat(eye, target, up)
 end
 
 function set3dMode()
-    love.graphics.setFrontFaceWinding('ccw')
+    love.graphics.setFrontFaceWinding('cw')
+    
     love.graphics.setMeshCullMode('back')
+
     love.graphics.setDepthMode('less', true)
     love.graphics.clear(true, false, 1)
+
+    setOrigin(BOTTOM_LEFT)
 end
 
 function setTransformation()

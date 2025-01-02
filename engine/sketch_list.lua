@@ -41,6 +41,7 @@ return {
 	{name='asteroids', filePath='sketch.games.asteroids', category='games'},
 	{name='chess', filePath='sketch.games.chess', category='games'},
 	{name='morpion', filePath='sketch.games.morpion', category='games'},
+	{name='puissance_4', filePath='sketch.games.puissance_4', category='games'},
 	{name='solitaire', filePath='sketch.games.solitaire', category='games'},
 	{name='sudoku', filePath='sketch.games.sudoku', category='games'},
 	{name='tetris', filePath='sketch.games.tetris', category='games'},

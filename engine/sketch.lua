@@ -83,6 +83,8 @@ function Sketch:updateSketch(dt)
 
     self.tweenManager:update(dt)
 
+    setSetting('assertLoadIsKO', true)
+
     local scene = self.scene or env.scene
     if scene then
         scene:update(dt)
@@ -90,6 +92,8 @@ function Sketch:updateSketch(dt)
     if self.update then
         self:update(dt)
     end
+
+    setSetting('assertLoadIsKO', nil)
 end
 
 function Sketch:drawSketch(force)
@@ -115,7 +119,7 @@ function Sketch:renderSketch()
 
     resetMatrix(true)
     resetStyle(getOrigin())
-
+    
     scale(1/SCALE_CANVAS, 1/SCALE_CANVAS)
 
     self:draw()
@@ -146,8 +150,8 @@ function Sketch:presentSketch(force)
     love.graphics.origin()
 
     if getOrigin() == BOTTOM_LEFT then
+        love.graphics.translate(0, SCALE * sy * H)
         love.graphics.scale(1, -1)
-        love.graphics.translate(0, -H*SCALE*sy)
     end
 
     love.graphics.draw(texture,

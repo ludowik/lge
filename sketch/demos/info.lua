@@ -1,7 +1,8 @@
 function setup()
     scene = Scene()
 
-    scene:add(UIExpression('version', 'version'))
+    scene:add(UIExpression('version app', 'version'))
+    scene:add(UIExpression('version framework', 'love.getVersion()'))
     scene:add(UIExpression('date', 'Date():asDate()'))
     scene:add(UIExpression('time', 'Date():asTime()'))
 
@@ -17,6 +18,7 @@ function setup()
     local w, h = love.window.getDesktopDimensions(1)
 
     scene:add(UI('Screen'):attrib{styles={fillColor=colors.red}})
+    scene:add(UIExpression('orientation', 'deviceOrientation'))
     scene:add(UIExpression('desktop dimension', 'string.format("%d, %d", love.window.getDesktopDimensions())'))
     scene:add(UIExpression('safe area', 'string.format("%d, %d, %d, %d", love.window.getSafeArea())'))
     scene:add(UIExpression('virtual area', 'LEFT..", "..TOP..", "..W..", "..H'))

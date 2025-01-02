@@ -76,7 +76,7 @@ vec4 specular(Light light, float shininess, vec3 normal) {
     return light.specularStrength * light.lightColor * brightness;
 }
 
-vec4 effect(vec4 _color, Image tex, vec2 texture_coords, vec2 screen_coords) {    
+vec4 effect(vec4 _color, Image tex, vec2 texture_coords, vec2 screen_coords) {
     Material material = materials[0];
 
     vec4 finalColor = color;
@@ -93,9 +93,6 @@ vec4 effect(vec4 _color, Image tex, vec2 texture_coords, vec2 screen_coords) {
             } else {
                 finalColor = vec4(fragmentPos.y / 20.);
             }
-
-        } else if (useColor == 1.) {
-            finalColor = color;
         }
 
         if (useTexCoord == 1.) {
