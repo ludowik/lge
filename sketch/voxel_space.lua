@@ -21,8 +21,8 @@ function setup()
     w, h = 320, 200
     img = FrameBuffer(w, h)
 
-    --map = MapCache('map0')
-    map = MapNoise()
+    map = MapCache('map0')
+    --map = MapNoise()
 
     SCALE = MIN_SIZE/1024/2
 end
@@ -145,8 +145,8 @@ end
 Map = class()
 
 function Map:init(filename)
-    self.color = Image('resources/images/'..filename..'.color.png')
-    self.height = Image('resources/images/'..filename..'.height.png')
+    self.color = Image(filename..'.color.png')
+    self.height = Image(filename..'.height.png')
     self.size = self.color.width
 end
 

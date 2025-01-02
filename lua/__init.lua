@@ -30,5 +30,9 @@ requireLib (..., {
     'quadtree',
     'octree',
     'dir',
-    'id',    
+    'id',
+    'todo',
 })
+
+scanTODO()
+

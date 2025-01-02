@@ -525,7 +525,7 @@ function Card:init(value, suit, faceUp)
 
     self.faceUp = faceUp
 
-    self.img = Image('resources/images/' .. self.suit.name .. '.png')
+    self.img = Image(self.suit.name .. '.png')
 end
 
 function Card:animate(count)

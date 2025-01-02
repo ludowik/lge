@@ -119,7 +119,7 @@ end
 function draw()
     background(colors.white)
     
-    img = img or Image('resources/images/pique.png')
+    img = img or Image('pique.png')
 
     local clr = colors.black
     img:mapPixel(function (x, y, r, g, b, a)

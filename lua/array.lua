@@ -87,6 +87,42 @@ function Array:foreachKey(f, ...)
     return self
 end
 
+function Array:enumerate()
+    local i = 0
+    local n = #self
+    return function ()
+        i = i + 1
+        if i <= n then
+            return i, self[i]
+        end
+        return nil
+    end
+end
+
+function Array:enumerateBy2()
+    local i = 0
+    local n = #self
+    return function ()
+        i = i + 1
+        if i < n then
+            return i, self[i], self[i+1]
+        end
+        return nil
+    end
+end
+
+function Array:enumerateBy3()
+    local i = 0
+    local n = #self
+    return function ()
+        i = i + 1
+        if i < n-1 then
+            return i, self[i], self[i+1], self[i+2]
+        end
+        return nil
+    end
+end
+
 function Array:indexOf(item)
     for i=1,#self do
         local v = self[i]

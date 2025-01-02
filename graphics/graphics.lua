@@ -111,8 +111,13 @@ function Graphics.setMode(w, h)
         local params = {
             msaa = 5,
             fullscreen = getOS() == 'ios' or flags.fullscreen,
-            displayindex = love.window.getDisplayCount(),
         }
+
+        if love.getVersion() > 11 then
+            params.displayindex = love.window.getDisplayCount()
+        else
+            params.display = love.window.getDisplayCount()
+        end
 
         love.window.setMode(
             w,
