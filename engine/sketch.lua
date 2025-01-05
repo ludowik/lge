@@ -162,10 +162,6 @@ function Sketch:presentSketch(force)
         SCALE * sx, -- scale x
         SCALE * sy) -- scale y
 
-    -- TODO : gérer un zoom
-    -- TODO : gérer une translation
-    -- TODO : gérer un pixelRatio
-
     if force then
         love.graphics.present()
     end

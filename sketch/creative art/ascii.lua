@@ -1,7 +1,7 @@
 function setup()
     supportedOrientations(LANDSCAPE)
 
-    baseImageList = dir('resources/images', 'png')
+    baseImageList = dir('resources/images/misc', 'png')
     
     if #baseImageList == 0 then
         baseImageList =  {
@@ -10,7 +10,7 @@ function setup()
     end
 
     local function getSource()
-        local baseImage = Image('resources/images/'..baseImageList[baseImageIndex])
+        local baseImage = Image(baseImageList[baseImageIndex])
 
         local size, ratio, ws, hs
         if W < H then

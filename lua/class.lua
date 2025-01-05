@@ -62,6 +62,42 @@ function extends(klass, ...)
     return klass
 end
 
+function classWithProperties(proto, base)
+    base = base or proto
+    if base.properties == nil then return end
+
+    local get = base.properties.get
+    if table.getnKeys(get) > 0 then
+        print(proto.__className..' have properties')
+        proto.__index = function(tbl, key)
+            if proto[key] then
+                return proto[key]
+            elseif get[key] then
+                return get[key](tbl)
+            elseif type(key) == 'number' and get.index then
+                return get.index(tbl, key)
+            else
+                return rawget(tbl, key)
+            end
+        end
+    end
+
+    local set = base.properties.set
+    if table.getnKeys(set) > 0 then
+        proto.__newindex = function(tbl, key, value)
+            if proto[key] then
+                proto[key] = value
+            elseif set[key] then
+                set[key](tbl, value)
+            elseif type(key) == 'number' and set.index then
+                set.index(tbl, key, value)
+            else
+                rawset(tbl, key, value)
+            end
+        end
+    end
+end
+
 function push2globals(klass)
     for propName, prop in pairs(klass) do
         if type(prop) == 'function' and type(propName) == 'string' and not propName:inList{'setup'} then
@@ -107,7 +143,40 @@ function attributeof(attrName, object)
     return object[attrName]
 end
 
+function typeof(object)
+    local typeof = type(object)
+    if typeof == 'table' then
+        return attributeof('__className', object) or 'table'
+
+    elseif typeof == 'cdata' then
+        typeof = ffi.typeof(object)
+        if typeof then
+            return typeof
+        end
+        return 'cdata'
+    end
+    return typeof
+end
+
 class().unitTest = function ()
     assert(true)
     assert(classnameof({}) == 'table')
+
+    -- test properties
+    local test = class()
+    test.properties = {
+        get = {},
+        set = {}
+    }
+
+    test.properties.set.a = function (self, v) self._a = v end
+    test.properties.get.a = function (self) return self._a end
+
+    classWithProperties(test)
+    local t = test()
+    t.a = 12
+    assert(t.a == 12)
+
+    assert(classnameof(t) == 'class')
+    assert(typeof(t) == 'class')
 end

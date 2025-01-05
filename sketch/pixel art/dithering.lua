@@ -1,7 +1,7 @@
 local grayScale = Color.grayScaleIntensity
 
 function reset()
-    source = Image('resources/images/joconde.png')
+    source = Image('joconde.png')
     target = FrameBuffer(
         source.width,
         source.height)

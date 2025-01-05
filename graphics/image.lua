@@ -142,9 +142,36 @@ function FrameBuffer:getPixel(x, y, clr)
     end
 end
 
+
+local function scan(path, files)
+    files = files or Array()
+
+    local directoryItems = love.filesystem.getDirectoryItems(path)
+    for _,itemName in ipairs(directoryItems) do
+        local filePath = path..'/'..itemName
+        local info = love.filesystem.getInfo(filePath)
+        if info.type == 'directory' then
+            scan(filePath, files)
+        else
+            files[itemName:lower()] = filePath:lower()
+        end
+    end
+    return files
+end
+
+local function find(filename)
+    filename = filename:lower()
+    if love.filesystem.getInfo(filename) then return filename end
+    local files = scan('resources/images')
+    return files[filename]
+end        
+
+
 Image = class() : extends(FrameBuffer)
 
 function Image:init(filename, ...)
+    filename = find(filename)
+
     if love.filesystem.getInfo(filename) == nil then
         log('Image : '..filename..' not found')
         FrameBuffer.init(self, ...)

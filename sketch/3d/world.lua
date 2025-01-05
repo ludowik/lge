@@ -23,7 +23,7 @@ function setup()
     end
     img:update()
 
-    m.image = Image('resources/images/grass.jpeg')
+    m.image = Image('grass.jpeg')
     
     m.uniforms.useHeightMap = true
     m.uniforms.tex = img.texture
@@ -40,7 +40,7 @@ function setup()
     }
 
     skybox = Mesh(Model.skybox())
-    skybox.image = Image('resources/images/skybox2.png')
+    skybox.image = Image('skybox2.png')
 
     local eye = vec3(0, 20, 0)
     camera(eye, eye + vec3(len, -1, len))

@@ -28,3 +28,12 @@ function table.clone(self)
     __cloningObjects[self] = nil
     return t
 end
+
+function table.getnKeys(self)
+    local n = 0
+    for k,v in pairs(self) do
+        n = n + 1
+    end
+    return n
+end
+

@@ -15,6 +15,11 @@ left, right, up, down via un click sur l'écran
 pitch to zoom (en étant centré)
 
 
+sketch
+- gérer un zoom
+- gérer une translation
+- gérer un pixelRatio
+
 triomino    
 - align position and drawing
 - progress in the implementation : push triomino on the grid
@@ -30,8 +35,11 @@ fonctions activables des sketches
 - 2 fingers swipe gesture => translate screen
 - 1 touch / release => pause / resume
 
+graph
+Améliorer l'algo d'équilibrage
+
 super_formula
 Faire marche la version 3D : éloigner la caméra ?
 
-graph
-Améliorer l'algo d'équilibrage
+3D
+- rotation with quaternion

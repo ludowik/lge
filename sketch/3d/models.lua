@@ -67,7 +67,7 @@ function draw()
     }
 
     if withTexture then
-        model.image = model.image or model.__image
+        model.image = model.image or model.__image or image('joconde.png')
     else
         model.__image = model.__image or model.image
         model.image = nil
