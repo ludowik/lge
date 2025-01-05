@@ -4,7 +4,6 @@ function setup()
 
     uiFontSize = 24
 
-    parameter:watch('version')
     parameter:integer('font size', 'uiFontSize', 12, 32, uiFontSize, function ()
         navigate(getSetting('category'))
     end)
@@ -19,7 +18,7 @@ function navigate(category)
         local link = UIButton(category, function (self) navigate() end)
         link:attrib{
             styles = {
-                fillColor = colors.gray,
+                fillColor = colors.blue,
                 fontSize = uiFontSize
             }
         }
@@ -40,7 +39,7 @@ function navigate(category)
 
                 categories[env.__category]:attrib{
                     styles = {
-                        fillColor = colors.gray,
+                        fillColor = colors.blue,
                         fontSize = uiFontSize
                     }
                 }
@@ -53,7 +52,6 @@ function navigate(category)
         local link = UIButton(env.__className,
             function (self)
                 processManager:setSketch(env.__className)
-                engine.parameter.visible = true
             end)
 
         scene:add(link)
@@ -61,6 +59,7 @@ function navigate(category)
         link:attrib{
             styles = {
                 fillColor = colors.transparent,
+                textColor = colors.white,
                 fontSize = uiFontSize
             }
         }

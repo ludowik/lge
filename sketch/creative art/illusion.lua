@@ -1,6 +1,6 @@
 function setup()
     count = 48
-    distance = CX
+    distance = SIZE / 2
     step = 0.0
     delta = 0.05/count
 end
@@ -11,13 +11,14 @@ function draw()
     translate(CX, CY)
 
     noStroke()
-    fill(Color.hsb(elapsedTime/10))
 
     for i=0,count-1 do
         a = (i/count)*TAU
 
         x = round(cos(a) * distance)
         y = round(sin(a) * distance)
+
+        fill(Color.hsb(i/count))
 
         if i >= count/2 then
             step = step - delta

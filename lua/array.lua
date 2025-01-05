@@ -13,6 +13,12 @@ function Array:count(f)
     return #self
 end
 
+function Array:reset()
+    for i=#self,1,-1 do
+        self[i] = nil
+    end
+end
+
 Array.add = table.insert
 Array.push = table.insert
 
@@ -107,13 +113,13 @@ function Array:last()
 end
 
 function Array:nextIndex(i)
-    i = i + 1
+    i = math.floor(i or 1) + 1
     if i > #self then i = 1 end
     return i
 end
 
 function Array:previousIndex(i)
-    i = i - 1
+    i = math.floor(i or 1) - 1
     if i < 1 then i = #self end
     return i
 end

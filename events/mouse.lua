@@ -5,6 +5,10 @@ PRESSED = 'pressed'
 MOVING = 'moving'
 RELEASED = 'released'
 
+function Mouse.setup()
+    mouse = Mouse()
+end
+
 function Mouse:init()
     self.state = ENDING
     self.id = 0

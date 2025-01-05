@@ -48,6 +48,10 @@ function string:inList(list)
     for _, v in pairs(list) do if v == self then return true end end
 end
 
+function string:startWith(text)
+    return self:find(text) == 1
+end
+
 function string.contains(s, ...)
     local args = { ... }
     if #args == 1 and type(args[1]) == 'table' then
@@ -60,10 +64,6 @@ function string.contains(s, ...)
         end
     end
     return false
-end
-
-function string:startWith(text)
-    return self:find(text) == 1
 end
 
 function string.findLast(s, txt)

@@ -4,206 +4,94 @@ function Graphics2d.setup()
     push2globals(Graphics2d)
 end
 
-function Graphics2d.getBackgroundColor()
-    return Graphics2d.backgroundColor
-end
-
-function Graphics2d.background(_clr, ...)
-    local clr = Color.fromParam(_clr, ...) or colors.black
-    Graphics2d.backgroundColor = clr
+function Graphics2d.background(clr, ...)
+    clr = Color.fromParam(clr, ...) or colors.black
+    Graphics.backgroundColor = clr
     love.graphics.setColor(clr.r, clr.g, clr.b, clr.a)
     love.graphics.rectangle('fill', 0, 0, W, H)
 end
 
-local styles = {}
-function stylesSet(name, value)
-    if value then
-        styles[name] = value
-    end
-    return styles[name]
-end
+-- function Graphics2d.axes2d()
+--     pushMatrix()
+--     resetMatrix()
 
-function stylesGet(name, value)
-    return styles[name]
-end
+--     stroke(colors.gray)
+--     strokeSize(0.5)
 
-function stylesReset(name)
-    styles[name] = nil
-end
+--     translate(CX, CY)
 
-function Graphics2d.resetStyle(origin)
-    blendMode(NORMAL)
+--     local len = max(W, H)
 
-    stroke(colors.white)
-    strokeSize(1)
+--     line(-len, 0, len, 0)
+--     line(0, -len, 0, len)
 
-    noFill()
+--     popMatrix()
+-- end
 
-    tint(colors.white)
+-- function Graphics2d.grid2d(size)
+--     size = size or 32
 
-    rectMode(CORNER)
+--     pushMatrix()
+--     resetMatrix()
 
-    circleMode(CENTER)
-    ellipseMode(CENTER)
+--     stroke(colors.gray)
+--     strokeSize(0.5)
 
-    textMode(CORNER)
-    textColor(colors.white)
-    textPosition(0)
+--     translate(CX, CY)
 
-    fontName('comic')
-    fontSize(22)
+--     local len = max(W, H)
 
-    noLight()
-    noMaterial()
+--     local m = ceil(W / size / 2) - 1
+--     local n = ceil(H / size / 2)
 
-    styles.origin = origin or TOP_LEFT
-end
+--     line(-len, 0, len, 0)
+--     line(0, -len, 0, len)
 
-NORMAL = 'alpha'
-ADD = 'add'
-SUBTRACT = 'subtract'
-MULTIPLY = 'multiply'
+--     stroke(colors.gray:alpha(0.25))
 
-function Graphics2d.blendMode(mode)
-    if mode == MULTIPLY then
-        love.graphics.setBlendMode(MULTIPLY, 'premultiplied')
-    else
-        love.graphics.setBlendMode(mode)
-    end
-end
+--     for x=-m,m do
+--         line(x*size, -len, x*size, len)
+--     end
 
-function Graphics2d.fill(clr, ...)
-    clr = Color.fromParam(clr, ...)
-    return stylesSet('fillColor', clr)
-end
+--     for y=-n,n do
+--         line(-len, y*size, len, y*size)
+--     end
 
-function Graphics2d.noFill()
-    stylesReset('fillColor')
-end
+--     fontSize(10)
+--     textMode(CENTER)
 
-function Graphics2d.tint(clr, ...)
-    clr = Color.fromParam(clr, ...)
-    return stylesSet('tintColor', clr)
-end
-
-function Graphics2d.noTint()
-    stylesReset('tintColor')
-end
-
-function Graphics2d.stroke(clr, ...)
-    clr = Color.fromParam(clr, ...)
-    return stylesSet('strokeColor', clr)
-end
-
-function Graphics2d.noStroke()
-    stylesReset('strokeColor')
-end
-
-function Graphics2d.strokeSize(size)
-    return stylesSet('strokeSize', size)
-end
-
-function Graphics2d.light(lights)
-    if type(lights) == 'table' then
-        stylesSet('lights', lights)
-    elseif type(lights) == 'boolean' then
-        stylesSet('lights', Graphics2d.lights)
-    end
-    return stylesGet('lights')
-end
-
-function Graphics2d.noLight()
-    stylesReset('light')
-end
-
-function Graphics2d.noMaterial()
-    stylesReset('material')
-end
-
-function Graphics2d.zLevel()
-end
-
-function Graphics2d.axes2d()
-    pushMatrix()
-    resetMatrix()
-
-    stroke(colors.gray)
-    strokeSize(0.5)
-
-    translate(CX, CY)
-
-    local len = max(W, H)
-
-    line(-len, 0, len, 0)
-    line(0, -len, 0, len)
-
-    popMatrix()
-end
-
-function Graphics2d.grid2d(size)
-    size = size or 32
-
-    pushMatrix()
-    resetMatrix()
-
-    stroke(colors.gray)
-    strokeSize(0.5)
-
-    translate(CX, CY)
-
-    local len = max(W, H)
-
-    local m = ceil(W / size / 2) - 1
-    local n = ceil(H / size / 2)
-
-    line(-len, 0, len, 0)
-    line(0, -len, 0, len)
-
-    stroke(colors.gray:alpha(0.25))
-
-    for x=-m,m do
-        line(x*size, -len, x*size, len)
-    end
-
-    for y=-n,n do
-        line(-len, y*size, len, y*size)
-    end
-
-    fontSize(10)
-    textMode(CENTER)
-
-    local index = -n*10
-    for y=-n,n,0.1 do
-        if index%10 == 0 then
-            len = 15
-            text(-index/10, -m*size+15, y*size-2)
-        elseif index%5 == 0 then
-            len = 10
-        else
-            len = 5
-        end
-        line(-m*size, y*size, -m*size+len, y*size)
+--     local index = -n*10
+--     for y=-n,n,0.1 do
+--         if index%10 == 0 then
+--             len = 15
+--             text(-index/10, -m*size+15, y*size-2)
+--         elseif index%5 == 0 then
+--             len = 10
+--         else
+--             len = 5
+--         end
+--         line(-m*size, y*size, -m*size+len, y*size)
         
-        index = index + 1        
-    end
+--         index = index + 1        
+--     end
 
-    index = -m*10
-    for x=-m,m,0.1 do
-        if index%10 == 0 then
-            len = 15
-            text(index/10, x*size, n*size-15)
-        elseif index%5 == 0 then
-            len = 10
-        else
-            len = 5
-        end
-        line(x*size, n*size, x*size, n*size-len)
+--     index = -m*10
+--     for x=-m,m,0.1 do
+--         if index%10 == 0 then
+--             len = 15
+--             text(index/10, x*size, n*size-15)
+--         elseif index%5 == 0 then
+--             len = 10
+--         else
+--             len = 5
+--         end
+--         line(x*size, n*size, x*size, n*size-len)
         
-        index = index + 1        
-    end
+--         index = index + 1        
+--     end
 
-    popMatrix()
-end
+--     popMatrix()
+-- end
 
 function Graphics2d.point(x, y)
     if type(x) == 'table' then x, y = x.x, x.y end
@@ -231,6 +119,18 @@ function Graphics2d.line(x1, y1, x2, y2)
     end
 end
 
+function Graphics2d.lines(lines)
+    for _,attr in ipairs(lines) do
+        if type(attr[5]) == 'number' then
+            stroke(attr[5], attr[6], attr[7], attr[8])
+        elseif classnameof(attr[5]) == 'Color' then
+            stroke(attr[5])
+        end
+
+        Graphics2d.line(attr[1], attr[2], attr[3], attr[4])
+    end
+end
+
 function Graphics2d.polyline(vertices)
     if stroke() and #vertices >= 4 then
         love.graphics.setColor(stroke():rgba())
@@ -252,10 +152,6 @@ function Graphics2d.polygon(vertices)
     end
 end
 
-function Graphics2d.rectMode(mode)
-    return stylesSet('rectMode', mode)
-end
-
 function Graphics2d.rect(x, y, w, h, radius, ...)
     local mode = rectMode()
 
@@ -275,16 +171,8 @@ function Graphics2d.rect(x, y, w, h, radius, ...)
     end
 end
 
-function Graphics2d.circleMode(mode)
-    return stylesSet('circleMode', mode)
-end
-
 function Graphics2d.circle(x, y, radius)
     Graphics2d.ellipse(x, y, radius, radius, circleMode())
-end
-
-function Graphics2d.ellipseMode(mode)
-    return stylesSet('ellipseMode', mode)
 end
 
 function Graphics2d.ellipse(x, y, rx, ry, mode)
@@ -323,65 +211,6 @@ function Graphics2d.arc(x, y, rx, ry, a1, a2)
     end
 end
 
-CENTER = 'center'
-CORNER = 'corner'
-RIGHT_CORNER = 'righ_corner'
-
-function Graphics2d.textColor(clr, ...)
-    clr = Color.fromParam(clr, ...)
-    return stylesSet('textColor', clr)
-end
-
-function Graphics2d.textMode(mode)
-    return stylesSet('textMode', mode)
-end
-
-function Graphics2d.textPosition(y)
-    return stylesSet('textPosition', y)
-end
-
-function Graphics2d.text(str, x, y, limit, align)
-    if Graphics2d.textColor() == nil then return end
-
-    str = tostring(str)
-
-    x = x or 0
-    y = y or 0
-
-    if limit then
-        align = align or 'left'
-    end
-
-    local ws, hs = textSize(str, limit)
-
-    textPosition(y + hs)
-    
-    love.graphics.setColor(Graphics2d.textColor():rgba())
-
-    local mode = textMode()
-    if mode == CENTER then
-        x, y = x - ws / 2, y - hs / 2
-    end
-
-    if not limit and align == 'right' then
-        x = x - ws
-    end
-
-    local font = FontManager.getFont()
-
-    local newText = love.graphics.newTextBatch or love.graphics.newText
-
-    local text = getResource('font', tostring(font)..str, function ()
-        local text = newText(font, str)
-        return text
-    end)
-
-    local sx, sy = 1, styles.origin == BOTTOM_LEFT and -1 or 1
-    love.graphics.draw(text, x, y, 0, sx, sy)
-
-    return ws, hs
-end
-
 function Graphics2d.textSize(str, limit)
     str = tostring(str)
 
@@ -401,8 +230,46 @@ function Graphics2d.textSize(str, limit)
     return w, h
 end
 
-function Graphics2d.spriteMode(mode)
-    return stylesSet('spriteMode', mode)
+function Graphics2d.text(str, x, y, limit, align)
+    if Graphics.textColor() == nil then return end
+
+    str = tostring(str)
+
+    x = x or 0
+    y = y or 0
+
+    if limit then
+        align = align or 'left'
+    end
+
+    local ws, hs = textSize(str, limit)
+
+    textPosition(y + hs)
+    
+    love.graphics.setColor(Graphics.textColor():rgba())
+
+    local mode = textMode()
+    if mode == CENTER then
+        x, y = x - ws / 2, y - hs / 2
+    end
+
+    if not limit and align == 'right' then
+        x = x - ws
+    end
+
+    local font = FontManager.getFont()
+
+    local newText = love.graphics.newTextBatch or love.graphics.newText
+
+    local text = getResource('font', tostring(font)..str, function ()
+        local text = newText(font, str)
+        return text
+    end)
+
+    local sx, sy = 1, Graphics.styles.origin == BOTTOM_LEFT and -1 or 1
+    love.graphics.draw(text, x, y, 0, sx, sy)
+
+    return ws, hs
 end
 
 function Graphics2d.spriteSize(image)
@@ -410,18 +277,9 @@ function Graphics2d.spriteSize(image)
     return texture:getWidth(), texture:getHeight()
 end
 
-Graphics2d.__imageCache = {}
-function Graphics2d.image(filePath)
-    local cache = Graphics2d.__imageCache
-    if not cache[filePath] then
-        cache[filePath] = Image(filePath)
-    end
-    return cache[filePath]
-end
-
 function Graphics2d.sprite(image, x, y, w, h, ox, oy, ow, oh)
     if type(image) == 'string' then
-        image = Graphics2d.image(image)
+        image = Graphics.image(image)
     end
 
     x = x or 0
@@ -442,8 +300,8 @@ function Graphics2d.sprite(image, x, y, w, h, ox, oy, ow, oh)
         x, y = x - w / 2, y - h / 2
     end
 
-    if Graphics2d.tint() then
-        love.graphics.setColor(Graphics2d.tint():rgba())
+    if Graphics.tint() then
+        love.graphics.setColor(Graphics.tint():rgba())
     end
     
     love.graphics.draw(texture,

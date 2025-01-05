@@ -157,7 +157,7 @@ function Grid:draw(x, y, drawCellFunction)
     y = y or self.position and self.position.y or 0
 
     strokeSize(0.2)
-    stroke((getBackgroundColor() or colors.black):contrast())
+    stroke(getBackgroundColor():contrast())
 
     noFill()
     

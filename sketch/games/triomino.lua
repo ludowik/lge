@@ -307,8 +307,6 @@ function Triomino:draw()
     end
     
     self.stack:draw()
-
-    -- grid2d(cellSize)
 end
 
 Mino = class() : extends(Rect)

@@ -165,7 +165,7 @@ function Instrument:draw()
     textColor(colors.white)
         
     fontName(DEFAULT_FONT_NAME)
-    fontSize(18)
+    fontSize(DEFAULT_FONT_SIZE)
 
     self.functions:sort(function (a, b)    
         return a.elapsedTimeByFrameAvg > b.elapsedTimeByFrameAvg

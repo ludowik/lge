@@ -7,6 +7,8 @@ if arg[#arg] == 'vsc_debug' then
 
     debugMode = true
 
+    print('debug mode')
+
     function love.run(...)
         local f = lldebugger.call(love.runProc, false, ...)
         return function(...)

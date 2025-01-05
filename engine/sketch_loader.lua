@@ -11,7 +11,7 @@ function load(reload)
     classUnitTesting()
     
     if getSetting('assertLoadIsKO') then
-        processManager:setSketch('sketches')    
+        processManager:setSketch('sketches', false)
     else
         setSetting('assertLoadIsKO', true)
         if not processManager:setSketch(getSetting('sketch', 'sketches')) then
@@ -133,6 +133,7 @@ function loadSketch(env)
         env.sketch.__className = env.__className
 
         env.parameter = env.sketch.parameter
+        env.bar = env.sketch.bar
         
         local function encapsulate(fname)
             if env[fname] then

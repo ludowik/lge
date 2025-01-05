@@ -22,3 +22,7 @@ function request(url, success, fail, parameterTable)
         return false
     end
 end
+
+function openURL(url)
+    love.system.openURL(url)
+end

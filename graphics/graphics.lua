@@ -3,6 +3,8 @@ Graphics = class()
 function Graphics.setup()
     push2globals(Graphics)
 
+    Graphics.styles = {}
+
     font = FontManager.getFont()
 
     screenRatios = Array{
@@ -37,15 +39,19 @@ function Graphics.toggleDeviceOrientation()
     Graphics.setDeviceOrientation(deviceOrientation == PORTRAIT and LANDSCAPE or PORTRAIT)
 end
 
-function Graphics.initMode()
-    love.window.setVSync(1)
+function Graphics.setVSync(v)
+    love.window.setVSync(v)
+end
 
+function Graphics.initMode()
     deviceOrientation = getSetting('deviceOrientation', PORTRAIT)
 
-    _, _, WS, HS = Graphics.getPhysicalArea()
+    LEFT, TOP, WS, HS = Graphics.getPhysicalArea()
+    
     Graphics.setMode(WS, HS)
+    Graphics.setVSync(1)
 
-    LEFT, TOP, W, H = getVirtualArea()
+    _, _, W, H = Graphics.getVirtualArea()
 
     CX = W/2
     CY = H/2
@@ -55,12 +61,12 @@ function Graphics.initMode()
 
     SIZE = MIN_SIZE
 
-    SCALE = max(WS/W, HS/H)
+    SCALE = min(WS/W, HS/H)
     
     refreshRate = 60
 end
 
-function scaleMouseProperties(x, y)
+function Graphics.scaleMouseProperties(x, y)
     return x/SCALE, y/SCALE
 end
 
@@ -88,23 +94,33 @@ function Graphics.getPhysicalArea()
 
     dpiscale = 1
     deviceScreenRatio = min(w/h, h/w)
+
+    x = x + UI.outerMarge
+    y = y + UI.outerMarge
     
     if deviceOrientation == PORTRAIT then
         return min(x, y), max(x, y), min(w, h), max(w, h)
+    else
+        return max(x, y), min(x, y), max(w, h), min(w, h)
     end
-
-    return max(x, y), min(x, y), max(w, h), min(w, h)
 end
 
-function getVirtualArea()
-    local x, y, w, h = 5, 50, 480
+function Graphics.getVirtualArea()
+    local ws, hs = 0, 0
+    if getOS() == 'ios' then
+        ws, hs = love.window.getDesktopDimensions()
+    elseif getOS():inList{'osx', 'windows'} then
+    else
+    end
+
+    local x, y, w, h = 5, 50, max(480, min(ws, hs))
     h = even(w / deviceScreenRatio)
 
     if deviceOrientation == PORTRAIT then
         return x, y, w, h
+    else
+        return y, x, h, w
     end
-
-    return y, x, h, w
 end
 
 function Graphics.setMode(w, h)
@@ -128,6 +144,7 @@ function Graphics.setMode(w, h)
             w,
             h,
             params)
+        love.mouse.setPosition(w/2, h/2)
     end
 end
 
@@ -171,6 +188,8 @@ function Graphics.updateScreen()
     sketch:setMode(W, H, sketch.persistence)
     sketch:resize()
 
+    Engine.initParameter()
+
     redraw()
 end
 
@@ -190,4 +209,159 @@ function Graphics.toggleLoop()
 end
 
 function Graphics.supportedOrientations(orientation)
+end
+
+function Graphics.getBackgroundColor()
+    return Graphics.backgroundColor or colors.black
+end
+
+local function stylesSet(name, value)
+    if value then
+        Graphics.styles[name] = value
+    end
+    return Graphics.styles[name]
+end
+
+local function stylesGet(name, value)
+    return Graphics.styles[name]
+end
+
+local function stylesReset(name)
+    Graphics.styles[name] = nil
+end
+
+function Graphics.resetStyle(origin)
+    blendMode(NORMAL)
+
+    stroke(colors.white)
+    strokeSize(1)
+
+    noFill()
+
+    tint(colors.white)
+
+    rectMode(CORNER)
+
+    circleMode(CENTER)
+    ellipseMode(CENTER)
+
+    textMode(CORNER)
+    textColor(colors.white)
+    textPosition(0)
+
+    fontName(DEFAULT_FONT_NAME)
+    fontSize(DEFAULT_FONT_SIZE)
+
+    noLight()
+    noMaterial()
+
+    Graphics.styles.origin = origin or TOP_LEFT
+end
+
+NORMAL = 'alpha'
+ADD = 'add'
+SUBTRACT = 'subtract'
+MULTIPLY = 'multiply'
+
+function Graphics.blendMode(mode)
+    mode = stylesSet('blendMode', mode)
+    if mode == MULTIPLY then
+        love.graphics.setBlendMode(MULTIPLY, 'premultiplied')
+    else
+        love.graphics.setBlendMode(mode)
+    end
+    return mode
+end
+
+function Graphics.fill(clr, ...)
+    clr = Color.fromParam(clr, ...)
+    return stylesSet('fillColor', clr)
+end
+
+function Graphics.noFill()
+    stylesReset('fillColor')
+end
+
+function Graphics.tint(clr, ...)
+    clr = Color.fromParam(clr, ...)
+    return stylesSet('tintColor', clr)
+end
+
+function Graphics.noTint()
+    stylesReset('tintColor')
+end
+
+function Graphics.stroke(clr, ...)
+    clr = Color.fromParam(clr, ...)
+    return stylesSet('strokeColor', clr)
+end
+
+function Graphics.noStroke()
+    stylesReset('strokeColor')
+end
+
+function Graphics.strokeSize(size)
+    return stylesSet('strokeSize', size)
+end
+
+function Graphics.light(lights)
+    if type(lights) == 'table' then
+        stylesSet('lights', lights)
+    elseif type(lights) == 'boolean' then
+        stylesSet('lights', Graphics.lights)
+    end
+    return stylesGet('lights')
+end
+
+function Graphics.noLight()
+    stylesReset('light')
+end
+
+function Graphics.noMaterial()
+    stylesReset('material')
+end
+
+function Graphics.zLevel()
+end
+
+function Graphics.rectMode(mode)
+    return stylesSet('rectMode', mode)
+end
+
+function Graphics.circleMode(mode)
+    return stylesSet('circleMode', mode)
+end
+
+function Graphics.ellipseMode(mode)
+    return stylesSet('ellipseMode', mode)
+end
+
+CENTER = 'center'
+CORNER = 'corner'
+RIGHT_CORNER = 'righ_corner'
+
+function Graphics.textColor(clr, ...)
+    clr = Color.fromParam(clr, ...)
+    return stylesSet('textColor', clr)
+end
+
+function Graphics.textMode(mode)
+    return stylesSet('textMode', mode)
+end
+
+function Graphics.textPosition(y)
+    return stylesSet('textPosition', y)
+end
+
+Graphics.__imageCache = {}
+function Graphics.image(filePath)
+    local cache = Graphics2d.__imageCache
+    if not cache[filePath] then
+        cache[filePath] = Image(filePath)
+    end
+    return cache[filePath]
+end
+
+function Graphics.spriteMode(mode)
+    return stylesSet('spriteMode', mode)
 end

@@ -124,7 +124,7 @@ confs = {
 }
 
 function draw()
-    background(0, 0.01)
+    background(0, 0.05)
 
     if newConf then
         reset(newConf)

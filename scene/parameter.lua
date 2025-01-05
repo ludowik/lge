@@ -52,7 +52,7 @@ function Parameter:initControlBar()
     
     self:action('sketches',
         function ()
-            ProcessManager.openSketches()
+            engine.parameter.visible = not engine.parameter.visible
         end,
         {
             styles = styles,
@@ -62,7 +62,8 @@ function Parameter:initControlBar()
 
     self:action('menu',
         function ()
-            engine.parameter.visible = not engine.parameter.visible
+            local sketch = processManager:current()
+            if sketch then sketch.parameter.visible = not sketch.parameter.visible end
         end,
         {
             styles = styles,
@@ -92,34 +93,34 @@ function Parameter:initControlBar()
 end
 
 function Parameter:addMainMenu()    
-    self.menu = self:group('main')
-
-    self:space()
-    self:action('fused', function () toggleFused() end)
+    self.menu = self:group('main', true)
 
     if getOS() == 'ios' then
         self:space()
         self:action('update from local', function ()
             updateScripts(false)
         end)
-        self:space()
         self:action('update from git', function ()
             updateScripts(true)
         end)
     end
 
     self:space()
+    self:action('fused', function () toggleFused() end)
+
+    self:space()
     self:action('reload', reload)
     self:action('restart', restart)
 
     self:space()
-    self:action('sketches', function() processManager:setSketch('sketches') end)
-    self:action('info', function() processManager:setSketch('info') end)
+    self:action('sketches', function() processManager:setSketch('sketches', false) end)
+    self:action('info', function() processManager:setSketch('info', false) end)
+    self:action('keyboard', function()
+        love.keyboard.setTextInput(not love.keyboard.hasTextInput())
+    end)
 
     self:space()
     self:action('instrument', function ()
-        -- instrument:instrumentFunctions()
-        -- instrument.active = not instrument.active
         instrument:toggleState()
     end)
 
@@ -150,7 +151,7 @@ end
 function Parameter:addNavigationMenu()
     self:group('navigation')
     
-    self:action('sketches', function() processManager:setSketch('sketches') end)
+    self:action('sketches', function() processManager:setSketch('sketches', false) end)
 
     self:space()
     self:action('next', function () processManager:next() end)
@@ -233,7 +234,6 @@ function Parameter:group(label, open)
             styles = {
                 fillColor = colors.blue,
                 textColor = colors.white,
-                fontSize = 28
             },
             mousereleased = function (...)
                 MouseEvent.mousereleased(...)
@@ -266,10 +266,6 @@ function Parameter:space()
     local ui = UI()
     ui.fixedSize = vec2(0, 4 * UI.outerMarge)
     self.currentGroup:add(ui)
-end
-
-function openURL(url)    
-    love.system.openURL(url)
 end
 
 function Parameter:link(label, url)
@@ -333,7 +329,7 @@ function Parameter:draw(x, y)
     x = x or 0
     y = y or 0
 
-    self:layout(x, y + UI.outerMarge)
+    self:layout(x, y)
     Scene.draw(self)
 end
 
@@ -354,4 +350,11 @@ function captureLogo()
         end)
     fb:getImageData():encode('png', 'logo/'..env.__name..'.png')
     fb:release()
+end
+
+
+Bar = class() : extends(Parameter)
+
+function Bar:init()
+    Parameter.init(self, 'horizontal')
 end

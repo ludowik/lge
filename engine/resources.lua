@@ -21,14 +21,24 @@ function getResource(resType, resRef, createRes, isValidRes, releaseRes)
     return unpack(resources[resType][resRef].res)
 end
 
-function releaseResource(resName)
-    if not resources[resName] then
-        return
-    end
-    for i,v in ipairs(resources[resName]) do
-        if v.releaseRes then
-            v.releaseRes(r.res)
+function releaseResource(resType, resRef)
+    if not resources[resType] then return end
+    
+    if resRef then
+        local resInfo = resources[resType][resRef]
+        if not resInfo then return end
+
+        if resInfo.releaseRes then
+            resInfo.releaseRes(resInfo.res)
         end
+        resources[resType][resRef] = nil
+
+    else        
+        for i,resInfo in ipairs(resources[resType]) do
+            if resInfo.releaseRes then
+                resInfo.releaseRes(resInfo.res)
+            end
+        end
+        resources[resType] = {}
     end
-    resources[resName] = {}
 end

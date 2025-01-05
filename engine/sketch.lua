@@ -35,7 +35,6 @@ function Sketch:setMode(w, h, persistence)
     w = w / SCALE_CANVAS
     h = h / SCALE_CANVAS
     
-    -- love.graphics.setDefaultFilter('nearest', 'nearest')
     if self.persistence then
         self.fb = FrameBuffer(w, h)
     else
@@ -61,7 +60,9 @@ end
 
 function Sketch:initMenu()
     self.parameter = Parameter('right')
-    self.parameter:group(nil, true)
+    self.parameter:group(self, true)
+
+    self.bar = Bar()
 end
 
 function Sketch:checkReload()

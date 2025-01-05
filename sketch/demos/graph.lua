@@ -84,7 +84,7 @@ function ClassItem:init(className, classRef)
     self:reset()
 
     self.fontName = DEFAULT_FONT_NAME
-    self.fontSize = 12
+    self.fontSize = DEFAULT_FONT_SIZE
 end
 
 function ClassItem:reset()

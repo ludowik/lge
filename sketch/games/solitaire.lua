@@ -201,8 +201,10 @@ function Solitaire:resetHistory()
 end
 
 function Solitaire:undo()
-    sketch:movement('undo')
-    self:exec(self.movesBack, self.movesForward)
+    if #self.movesBack > 1 then
+        sketch:movement('undo')
+        self:exec(self.movesBack, self.movesForward)
+    end
 end
 
 function Solitaire:redo()
@@ -555,7 +557,7 @@ function Card:draw()
     rect(x, y, wcard, hcard, Card.radius)
 
     if self.faceUp then
-        fontName('arial')
+        fontName('comic')
         fontSize(wtext)
 
         textMode(CENTER)

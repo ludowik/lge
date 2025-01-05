@@ -10,7 +10,9 @@ function Horloge:init(lieu, decalage, x, y, rayon)
     self.x = x or CX
     self.y = y or CY
 
-    self.rayon = rayon or 150
+    self.rayon = rayon or SIZE / 3
+
+    self.shapes = Array()
 end
 
 function Horloge:draw()
@@ -23,9 +25,9 @@ function Horloge:draw()
     local date = date()
     local ipart, fpart = math.modf(os.clock())
     
-    self:aiguille(colors.red  , self.x, self.y, ( date.hour - self.decalage ) * 30 , self.rayon * 0.8, 3)
-    self:aiguille(colors.green, self.x, self.y, ( date.min                  ) * 6  , self.rayon * 0.8, 2)
-    self:aiguille(colors.blue , self.x, self.y, ( date.sec                  ) * 6  , self.rayon * 0.8, 1)
+    self:aiguille(colors.red  , self.x, self.y, ( date.hour - self.decalage ) * 30 , self.rayon * 0.8, 7)
+    self:aiguille(colors.green, self.x, self.y, ( date.min                  ) * 6  , self.rayon * 0.8, 4)
+    self:aiguille(colors.blue , self.x, self.y, ( date.sec                  ) * 6  , self.rayon, 1)
 
     width, height = textSize(self.lieu)
 
@@ -38,22 +40,24 @@ function Horloge:aiguille(clr, x, y, a, l, size)
 
     translate(x, y)
 
-    rotate(rad(a-180), 0, 0, 1)
+    rotate(rad(-a), 0, 0, 1)
 
-    if self.m == nil then
+    if self.shapes[size] == nil then
         local vertices = Buffer('vec3', {
             {0, l},
             {-size, 0},
             {size, 0},
         })
         
-        self.m = Mesh(vertices, 'fan')
+        self.shapes[size] = Mesh(vertices, 'fan')
     end
 
     noStroke()
     fill(clr)
 
-    self.m:draw()
+    self.shapes[size]:draw()
+
+    circle(0, 0, size)
 
     popMatrix()
 end

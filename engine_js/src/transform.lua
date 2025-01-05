@@ -33,8 +33,8 @@ function resetStyle()
     textColor(colors.white)
     textPosition(0)
 
-    fontName('comic')
-    fontSize(22)
+    fontName(DEFAULT_FONT_NAME)
+    fontSize(DEFAULT_FONT_SIZE)
 
     -- noLight()
     -- noMaterial()

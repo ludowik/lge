@@ -6,7 +6,7 @@ function love.conf(t)
         t.audio.mixwithsystem = true
     end
 
-    local highdpi = false
+    local highdpi = true
     if t.highdpi ~= nil then t.highdpi = highdpi end
     if t.window.highdpi ~= nil then t.window.highdpi = highdpi end
 

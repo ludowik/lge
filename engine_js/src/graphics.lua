@@ -72,8 +72,13 @@ function fontName(name)
     return __fontName
 end
 
+local __fontSize = DEFAULT_FONT_SIZE
 function fontSize(size)
-    return js.global:textSize(size)
+    if size then
+        __fontSize = size
+        return js.global:textSize(size)
+    end
+    return __fontSize
 end
 
 local __textMode

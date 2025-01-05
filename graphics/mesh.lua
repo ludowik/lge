@@ -92,7 +92,7 @@ function Mesh:draw(x, y, z, w, h, d)
     popMatrix()
 end
 
-function Mesh:drawInstanced(instances, instancedBuffer)
+function Mesh:drawInstanced(instances, newInstances)
     self:update()
 
     local clr = fill() or colors.white
@@ -100,9 +100,13 @@ function Mesh:drawInstanced(instances, instancedBuffer)
     
     local n = #instances
 
-    instancedBuffer = getResource('mesh', instances, function (instances)
-        return self:instancedBuffer(instances)
-    end)
+    local instancedBuffer = getResource('mesh', instances,
+        function()
+            return self:instancedBuffer(instances)
+        end,
+        function()
+            return newInstances == nil -- force recompute instanced buffer
+        end)
         
     self.mesh:attachAttribute('InstancePosition', instancedBuffer, 'perinstance')
     self.mesh:attachAttribute('InstanceScale', instancedBuffer, 'perinstance')
@@ -114,8 +118,6 @@ function Mesh:drawInstanced(instances, instancedBuffer)
 end
 
 function Mesh:instancedBuffer(instances)
-    local n = #instances
-
     local bufferFormat
     if love.getVersion() > 11 then
         bufferFormat = {
@@ -138,7 +140,7 @@ function Mesh:useShader(instanced)
     self.previousShader = love.graphics.getShader()    
     love.graphics.setShader(self.shader.program)
 
-    if env.sketch.cam then
+    if env and env.sketch.cam then
         self.uniforms.cameraPos = env.sketch.cam.eye
     end
 

@@ -1,12 +1,12 @@
 UI = class() : extends(Rect, MouseEvent, KeyboardEvent)
 
-function UI.setup()
-    UI.innerMarge = 8
-    UI.outerMarge = 4
+UI.innerMarge = 8
+UI.outerMarge = 4
 
+function UI.setup()
     UI.styles = {
-        fontSize = 32,
         fontName = DEFAULT_FONT_NAME,
+        fontSize = DEFAULT_FONT_SIZE * 1.5,
     }
 end
 
@@ -17,8 +17,8 @@ function UI:init(label)
     self.label = label
 
     self.styles = Array{
-        fillColor = Color(0.5),
-        textColor = colors.white,
+        fillColor = colors.white,
+        textColor = colors.black,
 
         fontSize = UI.styles.fontSize,
         fontName = UI.styles.fontName,
@@ -28,9 +28,16 @@ function UI:init(label)
 end
 
 function UI:getLabel()
-    local label = tostring(self.label):replace('_', ' '):proper()
-    if self.value then
-        return label .. ' = ' .. self:getValue()
+    local label = tostring(self.label)
+    
+    if label:startWith('@') then
+        self.styles.fontName = 'foundation-icons'
+        label = utf8.char(iconsFont[label:mid(2)])
+    else
+        label = label:replace('_', ' '):proper()
+        if self.value then
+            return label .. ' = ' .. self:getValue()
+        end
     end
     return label
 end
@@ -63,8 +70,8 @@ function UI:formatValue(value)
 end
 
 function UI:fontStyle()
-    fontSize(self.styles.fontSize)
     fontName(self.styles.fontName)
+    fontSize(self.styles.fontSize)
 end
 
 function UI:computeSize()
@@ -73,13 +80,9 @@ function UI:computeSize()
         return
     end
 
-    self:fontStyle()
-
     local label = self:getLabel()
-    if label:startWith('@') then
-        fontName('foundation-icons')
-        label = utf8.char(iconsFont[label:mid(2)])
-    end
+    
+    self:fontStyle()
 
     local w, h = textSize(label)
     self.size:set(w + 2 * UI.innerMarge, h)
@@ -101,13 +104,19 @@ function UI:drawBack()
     end
 
     if self.styles.fillColor then
-        fill(self.styles.fillColor)
+        local clr
+        if self.styles.fillColor == getBackgroundColor() then
+            clr = colors.gray
+        else
+            clr = self.styles.fillColor
+        end
+        fill(clr)
     else
         noFill()
     end
 
 
-    if eventManager.currentObject == self then
+    if eventManager.currentObjectPressed and eventManager.currentObject == self then
         fill(colors.red)
     end
     
@@ -124,16 +133,12 @@ function UI:drawFront()
         textColor(self.styles.textColor)
     end
 
-    self:fontStyle()
-
     local wrapSize = self.styles.wrapSize
     local wrapAlign = self.styles.wrapAlign
 
     local label = self:getLabel()
-    if label:startWith('@') then
-        fontName('foundation-icons')
-        label = utf8.char(iconsFont[label:mid(2)])
-    end
+
+    self:fontStyle()
 
     if self.styles.mode == CENTER then
         textMode(CENTER)

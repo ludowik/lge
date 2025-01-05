@@ -1,10 +1,8 @@
 Engine = class()
 
-function Engine.setup()
-    engine = Engine()
-end
-
 function Engine.load()
+    engine = Engine()
+
     classSetup()
     classUnitTesting()
 
@@ -26,11 +24,8 @@ function Engine.load()
 end
 
 function Engine.initParameter()
-    engine.parameter = Parameter('right')
-
-    engine.parameter:action('update from local', function ()
-        updateScripts(false)
-    end)
+    engine.parameter = Parameter('left')
+    engine.parameter.visible = false
 
     if not fused() then
         engine.parameter:addMainMenu()
@@ -41,8 +36,6 @@ function Engine.initParameter()
 
     engine.navigation = Parameter('left')
     engine.navigation:initControlBar()
-
-    engine.parameter:group('sketch', true)
 end
 
 function Engine.reload(reload)
@@ -60,16 +53,23 @@ function Engine.quit()
 end
 
 function Engine.contains(mouse)
+    local sketch = processManager:current()
+    
     local object = engine.parameter:contains(mouse.position)
     if object then return object end
 
-    if engine.parameter.currentMenu and engine.parameter.currentMenu.label == 'navigation' then                
-        local object = engine.navigation:contains(mouse.position)
-        if object then return object end
-    end
+    object = sketch.parameter:contains(mouse.position)
+    if object then return object end
 
-    local sketch = processManager:current()
-    local object = sketch:contains(mouse.position)
+    --if engine.parameter.currentMenu and engine.parameter.currentMenu.label == 'navigation' then                
+        object = engine.navigation:contains(mouse.position)
+        if object then return object end
+    --end
+
+    object = sketch.bar:contains(mouse.position)
+    if object then return object end
+
+    object = sketch:contains(mouse.position)
     if object then return object end
 end
 
@@ -125,29 +125,31 @@ function Engine.draw()
         return
     end
 
-    engine.parameter:draw(0, TOP)
+    sketch.parameter:draw(0, TOP)
+    engine.parameter:draw(LEFT, TOP)
 
     if instrument.active then
         instrument:draw()
     end
 
     local fps = getFPS()
-    if fps < refreshRate * 0.95 then -- or fps > refreshRate * 1.05 then
+    local showFPS = true
+    if showFPS or fps < refreshRate * 0.95 then -- or fps > refreshRate * 1.05 then        
         fontName(DEFAULT_FONT_NAME)
-        fontSize(18)
-        local w, h = textSize(fps)
+        fontSize(DEFAULT_FONT_SIZE)
+        
         textColor(colors.red)
         textMode(CORNER)
-        text(fps, LEFT, TOP)
+        text(fps..' fps / '..getMemoryInfo(), LEFT, max(0, TOP - DEFAULT_FONT_SIZE))
     end
 
     if __echo then
         echoUpdate(env.deltaTime)
 
         fontName(DEFAULT_FONT_NAME)
-        fontSize(32)
+        fontSize(DEFAULT_FONT_SIZE * 2)
 
-        textColor((getBackgroundColor() or colors.black):contrast())
+        textColor(getBackgroundColor():contrast())
         textMode(CORNER)
 
         local txt = ''
