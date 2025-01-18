@@ -105,6 +105,10 @@ function Graphics.getPhysicalArea()
     end
 end
 
+function Graphics.flush()
+    love.graphics.present()
+end
+
 function Graphics.getVirtualArea()
     local ws, hs = 0, 0
     if getOS() == 'ios' then
@@ -113,7 +117,7 @@ function Graphics.getVirtualArea()
     else
     end
 
-    local x, y, w, h = 5, 50, max(480, min(ws, hs))
+    local x, y, w, h = 5, 50, max(640, min(ws, hs))
     h = even(w / deviceScreenRatio)
 
     if deviceOrientation == PORTRAIT then
@@ -154,6 +158,8 @@ function Graphics.isFullScreen()
 end
 
 function Graphics.toggleFullScreen()
+    Graphics.initializedScreen = false
+
     local ws, hs, flags = love.window.getMode()
     if not flags.fullscreen then
         flags.fullscreen = true
@@ -163,6 +169,7 @@ function Graphics.toggleFullScreen()
             ws = ws,
             hs = hs,
         }
+    
     else
         flags.fullscreen = false
         flags.x = Graphics.flags.x
@@ -193,14 +200,21 @@ function Graphics.updateScreen()
     redraw()
 end
 
+function Graphics.loop()
+    local sketch = processManager:current()
+    sketch.loopMode = 'loop'
+end
+
 function Graphics.noLoop()
     local sketch = processManager:current()
     sketch.loopMode = 'none'
 end
 
-function Graphics.loop()
+function Graphics.redraw()
     local sketch = processManager:current()
-    sketch.loopMode = 'loop'
+    if sketch.loopMode == 'none' then
+        sketch.loopMode = 'redraw'
+    end
 end
 
 function Graphics.toggleLoop()
@@ -321,6 +335,14 @@ function Graphics.noMaterial()
     stylesReset('material')
 end
 
+function Graphics.getShader()
+    return love.graphics.getShader()
+end
+
+function Graphics.setShader(program)
+    love.graphics.setShader(program)
+end
+
 function Graphics.zLevel()
 end
 
@@ -355,7 +377,7 @@ end
 
 Graphics.__imageCache = {}
 function Graphics.image(filePath)
-    local cache = Graphics2d.__imageCache
+    local cache = Graphics.__imageCache
     if not cache[filePath] then
         cache[filePath] = Image(filePath)
     end

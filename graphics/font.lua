@@ -4,8 +4,12 @@ function FontManager.setup()
     FontManager.fonts = Array()
     FontManager.path = 'resources/fonts'
 
-    DEFAULT_FONT_NAME = 'arial'
-    DEFAULT_FONT_SIZE = 16
+    DEFAULT_FONT_NAME = getSetting('DEFAULT_FONT_NAME', 'arial')
+    DEFAULT_FONT_SIZE = getSetting('DEFAULT_FONT_SIZE', 24)
+end
+
+function FontManager.newFont(...)
+    return love.graphics.newFont(...)
 end
 
 function FontManager.getFont()
@@ -18,9 +22,9 @@ function FontManager.getFont()
     if not FontManager.fonts[ref] then
         if fontName ~= '' then
             local fontPath = FontManager.path..'/'..fontName..'.ttf'
-            FontManager.fonts[ref] = love.graphics.newFont(fontPath, fontSize)
+            FontManager.fonts[ref] = FontManager.newFont(fontPath, fontSize)
         else
-            FontManager.fonts[ref] = love.graphics.newFont(fontSize)
+            FontManager.fonts[ref] = FontManager.newFont(fontSize)
         end
     end
     return FontManager.fonts[ref]

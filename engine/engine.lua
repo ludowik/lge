@@ -6,8 +6,8 @@ function Engine.load()
     classSetup()
     classUnitTesting()
 
-    resetMatrix(true)
-    resetStyle()
+    -- resetMatrix(true)
+    -- resetStyle()
 
     engine.reload()
 
@@ -109,8 +109,9 @@ function echoDraw()
 end
 
 function Engine.draw()
-    love.graphics.reset()
-    
+    resetMatrix(true)
+    resetStyle()
+
     local sketch = processManager:current()
     sketch:drawSketch()
 
@@ -132,8 +133,9 @@ function Engine.draw()
         instrument:draw()
     end
 
+    local showFPS = env.sketch.parameter.visible
+    
     local fps = getFPS()
-    local showFPS = true
     if showFPS or fps < refreshRate * 0.95 then -- or fps > refreshRate * 1.05 then        
         fontName(DEFAULT_FONT_NAME)
         fontSize(DEFAULT_FONT_SIZE)
@@ -163,14 +165,6 @@ function Engine.draw()
         text(txt, 25, 25)
     end
 end
-
-function Engine.redraw()
-    local sketch = processManager:current()
-    if sketch.loopMode == 'none' then
-        sketch.loopMode = 'redraw'
-    end
-end
-redraw = Engine.redraw
 
 function toggleFused()
     setSetting('fused', not fused())

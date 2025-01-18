@@ -99,10 +99,6 @@ function ProcessManager:setCurrentSketch(processIndex)
         Graphics.updateScreen()
     end
 
-    sketch.fb:setContext()
-    sketch.fb:background()
-    
-    resetContext()
     background()
 
     redraw()
@@ -182,7 +178,7 @@ function ProcessManager:updateLoop(dt)
         sketch:updateSketch(dt)
         sketch:drawSketch()
 
-        love.graphics.present()
+        Graphics.flush()
         
         if time() - startTime > delay or n >= LOOP_PROCESS_N then
             break

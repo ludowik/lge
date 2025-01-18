@@ -17,8 +17,8 @@ function Shape:draw()
     scale(self.scaleFactor)
 
     if self.shader then
-       self.oldShader = love.graphics.getShader()
-       love.graphics.setShader(self.shader.program)
+       self.oldShader = getShader()
+       setShader(self.shader.program)
     end
     
     if self.type == POINTS then
@@ -37,7 +37,7 @@ function Shape:draw()
     end
 
     if self.shader then
-       love.graphics.setShader(self.oldShader)
+        setShader(self.oldShader)
     end
 
     popMatrix()

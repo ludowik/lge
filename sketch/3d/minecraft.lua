@@ -100,18 +100,19 @@ function draw()
         popMatrix()
 
         -- draw 3d in fb
-        setContext(fb, true)
-        resetMatrixContext()
-        light(true)
-        perspective()        
-        love.graphics.clear(0, 0, 0, 1, true, false, 1)
-        block.mesh:drawInstanced(blocks)
-        resetContext()
+        fb:setContext()
+        do
+            background(colors.black)
+            perspective()        
+            light(true)
+            block.mesh:drawInstanced(blocks)
+        end
+        fb:resetContext()
 
         -- draw fb
         pushMatrix()
         translate(getPosition(i, j, size))
-        love.graphics.draw(fb.canvas, 0, size, 0, size/fb.width, size/fb.height)
+        sprite(fb, 0, size, size, size)
         popMatrix()
     end
 
@@ -137,7 +138,7 @@ function createTexture()
 
     local image = FrameBuffer(size*4, size*3)
 
-    render2context(image,
+    image:render(
         function ()
             noStroke()
             rectMode(CORNER)
@@ -152,6 +153,7 @@ function createTexture()
                         rect(x, y, tileSize, tileSize)
                     end
                 end
+                
                 popMatrix()
             end
 

@@ -74,11 +74,9 @@ end
 function draw()
     background()
     
-    local shader = shaders[shaderIndex]
+    local shader = shaders[shaderIndex]    
+    setShader(shader.program)
     
-    love.graphics.clear(0, 0, 0, 1)
-    love.graphics.setShader(shader.program)
-
     local mesh = love.graphics.newMesh({
         {0, 0, 0, 0, 1, 1, 1, 1},
         {W, 0, 1, 0, 1, 0, 1, 1},
@@ -87,8 +85,6 @@ function draw()
     }, 'fan')
 
     love.graphics.draw(mesh, 0, 0)
-
-    love.graphics.setShader()
 
     if shader.errorMsg then
         fontSize(12)

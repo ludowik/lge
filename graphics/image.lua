@@ -8,9 +8,7 @@ function FrameBuffer:init(w, h, format, clr)
         dpiscale = dpiscale,
     })
     
-    self:setContext()
     self:background(clr or colors.transparent)
-    self:resetContext()
     
     self.width = self.canvas:getWidth()
     self.height = self.canvas:getHeight()
@@ -21,10 +19,10 @@ function FrameBuffer:copy(fb)
     
     local fb = FrameBuffer(self.width, self.height, self.format)    
     fb:setContext()
-
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.draw(self.canvas)
-
+    do
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.draw(self.canvas)
+    end
     fb:getImageData()
     fb:resetContext()
 
@@ -40,12 +38,21 @@ function FrameBuffer:release()
 end
 
 function FrameBuffer:setContext()
-    setContext(self)
+    self.previousCanvas = love.graphics.getCanvas()
+
+    love.graphics.setCanvas({
+        self.canvas,
+        stencil = false,
+        depth = true,
+    })
+
+    pushMatrix()
     resetMatrixContext()
 end
 
 function FrameBuffer:resetContext()
-    resetContext()
+    popMatrix()
+    love.graphics.setCanvas(self.previousCanvas)
 end
 
 function FrameBuffer:background(clr, ...)
@@ -53,7 +60,7 @@ function FrameBuffer:background(clr, ...)
 
     local previous = love.graphics.getCanvas()
     love.graphics.setCanvas(self.canvas)
-    love.graphics.clear(clr.r, clr.g, clr.b, clr.a)
+    love.graphics.clear(clr.r, clr.g, clr.b, clr.a, true, false, 1)
     love.graphics.setCanvas(previous)
 
     self.imageData = nil
@@ -96,6 +103,12 @@ function FrameBuffer:update()
             dpiscale = dpiscale,
         })
     end
+end
+
+function FrameBuffer:render(f)
+    self:setContext()
+    f()
+    self:resetContext()
 end
 
 function FrameBuffer:mapPixel(f)
@@ -170,15 +183,15 @@ end
 Image = class() : extends(FrameBuffer)
 
 function Image:init(filename, ...)
-    filename = find(filename)
+    local filepath = find(filename)
 
-    if love.filesystem.getInfo(filename) == nil then
+    if not filepath then
         log('Image : '..filename..' not found')
         FrameBuffer.init(self, ...)
         return
     end
 
-    self.texture = love.graphics.newImage(filename, {
+    self.texture = love.graphics.newImage(filepath, {
         dpiscale = dpiscale,
         linear = true
     })
@@ -187,9 +200,9 @@ function Image:init(filename, ...)
     FrameBuffer.init(self, w, h, self.texture:getFormat())
 
     self:setContext()
-
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.draw(self.texture)
-    
+    do
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.draw(self.texture)
+    end  
     self:resetContext()
 end

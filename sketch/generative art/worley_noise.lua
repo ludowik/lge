@@ -27,9 +27,6 @@ function mapPixels(img, uniforms, pixelShader)
 
     shader:sendUniforms(uniforms)
 
-    love.graphics.clear(0, 0, 0, 1)
-    love.graphics.setShader(shader.program)
-
     local mesh = love.graphics.newMesh({
         {0, 0, 0, 0, 1, 1, 1, 1},
         {W, 0, 1, 0, 1, 0, 1, 1},
@@ -38,10 +35,12 @@ function mapPixels(img, uniforms, pixelShader)
     }, 'fan')
 
     img:setContext()
-    love.graphics.draw(mesh, 0, 0)
+    do
+        background()
+        setShader(shader.program)
+        love.graphics.draw(mesh, 0, 0)
+    end
     img:resetContext()
-
-    love.graphics.setShader()
 end
 
 function update()

@@ -27,7 +27,7 @@ function setup()
 
         local source = FrameBuffer(size, size)
 
-        render2context(source,
+        source:render(
             function ()
                 background(colors.white)
                 spriteMode(CENTER)
@@ -85,12 +85,12 @@ function defineCharactersSet()
     for i=1,from:len() do
         local character = from:sub(i, i)
 
-        setContext(img)
+        img:setContext()
         do
             background(colors.black)
             text(character, cx, cy)
         end
-        resetContext()
+        img:resetContext()
 
         img:getImageData()
 

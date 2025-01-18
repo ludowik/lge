@@ -2,11 +2,21 @@ function setup()
     scene = Scene()
     navigate(getSetting('category'))
 
-    uiFontSize = 24
+    uiFontSize = DEFAULT_FONT_SIZE
+    menu()
+end
 
-    parameter:integer('font size', 'uiFontSize', 12, 32, uiFontSize, function ()
+function menu()
+    local inMenu = true
+    env.sketch:initMenu()
+    env.sketch.parameter:integer('font size', 'uiFontSize', 18, 42, uiFontSize, function ()
+        DEFAULT_FONT_SIZE = uiFontSize
+        setSetting('DEFAULT_FONT_SIZE', uiFontSize)
+        UI.styles.fontSize = uiFontSize
         navigate(getSetting('category'))
+        if not inMenu then menu() end
     end)
+    inMenu = false
 end
 
 function navigate(category)

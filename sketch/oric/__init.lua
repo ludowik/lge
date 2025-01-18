@@ -4,12 +4,5 @@ requireLib (..., {
     'video',
     'sound',
     'keyboard',
+    'oric',
 })
-
-function setup()
-    cpu = CPU()
-    mem = Memory()
-end
-
-function draw()
-end

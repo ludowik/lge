@@ -60,7 +60,7 @@ function draw()
     
     local pos = (vec2(mouse) + translation) * zoom
 
-    local globalX, globalY = love.graphics.inverseTransformPoint(mouse.position.x, mouse.position.y)
+    local globalX, globalY = inverseTransformPoint(mouse.position.x, mouse.position.y)
 
     row, col = 0, 0
     for k,v in pairs(iconsFont) do

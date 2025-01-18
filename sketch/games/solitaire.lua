@@ -78,9 +78,9 @@ end
 
 function Solitaire:initParameters()
     self.parameter:boolean('Auto', Bind(self, 'autoPlay'), true)
-    self.parameter:boolean('3 cartes', Bind(self, 'play3Card'), getSetting('play3Card', true),
+    self.parameter:boolean('3 cartes', Bind(self, 'play3Card'), getAppSetting('play3Card', true),
         function ()
-            setSetting('play3Card', self.play3Card)
+            setAppSetting('play3Card', self.play3Card)
         end)
     self.parameter:watch('Score', Bind(self, 'score'))        
     self.parameter:action('Nouvelle donne', function() self:newGame() end)

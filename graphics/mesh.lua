@@ -100,6 +100,7 @@ function Mesh:drawInstanced(instances, newInstances)
     
     local n = #instances
 
+    gcResource('mesh')
     local instancedBuffer = getResource('mesh', instances,
         function()
             return self:instancedBuffer(instances)
@@ -137,8 +138,8 @@ function Mesh:instancedBuffer(instances)
 end
 
 function Mesh:useShader(instanced)
-    self.previousShader = love.graphics.getShader()    
-    love.graphics.setShader(self.shader.program)
+    self.previousShader = getShader()
+    setShader(self.shader.program)
 
     if env and env.sketch.cam then
         self.uniforms.cameraPos = env.sketch.cam.eye
@@ -179,7 +180,7 @@ function Mesh:sendUniform(uniformName, ...)
 end
 
 function Mesh:restoreShader()
-    love.graphics.setShader(self.previousShader)
+    setShader(self.previousShader)
 end
 
 function Mesh:addRect(...)

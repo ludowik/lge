@@ -1,4 +1,5 @@
-local classList = {}
+local classList, classMap = {}, {}
+
 function class(__className)
     local __inheritsFrom = nil
     if type(__className) == 'table' then 
@@ -32,6 +33,7 @@ function class(__className)
     end
 
     table.insert(classList, klass)
+    classMap[klass] = klass
 
     if __className then
         (_G.env or _G)[__className] = klass
@@ -68,7 +70,6 @@ function classWithProperties(proto, base)
 
     local get = base.properties.get
     if table.getnKeys(get) > 0 then
-        print(proto.__className..' have properties')
         proto.__index = function(tbl, key)
             if proto[key] then
                 return proto[key]
@@ -156,6 +157,10 @@ function typeof(object)
         return 'cdata'
     end
     return typeof
+end
+
+function isclass(klass)
+    return classMap[klass]
 end
 
 class().unitTest = function ()

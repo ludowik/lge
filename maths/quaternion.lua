@@ -74,9 +74,9 @@ function Quaternion.lookAt(positionA, positionB, up)
 
     local q = Quaternion()
 
-    R = right
-    U = newUp
-    F = forward
+    local R = right
+    local U = newUp
+    local F = forward
 
     local trace = R.x + U.y + F.z
     if (trace > 0.0) then

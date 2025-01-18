@@ -8,9 +8,16 @@ function Array:init(t)
     return t
 end
 
-function Array:count(f)
-    assert(not f)
+function Array:count()
     return #self
+end
+
+function Array:countKey()
+    local n = 0
+    for _, v in pairs(self) do
+        n = n + 1 
+    end
+    return n
 end
 
 function Array:reset()

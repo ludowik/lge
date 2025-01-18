@@ -44,8 +44,6 @@ function Particle.initImage(n)
     n = n or 200
     local img = FrameBuffer(n, n)
     img:setContext()
-
-    resetMatrixContext()
     
     background(0)
     ellipseMode(CENTER)
@@ -55,7 +53,7 @@ function Particle.initImage(n)
         ellipse(n/2, n/2, i/2, i/2)
     end
     
-    resetContext()
+    img:resetContext()
     
     Particle.img = img
     return img

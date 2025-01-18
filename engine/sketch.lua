@@ -97,6 +97,29 @@ function Sketch:updateSketch(dt)
     setSetting('assertLoadIsKO', nil)
 end
 
+function Sketch:setCanvas(clear)
+    self.previousCanvas = love.graphics.getCanvas()
+
+    love.graphics.setCanvas({
+        self.fb.canvas,
+        stencil = false,
+        depth = true,
+    })
+
+    
+    if clear then
+        love.graphics.clear(0, 0, 0, 1, true, false, 1)
+    else
+        love.graphics.clear(false, false, true)
+    end
+
+    love.graphics.setWireframe(env.__wireframe and true or false)
+end
+
+function Sketch:resetCanvas()
+    love.graphics.setCanvas(self.previousCanvas)
+end
+
 function Sketch:drawSketch(force)
     if self.directDraw then
         self:draw()
@@ -109,14 +132,7 @@ end
 function Sketch:renderSketch()
     if self.loopMode == 'none' then return end
 
-    love.graphics.setCanvas({
-        self.fb.canvas,
-        stencil = false,
-        depth = true,
-    })
-    
-    love.graphics.clear(false, false, true)
-    love.graphics.setWireframe(env.__wireframe and true or false)
+    self:setCanvas()
 
     resetMatrix(true)
     resetStyle(getOrigin())
@@ -128,11 +144,13 @@ function Sketch:renderSketch()
     if self.loopMode == 'redraw' then
         self.loopMode = 'none'
     end
+
+    self:resetCanvas()
 end
 
 function Sketch:presentSketch(force)
     love.graphics.setCanvas()
-    love.graphics.setShader()
+    setShader()
     love.graphics.setDepthMode()
     love.graphics.setWireframe(false)
 
@@ -163,7 +181,7 @@ function Sketch:presentSketch(force)
         SCALE * sy) -- scale y
 
     if force then
-        love.graphics.present()
+        Graphics.flush()
     end
 end
 

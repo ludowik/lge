@@ -20,7 +20,11 @@ function Parameter:randomizeParameter()
             Parameter.randomizeParameter(ui)
 
         elseif ui.set then
-            ui:set(random(ui.minValue, ui.maxValue))
+            if not ui.animate then
+                local nextValue = random(ui.minValue, ui.maxValue)
+                ui.animate = animate(ui.value, {value=nextValue}, 2)
+            end
+            --ui:set(random(ui.minValue, ui.maxValue))
         end
     end
 end
@@ -171,9 +175,11 @@ function Parameter:addCaptureMenu()
     self:group('capture')
 
     self:space()
-    self:action('pause', Graphics.noLoop)
-    self:action('1x frame', Graphics.redraw)
-    self:action('resume', Graphics.loop)
+    self:action('pause', Graphics.toggleLoop)
+    self:action('1x frame', function()
+        Graphics.noLoop()
+        Graphics.redraw()
+    end)
 
     self:space()
     self:action('capture image', function ()
@@ -334,17 +340,23 @@ function Parameter:draw(x, y)
 end
 
 function captureImage()
+    local engineVisible = engine.parameter.visible
+    local sketchVisible = env.sketch.parameter.visible
+    
     engine.parameter.visible = false
+    env.sketch.parameter.visible = false
+
     love.graphics.captureScreenshot(function (imageData)
         imageData:encode('png', 'image/'..env.__name..'.png')
-        engine.parameter.visible = true
+        engine.parameter.visible = engineVisible
+        env.sketch.parameter.visible = sketchVisible
     end)
 end
 
 function captureLogo()
     local size = 1024
     local fb = FrameBuffer(size, size)
-    render2context(fb,
+    fb:render(
         function ()
             sprite(env.sketch.fb, 0, 0, size, size, 0, (H-W)/2, W, W)
         end)

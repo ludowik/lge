@@ -43,7 +43,7 @@ function createTexture()
 
     local image = FrameBuffer(size*4, size*3)
 
-    render2context(image,
+    image:render(
         function ()
             noStroke()
             rectMode(CORNER)

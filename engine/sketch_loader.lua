@@ -77,7 +77,11 @@ function declareSketch(name, filePath, category, reload)
     if reload then
         local requirePath = filePath:gsub('%/', '%.'):gsub('%.lua', '')
         environments[requirePath] = nil
-        package.loaded[requirePath] = nil
+        for k,v in pairs(package.loaded) do
+            if k:startWith(requirePath) then
+                package.loaded[k] = nil
+            end
+        end
     end
     
     if environments[name] then return environments[name] end
@@ -161,17 +165,9 @@ function loadSketch(env)
         end
 
         if env.sketch.setup then
-            local previousCanvas = love.graphics.getCanvas()
-            love.graphics.setCanvas({
-                env.sketch.fb.canvas,
-                stencil = false,
-                depth = true,
-            })
-            love.graphics.clear(0, 0, 0, 1, true, false, 1)
-
+            env.sketch:setCanvas(true)
             env.sketch:setup()
-
-            love.graphics.setCanvas(previousCanvas)
+            env.sketch:resetCanvas()
         end
     end
 end

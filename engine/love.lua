@@ -28,7 +28,7 @@ function love.runProc()
 
 		-- Call draw
 		if love.graphics.isActive() and frame%2 == 0 then
-			love.graphics.origin()
+			love.graphics.reset()
 			love.draw()
 			love.graphics.present()
 		end

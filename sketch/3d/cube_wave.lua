@@ -6,7 +6,7 @@ function appCubeWave:init()
     self.angle = 0
 
     self.parameter:integer('n', Bind(self, 'n'), 1, 20, 5)
-    self.parameter:integer('size', Bind(self, 'cubeSize'), 1, 20, 4)
+    self.parameter:integer('size', Bind(self, 'cubeSize'), 1, 20, 5)
 
     self.parameter:number('zoom', Bind(self, 'zoom'), 1, 20, 8)
     self.parameter:number('speed', Bind(self, 'speed'), 1, 10, 2)
@@ -38,6 +38,7 @@ function appCubeWave:draw()
 
     instances = Array()
 
+    local i = 1
     for x = 1, n do
         for z = 1, n do
             local d = vec2(x, z):dist(vec2((n + 1) / 2, (n + 1) / 2))
@@ -50,9 +51,7 @@ function appCubeWave:draw()
             strokeSize(2)
             stroke(colors.gray)
 
-            --fill(Color(r))
-
-            instances:add{x*w, 0, z*w, w, h, w, r, r, r, 1}
+            instances:add{x*w, 0, z*w, w, h, w, r, r, r, r}
         end
     end
     

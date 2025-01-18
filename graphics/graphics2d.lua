@@ -11,88 +11,6 @@ function Graphics2d.background(clr, ...)
     love.graphics.rectangle('fill', 0, 0, W, H)
 end
 
--- function Graphics2d.axes2d()
---     pushMatrix()
---     resetMatrix()
-
---     stroke(colors.gray)
---     strokeSize(0.5)
-
---     translate(CX, CY)
-
---     local len = max(W, H)
-
---     line(-len, 0, len, 0)
---     line(0, -len, 0, len)
-
---     popMatrix()
--- end
-
--- function Graphics2d.grid2d(size)
---     size = size or 32
-
---     pushMatrix()
---     resetMatrix()
-
---     stroke(colors.gray)
---     strokeSize(0.5)
-
---     translate(CX, CY)
-
---     local len = max(W, H)
-
---     local m = ceil(W / size / 2) - 1
---     local n = ceil(H / size / 2)
-
---     line(-len, 0, len, 0)
---     line(0, -len, 0, len)
-
---     stroke(colors.gray:alpha(0.25))
-
---     for x=-m,m do
---         line(x*size, -len, x*size, len)
---     end
-
---     for y=-n,n do
---         line(-len, y*size, len, y*size)
---     end
-
---     fontSize(10)
---     textMode(CENTER)
-
---     local index = -n*10
---     for y=-n,n,0.1 do
---         if index%10 == 0 then
---             len = 15
---             text(-index/10, -m*size+15, y*size-2)
---         elseif index%5 == 0 then
---             len = 10
---         else
---             len = 5
---         end
---         line(-m*size, y*size, -m*size+len, y*size)
-        
---         index = index + 1        
---     end
-
---     index = -m*10
---     for x=-m,m,0.1 do
---         if index%10 == 0 then
---             len = 15
---             text(index/10, x*size, n*size-15)
---         elseif index%5 == 0 then
---             len = 10
---         else
---             len = 5
---         end
---         line(x*size, n*size, x*size, n*size-len)
-        
---         index = index + 1        
---     end
-
---     popMatrix()
--- end
-
 function Graphics2d.point(x, y)
     if type(x) == 'table' then x, y = x.x, x.y end
     if stroke() then
@@ -288,8 +206,8 @@ function Graphics2d.sprite(image, x, y, w, h, ox, oy, ow, oh)
     image:update()
 
     local texture = image.texture or image.canvas
-
     local mode = spriteMode()
+
     w = w or texture:getWidth()
     h = h or texture:getHeight()
 

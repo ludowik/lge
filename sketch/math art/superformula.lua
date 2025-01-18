@@ -144,9 +144,6 @@ function __draw3d()
 
     fill(colors.white)
 
-    -- cullingMode(false)
-    love.graphics.setMeshCullMode('none')
-
     mesh = Mesh(Model.centerVertices(array))
     mesh.drawMode = 'strip'
     -- TODO : BUG !!! computeNormals need to be modify to manage strip type

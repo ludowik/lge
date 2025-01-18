@@ -190,10 +190,18 @@ function Instrument:draw()
 
         self.columnSize = min(max(self.columnSize , w), CX)
 
-        text(string.format('%.5f * %d = %.5f',
-            ref.deltaTimeAvg,
+        local c1 = string.format('%.2f', ref.deltaTimeAvg*1000)
+        text(c1,
+            self.columnSize + textSize('0.00') - textSize(c1),
+            y)
+
+        text(string.format('* %d', ref.countByFrameAvg),
+            self.columnSize + textSize('0.00'),
+            y)
+
+        text(string.format('%.2f',
             ref.countByFrameAvg,
-            ref.elapsedTimeByFrameAvg), self.columnSize, y)
+            ref.elapsedTimeByFrameAvg*1000), self.columnSize + textSize('0.00'), y)
 
         if ref.calls and ref.viewDetail then
             for ref,stats in pairs(ref.calls) do

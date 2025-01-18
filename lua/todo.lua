@@ -7,7 +7,7 @@ function scanTODO()
 
         local list = dir('')
         for i,file in ipairs(list) do
-
+            goto continue
             if isLuaFile(file) then
             
                 local content = io.read(file)
@@ -30,6 +30,7 @@ function scanTODO()
                 end
 
             end
+            ::continue::
         end
         
         for _,todoName in ipairs(todos) do

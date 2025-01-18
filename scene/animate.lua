@@ -64,6 +64,14 @@ function Tween:init(source, target, delay, easingOrOptions, callback)
     self.state = 'stop'
 end
 
+local function get(t, name)
+    return t[name]
+end
+
+local function set(t, name, value)
+    t[name] = value
+end
+
 function Tween:update(dt)
     if self.state ~= 'running' then return end
 
@@ -75,17 +83,17 @@ function Tween:update(dt)
 
     for k,v in pairs(self.target) do
         local t = self.elapsed
-        local b = self.origin[k] 
-        local c = self.target[k] - self.origin[k]
+        local b = get(self.origin, k)
+        local c = get(self.target, k) - b
         local d = self.delay
         
-        self.source[k] = self.easing(t, b, c, d)
+        set(self.source, k, self.easing(t, b, c, d))
     end
 
     if self.elapsed >= self.delay then
         -- ensure source = target
         for k,v in pairs(self.target) do
-            self.source[k] = self.target[k]
+            set(self.source, k, get(self.target, k))
         end
 
         self:finalize(self.elapsed - self.delay)
@@ -105,7 +113,7 @@ function Tween:reset()
     self.state = 'running'
     
     for k,v in pairs(self.target) do
-        self.source[k] = self.origin[k]
+        set(self.source, k, get(self.origin, k))
     end
     self.elapsed = 0
 end

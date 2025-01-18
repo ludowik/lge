@@ -1,5 +1,4 @@
 function setup()
-    LEFT = CX
     scene = Scene()
 
     local UIExpression = function(...)

@@ -6,7 +6,7 @@ UI.outerMarge = 4
 function UI.setup()
     UI.styles = {
         fontName = DEFAULT_FONT_NAME,
-        fontSize = DEFAULT_FONT_SIZE * 1.5,
+        fontSize = DEFAULT_FONT_SIZE,
     }
 end
 
