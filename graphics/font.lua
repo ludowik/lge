@@ -6,6 +6,7 @@ function FontManager.setup()
 
     DEFAULT_FONT_NAME = getSetting('DEFAULT_FONT_NAME', 'arial')
     DEFAULT_FONT_SIZE = getSetting('DEFAULT_FONT_SIZE', 24)
+    SMALL_FONT_SIZE = floor(DEFAULT_FONT_SIZE * 2 / 3)
 end
 
 function FontManager.newFont(...)

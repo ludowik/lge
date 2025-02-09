@@ -35,11 +35,13 @@ end
 
 function loadFile(fileName)
     fileName = (fileName..'.lua'):lower()
-    local ok, f = pcall(
+    local status, f = xpcall(
         function ()
             return love.filesystem.load(fileName)
-        end)
-    if ok and type(f) == 'function' then
+        end,
+        nilf)
+        
+    if status and type(f) == 'function' then
         return f()
     end
 end

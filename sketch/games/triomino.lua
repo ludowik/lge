@@ -127,7 +127,7 @@ function Triomino:click(mouse)
     if mino then
         mino.grid = mino.grid:rotate(mouse.id == 1)
         mino.grid.rotation = (mouse.id == 1 and -1 or 1) * PI/2
-        animate(mino.grid, {rotation = 0}, 1/6)
+        tween(mino.grid, {rotation = 0}, 1/6)
         self:updateShadow(mino)
     end
 end

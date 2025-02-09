@@ -19,10 +19,6 @@ function EventManager:init()
         local name = sketch.__className:replace('_', '+')
         openURL(('https://www.google.com/search?q=%s&lr=lang_en'):format(name))
     end)
-
-    self:registerEvent('key', 'f2', function()
-        line = line == Graphics2d.line and myline or Graphics2d.line
-    end)
 end
 
 function EventManager:update(dt)

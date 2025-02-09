@@ -5,7 +5,7 @@ function setup()
 
     shaders = Array()
 
-    local directoryItems = love.filesystem.getDirectoryItems(path)
+    local directoryItems = love.filesystem.getDirectoryItems(path..'/shaders')
     for _,itemName in ipairs(directoryItems) do
         if itemName:contains('pixel') then 
             local name = itemName:gsub('%.pixel.glsl', '')
@@ -23,36 +23,35 @@ function setup()
         [0] = Image(path..'/channel/cube00_0.jpg')
     }
 
-    parameter:number('SHAPE_SIZE', 0.1, 2.5, 0.5)
-    parameter:number('SMOOTHNESS', 0, 1, 0.5)
+    shaderIndex = getSetting('shaderIndex', 1)
+    menu()
+end
 
-    parameter:boolean('paused', false)
-
-    parameter:integer('depth', 'z', 3)
-
-    shaderIndex = 1 -- getSetting('shaderIndex', 1)
-
+function menu()
     parameter:integer('shader', 'shaderIndex', 1, #shaders, shaderIndex, function ()
         setSetting('shaderIndex', shaderIndex)
+        env.sketch:initMenu()
+        menu()
     end)
     
     parameter:watch('shader name', 'shaders[shaderIndex].name')
+    parameter:boolean('paused', false)
+
+    if shaders[shaderIndex].name == 'shader' then
+        parameter:number('SHAPE_SIZE', 0.1, 2.5, 0.5)
+        parameter:number('SMOOTHNESS', 0, 1, 0.5)
+        parameter:integer('depth', 'z', 3)
+    end
 end
 
-function update(dt)
-    log(id())
-
+function update(dt)    
     local shader = shader or shaders[shaderIndex]
     shader:update(dt)
-
-    log(id())
 
     if shader.program then
         if not paused then
             shader:sendUniform('iTime', elapsedTime);
         end
-
-        log(id())
 
         shader:sendUniforms{
             iChannel0 = shaderChannel[0].texture,
@@ -66,8 +65,6 @@ function update(dt)
             MAX_DIST = 100,
             SURF_DIST = 0.01,
         }
-
-        log(id())
     end
 end
 
@@ -84,10 +81,11 @@ function draw()
         {0, H, 0, 1, 1, 1, 1, 1}
     }, 'fan')
 
+    love.graphics.setColor(colors.white:unpack())
     love.graphics.draw(mesh, 0, 0)
 
     if shader.errorMsg then
-        fontSize(12)
+        fontSize(DEFAULT_FONT_SIZE*.75)
         textColor(colors.gray)
         text(shader.errorMsg, 0, CY, W)
     end

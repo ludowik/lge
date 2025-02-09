@@ -340,7 +340,7 @@ function The2048:draw()
             for k, v in pairs((anim.from or {})) do
                 anim.source[k] = anim.from[k]
             end
-            anim.tween = animate(anim.source, anim.target, anim.delay, function ()
+            anim.tween = tween(anim.source, anim.target, anim.delay, function ()
                 if anim.callback then anim.callback() end
             end)
         end

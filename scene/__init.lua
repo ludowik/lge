@@ -9,6 +9,6 @@ requireLib(..., {
     'node',
     'scene',
     'parameter',
-    'animate',
-    'animate_easings',
+    'tween',
+    'tween_easings',
 })

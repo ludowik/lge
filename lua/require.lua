@@ -25,11 +25,13 @@ function require(module, env)
 end
 
 function try_require(module)
-    local ok, result = pcall(
+    local status, result = xpcall(
         function ()
             return require(module)
-        end)
-    return ok and result
+        end,
+        nilf)
+
+    return status and result
 end
 
 function requireLib(path, modules)

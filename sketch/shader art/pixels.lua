@@ -131,7 +131,6 @@ function Pixels:draw()
     background()
 
     seed = 56494446
-
     local fragment = Pixels.noiseFunctions[noiseFunctionIndex]
     local w, h = self.img.width, self.img.height
 

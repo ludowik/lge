@@ -12,24 +12,23 @@ function reset()
     end
 
     function nextPosition(i)
-        local easing = randomInt(1, #tween.easingFunctions)
-        animate(
+        tween(
             vertices[i],
             vec2.randomInScreen(),
-            random(0.5, 1.3),
-            tween.easingFunctions[easing],
+            2,
+            Tween.easing.linear,
             function ()
                 nextPosition(i)
             end)
     end
 
     function nextColor(i)
-        local easing = randomInt(1, #tween.easingFunctions)
-        animate(
+        local easing = randomInt(1, #Tween.easingFunctions)
+        tween(
             palette[i],
             Color.random(),
-            random(0.8, 1.5),
-            tween.easingFunctions[easing],
+            random(1.5, 3),
+            Tween.easingFunctions[easing],
             function ()
                 nextColor(i)
             end)
@@ -42,12 +41,12 @@ function reset()
 end
 
 function draw()
-    background(0, 0, 0, 0.05)
+    background(0, 0, 0, 0.25)
 
     local function drawLines()
-        translate(3, 3)
+        translate(5, 5)
 
-        strokeSize(2)
+        strokeSize(1.5)
 
         local n = #vertices
         for i=1,n-1 do

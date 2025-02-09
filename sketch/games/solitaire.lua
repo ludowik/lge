@@ -9,6 +9,7 @@ function Solitaire:init()
     self:initScene()
     self:initPosition()
     
+    self:resetHistory()
     self:loadGame()
 
     self:initParameters()
@@ -222,25 +223,25 @@ end
 function Solitaire:movement(type, fromDeck, toDeck)
     if type == 'faceup' then
         self.score = self.score + 10
-        log('faceup')
+        info('faceup')
 
     elseif type == 'movement' then
         if fromDeck.__className == 'Wast' and toDeck.__className == 'Row' then
             self.score = self.score + 10
-            log('Wast to Row')
+            info('Wast to Row')
 
         elseif toDeck.__className == 'Pile' then
             self.score = self.score + 10
-            log('to Pile')
+            info('to Pile')
 
         elseif fromDeck.__className == 'Pile' and toDeck.__className == 'Row' then
             self.score = self.score  - 5
-            log('Pile to Row')
+            info('Pile to Row')
         end
     
     elseif type == 'undo' then
         self.score = self.score  - 20
-        log('undo')
+        info('undo')
     end
 end
 
@@ -525,14 +526,14 @@ end
 function Card:animate(count)
     count = count or 0
 
-    self.tween = animate(
+    self.tween = tween(
         self.position,
         self.nextPosition,
         {
             delayBeforeStart = count / 60,
             delay = 20 / 60
         },
-        tween.easing.quadOut,
+        Tween.easing.quadOut,
         function() self.tween = nil end)    
 end
 

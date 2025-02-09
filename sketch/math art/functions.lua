@@ -80,7 +80,7 @@ function Functions:init()
 
     parameter:number('dx', 0.001, 0.1, 0.01, function () Functions.needUpdate = true end)
 
-    for name,f in pairs(tween.easing) do
+    for name,f in pairs(Tween.easing) do
         Functions.functions:add({
                 name,
                 f,

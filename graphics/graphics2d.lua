@@ -115,17 +115,17 @@ function Graphics2d.ellipse(x, y, rx, ry, mode)
     end
 end
 
-function Graphics2d.arc(x, y, rx, ry, a1, a2)
-    local segments = 64
+function Graphics2d.arc(x, y, radius, a1, a2, segments)
+    segments = segments or 64
 
     if fill() then
         love.graphics.setColor(fill():rgba())
-        love.graphics.arc('fill', x, y, rx, a1, a2, segments)
+        love.graphics.arc('fill', 'pie', x, y, radius, a1, a2, segments)
     else
         local size = strokeSize()
         love.graphics.setColor(stroke():rgba())
         love.graphics.setLineWidth(size)
-        love.graphics.arc('line', x, y, rx, a1, a2, segments)
+        love.graphics.arc('line', 'open', x, y, radius, a1, a2, segments)
     end
 end
 
@@ -136,9 +136,9 @@ function Graphics2d.textSize(str, limit)
     
     love.graphics.setFont(font)
 
-    local w, h
+    local w, h = 0, 0
     if limit then
-        local wrappedtext
+        local wrappedtext = 0
         w, wrappedtext = font:getWrap(str, limit or W)
         h = font:getHeight() * #wrappedtext
     else
@@ -178,6 +178,10 @@ function Graphics2d.text(str, x, y, limit, align)
     local font = FontManager.getFont()
 
     local newText = love.graphics.newTextBatch or love.graphics.newText
+    if not newText then
+        love.graphics.text(str, x, y)
+        return
+    end
 
     local text = getResource('font', tostring(font)..str, function ()
         local text = newText(font, str)

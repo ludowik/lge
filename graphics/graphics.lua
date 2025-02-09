@@ -1,9 +1,8 @@
 Graphics = class()
+Graphics.styles = {}
 
 function Graphics.setup()
     push2globals(Graphics)
-
-    Graphics.styles = {}
 
     font = FontManager.getFont()
 
@@ -47,7 +46,7 @@ function Graphics.initMode()
     deviceOrientation = getSetting('deviceOrientation', PORTRAIT)
 
     LEFT, TOP, WS, HS = Graphics.getPhysicalArea()
-    
+
     Graphics.setMode(WS, HS)
     Graphics.setVSync(1)
 
@@ -73,9 +72,11 @@ end
 function Graphics.getPhysicalArea()
     local x, y, w, h
 
-    if getOS() == 'ios' then
+    if getOS():inList{'ios', 'web'} then
         x, y = love.window.getSafeArea()
         w, h = love.window.getDesktopDimensions(love.window.getDisplayCount())
+                
+        deviceOrientation = w < h and PORTRAIT or LANDSCAPE
             
     elseif getOS():inList{'osx', 'windows'} then
         local ws, hs, flags = love.window.getMode()
@@ -84,14 +85,20 @@ function Graphics.getPhysicalArea()
             deviceOrientation = w < h and PORTRAIT or LANDSCAPE
         else
             _, h = love.window.getDesktopDimensions(love.window.getDisplayCount())
-            x, y, w, h = 0, 0, 0, h * 0.9
+            x, y, w, h = 0, 0, 0, h * 0.95
             w = even(h*screenRatio)
         end
 
     else
         x, y, w, h = 0, 0, 375, 812
+        deviceOrientation = PORTRAIT
     end
 
+    if deviceOrientation == LANDSCAPE then
+        local scale = 1.3
+        w, h = even(w*scale), even(h*scale)
+    end
+    
     dpiscale = 1
     deviceScreenRatio = min(w/h, h/w)
 
@@ -111,7 +118,7 @@ end
 
 function Graphics.getVirtualArea()
     local ws, hs = 0, 0
-    if getOS() == 'ios' then
+    if getOS():inList{'ios', 'web'} then
         ws, hs = love.window.getDesktopDimensions()
     elseif getOS():inList{'osx', 'windows'} then
     else
@@ -273,6 +280,7 @@ function Graphics.resetStyle(origin)
 end
 
 NORMAL = 'alpha'
+REPLACE = 'replace'
 ADD = 'add'
 SUBTRACT = 'subtract'
 MULTIPLY = 'multiply'

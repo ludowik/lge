@@ -20,11 +20,13 @@ function Parameter:randomizeParameter()
             Parameter.randomizeParameter(ui)
 
         elseif ui.set then
-            if not ui.animate then
+            if not ui.tween or ui.tween.state == 'dead' then
                 local nextValue = random(ui.minValue, ui.maxValue)
-                ui.animate = animate(ui.value, {value=nextValue}, 2)
+                ui.tween = tween({value=ui.value}, {value=nextValue}, 5)
+                ui.tween.callbackOnChange = function(value)
+                    ui:set(value)
+                end
             end
-            --ui:set(random(ui.minValue, ui.maxValue))
         end
     end
 end
@@ -258,13 +260,11 @@ end
 function Parameter:declareParameter(varName, initValue, callback)
     if type(varName) == 'string' and env[varName] == null then
         env[varName] = initValue
+        if callback then callback() end
     
     elseif classnameof(varName) == 'Bind' and varName:get() == null then
         varName:set(initValue)
-    end
-
-    if callback then
-        callback()
+        if callback then callback() end
     end
 end
 

@@ -28,6 +28,7 @@ function Engine.initParameter()
     engine.parameter.visible = false
 
     if not fused() then
+        engine.parameter:action('sketches', function() processManager:setSketch('sketches', false) end)
         engine.parameter:addMainMenu()
         engine.parameter:addNavigationMenu()
         engine.parameter:addScreenMenu()
@@ -105,7 +106,23 @@ function echoUpdate(dt)
 end
 
 function echoDraw()
-    
+    echoUpdate(env.deltaTime)
+
+    fontName(DEFAULT_FONT_NAME)
+    fontSize(DEFAULT_FONT_SIZE * 2)
+
+    textColor(getBackgroundColor():contrast())
+    textMode(CORNER)
+
+    local txt = ''
+    for _,line in ipairs(__echo) do
+        txt = txt..line.line
+        if line.count > 1 then
+            txt = txt..' ('..line.count..')'
+        end
+        txt = txt..NL
+    end
+    text(txt, 25, 25)
 end
 
 function Engine.draw()
@@ -136,33 +153,17 @@ function Engine.draw()
     local showFPS = env.sketch.parameter.visible
     
     local fps = getFPS()
-    if showFPS or fps < refreshRate * 0.95 then -- or fps > refreshRate * 1.05 then        
+    if showFPS or fps < refreshRate * 0.95 then
         fontName(DEFAULT_FONT_NAME)
-        fontSize(DEFAULT_FONT_SIZE)
+        fontSize(SMALL_FONT_SIZE)
         
         textColor(colors.red)
         textMode(CORNER)
-        text(fps..' fps / '..getMemoryInfo(), LEFT, max(0, TOP - DEFAULT_FONT_SIZE))
+        text(fps..' fps / '..getMemoryInfo(), W-LEFT-SMALL_FONT_SIZE, H-2*SMALL_FONT_SIZE, nil, 'right')
     end
 
     if __echo then
-        echoUpdate(env.deltaTime)
-
-        fontName(DEFAULT_FONT_NAME)
-        fontSize(DEFAULT_FONT_SIZE * 2)
-
-        textColor(getBackgroundColor():contrast())
-        textMode(CORNER)
-
-        local txt = ''
-        for _,line in ipairs(__echo) do
-            txt = txt..line.line
-            if line.count > 1 then
-                txt = txt..' ('..line.count..')'
-            end
-            txt = txt..NL
-        end
-        text(txt, 25, 25)
+        echoDraw()
     end
 end
 

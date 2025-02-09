@@ -10,11 +10,15 @@ end
 function Sketch2d:draw()
     background(colors.black)
 
+    local W, H = W, H
     local anchor
     if deviceOrientation == PORTRAIT then
-        anchor = Anchor(16)
+        anchor = Anchor(9, 20)
     else
-        anchor = Anchor(nil, 16*W/H)
+        anchor = Anchor(9, 20)
+        translate(0, H)
+        rotate(-PI/2)
+        W, H = H, W
     end
 
     anchor:draw()
@@ -31,8 +35,9 @@ function Sketch2d:draw()
     
 	rect(0, 0, W, H)
 
-    local pos = anchor:pos(2, 2)
+    local pos = anchor:pos(2, 1)
     local size = anchor:size(1, 1)
+
     local x, y, w, h = pos.x, pos.y, size.x, size.y
     
     for _,f in ipairs{
@@ -54,43 +59,47 @@ end
 function drawPoint(x, y, w, h)
     strokeSize(20)
     stroke(colors.red)
-    point(x+w/2, y+h/2)
+    point(x, y+h)
 
-    strokeSize(10)
-    stroke(colors.gray)
-    points{{x*3, y, 1,0,0,1}, {x*3+w, y+h*2, 0,1,0,1}}
+    x = x + 2*w
+    points{{x, y, 1,0,0,1}, {x+w, y+h*2, 0,1,0,1}}
 
-    strokeSize(5)
-    stroke(colors.white)
-    points{{x*5, y, 1,0,0,1}, {x*5+w*2, y+h, 0,1,0,1}}
+    x = x + 2*w
+    points{{x, y+h/2, 1,0,0,1}, {x+w*2, y+3*h/2, 0,1,0,1}}
 end
 
 function drawLine(x, y, w, h)
-    strokeSize(2)
+    strokeSize(10)
     stroke(colors.red)
-    line(x, y+w, x+w, y+h)
+    line(x-0.5*w, y+w, x+w/2, y+h)
 
+    x = x + 2*w
     strokeSize(10)
     stroke(colors.green)
-    line(x*3, y, x*3+w, y+h*2)
+    line(x, y, x+w, y+h*2)
 
+    x = x + 2*w
     strokeSize(5)
     stroke(colors.blue)
-    line(x*5, y+h/2, x*5+w*2, y+h+h/2)
+    line(x, y+h/2, x+2*w, y+h+h/2)
 end
 
 function drawRect(x, y, w, h)
+    rectMode(CORNER)
+    
     noStroke()
     fill(colors.red)
-    rect(x, y+h/2, w, h)
+    rect(x-0.5*w, y+h/2, w, h)
 
+    x = x + 2*w
     strokeSize(10)
     stroke(colors.green)
-    rect(x*3, y, w, h*2)
+    rect(x, y, w, h*2)
 
+    x = x + 2*w
     strokeSize(5)
     stroke(colors.blue)
-    rect(x*5, y+h/2, w*2, h)
+    rect(x, y+h/2, w*2, h)
 end
 
 function drawCircle(x, y, w, h)
@@ -98,15 +107,17 @@ function drawCircle(x, y, w, h)
     
     noStroke()
     fill(colors.red)
-    circle(x+w/2, y+h, w/2)
+    circle(x, y+h, w/2)
 
+    x = x + 2.5*w
     strokeSize(10)
     stroke(colors.green)
-    circle(x*3+w/2, y+h, w)
+    circle(x, y+h, w)
 
+    x = x + 2.5*w
     strokeSize(5)
     stroke(colors.blue)
-    circle(x*6, y+h, w)
+    circle(x, y+h, w)
 end
 
 function drawEllipse(x, y, w, h)
@@ -114,22 +125,21 @@ function drawEllipse(x, y, w, h)
 
     noStroke()
     fill(colors.red)
-    pushMatrix()
-    translate(x+w/2, y+h)
-    ellipse(0, 0, w/2)
-    popMatrix()
+    ellipse(x, y+h, w/4, h/2)
 
+    x = x + 2.5*w
     strokeSize(10)
     stroke(colors.green)
-    ellipse(x*3+w/2, y+h, w/2, h)
+    ellipse(x, y+h, w/2, h)
 
+    x = x + 2.5*w
     strokeSize(5)
     stroke(colors.blue)
-    ellipse(x*6, y+h, w, h/2)
+    ellipse(x, y+h, w, h/2)
 end
 
-function drawBlendMode(x, y, r)
-    r = r * 2 / 3
+function drawBlendMode(x, y, w)
+    local r = w * 2 / 3
     noStroke()
 
     local function drawCircles(mode, x, y)
@@ -145,12 +155,15 @@ function drawBlendMode(x, y, r)
         circle(x, y+r/2, r)
     end
 
-    drawCircles(NORMAL, x + 3*r/2, y + 3*r/2)
-    drawCircles(ADD, x + 4*r + 3*r/2, y + 3*r/2)
+    drawCircles(NORMAL, x, y + 3*r/2)
 
+    x = x + 2.5*w
+    drawCircles(ADD, x, y + 3*r/2)
+
+    x = x + 2.5*w
     fill(colors.gray)
-    rect(x + 8*r - r/2, y - r/2, 4*r, 4*r)
-    drawCircles(MULTIPLY, x + 8*r + 3*r/2, y + 3*r/2)
+    rect(x - 2*r, y - r/2, 4*r, 4*r)
+    drawCircles(MULTIPLY, x, y + 3*r/2)
 end
 
 function drawSprite(x, y, w, h)

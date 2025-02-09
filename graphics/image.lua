@@ -14,16 +14,34 @@ function FrameBuffer:init(w, h, format, clr)
     self.height = self.canvas:getHeight()
 end
 
-function FrameBuffer:copy(fb)
+function FrameBuffer:copy(x, y, w, h)
+    x, y = x or 0, y or 0
+    w, h = w or self.width, h or self.height
+
     self:update()
     
-    local fb = FrameBuffer(self.width, self.height, self.format)    
+    local fb = FrameBuffer(w, h, self.format)    
     fb:setContext()
     do
-        love.graphics.setColor(1, 1, 1)
-        love.graphics.draw(self.canvas)
+        tint(colors.white)
+        sprite(self, 0, 0, w, h, x, y, w, h)
     end
-    fb:getImageData()
+    fb:resetContext()
+
+    return fb
+end
+
+function FrameBuffer:resize(w, h)
+    assert(w and h)
+
+    self:update()
+    
+    local fb = FrameBuffer(w, h, self.format)    
+    fb:setContext()
+    do
+        tint(colors.white)
+        sprite(self, 0, 0, w, h)
+    end
     fb:resetContext()
 
     return fb
@@ -52,16 +70,16 @@ end
 
 function FrameBuffer:resetContext()
     popMatrix()
-    love.graphics.setCanvas(self.previousCanvas)
+    love.graphics.setCanvas({self.previousCanvas})
 end
 
 function FrameBuffer:background(clr, ...)
     clr = Color.fromParam(clr, ...) or colors.black
 
     local previous = love.graphics.getCanvas()
-    love.graphics.setCanvas(self.canvas)
+    love.graphics.setCanvas({self.canvas})
     love.graphics.clear(clr.r, clr.g, clr.b, clr.a, true, false, 1)
-    love.graphics.setCanvas(previous)
+    love.graphics.setCanvas({previous})
 
     self.imageData = nil
 end
@@ -80,10 +98,14 @@ function FrameBuffer:getImageData()
 
     local getImageData = love.graphics.readbackTexture or self.canvas.newImageData
     self.imageData = getImageData(self.canvas)
-    -- self.pointerData = ffi.cast('uint8_t*', self.imageData:getFFIPointer())
 
+    self.texture = love.graphics.newImage(self.imageData, {
+        dpiscale = dpiscale,
+    })
+    -- self.pointerData = ffi.cast('uint8_t*', self.imageData:getFFIPointer())
+    
     if restoreCanvas then
-        love.graphics.setCanvas(self.canvas)
+        love.graphics.setCanvas({self.canvas})
     end
 
     self.needUpdate = true
@@ -94,14 +116,7 @@ end
 function FrameBuffer:update()
     if self.imageData and (self.texture == nil or self.needUpdate == true) then
         self.needUpdate = false
-
-        if self.texture then
-            self.texture:release()
-        end
-
-        self.texture = love.graphics.newImage(self.imageData, {
-            dpiscale = dpiscale,
-        })
+        self.texture:replacePixels(self.imageData)
     end
 end
 
@@ -155,6 +170,12 @@ function FrameBuffer:getPixel(x, y, clr)
     end
 end
 
+function FrameBuffer:filter(filterType)
+    self:mapPixel(function (x, y, r, g, b, a)
+        return Color(r, g, b, a):grayscale():unpack()
+    end)
+end
+
 
 local function scan(path, files)
     files = files or Array()
@@ -186,7 +207,7 @@ function Image:init(filename, ...)
     local filepath = find(filename)
 
     if not filepath then
-        log('Image : '..filename..' not found')
+        info('Image : '..filename..' not found')
         FrameBuffer.init(self, ...)
         return
     end

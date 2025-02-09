@@ -104,7 +104,7 @@ function Shader:compile()
             return love.graphics.newShader(self.pixelShader.code, self.vertexShader.code)
         end,
         function (msg)
-            log('Compile shader '..self.name, msg)
+            info('Compile shader '..self.name, msg)
             self.errorMsg = msg
         end)
 

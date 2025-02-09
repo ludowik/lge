@@ -36,6 +36,9 @@ function math.quotient(dividend, divisor)
 end
 quotient = math.quotient
 
+function lerp(a, b, t)
+    return (1 - t) * a + t * b
+end
 
 abs = math.abs
 

@@ -55,8 +55,6 @@ function gcResource(resType)
     end
     if not resources[resType] then return end
 
-    log(resources[resType]:countKey())
-
     local now = time()
     for resRef,resInfo in pairs(resources[resType]) do
         if now - resInfo.time >= 5 then

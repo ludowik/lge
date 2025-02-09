@@ -88,7 +88,7 @@ function Instrument:instrumentFunctions(t)
         ref.parent[ref.name] = function (...)
             if self.behindInstrument then return ref.func(...) end
 
-            -- log(string.tab(self.level)..scriptLink(3), ref.parentName..'.'..ref.name)
+            -- info(string.tab(self.level)..scriptLink(3), ref.parentName..'.'..ref.name)
             -- self.level = self.level + 1
             local startTime, innerTime, endTime, results, push_calls
 
@@ -225,6 +225,8 @@ function Instrument:avoidReferences()
         type, tonumber, tostring,
         require, requireLib,
         xpcall,
+        ypcall,
+        pcall,
     }
 
     Instrument.avoidModules = {

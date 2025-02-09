@@ -59,10 +59,6 @@ function vertex(x, y, z)
     end
 end
 
-local function lerp(a, b, t)
-    return (1 - t) * a + t * b
-end
-
 function bezierVertex(x2, y2, x3, y3, x4, y4)
     bezierCube(
         { x = shape.vertices[#shape.vertices - 1], y = shape.vertices[#shape.vertices] },

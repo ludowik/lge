@@ -1,6 +1,10 @@
 function setup()
-    N = 15
-    
+    N = 15    
+    reset()
+    menu()
+end
+
+function menu()
     parameter:action('reset', reset)
 
     parameter:integer('d', 1, SIZE*2, SIZE)

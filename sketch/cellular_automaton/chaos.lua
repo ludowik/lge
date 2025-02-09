@@ -16,7 +16,7 @@ function vector(v)
 end
 
 function reset(i)
-    background(0)
+    background()
 
     conf = confs[i]
 
@@ -137,7 +137,7 @@ function draw()
     translate(CX, CY)
 
     if rotation then
-        rotate(elapsedTime)
+        rotate(elapsedTime/2)
     end
     
     for i = 1,1000 do

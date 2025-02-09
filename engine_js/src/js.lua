@@ -3,6 +3,7 @@ js = require 'js'
 package.path = './?.lua;./?/__init.lua;./lua/5.3/?.lua;./lua/5.3/?/init.lua'
 
 loadstring = load
+nilf = function () end
 
 require 'engine_js.src.love2p5'
 
@@ -16,8 +17,12 @@ require 'graphics.anchor'
 require 'graphics.font'
 require 'graphics.font_icons'
 require 'graphics.graphics'
+require 'graphics.graphics2d'
 require 'graphics.shape'
-Graphics.setup = nil
+require 'graphics.light'
+require 'graphics.material'
+require 'graphics.image'
+--require 'graphics.transform'
 
 require 'events'
 require 'scene'
@@ -33,59 +38,22 @@ require 'engine_js.src.graphics'
 require 'engine_js.src.transform'
 require 'engine_js.src.audio'
 
-function loop()
-    Graphics.loop()
-end
-
-function noLoop()
-    Graphics.noLoop()
-end
-
-function captureLogo()
-end
-
 function noise(...)
     return js.global:noise(...)
 end
 
-function __init()
-    PORTRAIT = 'portrait'
-    LANDSCAPE = 'landscape'
+function __initall()
+    Engine.load()
 
     refreshRate = 30
 
     js.global:frameRate(refreshRate)
     js.global:textAlign(js.global.LEFT, js.global.TOP)
 
-    __setMode()
-
-    elapsedTime = 0
-
-    mouse = Mouse()
-
-    Engine.load()
-    processManager:setSketch(getSetting('sketch', 'sketches'))
+    Graphics.initMode()
 end
 
-function __setMode()
-    W = js.global.screen.width -- innerWidth
-    H = js.global.screen.height -- innerHeight
-
-    CX = W/2
-    CY = H/2
-
-    MIN_SIZE = min(W, H)
-    MAX_SIZE = max(W, H)
-
-    SIZE = MIN_SIZE
-
-    SCALE = 1
-    
-    LEFT = 5
-    TOP = 5
-end
-
-function __update()
+function __update()    
     env.deltaTime = js.global.deltaTime / 1000
     env.elapsedTime = env.elapsedTime + env.deltaTime
     env.frameCount = env.frameCount + 1
@@ -94,12 +62,17 @@ function __update()
 end
 
 function __draw()
-    blendMode(NORMAL)
-
-    js.global:angleMode(js.global.RADIANS)
-    js.global:colorMode(js.global.RGB, 1)
-
+    blendMode(REPLACE)
+    Graphics.resetStyle()
     return Engine.draw()
+end
+
+function __debugGraphics()
+    js.global.pg:background(1, 1, 1, 1)
+    js.global.pg:rect(5, 5, 155, 55)
+    js.global.pg:text('hello', 5, 5, 155, 55)
+
+    js.global:image(js.global.pg, 0, 0)
 end
 
 function __mousepressed()
@@ -153,7 +126,7 @@ end
 function __orientationchange()
     Graphics.setDeviceOrientation(js.global.__orientation:startWith('landscape') and LANDSCAPE or PORTRAIT)
 
-    __setMode()
+    Graphics.initMode()
 
     local sketch = processManager:current()
 
@@ -164,132 +137,153 @@ function __orientationchange()
     redraw()
 end
 
-FrameBuffer = class()
+-- FrameBuffer = class()
 
-function FrameBuffer:init(w, h)
-    self.width = w or W
-    self.height = h or H
+-- function FrameBuffer:init(w, h)
+--     self.width = w or W
+--     self.height = h or H
 
-    self.texture = {
-        setFilter = function ()
-        end,
-    }
+--     self.texture = {
+--         setFilter = function ()
+--         end,
 
-    self.canvas = {
-        img = js.global:createImage(self.width, self.height),
+--         draw = function (_, x, y, w, h)
+--             js.global:image(self.canvas.img, x, y, w or self.width, h or self.height)
+--         end,
 
-        getWidth = function ()
-            return self.width
-        end,
+--         getWidth = function ()
+--             return self.width
+--         end,
 
-        getHeight = function ()
-            return self.height
-        end,
-    }
+--         getHeight = function ()
+--             return self.height
+--         end,
+--     }
 
-    self.pixelDensity = self.canvas.img:pixelDensity()
-end
+--     self.canvas = {
+--         img = js.global:createImage(self.width, self.height),
 
-function FrameBuffer:getImageData()
-    if self.pixels then return self.canvas end
-    self.canvas.img:loadPixels()
-    self.pixels = self.canvas.img.pixels
-    return self.canvas
-end
+--         getWidth = function ()
+--             return self.width
+--         end,
 
-function FrameBuffer:release()    
-end
+--         getHeight = function ()
+--             return self.height
+--         end,
+--     }
 
-function FrameBuffer:setPixel(x, y, r, g, b, a)
-    if type(r) == 'table' then r, g, b, a = r.r, r.g, r.b, r.a end
-    self:getImageData()
-    local d = self.pixelDensity
-    local offset = 4 * (x + y * self.width) * d
-    self.pixels[offset+0] = r * 255
-    self.pixels[offset+1] = g * 255
-    self.pixels[offset+2] = b * 255
-    self.pixels[offset+3] = (a or 1) * 255
-end
+--     self.pixelDensity = self.canvas.img:pixelDensity()
+-- end
 
-function FrameBuffer:getPixel(x, y)
-    self:getImageData()
-    local d = self.pixelDensity
-    local offset = 4 * (x + y * self.width) * d
-    return
-        self.pixels[offset+0] / 255,
-        self.pixels[offset+1] / 255,
-        self.pixels[offset+2] / 255,
-        self.pixels[offset+3] / 255
-end
+-- function FrameBuffer:getImageData()
+--     if self.pixels then return self.canvas end
+--     self.canvas.img:loadPixels()
+--     self.pixels = self.canvas.img.pixels
+--     return self.canvas
+-- end
 
-function FrameBuffer:setContext()
-end
+-- function FrameBuffer:release()    
+-- end
 
-function FrameBuffer:background()
-    self.canvas.img:reset(0, 0, 0, 1)
-end
+-- function FrameBuffer:setPixel(x, y, r, g, b, a)
+--     if type(r) == 'table' then r, g, b, a = r.r, r.g, r.b, r.a end
+--     self:getImageData()
+--     local d = self.pixelDensity
+--     local offset = 4 * (x + y * self.width) * d
+--     self.pixels[offset+0] = r * 255
+--     self.pixels[offset+1] = g * 255
+--     self.pixels[offset+2] = b * 255
+--     self.pixels[offset+3] = (a or 1) * 255
+-- end
 
-function FrameBuffer:update()
-    if self.pixels then
-        self.canvas.img:updatePixels()
-    end
-end
+-- function FrameBuffer:getPixel(x, y)
+--     self:getImageData()
+--     local d = self.pixelDensity
+--     local offset = 4 * (x + y * self.width) * d
+--     return
+--         self.pixels[offset+0] / 255,
+--         self.pixels[offset+1] / 255,
+--         self.pixels[offset+2] / 255,
+--         self.pixels[offset+3] / 255
+-- end
 
-function FrameBuffer:draw(x, y, w, h)
-    self:update()
-    js.global:image(self.canvas.img, x, y, w or self.width, h or self.height)
-end
+-- function FrameBuffer:setContext()
+-- end
 
-function FrameBuffer:mapPixel(f)
-    self:getImageData()
+-- function FrameBuffer:resetContext()
+-- end
 
-    local d = 4 * self.pixelDensity
-    local offset = 0
-    local r, g, b, a
-    local pixels = self.pixels
+-- function FrameBuffer:background()
+--     self.canvas.img:reset(0, 0, 0, 1)
+-- end
 
-    for y=0,self.height-1 do
-        for x=0,self.width-1 do
-            r, g, b, a = f(x, y)
+-- function FrameBuffer:update()
+--     if self.pixels then
+--         self.canvas.img:updatePixels()
+--     end
+-- end
 
-            pixels[offset+0] = r * 255
-            pixels[offset+1] = g * 255
-            pixels[offset+2] = b * 255
-            pixels[offset+3] = (a or 1) * 255
+-- function FrameBuffer:draw(x, y, w, h)
+--     self:update()
+--     js.global:image(self.canvas.img, x, y, w or self.width, h or self.height)
+-- end
 
-            offset = offset + d
-        end
-    end
-end
+-- function FrameBuffer:render(f)
+--     self:setContext()
+--     f()
+--     self:resetContext()
+-- end
+
+-- function FrameBuffer:mapPixel(f)
+--     self:getImageData()
+
+--     local d = 4 * self.pixelDensity
+--     local offset = 0
+--     local r, g, b, a
+--     local pixels = self.pixels
+
+--     for y=0,self.height-1 do
+--         for x=0,self.width-1 do
+--             r, g, b, a = f(x, y)
+
+--             pixels[offset+0] = r * 255
+--             pixels[offset+1] = g * 255
+--             pixels[offset+2] = b * 255
+--             pixels[offset+3] = (a or 1) * 255
+
+--             offset = offset + d
+--         end
+--     end
+-- end
 
 
-Image = class() : extends(FrameBuffer)
+-- Image = class() : extends(FrameBuffer)
 
-function Image:init(name)
-    FrameBuffer.init(self)
+-- function Image:init(name)
+--     FrameBuffer.init(self)
 
-    self.canvas =  {
-        img = js.global:loadImage(name),
+--     self.canvas =  {
+--         img = js.global:loadImage(name),
 
-        getWidth = function ()
-            return self.width
-        end,
+--         getWidth = function ()
+--             return self.width
+--         end,
 
-        getHeight = function ()
-            return self.height
-        end,
-    }
+--         getHeight = function ()
+--             return self.height
+--         end,
+--     }
 
-    self.width = self.canvas.img.width
-    self.height = self.canvas.img.height
-end
+--     self.width = self.canvas.img.width
+--     self.height = self.canvas.img.height
+-- end
 
-function Image:update()
-end
+-- function Image:update()
+-- end
 
-function Image:draw(x, y, w, h)
-    js.global:image(self.canvas.img, x, y, w, h)
-end
+-- function Image:draw(x, y, w, h)
+--     js.global:image(self.canvas.img, x, y, w or self.width, h or self.height)
+-- end
 
 Mesh = class()
 
@@ -308,7 +302,7 @@ end
 function setContext() 
 end
 
-function resetContext() 
+function resetContext()
 end
 
 function render2context()

@@ -1,7 +1,19 @@
-console.clear();
-
 function setup() {
+    console.clear();
+
     createCanvas(
+        screen.width,
+        screen.height);
+        // ,
+        // WEBGL);
+    
+    textFont(loadFont('/resources/fonts/arial.ttf'))
+
+    angleMode(RADIANS)
+    colorMode(RGB, 1)
+    textAlign(LEFT, TOP)
+
+    pg = createGraphics(
         screen.width,
         screen.height);
 }
@@ -11,30 +23,41 @@ var needSetup = true;
 
 function draw() {
     if (needLoad) {
-        var init = fengari.load('return __init')();
-        if (init) {
-            init();
+        if (call('__initall')) {
             needLoad = false;
         }
         return;
     }
 
     if (needSetup) {
-        var update = fengari.load('return __update')();
-        var draw = fengari.load('return __draw')();
-        if (update || draw) {
-            if (update) update();
-            if (draw) {
-                background(0, 0, 0);
-                draw();
-            }
+        if (call('__update') || call('__draw')) {
             needSetup = false;
         }
         return;
     }
     
-    fengari.load('return __update()')();
-    fengari.load('return __draw()')();
+    call('__update');
+    call('__draw');
+}
+
+function _draw() {
+    if (needLoad) {
+        if (call('__initall')) {
+            needLoad = false;
+        }
+        return;
+    }
+
+    call('__debugGraphics');
+}
+
+function call(functionName) {
+    var f = fengari.load('return ' + functionName)();
+    if (f) {
+        f();
+        return true;
+    }
+    return false;
 }
 
 function mousePressed(event) {
@@ -42,7 +65,7 @@ function mousePressed(event) {
         x: event.clientX,
         y: event.clientY,
     };
-    fengari.load('return __mousepressed()')();
+    call('__mousepressed()');
 }
 
 function touchStarted() {
@@ -50,7 +73,7 @@ function touchStarted() {
         x: touches[0].x,
         y: touches[0].y,
     };
-    fengari.load('return __mousepressed()')();
+    call('__mousepressed');
 }
 
 function mouseDragged(event) {
@@ -58,7 +81,7 @@ function mouseDragged(event) {
         x: event.clientX,
         y: event.clientY,
     };
-    fengari.load('return __mousemoved()')();
+    call('__mousemoved');
 }
 
 function touchMoved() {
@@ -66,7 +89,7 @@ function touchMoved() {
         x: touches[0].x,
         y: touches[0].y,
     };
-    fengari.load('return __mousemoved()')();
+    call('__mousemoved');
 }
 
 function mouseReleased(event) {
@@ -74,31 +97,30 @@ function mouseReleased(event) {
         x: event.clientX,
         y: event.clientY,
     };
-    fengari.load('return __mousereleased()')();
+    call('__mousereleased');
 }
 
 function touchEnded() {
-    fengari.load('return __mousereleased()')();
+    call('__mousereleased');
 }
 
 function keyTyped() {
     __key = key;
-    fengari.load('return __textinput()')();
+    call('__textinput');
 }
 
 function keyPressed() {
     __key = key;
-    fengari.load('return __keypressed()')();
+    call('__keypressed');
 }
 
 function keyReleased() {
     __key = key;
-    fengari.load('return __keyreleased()')();
+    call('__keyreleased');
 }
 
 screen.orientation.addEventListener("change", (event) => {
     __orientation = event.target.type;    
     setup();
-    
-    fengari.load('return __orientationchange()')();
+    call('__orientationchange');
 });

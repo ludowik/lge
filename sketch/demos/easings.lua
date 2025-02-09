@@ -9,12 +9,12 @@ function init()
     scene = Scene()
 
     local r = 25
-    local x, y = r, CY-r*#tween.easingFunctions
+    local x, y = r, CY-r*#Tween.easingFunctions
 
-    for name,f in pairs(tween.easing) do
+    for name,f in pairs(Tween.easing) do
         local obj = Circle(name, f, x, y, r)
         scene:add(obj)
-        obj.tween = animate(obj.position, vec2(W-r, obj.position.y), 1, f)        
+        obj.tween = tween(obj.position, vec2(W-r, obj.position.y), 1, f)        
         y = y + 2*r + 5
     end
 end

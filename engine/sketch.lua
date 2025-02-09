@@ -1,7 +1,7 @@
 Sketch = class() : extends(Index, State, Rect, MouseEvent, KeyboardEvent)
 
 function Sketch.setup()
-    Sketch.fb = nil    
+    Sketch.fb = nil
 end
 
 function Sketch:init()    
@@ -63,6 +63,9 @@ function Sketch:initMenu()
     self.parameter:group(self, true)
 
     self.bar = Bar()
+
+    env.parameter = self.parameter
+    env.bar = self.bar
 end
 
 function Sketch:checkReload()
@@ -117,7 +120,7 @@ function Sketch:setCanvas(clear)
 end
 
 function Sketch:resetCanvas()
-    love.graphics.setCanvas(self.previousCanvas)
+    love.graphics.setCanvas({self.previousCanvas})
 end
 
 function Sketch:drawSketch(force)
@@ -139,7 +142,16 @@ function Sketch:renderSketch()
     
     scale(1/SCALE_CANVAS, 1/SCALE_CANVAS)
 
-    self:draw()
+    if self.frame then
+        for i=1,(env.FRAME_COUNT or 10) do
+            pushMatrix()
+            self:frame()
+            if self.loopMode == 'none' then break end
+            popMatrix()
+        end
+    else
+        self:draw()
+    end
 
     if self.loopMode == 'redraw' then
         self.loopMode = 'none'
@@ -155,7 +167,7 @@ function Sketch:presentSketch(force)
     love.graphics.setWireframe(false)
 
     love.graphics.setColor(colors.white:rgba())
-    love.graphics.setBlendMode('replace')
+    love.graphics.setBlendMode(REPLACE)
 
     local fb = self.fb
     local canvas = fb.canvas

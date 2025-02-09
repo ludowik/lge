@@ -1,57 +1,34 @@
 
 function pushMatrix()
-    js.global:push()
+    pg:push()
 end
 
 function popMatrix()
-    js.global:pop()
+    pg:pop()
 end
 
 function resetMatrix()
-    js.global:resetMatrix()
+    pg:resetMatrix()
 end
 
 function resetMatrixContext()
-end
-
-function resetStyle()
-    blendMode(NORMAL)
-
-    stroke(colors.white)
-    strokeSize(1)
-
-    noFill()
-
-    tint(colors.white)
-
-    rectMode(CORNER)
-
-    circleMode(CENTER)
-    ellipseMode(CENTER)
-
-    textMode(CORNER)
-    textColor(colors.white)
-    textPosition(0)
-
-    fontName(DEFAULT_FONT_NAME)
-    fontSize(DEFAULT_FONT_SIZE)
-
-    -- noLight()
-    -- noMaterial()
-
-    -- styles.origin = origin or TOP_LEFT
+    pg:resetMatrix()
 end
 
 function translate(...)
-    return js.global:translate(xyz(...))
+    pg:translate(...)
 end
 
 function scale(...)
-    return js.global:scale(xyz(...))
+    pg:scale(...)
 end
 
 function rotate(...)
-    return js.global:rotate(...)
+    pg:rotate(...)
+end
+
+function inverseTransformPoint(x, y)
+    return x, y
 end
 
 function perspective()

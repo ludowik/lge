@@ -78,7 +78,7 @@ function UISlider:click(mouse)
     else
         local rx = (mouse.position.x - self.position.x - self.size.y) / (self.size.x - 2*self.size.y)
         local newValue = rx * (self.maxValue - self.minValue) + self.minValue
-        log(rx, newValue)
+        info(rx, newValue)
 
         self:set(newValue)
     end

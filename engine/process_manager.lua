@@ -72,7 +72,7 @@ function ProcessManager:setCurrentSketch(processIndex)
     local env = self.items[self.processIndex]
 
     setSetting('sketch', env.__name)
-    log(env.__name)
+    info(env.__name)
     love.window.setTitle(env.__name)
 
     -- load if not
@@ -159,9 +159,8 @@ end
 
 function ProcessManager:updateLoop(dt)
     if not self.__loopProcesses then return end
-    self:next()
-
-    local sketch = processManager:current()
+    
+    local sketch = self:next()
     assert(sketch)
 
     local delay = LOOP_PROCESS_DELAY
@@ -170,22 +169,23 @@ function ProcessManager:updateLoop(dt)
     local startTime = time()
 
     sketch.env.__autotest = true
-    Graphics.setVSync(0)
-        
-    while true do
-        n = n + 1
+    do
+        Graphics.setVSync(0)
+            
+        while true do
+            n = n + 1
 
-        sketch:updateSketch(dt)
-        sketch:drawSketch()
-
-        Graphics.flush()
-        
-        if time() - startTime > delay or n >= LOOP_PROCESS_N then
-            break
+            sketch:updateSketch(dt)
+            sketch:drawSketch()
+            
+            if time() - startTime > delay or n >= LOOP_PROCESS_N then
+                break
+            end
         end
+        
+        Graphics.flush()
+        Graphics.setVSync(1)
     end
-    
-    Graphics.setVSync(1)
     sketch.env.__autotest = false
 
     -- captureImage()

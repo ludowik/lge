@@ -6,10 +6,11 @@ function evaluateCode(source)
     assert(source)
 
     local f, err = loadstring(source, nil, 't', (_G.env or _G))
-    if not f then log(source, err) return err end
+    if not f then info(source, err) return err end
     
-    local ok, result = pcall(f)
-    if not ok then log(source, result) return result end
+    local status, result = xpcall(f, function (msg)
+        info(source, msg)
+    end)
     
     return result
 end

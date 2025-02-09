@@ -135,9 +135,6 @@ function loadSketch(env)
         env.sketch.env = env
 
         env.sketch.__className = env.__className
-
-        env.parameter = env.sketch.parameter
-        env.bar = env.sketch.bar
         
         local function encapsulate(fname)
             if env[fname] then
@@ -147,11 +144,12 @@ function loadSketch(env)
 
         for _,fname in ipairs({
             'setup',
+            'release',
             'pause',
             'resume',
             'resize',
-            'release',
             'update',
+            'frame',
             'draw',
             'autotest',
             'mousepressed',

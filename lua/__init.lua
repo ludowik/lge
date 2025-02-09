@@ -1,3 +1,4 @@
+require 'lua.log'
 require 'lua.debug'
 require 'lua.require'
 
@@ -9,7 +10,7 @@ ffi = try_require 'ffi'
 requireLib (..., {
     'table',
     'string',
-    'log',
+    --'log',
     'os',
     'iter',
     'attrib',
@@ -20,7 +21,6 @@ requireLib (..., {
     'state',
     'settings',
     'grid',
-    'function',
     'datetime',
     'eval',
     'argument',
@@ -32,4 +32,5 @@ requireLib (..., {
     'dir',
     'id',
     'switch',
+    'console',
 })

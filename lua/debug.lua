@@ -1,13 +1,12 @@
 io.stdout:setvbuf("no")
 
---if os.getenv 'LOCAL_LUA_DEBUGGER_VSCODE' == '1' then
 if arg[#arg] == 'vsc_debug' then
     local lldebugger = require 'lldebugger'
     lldebugger.start()
 
     debugMode = true
 
-    print('debug mode')
+    info('debug mode')
 
     function love.run(...)
         local f = lldebugger.call(love.runProc, false, ...)
@@ -21,12 +20,6 @@ if arg[#arg] == 'vsc_debug' then
             lldebugger.requestBreak()
         end
     end
-
--- elseif arg[#arg] == '-debug' then
---     local mobdebug = require 'mobdebug'
---     mobdebug.start()
-
---     debugMode = true
 
 else
     function love.run(...)
@@ -62,8 +55,15 @@ function getFunctionLocation(msg, level)
     if fileLocation then
         msg = msg and tostring(msg) or ''
 
-        local func = __FUNC__(level + 4) or ''
+        local func = __FUNC__(level + 3) or ''
 
         return fileLocation .. ': ' .. msg .. ' ' .. func
+    end
+end
+
+function logf(msg, ...)
+    info(getFunctionLocation(nil, 1))
+    if msg then
+        info(msg, ...)
     end
 end
