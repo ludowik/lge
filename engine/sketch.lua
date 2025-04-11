@@ -43,9 +43,6 @@ function Sketch:setMode(w, h, persistence)
     end
 end
 
-function Sketch:setup()
-end
-
 function Sketch:pause()
 end
 
@@ -53,6 +50,9 @@ function Sketch:resume()
 end
 
 function Sketch:resize()
+end
+
+function Sketch:release()
 end
 
 function Sketch:update()
@@ -124,6 +124,7 @@ function Sketch:resetCanvas()
 end
 
 function Sketch:drawSketch(force)
+    self.directDraw = false
     if self.directDraw then
         self:draw()
     else
@@ -171,7 +172,7 @@ function Sketch:presentSketch(force)
 
     local fb = self.fb
     local canvas = fb.canvas
-    local texture = fb.texture or fb.canvas
+    local texture = fb:getTexture()
 
     local ws, hs, flags = love.window.getMode()
 
@@ -293,12 +294,4 @@ function Sketch:wheelmoved(dx, dy)
             env.zoom = env.zoom / ratio
         end
     end
-end
-
-function setOrigin(origin)
-    env.__origin = origin or TOP_LEFT
-end
-
-function getOrigin(origin)
-    return env.__origin or TOP_LEFT
 end

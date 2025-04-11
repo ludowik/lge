@@ -34,6 +34,13 @@ function Shader.fromString(name, source)
     return self
 end
 
+function Shader:release()
+    if self.program then
+        self.program:release()
+        self.program = nil
+    end
+end
+
 function Shader:loadProgram()
     if self:load() then
         self:compile()

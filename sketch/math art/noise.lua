@@ -4,12 +4,12 @@ function setup()
     img = FrameBuffer(W, H)
 
     parameter:number('frequency', 1, 100, 50,
-        function()
+        function ()
             generateImg()
         end)
 
     parameter:number('amplitude', 0, 2, 1,
-        function()
+        function ()
             generateImg()
         end)
 end

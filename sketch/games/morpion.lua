@@ -296,7 +296,7 @@ function Minimax:gameMoves(grid)
     local moves = Array()
 
     if MODE == 'morpion' then    
-        grid:foreach(function(cell, i, j)
+        grid:foreach(function (cell, i, j)
             if not cell.value then
 --                moves:add(cell)
                 moves[#moves+1] = cell

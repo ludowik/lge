@@ -18,6 +18,7 @@ require 'graphics.font'
 require 'graphics.font_icons'
 require 'graphics.graphics'
 require 'graphics.graphics2d'
+--require 'graphics.graphics3d'
 require 'graphics.shape'
 require 'graphics.light'
 require 'graphics.material'
@@ -62,8 +63,6 @@ function __update()
 end
 
 function __draw()
-    blendMode(REPLACE)
-    Graphics.resetStyle()
     return Engine.draw()
 end
 
@@ -137,153 +136,6 @@ function __orientationchange()
     redraw()
 end
 
--- FrameBuffer = class()
-
--- function FrameBuffer:init(w, h)
---     self.width = w or W
---     self.height = h or H
-
---     self.texture = {
---         setFilter = function ()
---         end,
-
---         draw = function (_, x, y, w, h)
---             js.global:image(self.canvas.img, x, y, w or self.width, h or self.height)
---         end,
-
---         getWidth = function ()
---             return self.width
---         end,
-
---         getHeight = function ()
---             return self.height
---         end,
---     }
-
---     self.canvas = {
---         img = js.global:createImage(self.width, self.height),
-
---         getWidth = function ()
---             return self.width
---         end,
-
---         getHeight = function ()
---             return self.height
---         end,
---     }
-
---     self.pixelDensity = self.canvas.img:pixelDensity()
--- end
-
--- function FrameBuffer:getImageData()
---     if self.pixels then return self.canvas end
---     self.canvas.img:loadPixels()
---     self.pixels = self.canvas.img.pixels
---     return self.canvas
--- end
-
--- function FrameBuffer:release()    
--- end
-
--- function FrameBuffer:setPixel(x, y, r, g, b, a)
---     if type(r) == 'table' then r, g, b, a = r.r, r.g, r.b, r.a end
---     self:getImageData()
---     local d = self.pixelDensity
---     local offset = 4 * (x + y * self.width) * d
---     self.pixels[offset+0] = r * 255
---     self.pixels[offset+1] = g * 255
---     self.pixels[offset+2] = b * 255
---     self.pixels[offset+3] = (a or 1) * 255
--- end
-
--- function FrameBuffer:getPixel(x, y)
---     self:getImageData()
---     local d = self.pixelDensity
---     local offset = 4 * (x + y * self.width) * d
---     return
---         self.pixels[offset+0] / 255,
---         self.pixels[offset+1] / 255,
---         self.pixels[offset+2] / 255,
---         self.pixels[offset+3] / 255
--- end
-
--- function FrameBuffer:setContext()
--- end
-
--- function FrameBuffer:resetContext()
--- end
-
--- function FrameBuffer:background()
---     self.canvas.img:reset(0, 0, 0, 1)
--- end
-
--- function FrameBuffer:update()
---     if self.pixels then
---         self.canvas.img:updatePixels()
---     end
--- end
-
--- function FrameBuffer:draw(x, y, w, h)
---     self:update()
---     js.global:image(self.canvas.img, x, y, w or self.width, h or self.height)
--- end
-
--- function FrameBuffer:render(f)
---     self:setContext()
---     f()
---     self:resetContext()
--- end
-
--- function FrameBuffer:mapPixel(f)
---     self:getImageData()
-
---     local d = 4 * self.pixelDensity
---     local offset = 0
---     local r, g, b, a
---     local pixels = self.pixels
-
---     for y=0,self.height-1 do
---         for x=0,self.width-1 do
---             r, g, b, a = f(x, y)
-
---             pixels[offset+0] = r * 255
---             pixels[offset+1] = g * 255
---             pixels[offset+2] = b * 255
---             pixels[offset+3] = (a or 1) * 255
-
---             offset = offset + d
---         end
---     end
--- end
-
-
--- Image = class() : extends(FrameBuffer)
-
--- function Image:init(name)
---     FrameBuffer.init(self)
-
---     self.canvas =  {
---         img = js.global:loadImage(name),
-
---         getWidth = function ()
---             return self.width
---         end,
-
---         getHeight = function ()
---             return self.height
---         end,
---     }
-
---     self.width = self.canvas.img.width
---     self.height = self.canvas.img.height
--- end
-
--- function Image:update()
--- end
-
--- function Image:draw(x, y, w, h)
---     js.global:image(self.canvas.img, x, y, w or self.width, h or self.height)
--- end
 
 Mesh = class()
 

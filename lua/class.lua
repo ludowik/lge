@@ -70,7 +70,7 @@ function classWithProperties(proto, base)
 
     local get = base.properties.get
     if table.getnKeys(get) > 0 then
-        proto.__index = function(tbl, key)
+        proto.__index = function (tbl, key)
             if proto[key] then
                 return proto[key]
             elseif get[key] then
@@ -85,7 +85,7 @@ function classWithProperties(proto, base)
 
     local set = base.properties.set
     if table.getnKeys(set) > 0 then
-        proto.__newindex = function(tbl, key, value)
+        proto.__newindex = function (tbl, key, value)
             if proto[key] then
                 proto[key] = value
             elseif set[key] then

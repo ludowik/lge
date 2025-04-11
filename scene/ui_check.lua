@@ -2,6 +2,7 @@ UICheck = class() : extends(UI)
 
 function UICheck:init(label, object, callback)
     UI.init(self, label)
+
     self.callback = callback
 
     if classnameof(object) == 'Bind' then

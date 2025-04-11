@@ -3,12 +3,12 @@ function setup()
 
     ip = getSetting('ip', 32)
     
-    actions:integer('ip', 1, 32, ip, function() setSetting('ip', ip) end)
-    actions:action('load from local', function() updateScripts(false) end)
+    actions:integer('ip', 1, 32, ip, function () setSetting('ip', ip) end)
+    actions:action('load from local', function () updateScripts(false) end)
 
     actions:space()
     
-    actions:action('load from git', function() updateScripts(true) end)
+    actions:action('load from git', function () updateScripts(true) end)
 end
 
 function draw()

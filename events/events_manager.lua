@@ -15,7 +15,7 @@ function EventManager:init()
 
     self:registerEvent('key', 'escape', Engine.quit)
 
-    self:registerEvent('key', 'f1', function(sketch)
+    self:registerEvent('key', 'f1', function (sketch)
         local name = sketch.__className:replace('_', '+')
         openURL(('https://www.google.com/search?q=%s&lr=lang_en'):format(name))
     end)
@@ -39,6 +39,10 @@ function EventManager:mousepressed(id, x, y, presses)
     self.touches[id] = Engine.contains(mouse)
     if self.touches[id] then
         self.touches[id]:mousepressed(mouse)
+    else
+        if env.__mousepressed then
+            env.__mousepressed(mouse)
+        end
     end
 end
 
@@ -47,6 +51,10 @@ function EventManager:mousemoved(id, x, y)
     
     if self.touches[id] then
         self.touches[id]:mousemoved(mouse)
+    else
+        if env.__mousemoved then
+            env.__mousemoved(mouse)
+        end
     end
 end
 
@@ -64,12 +72,17 @@ function EventManager:mousereleased(id, x, y, presses)
         
         self.touches[id]:mousereleased(mouse)
         self.touches[id] = nil
+    else
+        if env.__mousereleased then
+            env.__mousereleased(mouse)
+        end
     end
 end
 
 function EventManager:wheelmoved(dx, dy)
-    if _G.env.sketch.wheelmoved then
-        _G.env.sketch:wheelmoved(dx, dy)
+    local sketch = processManager:current()
+    if sketch and sketch.wheelmoved then
+        sketch:wheelmoved(dx, dy)
     end
 end
 
@@ -104,9 +117,6 @@ function EventManager:keypressed(key, scancode, isrepeat)
         
         elseif key == 'i' then
             processManager:setSketch('info', false)
-
-        elseif key == 'p' then
-            instrument:toggleState()
 
         elseif key == 's' then
             ProcessManager.openSketches()

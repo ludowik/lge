@@ -23,7 +23,7 @@ function Parameter:randomizeParameter()
             if not ui.tween or ui.tween.state == 'dead' then
                 local nextValue = random(ui.minValue, ui.maxValue)
                 ui.tween = tween({value=ui.value}, {value=nextValue}, 5)
-                ui.tween.callbackOnChange = function(value)
+                ui.tween.callbackOnChange = function (value)
                     ui:set(value)
                 end
             end
@@ -119,9 +119,9 @@ function Parameter:addMainMenu()
     self:action('restart', restart)
 
     self:space()
-    self:action('sketches', function() processManager:setSketch('sketches', false) end)
-    self:action('info', function() processManager:setSketch('info', false) end)
-    self:action('keyboard', function()
+    self:action('sketches', function () processManager:setSketch('sketches', false) end)
+    self:action('info', function () processManager:setSketch('info', false) end)
+    self:action('keyboard', function ()
         love.keyboard.setTextInput(not love.keyboard.hasTextInput())
     end)
 
@@ -136,7 +136,7 @@ function Parameter:addMainMenu()
 end
 
 function Parameter:addScreenMenu()
-    if getOS():inList{'web', 'ios'} then return end
+    if getOS():inList{'ios', 'web'} then return end
 
     self:group('screen')
 
@@ -149,7 +149,8 @@ function Parameter:addScreenMenu()
             screenRatio = v
             setSetting('screenRatio', screenRatio)
             Sketch.fb = nil
-            Graphics.updateScreen()
+            Graphics.updateScreen(true)
+
         end)
     end
 end
@@ -157,7 +158,7 @@ end
 function Parameter:addNavigationMenu()
     self:group('navigation')
     
-    self:action('sketches', function() processManager:setSketch('sketches', false) end)
+    self:action('sketches', function () processManager:setSketch('sketches', false) end)
 
     self:space()
     self:action('next', function () processManager:next() end)
@@ -167,7 +168,7 @@ function Parameter:addNavigationMenu()
     self:action('random', function () processManager:random() end)
 
     self:space()
-    self:action('loop', function() processManager:loopProcesses() end)
+    self:action('loop', function () processManager:loopProcesses() end)
 
     self:space()
     self:link('web version', 'https://ludowik.github.io/lge')
@@ -178,7 +179,7 @@ function Parameter:addCaptureMenu()
 
     self:space()
     self:action('pause', Graphics.toggleLoop)
-    self:action('1x frame', function()
+    self:action('1x frame', function ()
         Graphics.noLoop()
         Graphics.redraw()
     end)
@@ -210,7 +211,7 @@ function Parameter:setStateForAllGroups(state, visible)
     state = state
     visible = visible or false
     self:foreach(
-        function(node)
+        function (node)
             if node.state then
                 node.state = state
                 node.visible = visible
@@ -294,8 +295,12 @@ function Parameter:action(label, callback, attribs)
     self.currentGroup:add(ui)
 end
 
-function Parameter:watch(label, expression)
-    self.currentGroup:add(UIExpression(label, expression))
+function Parameter:watch(label, expression, callback)
+    local ui = UIExpression(label, expression)
+    if callback then
+        ui.callback = callback
+    end
+    self.currentGroup:add(ui)
 end
 
 local function isVarName(varName)
@@ -331,6 +336,11 @@ function Parameter:number(label, varName, min, max, initValue, callback)
     return ui
 end
 
+function Parameter:color(label, clr, callback)
+    self:declareParameter(label, clr, callback)
+    self.currentGroup:add(UIColor(label, label, callback))
+end
+
 function Parameter:draw(x, y)
     x = x or 0
     y = y or 0
@@ -356,10 +366,9 @@ end
 function captureLogo()
     local size = 1024
     local fb = FrameBuffer(size, size)
-    fb:render(
-        function ()
-            sprite(env.sketch.fb, 0, 0, size, size, 0, (H-W)/2, W, W)
-        end)
+    fb:render(function ()
+        sprite(env.sketch.fb, 0, 0, size, size, 0, (H-W)/2, W, W)
+    end)
     fb:getImageData():encode('png', 'logo/'..env.__name..'.png')
     fb:release()
 end

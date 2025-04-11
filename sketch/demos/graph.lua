@@ -33,7 +33,7 @@ function setup()
     -- end
 
     parameter:action('restart', reset)
-    parameter:number('pivot', 1, SIZE, 75, function() reset() end)
+    parameter:number('pivot', 1, SIZE, 75, function () reset() end)
     parameter:number('attraction', 1, SIZE*4, SIZE)
     parameter:number('damping', 0, 1, 0.9)
     

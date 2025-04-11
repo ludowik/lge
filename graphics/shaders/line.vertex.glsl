@@ -23,6 +23,8 @@ vec4 position(mat4 , vec4 ) {
     vp = vp * vec4(InstanceScale, 1.) + vec4(InstancePosition, 0.);
     vp += normalize(vec4(-InstanceScale.y, InstanceScale.x, 0., 0.) * VertexTexCoord.x) * (strokeSize / 2.);
 
+    vp.y = love_ScreenSize.y-vp.y;
+
     color = InstanceColor;
     instanceID = gl_InstanceID;
 

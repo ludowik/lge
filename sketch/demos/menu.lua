@@ -5,7 +5,7 @@ function setup()
 
     bar:action('@play', Graphics.loop)
     bar:action('@pause', Graphics.noLoop)
-    bar:action('@loop', function() processManager:loopProcesses() end)
+    bar:action('@loop', function () processManager:loopProcesses() end)
 end
 
 function draw()

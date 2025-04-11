@@ -47,6 +47,30 @@ function Color:set(r, ...)
     end
 end
 
+function Color:__eq(clr)
+    return
+        (self.r == clr.r) and
+        (self.g == clr.g) and
+        (self.b == clr.b) and
+        (self.a == clr.a)
+end
+
+function Color:__le(clr)
+    return
+        (self.r <= clr.r) and
+        (self.g <= clr.g) and
+        (self.b <= clr.b) and
+        (self.a <= clr.a)
+end
+
+function Color:__lt(clr)
+    return
+        (self.r < clr.r) and
+        (self.g < clr.g) and
+        (self.b < clr.b) and
+        (self.a < clr.a)
+end
+
 function Color:unpack()
     return self.r, self.g, self.b, self.a
 end
@@ -83,6 +107,13 @@ end
 function Color.hsb(h, s, b, a)
     local r, g, b = hsb2rgb(h, s, b)
     return Color(r, g, b, a)
+end
+
+function Color:distance(clr)
+    return sqrt(
+        (self.r - clr.r)^2 +
+        (self.g - clr.g)^2 +
+        (self.b - clr.b)^2)    
 end
 
 function Color:contrast(a)
@@ -185,19 +216,23 @@ function Color:grayscale()
 end
 
 function Color.darken(clr, pct)
-    pct = pct or 50
+    pct = pct or 0.5
     return Color.lighten(clr, -pct)
 end
 
 function Color.lighten(clr, pct)
-    pct = pct or 50
-    local h, s, l, a = rgb2hsl(clr.r, clr.g, clr.b, clr.a)
-    l = l + l * pct / 100
-    return Color.hsl(h, s, l, a)
+    pct = pct or 0.5
+    local h, s, l = rgb2hsl(clr.r, clr.g, clr.b)
+    l = l * (1 + pct)
+    return Color.hsl(h, s, l, clr.a)
 end
 
 function Color:__tostring()
-    return self.r .. ', ' .. self.g .. ', ' .. self.b .. ', ' .. self.a
+    return (
+        floor(255*self.r) .. ', ' ..
+        floor(255*self.g) .. ', ' ..
+        floor(255*self.b) .. ', ' ..
+        floor(255*self.a))
 end
 
 function Color:rgba()
@@ -316,7 +351,7 @@ function rgb2hsl(r, g, b)
     else
         hue = (r - g) / delta + 4
     end
-    hue = hue * 60
+    hue = hue / 5
 
     -- Adjusting hue to be in the range of 0-1
     if hue < 0 then
@@ -408,7 +443,7 @@ function rgb2hsb(r, g, b)
     else
         hue = (r - g) / delta + 4
     end
-    hue = hue * 60
+    hue = hue / 5
 
     -- Adjusting hue to be in the range of 0-1
     if hue < 0 then

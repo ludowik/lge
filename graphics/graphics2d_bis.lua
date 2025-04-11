@@ -67,10 +67,11 @@ function Graphics2d_bis.arc(x, y, rx, ry, a1, a2)
 end
 
 function Graphics2d_bis.textSize(str, limit)
-    return 30, 15
+    return tostring(str):len()*fontSize(), fontSize()
 end
 
 function Graphics2d_bis.text(str, x, y, limit, align)
+    return Graphics2d_bis.textSize(str, limit)
 end
 
 function Graphics2d_bis.spriteSize(image)

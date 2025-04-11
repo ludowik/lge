@@ -129,6 +129,14 @@ else
 	end
 end
 
+function love.resize(w, h)
+    if w > h then
+        setDeviceOrientation(LANDSCAPE)
+    else
+        setDeviceOrientation(PORTRAIT)
+    end
+end
+
 function love.textinput(text)
     eventManager:textinput(text)
 end

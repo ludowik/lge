@@ -1,5 +1,6 @@
 Graphics = class()
-Graphics.styles = {}
+Graphics.styles = Array{}
+Graphics.stackStyles = Array{}
 
 function Graphics.setup()
     push2globals(Graphics)
@@ -58,7 +59,15 @@ function Graphics.initMode()
     MIN_SIZE = min(W, H)
     MAX_SIZE = max(W, H)
 
-    SIZE = MIN_SIZE
+    SIZE = even(min(MIN_SIZE, MAX_SIZE/2))
+
+    if W < H then
+        DX = (W-SIZE)/2
+        DY = (H-2*SIZE)/2
+    else
+        DX = (W-2*SIZE)/2
+        DY = (H-SIZE)/2
+    end
 
     SCALE = min(WS/W, HS/H)
     
@@ -74,32 +83,33 @@ function Graphics.getPhysicalArea()
 
     if getOS():inList{'ios', 'web'} then
         x, y = love.window.getSafeArea()
-        w, h = love.window.getDesktopDimensions(love.window.getDisplayCount())
-                
+        w, h = love.graphics.getDimensions(love.window.getDisplayCount())
         deviceOrientation = w < h and PORTRAIT or LANDSCAPE
             
     elseif getOS():inList{'osx', 'windows'} then
         local ws, hs, flags = love.window.getMode()
         if flags.fullscreen then
-            x, y, w, h = 0, 0, ws, hs
+            x, y = love.window.getSafeArea()
+            w, h = love.window.getDesktopDimensions(love.window.getDisplayCount())
             deviceOrientation = w < h and PORTRAIT or LANDSCAPE
         else
             _, h = love.window.getDesktopDimensions(love.window.getDisplayCount())
-            x, y, w, h = 0, 0, 0, h * 0.95
+            x, y = 0, 0
+            w, h = 0, h * 0.9
             w = even(h*screenRatio)
+            if deviceOrientation == LANDSCAPE then
+                local scale = 1.3
+                w, h = even(w*scale), even(h*scale)
+            end
         end
-
+    
     else
-        x, y, w, h = 0, 0, 375, 812
+        x, y = 0, 0
+        w, h = 375, 812
         deviceOrientation = PORTRAIT
     end
-
-    if deviceOrientation == LANDSCAPE then
-        local scale = 1.3
-        w, h = even(w*scale), even(h*scale)
-    end
     
-    dpiscale = 1
+    dpiscale = 2
     deviceScreenRatio = min(w/h, h/w)
 
     x = x + UI.outerMarge
@@ -120,6 +130,7 @@ function Graphics.getVirtualArea()
     local ws, hs = 0, 0
     if getOS():inList{'ios', 'web'} then
         ws, hs = love.window.getDesktopDimensions()
+        
     elseif getOS():inList{'osx', 'windows'} then
     else
     end
@@ -155,7 +166,11 @@ function Graphics.setMode(w, h)
             w,
             h,
             params)
-        love.mouse.setPosition(w/2, h/2)
+        
+        if not Graphics.positionSetted then
+            love.mouse.setPosition(w/2, h/2)
+            Graphics.positionSetted = true
+        end
     end
 end
 
@@ -164,10 +179,15 @@ function Graphics.isFullScreen()
     return flags.fullscreen
 end
 
-function Graphics.toggleFullScreen()
+function Graphics.toggleFullScreen(mode)
     Graphics.initializedScreen = false
 
     local ws, hs, flags = love.window.getMode()
+
+    if mode ~= nil then
+        flags.fullscreen = not mode
+    end
+
     if not flags.fullscreen then
         flags.fullscreen = true
         Graphics.flags = {
@@ -193,7 +213,15 @@ function Graphics.toggleFullScreen()
     Graphics.updateScreen()
 end
 
-function Graphics.updateScreen()
+function Graphics.setOrigin(origin)
+    env.__origin = origin or TOP_LEFT
+end
+
+function Graphics.getOrigin(origin)
+    return env.__origin or TOP_LEFT
+end
+
+function Graphics.updateScreen(keepParameter)
     Graphics.initMode()
 
     local sketch = processManager:current()
@@ -202,8 +230,10 @@ function Graphics.updateScreen()
     sketch:setMode(W, H, sketch.persistence)
     sketch:resize()
 
-    Engine.initParameter()
-
+    if not keepParameter then
+        Engine.initParameter()
+    end
+    
     redraw()
 end
 
@@ -251,6 +281,14 @@ local function stylesReset(name)
     Graphics.styles[name] = nil
 end
 
+function Graphics.pushStyles()
+    Graphics.stackStyles:push(Graphics.styles:clone())
+end
+
+function Graphics.popStyles()
+    Graphics.styles = Graphics.styles:pop()
+end
+
 function Graphics.resetStyle(origin)
     blendMode(NORMAL)
 
@@ -280,15 +318,22 @@ function Graphics.resetStyle(origin)
 end
 
 NORMAL = 'alpha'
-REPLACE = 'replace'
 ADD = 'add'
 SUBTRACT = 'subtract'
+REPLACE = 'replace'
 MULTIPLY = 'multiply'
+LIGHTEN = 'lighten'
+DARKEN = 'darken'
+SCREEN = 'screen'
 
 function Graphics.blendMode(mode)
     mode = stylesSet('blendMode', mode)
     if mode == MULTIPLY then
         love.graphics.setBlendMode(MULTIPLY, 'premultiplied')
+    elseif mode == LIGHTEN then
+        love.graphics.setBlendMode(LIGHTEN, 'premultiplied')
+    elseif mode == DARKEN then
+        love.graphics.setBlendMode(DARKEN, 'premultiplied')
     else
         love.graphics.setBlendMode(mode)
     end

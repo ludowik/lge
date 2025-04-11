@@ -6,9 +6,6 @@ function Engine.load()
     classSetup()
     classUnitTesting()
 
-    -- resetMatrix(true)
-    -- resetStyle()
-
     engine.reload()
 
     instrument = Instrument()
@@ -28,7 +25,7 @@ function Engine.initParameter()
     engine.parameter.visible = false
 
     if not fused() then
-        engine.parameter:action('sketches', function() processManager:setSketch('sketches', false) end)
+        engine.parameter:action('sketches', function () processManager:setSketch('sketches', false) end)
         engine.parameter:addMainMenu()
         engine.parameter:addNavigationMenu()
         engine.parameter:addScreenMenu()

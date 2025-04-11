@@ -4,8 +4,7 @@ function setup() {
     createCanvas(
         screen.width,
         screen.height);
-        // ,
-        // WEBGL);
+        //WEBGL);
     
     textFont(loadFont('/resources/fonts/arial.ttf'))
 

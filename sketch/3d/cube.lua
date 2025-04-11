@@ -38,6 +38,7 @@ end
 
 function createTexture()
     if true then return image('minecraft_dirt.png') end
+    
     local size = 64
     local tileSize = 8
 

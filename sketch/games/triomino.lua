@@ -383,7 +383,7 @@ function TriominoGrid:draw(border, position, size)
     
     local w, h, marge = self.w, self.h, 0
 
-    Grid.draw(self, 0, 0, function(cell, i, j)
+    Grid.draw(self, 0, 0, function (cell, i, j)
         if cell.value then
             noStroke()
             fill(self.clr or cell.value)

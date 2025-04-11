@@ -1,7 +1,7 @@
 function setup()
     scene = Scene()
 
-    local UIExpression = function(...)
+    local UIExpression = function (...)
         local exp = _G.UIExpression(...)
         exp.styles.fillColor = colors.transparent
         exp.styles.textColor = colors.white
@@ -57,7 +57,6 @@ end
 
 function getFbSize()
     if sketch.fb then
-        imageData = imageData or sketch.fb:getImageData()
-        return imageData:getWidth()..' , '..imageData:getHeight()
+        return sketch.fb:getWidth()..' , '..sketch.fb:getHeight()
     end 
 end

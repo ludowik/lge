@@ -2,7 +2,7 @@ local __tan, __atan, __rad, __deg, __sqrt, __cos, __sin = math.tan, math.atan, m
 
 local stack = Array()
 
-class().setup = function()
+class().setup = function ()
     resetMatrix()
 end
 

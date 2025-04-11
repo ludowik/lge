@@ -195,8 +195,7 @@ function Graphics2d.text(str, x, y, limit, align)
 end
 
 function Graphics2d.spriteSize(image)
-    local texture = image.texture or image.canvas
-    return texture:getWidth(), texture:getHeight()
+    return image:getWidth(), image:getHeight()
 end
 
 function Graphics2d.sprite(image, x, y, w, h, ox, oy, ow, oh)
@@ -209,14 +208,14 @@ function Graphics2d.sprite(image, x, y, w, h, ox, oy, ow, oh)
 
     image:update()
 
-    local texture = image.texture or image.canvas
+    local texture = image:getTexture()
     local mode = spriteMode()
 
-    w = w or texture:getWidth()
-    h = h or texture:getHeight()
+    w = w or image:getWidth()
+    h = h or image:getHeight()
 
-    ow = ow or texture:getWidth()
-    oh = oh or texture:getHeight()
+    ow = ow or image:getWidth()
+    oh = oh or image:getHeight()
 
     if mode == CENTER then
         x, y = x - w / 2, y - h / 2

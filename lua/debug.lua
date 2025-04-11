@@ -10,7 +10,7 @@ if arg[#arg] == 'vsc_debug' then
 
     function love.run(...)
         local f = lldebugger.call(love.runProc, false, ...)
-        return function(...)
+        return function (...)
             return lldebugger.call(f, false, ...)
         end
     end
@@ -63,6 +63,13 @@ end
 
 function logf(msg, ...)
     info(getFunctionLocation(nil, 1))
+    if msg then
+        info(msg, ...)
+    end
+end
+
+function logcall(level, msg, ...)
+    info(getFunctionLocation(nil, level))
     if msg then
         info(msg, ...)
     end

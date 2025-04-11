@@ -30,7 +30,7 @@ Array.add = table.insert
 Array.push = table.insert
 
 Array.pop = table.remove
-Array.shift = function(t) return table.remove(t, 1) end
+Array.shift = function (t) return table.remove(t, 1) end
 
 table.unpack = table.unpack or unpack
 Array.unpack = table.unpack
@@ -285,8 +285,13 @@ function Array:__tolua(tab)
     local serializeTypes = {
         boolean = tostring,
         number = tostring,
-        string = function(s) return '"' .. s .. '"' end,
-        table = function(t) return Array.__tolua(t, tab .. '\t') end,
+        string = function (s) return '"' .. s .. '"' end,
+        table = function (t) return Array.__tolua(t, tab .. '\t') end,
+        Color = function (c) return 'Color(' .. c.r .. ', ' .. c.g .. ', ' .. c.b .. ', ' .. c.a .. ')' end,
+        vec2 = function (v) return 'vec2(' .. v.x .. ', ' .. v.y .. ')' end,
+        vec3 = function (v) return 'vec3(' .. v.x .. ', ' .. v.y .. ', ' .. v.z .. ')' end,
+        vec4 = function (v) return 'vec4(' .. v.x .. ', ' .. v.y .. ', ' .. v.z .. ', ' .. v.w .. ')' end,
+        rect = function (r) return 'rect(' .. r.x .. ', ' .. r.y .. ', ' .. r.w .. ', ' .. r.h .. ')' end,
     }
 
     local function name(k)
@@ -297,17 +302,19 @@ function Array:__tolua(tab)
 
     if #self > 0 then
         for k, v in ipairs(self) do
-            if serializeTypes[type(v)] then
+            local f = serializeTypes[classnameof(v)] or serializeTypes[type(v)]
+            if f then
                 code = code .. '\n'
-                code = code .. tab .. '\t' .. serializeTypes[type(v)](v)
+                code = code .. tab .. '\t' .. f(v)
                 code = code .. ','
             end
         end
     else
         for k, v in pairs(self) do
-            if serializeTypes[type(v)] then
+            local f = serializeTypes[classnameof(v)] or serializeTypes[type(v)]
+            if f then
                 code = code .. '\n'
-                code = code .. tab .. '\t' .. name(k) .. ' = ' .. serializeTypes[type(v)](v)
+                code = code .. tab .. '\t' .. name(k) .. ' = ' .. f(v)
                 code = code .. ','
             end
         end

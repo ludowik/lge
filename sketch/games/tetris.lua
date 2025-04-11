@@ -500,7 +500,7 @@ end
 
 function TetrisGrid:draw(shadow, luminosity)
     self.size = cellSize
-    Grid.draw(self, 0, 0, function(cell, i, j)
+    Grid.draw(self, 0, 0, function (cell, i, j)
         if not cell.value then return end
 
         local __rect = rect

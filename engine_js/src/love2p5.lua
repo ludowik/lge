@@ -109,20 +109,11 @@ love = {
                         end,
                         
                         setPixel = function (self, x, y, r, g, b, a)
-                            local index = (x + y * self:getWidth()) * 4
-                            self.pixels[index],
-                            self.pixels[index+1],
-                            self.pixels[index+2],
-                            self.pixels[index+3] = r, g, b, a
+                            self.pg:set(x, y, 255*r, 255*g, 255*b, 255*a)
                         end,
 
                         getPixel = function (self, x, y)
-                            local index = (x + y * self:getWidth()) * 4
-                            return
-                                self.pixels[index],
-                                self.pixels[index+1], 
-                                self.pixels[index+2],
-                                self.pixels[index+3]
+                            return self.pg:get(x, y)
                         end,
 
                         mapPixel = function (self, f)
@@ -151,6 +142,9 @@ love = {
                 end,
 
                 draw = function (self, x, y, rotation, sx, sy)
+                    pg:blendMode(NORMAL)
+                    sx = sx or 1
+                    sy = sy or 1
                     js.global:image(self.pg, x, y, w*sx, h*sy, 0, 0, w, h)
                 end,
 
@@ -160,7 +154,7 @@ love = {
         end,
 
         setCanvas = function (canvas)
-            if canvas and canvas[1] then
+            if canvas then
                 cc = canvas[1]
                 if cc.pg and cc.pg['begin'] then
                     cc.pg['begin'](cc.pg)
@@ -183,14 +177,10 @@ love = {
         newImage = function (path_imageData)
             local img
 
-            if type(path) == 'string' then
-                img = js.global:loadImage(path)
+            if type(path_imageData) == 'string' then
+                img = js.global:loadImage(path_imageData)
             else
-                img = js.global:createImage(path_imageData.width, path_imageData.height)
-                path_imageData.pg:updatePixels()
-                img:copy(path_imageData.pg,
-                    0, 0, path_imageData.width, path_imageData.height,
-                    0, 0, path_imageData.width, path_imageData.height)
+                img = path_imageData.pg
             end
 
             return {
@@ -213,7 +203,12 @@ love = {
                 end,
                 
                 draw = function (self, x, y, rotation, sx, sy)
-                    pg:image(self.img, x, y, w, h, sx, sy)
+                    pg:blendMode(NORMAL)
+                    sx = sx or 1
+                    sy = sy or 1
+                    w = self.img.width
+                    h = self.img.height
+                    pg:image(self.img, x, y, w*sx, h*sy, 0, 0, w, h)
                 end,
                 
                 replacePixels = function (pixels)
@@ -223,15 +218,24 @@ love = {
                 
                 release = function ()
                 end,
+
+                setFilter = function ()
+                end,
             }
         end,
 
         reset = function ()
             -- reset syles
+            resetStyles()
         end,
 
-        clear = function ()
-            pg:clear()
+        clear = function (...)
+            local args = {...}
+            if #args == 7 then
+                pg:clear(args[1], args[2], args[3], args[4])
+            else
+                pg:clear(0, 0, 0, 1)
+            end
         end,
 
         origin = function ()
@@ -239,21 +243,20 @@ love = {
         end,
 
         translate = function (...)
-            pg.translate(...)
+            pg:translate(...)
         end,
 
         scale = function (...)
-            pg.scale(...)
+            pg:scale(...)
         end,
 
         draw = function (img, x, y, angle, sx, sy)
-            assert(x and y)
             img:draw(
-                x,
-                y,
-                angle,
-                sx,
-                sy)
+                x or 0,
+                y or 0,
+                angle or 0,
+                sx or 1,
+                sy or 1)
         end,
 
         present = function ()

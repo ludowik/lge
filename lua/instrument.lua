@@ -165,7 +165,7 @@ function Instrument:draw()
     textColor(colors.white)
         
     fontName(DEFAULT_FONT_NAME)
-    fontSize(DEFAULT_FONT_SIZE)
+    fontSize(SMALL_FONT_SIZE)
 
     self.functions:sort(function (a, b)    
         return a.elapsedTimeByFrameAvg > b.elapsedTimeByFrameAvg
@@ -184,24 +184,26 @@ function Instrument:draw()
         line(0, y, W, y)
 
         local w, h = text(ref.parentName..'.'..ref.name, 0, y)
+        local dx = textSize(' 0.00 ')
 
         ref.position = vec2(x, y)
         ref.size = vec2(w, h)
 
         self.columnSize = min(max(self.columnSize , w), CX)
 
-        local c1 = string.format('%.2f', ref.deltaTimeAvg*1000)
+        local c1 = string.format('%dx ', ref.countByFrameAvg)
+        local c2 = string.format('%.2f', ref.deltaTimeAvg*1000)
         text(c1,
-            self.columnSize + textSize('0.00') - textSize(c1),
+            self.columnSize + dx - textSize(c1),
             y)
 
-        text(string.format('* %d', ref.countByFrameAvg),
-            self.columnSize + textSize('0.00'),
+        text(c2,
+            self.columnSize + dx,
             y)
 
-        text(string.format('%.2f',
-            ref.countByFrameAvg,
-            ref.elapsedTimeByFrameAvg*1000), self.columnSize + textSize('0.00'), y)
+        text(string.format('%.2f', ref.elapsedTimeByFrameAvg*1000),
+            self.columnSize + 2*dx,
+            y)
 
         if ref.calls and ref.viewDetail then
             for ref,stats in pairs(ref.calls) do

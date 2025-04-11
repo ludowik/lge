@@ -7,6 +7,7 @@ requireLib (..., {
     'graphics',
     'graphics2d',
     'graphics2d_bis',
+    'graphics2d_template',
     'graphics3d',
     'model',
     'model_loader',

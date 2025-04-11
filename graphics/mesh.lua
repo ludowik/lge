@@ -40,7 +40,7 @@ function Mesh:update()
 
     if self.image then
         self.image:update()
-        self.mesh:setTexture(self.image.texture or self.image.canvas)
+        self.mesh:setTexture(self.image:getTexture())
     else
         self.mesh:setTexture()
     end
@@ -102,10 +102,10 @@ function Mesh:drawInstanced(instances, newInstances)
 
     gcResource('mesh')
     local instancedBuffer = getResource('mesh', instances,
-        function()
+        function ()
             return self:instancedBuffer(instances)
         end,
-        function()
+        function ()
             return newInstances == nil -- force recompute instanced buffer
         end)
         

@@ -5,11 +5,11 @@ if love.filesystem.getIdentity():lower() == 'update' then
 end
 
 Performance.compare(
-    'iterate', function()
+    'iterate', function ()
         for i=1,10000 do
         end
     end,
-    'iterate with range', function()
+    'iterate with range', function ()
         for i in range(10000) do
         end
     end)

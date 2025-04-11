@@ -19,6 +19,7 @@ function reset()
        return vec3.randomInScreen() 
     end)
     
+    if shader then shader:release() end
     shader = nil
 end
 
@@ -111,7 +112,7 @@ function update()
             float g = map(distances3D[n], 0., d, 1. , 0.);
             float b = map(distances4D[n], 0., d, 0.2, 0.8);
             
-            return vec4(r, g, g, 1.);
+            return vec4(r, g, b, 1.);
         }
     ]]
 
