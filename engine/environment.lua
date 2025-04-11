@@ -9,7 +9,13 @@ function Environment:init(name, filePath, category)
     })
 
     local requirePath = filePath:gsub('%/', '%.'):gsub('%.lua', '')
-    require(requirePath, self)
+    local status, result = xpcall(function () require(requirePath, self) end, function (msg)
+        self.env.draw = function ()
+            background(colors.red)
+            fontSize(SMALL_FONT_SIZE)
+            text(msg)
+        end
+    end)
 
     classSetup(self)
 

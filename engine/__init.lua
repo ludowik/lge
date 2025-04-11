@@ -1,3 +1,5 @@
+nilf = function () end
+
 require 'lua'
 require 'lib'
 require 'maths'

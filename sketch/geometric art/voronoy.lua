@@ -17,7 +17,7 @@ function draw()
 
     local vertex
 
---        local pixels = image.surface.pixels
+    -- local pixels = image.surface.pixels
 
     local minDistance
     local maxDistance = (W/4)^2

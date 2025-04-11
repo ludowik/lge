@@ -1,15 +1,10 @@
 Engine = class()
 
-function Engine.setup()
-    engine = Engine()
-end
-
 function Engine.load()
+    engine = Engine()
+
     classSetup()
     classUnitTesting()
-
-    resetMatrix(true)
-    resetStyle()
 
     engine.reload()
 
@@ -26,13 +21,11 @@ function Engine.load()
 end
 
 function Engine.initParameter()
-    engine.parameter = Parameter('right')
-
-    engine.parameter:action('update from local', function ()
-        updateScripts(false)
-    end)
+    engine.parameter = Parameter('left')
+    engine.parameter.visible = false
 
     if not fused() then
+        engine.parameter:action('sketches', function () processManager:setSketch('sketches', false) end)
         engine.parameter:addMainMenu()
         engine.parameter:addNavigationMenu()
         engine.parameter:addScreenMenu()
@@ -41,8 +34,6 @@ function Engine.initParameter()
 
     engine.navigation = Parameter('left')
     engine.navigation:initControlBar()
-
-    engine.parameter:group('sketch', true)
 end
 
 function Engine.reload(reload)
@@ -60,16 +51,23 @@ function Engine.quit()
 end
 
 function Engine.contains(mouse)
+    local sketch = processManager:current()
+    
     local object = engine.parameter:contains(mouse.position)
     if object then return object end
 
-    if engine.parameter.currentMenu and engine.parameter.currentMenu.label == 'navigation' then                
-        local object = engine.navigation:contains(mouse.position)
-        if object then return object end
-    end
+    object = sketch.parameter:contains(mouse.position)
+    if object then return object end
 
-    local sketch = processManager:current()
-    local object = sketch:contains(mouse.position)
+    --if engine.parameter.currentMenu and engine.parameter.currentMenu.label == 'navigation' then                
+        object = engine.navigation:contains(mouse.position)
+        if object then return object end
+    --end
+
+    object = sketch.bar:contains(mouse.position)
+    if object then return object end
+
+    object = sketch:contains(mouse.position)
     if object then return object end
 end
 
@@ -105,12 +103,29 @@ function echoUpdate(dt)
 end
 
 function echoDraw()
-    
+    echoUpdate(env.deltaTime)
+
+    fontName(DEFAULT_FONT_NAME)
+    fontSize(DEFAULT_FONT_SIZE * 2)
+
+    textColor(getBackgroundColor():contrast())
+    textMode(CORNER)
+
+    local txt = ''
+    for _,line in ipairs(__echo) do
+        txt = txt..line.line
+        if line.count > 1 then
+            txt = txt..' ('..line.count..')'
+        end
+        txt = txt..NL
+    end
+    text(txt, 25, 25)
 end
 
 function Engine.draw()
-    love.graphics.reset()
-    
+    resetMatrix(true)
+    resetStyle()
+
     local sketch = processManager:current()
     sketch:drawSketch()
 
@@ -125,50 +140,29 @@ function Engine.draw()
         return
     end
 
-    engine.parameter:draw(0, TOP)
+    sketch.parameter:draw(0, TOP)
+    engine.parameter:draw(LEFT, TOP)
 
     if instrument.active then
         instrument:draw()
     end
 
+    local showFPS = env.sketch.parameter.visible
+    
     local fps = getFPS()
-    if fps < refreshRate * 0.95 then -- or fps > refreshRate * 1.05 then
+    if showFPS or fps < refreshRate * 0.95 then
         fontName(DEFAULT_FONT_NAME)
-        fontSize(18)
-        local w, h = textSize(fps)
+        fontSize(SMALL_FONT_SIZE)
+        
         textColor(colors.red)
         textMode(CORNER)
-        text(fps, LEFT, TOP)
+        text(fps..' fps / '..getMemoryInfo(), W-LEFT-SMALL_FONT_SIZE, H-2*SMALL_FONT_SIZE, nil, 'right')
     end
 
     if __echo then
-        echoUpdate(env.deltaTime)
-
-        fontName(DEFAULT_FONT_NAME)
-        fontSize(32)
-
-        textColor((getBackgroundColor() or colors.black):contrast())
-        textMode(CORNER)
-
-        local txt = ''
-        for _,line in ipairs(__echo) do
-            txt = txt..line.line
-            if line.count > 1 then
-                txt = txt..' ('..line.count..')'
-            end
-            txt = txt..NL
-        end
-        text(txt, 25, 25)
+        echoDraw()
     end
 end
-
-function Engine.redraw()
-    local sketch = processManager:current()
-    if sketch.loopMode == 'none' then
-        sketch.loopMode = 'redraw'
-    end
-end
-redraw = Engine.redraw
 
 function toggleFused()
     setSetting('fused', not fused())

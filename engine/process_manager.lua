@@ -7,8 +7,7 @@ end
 function ProcessManager.openSketches()
     local sketch = processManager:current()
     if sketch.__className ~= 'sketches' then            
-        processManager:setSketch('sketches')
-        engine.parameter.visible = false
+        processManager:setSketch('sketches', false)
     else
         sketch.env.navigate()
     end
@@ -19,9 +18,13 @@ function ProcessManager:init()
     self.processIndex = 1
 end
 
-function ProcessManager:setSketch(name)
+function ProcessManager:setSketch(name, showParam)
     assert(name)
 
+    if showParam ~= nil then
+        engine.parameter.visible = argument(showParam, true)
+    end
+    
     local index = self:findSketch(name)
     if index then 
         return self:setCurrentSketch(index)
@@ -69,7 +72,7 @@ function ProcessManager:setCurrentSketch(processIndex)
     local env = self.items[self.processIndex]
 
     setSetting('sketch', env.__name)
-    log(env.__name)
+    info(env.__name)
     love.window.setTitle(env.__name)
 
     -- load if not
@@ -90,20 +93,12 @@ function ProcessManager:setCurrentSketch(processIndex)
         instrument:reset()
     end
 
-    -- adjust global menu
-    engine.parameter.items[#engine.parameter.items].items[1].label = sketch.env.__name
-    engine.parameter.items[#engine.parameter.items].items[2] = sketch.parameter.items[1]
-
     -- clear drawing areas and force redraw
     local W = sketch.env.__W or sketch.env.W
     if W ~= sketch.env.W then
         Graphics.updateScreen()
     end
 
-    sketch.fb:setContext()
-    sketch.fb:background()
-    
-    resetContext()
     background()
 
     redraw()
@@ -164,9 +159,8 @@ end
 
 function ProcessManager:updateLoop(dt)
     if not self.__loopProcesses then return end
-    self:next()
-
-    local sketch = processManager:current()
+    
+    local sketch = self:next()
     assert(sketch)
 
     local delay = LOOP_PROCESS_DELAY
@@ -175,22 +169,23 @@ function ProcessManager:updateLoop(dt)
     local startTime = time()
 
     sketch.env.__autotest = true
-    love.window.setVSync(0)
-        
-    while true do
-        n = n + 1
+    do
+        Graphics.setVSync(0)
+            
+        while true do
+            n = n + 1
 
-        sketch:updateSketch(dt)
-        sketch:drawSketch()
-
-        love.graphics.present()
-        
-        if time() - startTime > delay or n >= LOOP_PROCESS_N then
-            break
+            sketch:updateSketch(dt)
+            sketch:drawSketch()
+            
+            if time() - startTime > delay or n >= LOOP_PROCESS_N then
+                break
+            end
         end
+        
+        Graphics.flush()
+        Graphics.setVSync(1)
     end
-
-    love.window.setVSync(1)
     sketch.env.__autotest = false
 
     -- captureImage()

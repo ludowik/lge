@@ -20,7 +20,13 @@ function Parameter:randomizeParameter()
             Parameter.randomizeParameter(ui)
 
         elseif ui.set then
-            ui:set(random(ui.minValue, ui.maxValue))
+            if not ui.tween or ui.tween.state == 'dead' then
+                local nextValue = random(ui.minValue, ui.maxValue)
+                ui.tween = tween({value=ui.value}, {value=nextValue}, 5)
+                ui.tween.callbackOnChange = function (value)
+                    ui:set(value)
+                end
+            end
         end
     end
 end
@@ -52,7 +58,7 @@ function Parameter:initControlBar()
     
     self:action('sketches',
         function ()
-            ProcessManager.openSketches()
+            engine.parameter.visible = not engine.parameter.visible
         end,
         {
             styles = styles,
@@ -62,7 +68,8 @@ function Parameter:initControlBar()
 
     self:action('menu',
         function ()
-            engine.parameter.visible = not engine.parameter.visible
+            local sketch = processManager:current()
+            if sketch then sketch.parameter.visible = not sketch.parameter.visible end
         end,
         {
             styles = styles,
@@ -92,34 +99,34 @@ function Parameter:initControlBar()
 end
 
 function Parameter:addMainMenu()    
-    self.menu = self:group('main')
-
-    self:space()
-    self:action('fused', function () toggleFused() end)
+    self.menu = self:group('main', true)
 
     if getOS() == 'ios' then
         self:space()
         self:action('update from local', function ()
             updateScripts(false)
         end)
-        self:space()
         self:action('update from git', function ()
             updateScripts(true)
         end)
     end
 
     self:space()
+    self:action('fused', function () toggleFused() end)
+
+    self:space()
     self:action('reload', reload)
     self:action('restart', restart)
 
     self:space()
-    self:action('sketches', function() processManager:setSketch('sketches') end)
-    self:action('info', function() processManager:setSketch('info') end)
+    self:action('sketches', function () processManager:setSketch('sketches', false) end)
+    self:action('info', function () processManager:setSketch('info', false) end)
+    self:action('keyboard', function ()
+        love.keyboard.setTextInput(not love.keyboard.hasTextInput())
+    end)
 
     self:space()
     self:action('instrument', function ()
-        -- instrument:instrumentFunctions()
-        -- instrument.active = not instrument.active
         instrument:toggleState()
     end)
 
@@ -129,7 +136,7 @@ function Parameter:addMainMenu()
 end
 
 function Parameter:addScreenMenu()
-    if getOS():inList{'web', 'ios'} then return end
+    if getOS():inList{'ios', 'web'} then return end
 
     self:group('screen')
 
@@ -142,7 +149,8 @@ function Parameter:addScreenMenu()
             screenRatio = v
             setSetting('screenRatio', screenRatio)
             Sketch.fb = nil
-            Graphics.updateScreen()
+            Graphics.updateScreen(true)
+
         end)
     end
 end
@@ -150,7 +158,7 @@ end
 function Parameter:addNavigationMenu()
     self:group('navigation')
     
-    self:action('sketches', function() processManager:setSketch('sketches') end)
+    self:action('sketches', function () processManager:setSketch('sketches', false) end)
 
     self:space()
     self:action('next', function () processManager:next() end)
@@ -160,7 +168,7 @@ function Parameter:addNavigationMenu()
     self:action('random', function () processManager:random() end)
 
     self:space()
-    self:action('loop', function() processManager:loopProcesses() end)
+    self:action('loop', function () processManager:loopProcesses() end)
 
     self:space()
     self:link('web version', 'https://ludowik.github.io/lge')
@@ -170,9 +178,11 @@ function Parameter:addCaptureMenu()
     self:group('capture')
 
     self:space()
-    self:action('pause', Graphics.noLoop)
-    self:action('1x frame', Graphics.redraw)
-    self:action('resume', Graphics.loop)
+    self:action('pause', Graphics.toggleLoop)
+    self:action('1x frame', function ()
+        Graphics.noLoop()
+        Graphics.redraw()
+    end)
 
     self:space()
     self:action('capture image', function ()
@@ -201,7 +211,7 @@ function Parameter:setStateForAllGroups(state, visible)
     state = state
     visible = visible or false
     self:foreach(
-        function(node)
+        function (node)
             if node.state then
                 node.state = state
                 node.visible = visible
@@ -233,7 +243,6 @@ function Parameter:group(label, open)
             styles = {
                 fillColor = colors.blue,
                 textColor = colors.white,
-                fontSize = 28
             },
             mousereleased = function (...)
                 MouseEvent.mousereleased(...)
@@ -252,13 +261,11 @@ end
 function Parameter:declareParameter(varName, initValue, callback)
     if type(varName) == 'string' and env[varName] == null then
         env[varName] = initValue
+        if callback then callback() end
     
     elseif classnameof(varName) == 'Bind' and varName:get() == null then
         varName:set(initValue)
-    end
-
-    if callback then
-        callback()
+        if callback then callback() end
     end
 end
 
@@ -266,10 +273,6 @@ function Parameter:space()
     local ui = UI()
     ui.fixedSize = vec2(0, 4 * UI.outerMarge)
     self.currentGroup:add(ui)
-end
-
-function openURL(url)    
-    love.system.openURL(url)
 end
 
 function Parameter:link(label, url)
@@ -292,8 +295,12 @@ function Parameter:action(label, callback, attribs)
     self.currentGroup:add(ui)
 end
 
-function Parameter:watch(label, expression)
-    self.currentGroup:add(UIExpression(label, expression))
+function Parameter:watch(label, expression, callback)
+    local ui = UIExpression(label, expression)
+    if callback then
+        ui.callback = callback
+    end
+    self.currentGroup:add(ui)
 end
 
 local function isVarName(varName)
@@ -329,29 +336,46 @@ function Parameter:number(label, varName, min, max, initValue, callback)
     return ui
 end
 
+function Parameter:color(label, clr, callback)
+    self:declareParameter(label, clr, callback)
+    self.currentGroup:add(UIColor(label, label, callback))
+end
+
 function Parameter:draw(x, y)
     x = x or 0
     y = y or 0
 
-    self:layout(x, y + UI.outerMarge)
+    self:layout(x, y)
     Scene.draw(self)
 end
 
 function captureImage()
+    local engineVisible = engine.parameter.visible
+    local sketchVisible = env.sketch.parameter.visible
+    
     engine.parameter.visible = false
+    env.sketch.parameter.visible = false
+
     love.graphics.captureScreenshot(function (imageData)
         imageData:encode('png', 'image/'..env.__name..'.png')
-        engine.parameter.visible = true
+        engine.parameter.visible = engineVisible
+        env.sketch.parameter.visible = sketchVisible
     end)
 end
 
 function captureLogo()
     local size = 1024
     local fb = FrameBuffer(size, size)
-    render2context(fb,
-        function ()
-            sprite(env.sketch.fb, 0, 0, size, size, 0, (H-W)/2, W, W)
-        end)
+    fb:render(function ()
+        sprite(env.sketch.fb, 0, 0, size, size, 0, (H-W)/2, W, W)
+    end)
     fb:getImageData():encode('png', 'logo/'..env.__name..'.png')
     fb:release()
+end
+
+
+Bar = class() : extends(Parameter)
+
+function Bar:init()
+    Parameter.init(self, 'horizontal')
 end

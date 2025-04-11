@@ -44,13 +44,16 @@ end
 
 function draw()
 	background()
+
+	fontSize(DEFAULT_FONT_SIZE * 2)
 	
-	local y = 100
 	local w, h = textSize('50')
 	local marge = w/2
+
+	local x, y = 0, CY - (w+marge)*9/2
 	
 	for i,pronostic in ipairs(pronosticList) do
-		local x = 0
+		x = CX - (w+marge)*7.5/2
 
 		for _,number in ipairs(pronostic.balls) do
 			local wn = textSize(number)

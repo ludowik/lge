@@ -40,7 +40,7 @@ function Mesh:update()
 
     if self.image then
         self.image:update()
-        self.mesh:setTexture(self.image.texture or self.image.canvas)
+        self.mesh:setTexture(self.image:getTexture())
     else
         self.mesh:setTexture()
     end
@@ -92,7 +92,7 @@ function Mesh:draw(x, y, z, w, h, d)
     popMatrix()
 end
 
-function Mesh:drawInstanced(instances, instancedBuffer)
+function Mesh:drawInstanced(instances, newInstances)
     self:update()
 
     local clr = fill() or colors.white
@@ -100,9 +100,14 @@ function Mesh:drawInstanced(instances, instancedBuffer)
     
     local n = #instances
 
-    instancedBuffer = getResource('mesh', instances, function (instances)
-        return self:instancedBuffer(instances)
-    end)
+    gcResource('mesh')
+    local instancedBuffer = getResource('mesh', instances,
+        function ()
+            return self:instancedBuffer(instances)
+        end,
+        function ()
+            return newInstances == nil -- force recompute instanced buffer
+        end)
         
     self.mesh:attachAttribute('InstancePosition', instancedBuffer, 'perinstance')
     self.mesh:attachAttribute('InstanceScale', instancedBuffer, 'perinstance')
@@ -114,8 +119,6 @@ function Mesh:drawInstanced(instances, instancedBuffer)
 end
 
 function Mesh:instancedBuffer(instances)
-    local n = #instances
-
     local bufferFormat
     if love.getVersion() > 11 then
         bufferFormat = {
@@ -135,10 +138,10 @@ function Mesh:instancedBuffer(instances)
 end
 
 function Mesh:useShader(instanced)
-    self.previousShader = love.graphics.getShader()    
-    love.graphics.setShader(self.shader.program)
+    self.previousShader = getShader()
+    setShader(self.shader.program)
 
-    if env.sketch.cam then
+    if env and env.sketch.cam then
         self.uniforms.cameraPos = env.sketch.cam.eye
     end
 
@@ -177,7 +180,7 @@ function Mesh:sendUniform(uniformName, ...)
 end
 
 function Mesh:restoreShader()
-    love.graphics.setShader(self.previousShader)
+    setShader(self.previousShader)
 end
 
 function Mesh:addRect(...)

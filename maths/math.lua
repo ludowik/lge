@@ -12,7 +12,7 @@ function math.map(value, minIn, maxIn, minOut, maxOut)
 end
 map = math.map
 
---- TODO check this 3 new functions
+--- TODO check this 2 new functions
 function math.smoothstep(edge0, edge1, x)
     -- Scale, bias and saturate x to 0..1 range
     x = clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0)
@@ -36,6 +36,9 @@ function math.quotient(dividend, divisor)
 end
 quotient = math.quotient
 
+function lerp(a, b, t)
+    return (1 - t) * a + t * b
+end
 
 abs = math.abs
 

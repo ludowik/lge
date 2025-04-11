@@ -186,18 +186,18 @@ end
 function mt.tobytes(m1) return m1.values end
 
 function mt.perf()
-    Performance.timeit('none', function(i) end)
+    Performance.timeit('none', function (i) end)
 
-    Performance.timeit('create matrix', function(i)
+    Performance.timeit('create matrix', function (i)
         matrix(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
     end)
 
-    Performance.timeit('create and set matrix', function(i, m)
+    Performance.timeit('create and set matrix', function (i, m)
         m:set(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
     end, matrix())
 
     Performance.timeit('multiply matrix',
-                       function(i, m1, m2) local m = m1 * m2 end, matrix(),
+                       function (i, m1, m2) local m = m1 * m2 end, matrix(),
                        matrix())
 end
 

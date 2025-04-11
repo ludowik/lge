@@ -351,10 +351,13 @@ function Image.Filter.PopArt:run(source, target)
     end
 
     target:setContext()
-    background(colors.white)
-    fill(colors.red)
-    circle(source.width/2, source.width/2, source.width/2)
+    do
+        background(colors.white)
+        fill(colors.red)
+        circle(source.width/2, source.width/2, source.width/2)
+    end
     target:resetContext()
+    
     target.imageData = nil
     target.texture = nil
 end

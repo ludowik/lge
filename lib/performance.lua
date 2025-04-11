@@ -23,4 +23,11 @@ Performance = class()
 function Performance.timeit(name, f)
     local t = runningTime(f, 100)
     log(name, t)
+    return t
+end
+
+function Performance.compare(name1, f1, name2, f2)
+    local t1 = Performance.timeit(name1, f1)
+    local t2 = Performance.timeit(name2, f2)
+    log(name1, name2, tofraction(t2/t1))
 end

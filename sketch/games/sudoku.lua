@@ -76,7 +76,7 @@ function resolve()
 end
 
 function reset()
-    grid:foreach(function(cell, i, j)
+    grid:foreach(function (cell, i, j)
         if not cell.fixed then
             cell.value = 0
         end
@@ -86,7 +86,7 @@ end
 function update()
     if routine and coroutine.status(routine) ~= 'dead' then
         local res, error = coroutine.resume(routine)
-        if res ~= true then log(res, error) end
+        if res ~= true then info(res, error) end
     end
 end
 
@@ -214,7 +214,7 @@ function block_index(i, j)
 end
 
 function updateAvailableValue(grid)
-    grid:foreach(function(cell, i, j)
+    grid:foreach(function (cell, i, j)
         cell.availableValues = createArrayOfValues()
         for k in range(N) do
             if k ~= i then 
@@ -280,7 +280,7 @@ function createSudoku(grid)
         for _,v in ipairs(deleteValues) do
             grid:getCellFromOffset(v).value = 0
         end
-        grid:foreach(function(cell, i , j)
+        grid:foreach(function (cell, i , j)
             cell.fixed = cell.value > 0
         end)
         updateAvailableValue(grid)
@@ -336,7 +336,7 @@ function generateSudoku(grid, offset, mode, solutions)
         updateAvailableValue(grid)
 
         local count = 0
-        grid:foreach(function(cell, i, j)
+        grid:foreach(function (cell, i, j)
             local total = 0
             for i=1,#cell.availableValues do
                 if cell.availableValues[i] then
@@ -379,7 +379,7 @@ end
 
 function savePuzzle(grid)
     local puzzle = ''
-    grid:foreach(function(cell)
+    grid:foreach(function (cell)
         puzzle = puzzle..(cell.value > 0 and cell.value or '.')
         puzzle = puzzle..(cell.fixed and 'f' or '.')
     end)

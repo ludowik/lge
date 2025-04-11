@@ -38,12 +38,13 @@ end
 
 function createTexture()
     if true then return image('minecraft_dirt.png') end
+    
     local size = 64
     local tileSize = 8
 
     local image = FrameBuffer(size*4, size*3)
 
-    render2context(image,
+    image:render(
         function ()
             noStroke()
             rectMode(CORNER)

@@ -8,5 +8,5 @@ end
 
 function getMemoryInfo(__ram)
     __ram = __ram or ram()
-    return string.format('%.2f mo', __ram / 1024 / 1024)
+    return string.format('%.1f mo', __ram / 1024 / 1024)
 end

@@ -7,61 +7,98 @@ function FrameBuffer:init(w, h, format, clr)
         msaa = 5,
         dpiscale = dpiscale,
     })
+    self.canvas:setFilter('linear', 'linear')
     
-    self:setContext()
     self:background(clr or colors.transparent)
-    self:resetContext()
     
     self.width = self.canvas:getWidth()
     self.height = self.canvas:getHeight()
 end
 
-function FrameBuffer:copy(fb)
+function FrameBuffer:copy(x, y, w, h)
+    x, y = x or 0, y or 0
+    w, h = w or self.width, h or self.height
+
     self:update()
     
-    local fb = FrameBuffer(self.width, self.height, self.format)    
-    fb:setContext()
-
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.draw(self.canvas)
-
-    fb:getImageData()
-    fb:resetContext()
+    local fb = FrameBuffer(w, h, self.format)    
+    fb:render(function ()
+        tint(colors.white)
+        pushStyles()
+        spriteMode(CORNER)
+        sprite(self, 0, 0, w, h, x, y, w, h)
+    end)
 
     return fb
 end
 
+function FrameBuffer:getWidth()
+    return self:getTexture():getWidth()
+end
+
+function FrameBuffer:getHeight()
+    return self:getTexture():getHeight()
+end
+
+function FrameBuffer:resize(w, h)
+    assert(w and h)
+
+    self:update()
+    
+    local fb = FrameBuffer(w, h, self.format)    
+    fb:render(function ()
+        tint(colors.white)
+        sprite(self, 0, 0, w, h)
+    end)
+
+    return fb
+end
+
+function FrameBuffer:getTexture()
+    return self.texture or self.canvas
+end
+
 function FrameBuffer:release()
-    self.imageData:release()
-    self.imageData = nil
+    if self.imageData then
+        self.imageData:release()
+        self.imageData = nil
+    end
     
     self.canvas:release()
     self.canvas = nil
 end
 
 function FrameBuffer:setContext()
-    setContext(self)
+    self.previousCanvas = love.graphics.getCanvas()
+
+    love.graphics.setCanvas({
+        self.canvas,
+        stencil = false,
+        depth = true,
+    })
+
+    pushMatrix()
     resetMatrixContext()
 end
 
 function FrameBuffer:resetContext()
-    resetContext()
+    popMatrix()
+    love.graphics.setCanvas({self.previousCanvas})
 end
 
 function FrameBuffer:background(clr, ...)
     clr = Color.fromParam(clr, ...) or colors.black
 
     local previous = love.graphics.getCanvas()
-    love.graphics.setCanvas(self.canvas)
-    love.graphics.clear(clr.r, clr.g, clr.b, clr.a)
-    love.graphics.setCanvas(previous)
+    love.graphics.setCanvas({self.canvas})
+    love.graphics.clear(clr.r, clr.g, clr.b, clr.a, true, false, 1)
+    love.graphics.setCanvas({previous})
 
     self.imageData = nil
 end
 
 function FrameBuffer:getImageData()
     if self.imageData then
-        -- self.pointerData = ffi.cast('uint8_t*', self.imageData:getFFIPointer())
         return self.imageData
     end
 
@@ -73,10 +110,14 @@ function FrameBuffer:getImageData()
 
     local getImageData = love.graphics.readbackTexture or self.canvas.newImageData
     self.imageData = getImageData(self.canvas)
-    -- self.pointerData = ffi.cast('uint8_t*', self.imageData:getFFIPointer())
 
+    self.texture = love.graphics.newImage(self.imageData, {
+        dpiscale = dpiscale,
+        linear = true
+    })
+    
     if restoreCanvas then
-        love.graphics.setCanvas(self.canvas)
+        love.graphics.setCanvas({self.canvas})
     end
 
     self.needUpdate = true
@@ -87,15 +128,14 @@ end
 function FrameBuffer:update()
     if self.imageData and (self.texture == nil or self.needUpdate == true) then
         self.needUpdate = false
-
-        if self.texture then
-            self.texture:release()
-        end
-
-        self.texture = love.graphics.newImage(self.imageData, {
-            dpiscale = dpiscale,
-        })
+        self.texture:replacePixels(self.imageData)
     end
+end
+
+function FrameBuffer:render(f)
+    self:setContext()
+    f()
+    self:resetContext()
 end
 
 function FrameBuffer:mapPixel(f)
@@ -118,11 +158,6 @@ function FrameBuffer:setPixel(x, y, r, g, b, a)
         self.imageData:setPixel(x, y, r:rgba())
     else
         self.imageData:setPixel(x, y, r, g, b, a)
-        -- local offset = (x + y * self.width) * 4
-        -- self.pointerData[offset+0] = r * 255
-        -- self.pointerData[offset+1] = g * 255
-        -- self.pointerData[offset+2] = b * 255
-        -- self.pointerData[offset+3] = (a or 1) * 255
     end
 end
 
@@ -139,6 +174,16 @@ function FrameBuffer:getPixel(x, y, clr)
         return r, g, b, a
     else
         return self.imageData:getPixel(x, y)
+    end
+end
+
+GRAY = 'gray'
+
+function FrameBuffer:filter(filterType)
+    if filterType == GRAY then
+        self:mapPixel(function (x, y, r, g, b, a)
+            return Color(r, g, b, a):grayscale():unpack()
+        end)
     end
 end
 
@@ -170,26 +215,25 @@ end
 Image = class() : extends(FrameBuffer)
 
 function Image:init(filename, ...)
-    filename = find(filename)
+    local filepath = find(filename)
 
-    if love.filesystem.getInfo(filename) == nil then
-        log('Image : '..filename..' not found')
+    if not filepath then
+        echo('Image : '..filename..' not found')
         FrameBuffer.init(self, ...)
         return
     end
 
-    self.texture = love.graphics.newImage(filename, {
+    local texture = love.graphics.newImage(filepath, {
         dpiscale = dpiscale,
         linear = true
     })
-
-    local w, h =  self.texture:getDimensions()
-    FrameBuffer.init(self, w, h, self.texture:getFormat())
-
-    self:setContext()
-
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.draw(self.texture)
+    texture:setFilter('linear', 'linear')
     
-    self:resetContext()
+    local w, h = texture:getDimensions()
+    FrameBuffer.init(self, w, h, texture:getFormat())
+    
+    self:render(function ()
+        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.draw(texture)
+    end)
 end

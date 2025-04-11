@@ -9,6 +9,7 @@ function Solitaire:init()
     self:initScene()
     self:initPosition()
     
+    self:resetHistory()
     self:loadGame()
 
     self:initParameters()
@@ -78,13 +79,13 @@ end
 
 function Solitaire:initParameters()
     self.parameter:boolean('Auto', Bind(self, 'autoPlay'), true)
-    self.parameter:boolean('3 cartes', Bind(self, 'play3Card'), getSetting('play3Card', true),
+    self.parameter:boolean('3 cartes', Bind(self, 'play3Card'), getAppSetting('play3Card', true),
         function ()
-            setSetting('play3Card', self.play3Card)
+            setAppSetting('play3Card', self.play3Card)
         end)
     self.parameter:watch('Score', Bind(self, 'score'))        
-    self.parameter:action('Nouvelle donne', function() self:newGame() end)
-    self.parameter:action('Rejouer', function() self:newGame(self.seedValue) end)
+    self.parameter:action('Nouvelle donne', function () self:newGame() end)
+    self.parameter:action('Rejouer', function () self:newGame(self.seedValue) end)
 
     self.parameter:action(Bind('"Annuler " .. #sketch.movesBack'), function ()
         self:undo()
@@ -176,19 +177,19 @@ function Solitaire:loadGame()
         self.seedValue = data.seedValue or self:nextSeedValue()
         self.score = data.score or 0
 
-        Array.foreach(data.deck, function(card)
+        Array.foreach(data.deck, function (card)
             self.deck:push(Card(card.value, card.suit, card.faceUp))
         end)
-        Array.foreach(data.wast, function(card)
+        Array.foreach(data.wast, function (card)
             self.wast:push(Card(card.value, card.suit, card.faceUp))
         end)
-        Array.foreach(data.rows, function(row, i)
-            Array.foreach(row, function(card)
+        Array.foreach(data.rows, function (row, i)
+            Array.foreach(row, function (card)
                 self.rows.items[i]:push(Card(card.value, card.suit, card.faceUp))
             end)
         end)
-        Array.foreach(data.piles, function(pile, i)
-            Array.foreach(pile, function(card)
+        Array.foreach(data.piles, function (pile, i)
+            Array.foreach(pile, function (card)
                 self.piles.items[i]:push(Card(card.value, card.suit, card.faceUp))
             end)
         end)
@@ -201,8 +202,10 @@ function Solitaire:resetHistory()
 end
 
 function Solitaire:undo()
-    sketch:movement('undo')
-    self:exec(self.movesBack, self.movesForward)
+    if #self.movesBack > 1 then
+        sketch:movement('undo')
+        self:exec(self.movesBack, self.movesForward)
+    end
 end
 
 function Solitaire:redo()
@@ -220,25 +223,25 @@ end
 function Solitaire:movement(type, fromDeck, toDeck)
     if type == 'faceup' then
         self.score = self.score + 10
-        log('faceup')
+        info('faceup')
 
     elseif type == 'movement' then
         if fromDeck.__className == 'Wast' and toDeck.__className == 'Row' then
             self.score = self.score + 10
-            log('Wast to Row')
+            info('Wast to Row')
 
         elseif toDeck.__className == 'Pile' then
             self.score = self.score + 10
-            log('to Pile')
+            info('to Pile')
 
         elseif fromDeck.__className == 'Pile' and toDeck.__className == 'Row' then
             self.score = self.score  - 5
-            log('Pile to Row')
+            info('Pile to Row')
         end
     
     elseif type == 'undo' then
         self.score = self.score  - 20
-        log('undo')
+        info('undo')
     end
 end
 
@@ -266,7 +269,7 @@ function Solitaire:draw()
 
     local cards = Array()
 
-    self.deckList:foreach(function(deck)
+    self.deckList:foreach(function (deck)
         deck:draw()
         for _, card in ipairs(deck.items) do
             if not card.tween then
@@ -275,7 +278,7 @@ function Solitaire:draw()
         end
     end)
 
-    self.deckList:foreach(function(deck)
+    self.deckList:foreach(function (deck)
         for _, card in ipairs(deck.items) do
             if card.tween and not card.faceUp then
                 cards:add(card)
@@ -283,7 +286,7 @@ function Solitaire:draw()
         end
     end)
 
-    self.deckList:foreach(function(deck)
+    self.deckList:foreach(function (deck)
         for _, card in ipairs(deck.items) do
             if card.tween and card.faceUp then
                 cards:add(card)
@@ -291,7 +294,7 @@ function Solitaire:draw()
         end
     end)
 
-    cards:foreach(function(card) card:draw() end)
+    cards:foreach(function (card) card:draw() end)
 end
 
 ---
@@ -346,7 +349,7 @@ end
 
 function Deck:serialize()
     local data = Array()
-    self.items:foreach(function(card)
+    self.items:foreach(function (card)
         data:push({
             value = card.value,
             suit = card.suit,
@@ -523,15 +526,15 @@ end
 function Card:animate(count)
     count = count or 0
 
-    self.tween = animate(
+    self.tween = tween(
         self.position,
         self.nextPosition,
         {
             delayBeforeStart = count / 60,
             delay = 20 / 60
         },
-        tween.easing.quadOut,
-        function() self.tween = nil end)    
+        Tween.easing.quadOut,
+        function () self.tween = nil end)    
 end
 
 local labels = { 'A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K' }
@@ -555,7 +558,7 @@ function Card:draw()
     rect(x, y, wcard, hcard, Card.radius)
 
     if self.faceUp then
-        fontName('arial')
+        fontName('comic')
         fontSize(wtext)
 
         textMode(CENTER)

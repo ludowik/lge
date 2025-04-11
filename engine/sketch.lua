@@ -1,7 +1,7 @@
 Sketch = class() : extends(Index, State, Rect, MouseEvent, KeyboardEvent)
 
 function Sketch.setup()
-    Sketch.fb = nil    
+    Sketch.fb = nil
 end
 
 function Sketch:init()    
@@ -35,16 +35,12 @@ function Sketch:setMode(w, h, persistence)
     w = w / SCALE_CANVAS
     h = h / SCALE_CANVAS
     
-    -- love.graphics.setDefaultFilter('nearest', 'nearest')
     if self.persistence then
         self.fb = FrameBuffer(w, h)
     else
         Sketch.fb = Sketch.fb or FrameBuffer(w, h)
         self.fb = Sketch.fb
     end
-end
-
-function Sketch:setup()
 end
 
 function Sketch:pause()
@@ -56,12 +52,20 @@ end
 function Sketch:resize()
 end
 
+function Sketch:release()
+end
+
 function Sketch:update()
 end
 
 function Sketch:initMenu()
     self.parameter = Parameter('right')
-    self.parameter:group(nil, true)
+    self.parameter:group(self, true)
+
+    self.bar = Bar()
+
+    env.parameter = self.parameter
+    env.bar = self.bar
 end
 
 function Sketch:checkReload()
@@ -96,7 +100,31 @@ function Sketch:updateSketch(dt)
     setSetting('assertLoadIsKO', nil)
 end
 
+function Sketch:setCanvas(clear)
+    self.previousCanvas = love.graphics.getCanvas()
+
+    love.graphics.setCanvas({
+        self.fb.canvas,
+        stencil = false,
+        depth = true,
+    })
+
+    
+    if clear then
+        love.graphics.clear(0, 0, 0, 1, true, false, 1)
+    else
+        love.graphics.clear(false, false, true)
+    end
+
+    love.graphics.setWireframe(env.__wireframe and true or false)
+end
+
+function Sketch:resetCanvas()
+    love.graphics.setCanvas({self.previousCanvas})
+end
+
 function Sketch:drawSketch(force)
+    self.directDraw = false
     if self.directDraw then
         self:draw()
     else
@@ -108,39 +136,43 @@ end
 function Sketch:renderSketch()
     if self.loopMode == 'none' then return end
 
-    love.graphics.setCanvas({
-        self.fb.canvas,
-        stencil = false,
-        depth = true,
-    })
-    
-    love.graphics.clear(false, false, true)
-    love.graphics.setWireframe(env.__wireframe and true or false)
+    self:setCanvas()
 
     resetMatrix(true)
     resetStyle(getOrigin())
     
     scale(1/SCALE_CANVAS, 1/SCALE_CANVAS)
 
-    self:draw()
+    if self.frame then
+        for i=1,(env.FRAME_COUNT or 10) do
+            pushMatrix()
+            self:frame()
+            if self.loopMode == 'none' then break end
+            popMatrix()
+        end
+    else
+        self:draw()
+    end
 
     if self.loopMode == 'redraw' then
         self.loopMode = 'none'
     end
+
+    self:resetCanvas()
 end
 
 function Sketch:presentSketch(force)
     love.graphics.setCanvas()
-    love.graphics.setShader()
+    setShader()
     love.graphics.setDepthMode()
     love.graphics.setWireframe(false)
 
     love.graphics.setColor(colors.white:rgba())
-    love.graphics.setBlendMode('replace')
+    love.graphics.setBlendMode(REPLACE)
 
     local fb = self.fb
     local canvas = fb.canvas
-    local texture = fb.texture or fb.canvas
+    local texture = fb:getTexture()
 
     local ws, hs, flags = love.window.getMode()
 
@@ -162,7 +194,7 @@ function Sketch:presentSketch(force)
         SCALE * sy) -- scale y
 
     if force then
-        love.graphics.present()
+        Graphics.flush()
     end
 end
 
@@ -262,12 +294,4 @@ function Sketch:wheelmoved(dx, dy)
             env.zoom = env.zoom / ratio
         end
     end
-end
-
-function setOrigin(origin)
-    env.__origin = origin or TOP_LEFT
-end
-
-function getOrigin(origin)
-    return env.__origin or TOP_LEFT
 end

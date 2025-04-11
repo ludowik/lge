@@ -27,7 +27,7 @@ function Layout:layout(_x, _y, _layoutMode)
             -- alignment
             function align(x, y)
                 if layoutMode:contains('right') then
-                    x = W - item.size.x - LEFT/2
+                    x = W - item.size.x - LEFT
                 elseif layoutMode:contains('center') then
                     x = CX - item.size.x/2
                 end

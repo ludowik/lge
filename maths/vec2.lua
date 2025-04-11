@@ -167,6 +167,12 @@ function vec2:normalizeInPlace(norm)
     return self
 end
 
+function vec2:scale(s)
+    return vec2(
+        self.x * s.x,
+        self.y * s.y)
+end
+
 function vec2.scalar(u, v)
     return u.x * v.x + u.y * v.y
 end

@@ -4,7 +4,7 @@ function setup()
     
     reset()
 
-    sketch.fb = FrameBuffer(w, h)
+    sketch.fb = FrameBuffer(W, H)
 end
 
 function reset()
@@ -35,7 +35,9 @@ function draw()
 
     local rMin = 2
     local rMax = 4
+    
     local rStep = 0.001
+
     local iMax = 150
 
     local data = Array()

@@ -3,7 +3,7 @@
 // uniforms
 uniform highp float iTime;
 uniform highp float SHAPE_SIZE;
-uniform highpfloat TIMESCALE;
+uniform highp float TIMESCALE;
 uniform highp float SMOOTHNESS;
 
 uniform highp float z;
@@ -111,9 +111,7 @@ float GetLight(vec3 p) {
 
 vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
     vec3 ws_pixels_pos = vec3((screen_coords * 2. - love_ScreenSize.xy) / love_ScreenSize.x, 1.);
-    
-    ws_pixels_pos.y *= -1.;
-    
+        
     vec3 ro = vec3(CAMERA_POS_WORLD.xy, -z);
     vec3 rd = normalize(ws_pixels_pos);
 

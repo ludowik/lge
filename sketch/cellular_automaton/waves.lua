@@ -14,7 +14,7 @@ function resize()
     damping = 0.95
 
     img = FrameBuffer(sizeW, sizeH)
-    img:background()
+    img:background(colors.red)
 end
 
 function update()

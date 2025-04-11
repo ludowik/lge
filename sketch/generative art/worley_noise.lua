@@ -1,6 +1,10 @@
 function setup()
-    N = 15
-    
+    N = 15    
+    reset()
+    menu()
+end
+
+function menu()
     parameter:action('reset', reset)
 
     parameter:integer('d', 1, SIZE*2, SIZE)
@@ -15,6 +19,7 @@ function reset()
        return vec3.randomInScreen() 
     end)
     
+    if shader then shader:release() end
     shader = nil
 end
 
@@ -27,9 +32,6 @@ function mapPixels(img, uniforms, pixelShader)
 
     shader:sendUniforms(uniforms)
 
-    love.graphics.clear(0, 0, 0, 1)
-    love.graphics.setShader(shader.program)
-
     local mesh = love.graphics.newMesh({
         {0, 0, 0, 0, 1, 1, 1, 1},
         {W, 0, 1, 0, 1, 0, 1, 1},
@@ -38,10 +40,12 @@ function mapPixels(img, uniforms, pixelShader)
     }, 'fan')
 
     img:setContext()
-    love.graphics.draw(mesh, 0, 0)
+    do
+        background()
+        setShader(shader.program)
+        love.graphics.draw(mesh, 0, 0)
+    end
     img:resetContext()
-
-    love.graphics.setShader()
 end
 
 function update()
@@ -108,7 +112,7 @@ function update()
             float g = map(distances3D[n], 0., d, 1. , 0.);
             float b = map(distances4D[n], 0., d, 0.2, 0.8);
             
-            return vec4(r, g, g, 1.);
+            return vec4(r, g, b, 1.);
         }
     ]]
 

@@ -159,7 +159,7 @@ end
 function update()
     if routine and coroutine.status(routine) ~= 'dead' then
         local res, error = coroutine.resume(routine)
-        if res ~= true then log(res, error) end
+        if res ~= true then info(res, error) end
     end
 end
 

@@ -88,7 +88,7 @@ function Instrument:instrumentFunctions(t)
         ref.parent[ref.name] = function (...)
             if self.behindInstrument then return ref.func(...) end
 
-            -- log(string.tab(self.level)..scriptLink(3), ref.parentName..'.'..ref.name)
+            -- info(string.tab(self.level)..scriptLink(3), ref.parentName..'.'..ref.name)
             -- self.level = self.level + 1
             local startTime, innerTime, endTime, results, push_calls
 
@@ -165,7 +165,7 @@ function Instrument:draw()
     textColor(colors.white)
         
     fontName(DEFAULT_FONT_NAME)
-    fontSize(18)
+    fontSize(SMALL_FONT_SIZE)
 
     self.functions:sort(function (a, b)    
         return a.elapsedTimeByFrameAvg > b.elapsedTimeByFrameAvg
@@ -184,16 +184,26 @@ function Instrument:draw()
         line(0, y, W, y)
 
         local w, h = text(ref.parentName..'.'..ref.name, 0, y)
+        local dx = textSize(' 0.00 ')
 
         ref.position = vec2(x, y)
         ref.size = vec2(w, h)
 
         self.columnSize = min(max(self.columnSize , w), CX)
 
-        text(string.format('%.5f * %d = %.5f',
-            ref.deltaTimeAvg,
-            ref.countByFrameAvg,
-            ref.elapsedTimeByFrameAvg), self.columnSize, y)
+        local c1 = string.format('%dx ', ref.countByFrameAvg)
+        local c2 = string.format('%.2f', ref.deltaTimeAvg*1000)
+        text(c1,
+            self.columnSize + dx - textSize(c1),
+            y)
+
+        text(c2,
+            self.columnSize + dx,
+            y)
+
+        text(string.format('%.2f', ref.elapsedTimeByFrameAvg*1000),
+            self.columnSize + 2*dx,
+            y)
 
         if ref.calls and ref.viewDetail then
             for ref,stats in pairs(ref.calls) do
@@ -217,6 +227,8 @@ function Instrument:avoidReferences()
         type, tonumber, tostring,
         require, requireLib,
         xpcall,
+        ypcall,
+        pcall,
     }
 
     Instrument.avoidModules = {

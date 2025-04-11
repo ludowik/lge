@@ -4,19 +4,13 @@ function setup()
     cubes = Array()
     cubes:add({0, 0, 0, 50, 50, 50, 1, 1, 1, 1})
 
-    updateInstance()
-
     parameter:watch('cubes:count()')
     parameter:action('level', addLevel)
 end
 
-function updateInstance()
-    instancesBuffer = mesh:instancedBuffer(cubes)
-end
-
 function draw()
     isometric(5)    
-    mesh:drawInstanced(cubes, instancesBuffer)
+    mesh:drawInstanced(cubes)
 end
 
 function addLevel()
@@ -42,8 +36,6 @@ function addLevel()
         end
     end)
     cubes = newCubes
-
-    updateInstance()    
 end
 
 function keypressed(key)

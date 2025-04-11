@@ -10,7 +10,15 @@ end
 function EventManager:init()
     self.currentObject = nil
 
-    self.touches = {}
+    self.touches = Array()
+    self.onEvents = Array()
+
+    self:registerEvent('key', 'escape', Engine.quit)
+
+    self:registerEvent('key', 'f1', function (sketch)
+        local name = sketch.__className:replace('_', '+')
+        openURL(('https://www.google.com/search?q=%s&lr=lang_en'):format(name))
+    end)
 end
 
 function EventManager:update(dt)
@@ -18,9 +26,9 @@ function EventManager:update(dt)
 
     if not eventManager.currentObjectPressed then
         eventManager.currentObjectTimer = eventManager.currentObjectTimer - 1
-        if eventManager.currentObjectTimer == 0 then
+        if eventManager.currentObjectTimer <= 0 then
             eventManager.currentObjectTimer = nil
-            eventManager.currentObject = self
+            eventManager.currentObject = nil
         end
     end
 end
@@ -31,6 +39,10 @@ function EventManager:mousepressed(id, x, y, presses)
     self.touches[id] = Engine.contains(mouse)
     if self.touches[id] then
         self.touches[id]:mousepressed(mouse)
+    else
+        if env.__mousepressed then
+            env.__mousepressed(mouse)
+        end
     end
 end
 
@@ -39,6 +51,10 @@ function EventManager:mousemoved(id, x, y)
     
     if self.touches[id] then
         self.touches[id]:mousemoved(mouse)
+    else
+        if env.__mousemoved then
+            env.__mousemoved(mouse)
+        end
     end
 end
 
@@ -46,7 +62,7 @@ function EventManager:mousereleased(id, x, y, presses)
     mouse:released(id, x, y, 0)
     
     if self.touches[id] then
-        if mouse.move:len() <= 25 and mouse.elapsedTime < 0.5 then
+        if mouse.move:len() <= 30 then -- and mouse.elapsedTime < 0.5 then
             mouse.presses = 1
             if self.touches[id]:click(mouse) then
                 self.touches[id] = nil
@@ -56,12 +72,17 @@ function EventManager:mousereleased(id, x, y, presses)
         
         self.touches[id]:mousereleased(mouse)
         self.touches[id] = nil
+    else
+        if env.__mousereleased then
+            env.__mousereleased(mouse)
+        end
     end
 end
 
 function EventManager:wheelmoved(dx, dy)
-    if _G.env.sketch.wheelmoved then
-        _G.env.sketch:wheelmoved(dx, dy)
+    local sketch = processManager:current()
+    if sketch and sketch.wheelmoved then
+        sketch:wheelmoved(dx, dy)
     end
 end
 
@@ -69,14 +90,19 @@ function EventManager:textinput(text)
     self:search(text)
 end
 
+function EventManager:registerEvent(eventType, eventId, eventAction)
+    self.onEvents[eventType] = self.onEvents[eventType] or {}
+    self.onEvents[eventType][eventId] = eventAction
+end
+
 function EventManager:keypressed(key, scancode, isrepeat)
     local sketch = processManager:current()
     if sketch.keypressed then
         sketch:keypressed(key, scancode, isrepeat)
     end
-    
-    if key == 'escape' then
-        Engine.quit()
+
+    if self.onEvents.key[key] then
+        self.onEvents.key[key](sketch)
 
     elseif love.keyboard.isDown('lgui') or love.keyboard.isDown('lctrl')  then
         if key == 'r' then
@@ -87,16 +113,20 @@ function EventManager:keypressed(key, scancode, isrepeat)
 
         elseif key == 't' then
             env.__autotest = not env.__autotest
-            love.window.setVSync(env.__autotest and 0 or 1)
+            Graphics.setVSync(env.__autotest and 0 or 1)
         
         elseif key == 'i' then
-            processManager:setSketch('info')
-
-        elseif key == 'p' then
-            instrument:toggleState()
+            processManager:setSketch('info', false)
 
         elseif key == 's' then
             ProcessManager.openSketches()
+
+        elseif key == 'm' then
+            if background == Graphics2d_bis.background then
+                push2globals(Graphics2d)
+            else
+                push2globals(Graphics2d_bis)
+            end
 
         elseif key == 'l' or key == 'kpenter' then
             processManager:loopProcesses()
@@ -114,13 +144,6 @@ function EventManager:keypressed(key, scancode, isrepeat)
             processManager:next()
 
         end
-
-    elseif key == 'f1' then
-        local name = sketch.__className:replace('_', '+')
-        openURL(('https://www.google.com/search?q=%s&lr=lang_en'):format(name))
-        
-    elseif key == 'f2' then
-        line = line == Graphics2d.line and myline or Graphics2d.line
 
     elseif key == 'f5' then
         ProcessManager.openSketches()

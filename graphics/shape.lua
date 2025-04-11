@@ -17,8 +17,8 @@ function Shape:draw()
     scale(self.scaleFactor)
 
     if self.shader then
-       self.oldShader = love.graphics.getShader()
-       love.graphics.setShader(self.shader.program)
+       self.oldShader = getShader()
+       setShader(self.shader.program)
     end
     
     if self.type == POINTS then
@@ -37,7 +37,7 @@ function Shape:draw()
     end
 
     if self.shader then
-       love.graphics.setShader(self.oldShader)
+        setShader(self.oldShader)
     end
 
     popMatrix()
@@ -54,13 +54,9 @@ function vertex(x, y, z)
     shape.vertices:add(y)
 
     if z then
-        shape.shader = Graphics3d.shaders.shader3d
+        shape.shader = Graphics3d and Graphics3d.shaders.shader3d
         shape.vertices:add(z)
     end
-end
-
-local function lerp(a, b, t)
-    return (1 - t) * a + t * b
 end
 
 function bezierVertex(x2, y2, x3, y3, x4, y4)

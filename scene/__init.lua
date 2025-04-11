@@ -5,10 +5,11 @@ requireLib(..., {
     'ui_expression',
     'ui_slider',
     'ui_check',
+    'ui_color',
     'layout',
     'node',
     'scene',
     'parameter',
-    'animate',
-    'animate_easings',
+    'tween',
+    'tween_easings',
 })

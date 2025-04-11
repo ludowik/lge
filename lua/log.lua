@@ -10,7 +10,7 @@ function warning(value, msg)
         if not warnings[msg] then
             warnings[msg] = true
             local info = scriptLink(3)
-            log(info..' '..msg)
+            info(info..' '..msg)
         end
     end
 end
@@ -31,19 +31,23 @@ function log(k, v, ...)
     end
 end
 
+function info(...)
+    log(...)
+end
+
 function here()
-    log('here')
+    info('here')
 end
 
 function fatal(check)
     if not check then
-        log(debug.traceback())
+        info(debug.traceback())
         stop()
     end
 end
 
 local major, minor, revision, codename = love.getVersion()
 local str = string.format("%d.%d.%d - %s", major, minor, revision, codename)
-log('Löve version', str)
-log('Lua version', _VERSION)
-log('Save data Directory', love.filesystem.getSaveDirectory())
+info('Löve version', str)
+info('Lua version', _VERSION)
+info('Save data Directory', love.filesystem.getSaveDirectory())

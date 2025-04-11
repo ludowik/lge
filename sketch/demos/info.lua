@@ -1,6 +1,15 @@
 function setup()
     scene = Scene()
 
+    local UIExpression = function (...)
+        local exp = _G.UIExpression(...)
+        exp.styles.fillColor = colors.transparent
+        exp.styles.textColor = colors.white
+        return exp
+    end
+
+    scene:add(UI('System'):attrib{styles={fillColor=colors.red}})
+    scene:add(UIExpression('os', 'getOS()'))
     scene:add(UIExpression('version app', 'version'))
     scene:add(UIExpression('version framework', 'love.getVersion()'))
     scene:add(UIExpression('date', 'Date():asDate()'))
@@ -15,8 +24,6 @@ function setup()
     scene:add(UIExpression('dt', 'string.format("%d ms", floor(deltaTime*1000))'))
     scene:add(UIExpression('elapsed', 'string.format("%d s", floor(elapsedTime))'))
 
-    local w, h = love.window.getDesktopDimensions(1)
-
     scene:add(UI('Screen'):attrib{styles={fillColor=colors.red}})
     scene:add(UIExpression('orientation', 'deviceOrientation'))
     scene:add(UIExpression('desktop dimension', 'string.format("%d, %d", love.window.getDesktopDimensions())'))
@@ -27,11 +34,10 @@ function setup()
     scene:add(UIExpression('dpi scale', 'love.window.getDPIScale()'))
 
     scene:add(UI('Mouse'):attrib{styles={fillColor=colors.red}})
-    scene:add(UIExpression('startPosition', 'mouse.startPosition'))
+    scene:add(UIExpression('start', 'mouse.startPosition'))
     scene:add(UIExpression('position', 'mouse.position'))
-    scene:add(UIExpression('previousPosition', 'mouse.previousPosition'))
-    scene:add(UIExpression('deltaPos', 'mouse.deltaPos'))
-    scene:add(UIExpression('previousPosition', 'mouse.previousPosition'))
+    scene:add(UIExpression('previous', 'mouse.previousPosition'))
+    scene:add(UIExpression('delta', 'mouse.deltaPos'))
     scene:add(UIExpression('move', 'mouse.move'))
     scene:add(UIExpression('move len', 'mouse.move:len()'))
     scene:add(UIExpression('delay', 'mouse.elapsedTime'))
@@ -51,7 +57,6 @@ end
 
 function getFbSize()
     if sketch.fb then
-        imageData = imageData or sketch.fb:getImageData()
-        return imageData:getWidth()..' , '..imageData:getHeight()
+        return sketch.fb:getWidth()..' , '..sketch.fb:getHeight()
     end 
 end

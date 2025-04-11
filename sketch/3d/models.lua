@@ -18,6 +18,11 @@ function setup()
         materials.wood
     }
 
+    camera(3, 2, 3)
+    menu()
+end
+
+function menu()
     parameter:link('OpenGL', 'https://learnopengl.com/lighting/basic-lighting')
     parameter:link('Models', 'https://poly.pizza')
 
@@ -41,8 +46,6 @@ function setup()
     parameter:number('material - diffuse', Bind(materials[1].diffuseColor, 'r'), 0, 5)
     parameter:number('material - specular', Bind(materials[1].specularColor, 'r'), 0, 3)
     parameter:number('alpha', Bind(materials[1], 'shininess'), 0, 1)
-
-    camera(3, 2, 3)
 end
 
 function draw()

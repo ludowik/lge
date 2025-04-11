@@ -11,7 +11,7 @@ function load(reload)
     classUnitTesting()
     
     if getSetting('assertLoadIsKO') then
-        processManager:setSketch('sketches')    
+        processManager:setSketch('sketches', false)
     else
         setSetting('assertLoadIsKO', true)
         if not processManager:setSketch(getSetting('sketch', 'sketches')) then
@@ -77,7 +77,11 @@ function declareSketch(name, filePath, category, reload)
     if reload then
         local requirePath = filePath:gsub('%/', '%.'):gsub('%.lua', '')
         environments[requirePath] = nil
-        package.loaded[requirePath] = nil
+        for k,v in pairs(package.loaded) do
+            if k:startWith(requirePath) then
+                package.loaded[k] = nil
+            end
+        end
     end
     
     if environments[name] then return environments[name] end
@@ -131,8 +135,6 @@ function loadSketch(env)
         env.sketch.env = env
 
         env.sketch.__className = env.__className
-
-        env.parameter = env.sketch.parameter
         
         local function encapsulate(fname)
             if env[fname] then
@@ -142,11 +144,12 @@ function loadSketch(env)
 
         for _,fname in ipairs({
             'setup',
+            'release',
             'pause',
             'resume',
             'resize',
-            'release',
             'update',
+            'frame',
             'draw',
             'autotest',
             'mousepressed',
@@ -160,17 +163,9 @@ function loadSketch(env)
         end
 
         if env.sketch.setup then
-            local previousCanvas = love.graphics.getCanvas()
-            love.graphics.setCanvas({
-                env.sketch.fb.canvas,
-                stencil = false,
-                depth = true,
-            })
-            love.graphics.clear(0, 0, 0, 1, true, false, 1)
-
+            env.sketch:setCanvas(true)
             env.sketch:setup()
-
-            love.graphics.setCanvas(previousCanvas)
+            env.sketch:resetCanvas()
         end
     end
 end
@@ -181,7 +176,7 @@ function saveSketchesList()
     local sketchesList = 'return {' .. NL
     environmentsList:foreach(function (env)
         if env.__category then
-            if  not env.__category:inList{'3d', 'pixel art', 'shader art'} and
+            if  not env.__category:inList{'3d', 'shader art'} and
                 not env.__name:inList{'geojson', 'worley_noise', 'myline', 'micro', 'mouse'}
             then
                 sketchesList = sketchesList .. TAB .. ("{name='{__name}', filePath='{__requirePath}', category='{__category}'},"):format(env) .. NL

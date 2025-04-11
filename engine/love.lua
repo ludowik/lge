@@ -5,6 +5,7 @@ function love.runProc()
 	love.timer.step()
 
 	local dt = 0
+    local frame = 0
 
 	-- Main loop time
 	local mainLoop = function ()
@@ -26,11 +27,13 @@ function love.runProc()
 		love.update(dt)
 
 		-- Call draw
-		if love.graphics.isActive() then
-			love.graphics.origin()
+		if love.graphics.isActive() and frame%2 == 0 then
+			love.graphics.reset()
 			love.draw()
 			love.graphics.present()
 		end
+
+        frame = frame + 1
 
 		love.timer.sleep(0.001)
 	end
@@ -72,7 +75,7 @@ if getOS() == 'ios' then
     local touches = {}
 
     function love.touchpressed(id, x, y, dx, dy, pressure)
-        x, y = scaleMouseProperties(x, y)
+        x, y = Graphics.scaleMouseProperties(x, y)
         touches[id] = {
             presses = 1,
             moved = false,
@@ -83,14 +86,14 @@ if getOS() == 'ios' then
     end
 
     function love.touchmoved(id, x, y, dx, dy, pressure)
-        x, y = scaleMouseProperties(x, y)
+        x, y = Graphics.scaleMouseProperties(x, y)
         touches[id].moved = true
         mouse = touches[id].mouse
         eventManager:mousemoved(id, x, y)
     end
 
     function love.touchreleased(id, x, y, dx, dy, pressure)
-        x, y = scaleMouseProperties(x, y)
+        x, y = Graphics.scaleMouseProperties(x, y)
         mouse = touches[id].mouse
         eventManager:mousereleased(id, x, y, touches[id].presses)
         touches[id] = nil
@@ -106,24 +109,32 @@ else
     end
 
     function love.mousepressed(x, y, button, istouch, presses)
-        x, y = scaleMouseProperties(x, y)
+        x, y = Graphics.scaleMouseProperties(x, y)
         eventManager:mousepressed(button, x, y, presses)
     end
 
     function love.mousemoved(x, y, dx, dy, istouch)
-        x, y = scaleMouseProperties(x, y)
+        x, y = Graphics.scaleMouseProperties(x, y)
         eventManager:mousemoved(mouse.id, x, y)
     end
 
     function love.mousereleased(x, y, button, istouch, presses)
-        x, y = scaleMouseProperties(x, y)
+        x, y = Graphics.scaleMouseProperties(x, y)
         eventManager:mousereleased(button, x, y, presses)
     end
 
 	function love.wheelmoved(dx, dy)
-        dx, dy = scaleMouseProperties(dx, dy)
+        dx, dy = Graphics.scaleMouseProperties(dx, dy)
 		eventManager:wheelmoved(dx, dy)
 	end
+end
+
+function love.resize(w, h)
+    if w > h then
+        setDeviceOrientation(LANDSCAPE)
+    else
+        setDeviceOrientation(PORTRAIT)
+    end
 end
 
 function love.textinput(text)

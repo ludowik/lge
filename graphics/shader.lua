@@ -34,6 +34,13 @@ function Shader.fromString(name, source)
     return self
 end
 
+function Shader:release()
+    if self.program then
+        self.program:release()
+        self.program = nil
+    end
+end
+
 function Shader:loadProgram()
     if self:load() then
         self:compile()
@@ -104,7 +111,7 @@ function Shader:compile()
             return love.graphics.newShader(self.pixelShader.code, self.vertexShader.code)
         end,
         function (msg)
-            log('Compile shader '..self.name, msg)
+            info('Compile shader '..self.name, msg)
             self.errorMsg = msg
         end)
 

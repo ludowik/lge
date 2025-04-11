@@ -1,2 +1,2 @@
 global __version__ = 12
-log(__version__)
+info(__version__)

@@ -2,6 +2,10 @@ local __tan, __atan, __rad, __deg, __sqrt, __cos, __sin = math.tan, math.atan, m
 
 local stack = Array()
 
+class().setup = function ()
+    resetMatrix()
+end
+
 function resetMatrix(resetStack)
     resetMatrixContext(resetStack)
 end
@@ -28,6 +32,8 @@ function popMatrix()
     __viewMatrix = stack:pop()
     __projectionMatrix = stack:pop()
     __modelMatrix = stack:pop()
+
+    assert(__modelMatrix)
 
     setTransformation()
 end
@@ -176,6 +182,10 @@ function matByVector(m, v)
         res:getMatrix()
     }
     return vec4(values[1], values[5], values[9], values[13])
+end
+
+function inverseTransformPoint(x, y)
+    return love.graphics.inverseTransformPoint(x, y)
 end
 
 function applyMatrix(m)
@@ -336,10 +346,9 @@ end
 
 function set3dMode()
     love.graphics.setFrontFaceWinding('cw')
-    
     love.graphics.setMeshCullMode('back')
-
     love.graphics.setDepthMode('less', true)
+    
     love.graphics.clear(true, false, 1)
 
     setOrigin(BOTTOM_LEFT)

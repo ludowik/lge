@@ -3,7 +3,7 @@ FlowFields = class() : extends(Sketch)
 function FlowFields:init()
     Sketch.init(self)
 
-    self.parameter:action('reset', function() self:initGrid() end)
+    self.parameter:action('reset', function () self:initGrid() end)
     self.parameter:boolean('lines', false, redraw)
 
     self.parameter:number('step', 0.001, 0.1, 0.01)
@@ -85,7 +85,7 @@ function FlowFields:draw()
         end
 
     else
-        self.img:mapPixel(function(x, y)
+        self.img:mapPixel(function (x, y)
             x = x + 1
             y = y + 1
 

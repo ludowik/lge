@@ -3,14 +3,16 @@ function setup()
     Functions()
 end
 
-function update()
+function update(dt)
     Functions:update()
+
+    current = Array.nextIndex(Functions.list, elapsedTime)
 end
 
 function draw()
     background()
 
-    translate(H/6, H/6)
+    translate(H/6, H/3)
 
     for i,f in ipairs(Functions.list) do
         f:draw(i == current)
@@ -30,6 +32,7 @@ function keypressed(key)
         else
             current = current + 1
         end
+        
     elseif key == 'up' then
         if current == 1 then
             current = #Functions.list
@@ -69,7 +72,7 @@ Functions.functions = Array{
 
     {'noise', noise},
 
-    {'a * x + b', function (x) return a*x+b end, param={2, 0.5}},
+    {'a * x + b', function (x) return 3 * x + 3 end, param={2, 0.5}},
 }
 
 function Functions:init()
@@ -77,10 +80,7 @@ function Functions:init()
 
     parameter:number('dx', 0.001, 0.1, 0.01, function () Functions.needUpdate = true end)
 
-    parameter:number('a', -10, 10, 2.0, function () Functions.needUpdate = true end)
-    parameter:number('b', -10, 10, 0.5, function () Functions.needUpdate = true end)
-
-    for name,f in pairs(tween.easing) do
+    for name,f in pairs(Tween.easing) do
         Functions.functions:add({
                 name,
                 f,
@@ -146,17 +146,17 @@ function Function:draw(current)
     if current then
         strokeSize(2)
         stroke(colors.red)
-        fontSize(20)
-        textColor(colors.white)
     else
-        strokeSize(1)
+        strokeSize(0.5)
         stroke(colors.darkgray)
-        fontSize(15)
-        textColor(colors.darkgray)
     end
 
     polyline(self.points)
 
-    textMode(CENTER)
-    text(self.label, self.tx, self.ty)
+    if current then
+        textMode(CENTER)
+        textColor(colors.white)
+        fontSize(20)
+        text(self.label, self.tx, self.ty)
+    end
 end

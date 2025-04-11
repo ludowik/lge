@@ -1,7 +1,7 @@
 local resources = {}
 
 function getResource(resType, resRef, createRes, isValidRes, releaseRes)
-    resources[resType] = resources[resType] or {}
+    resources[resType] = resources[resType] or Array()
 
     local resInfo = resources[resType][resRef]
     if (not resInfo) or (isValidRes and not isValidRes(resRef, res)) then
@@ -15,20 +15,50 @@ function getResource(resType, resRef, createRes, isValidRes, releaseRes)
             create = createRes,
             isValid = isValidRes,
             release = releaseRes,
+            time = time()
         }
+    else
+        resInfo.time = time()
     end
 
     return unpack(resources[resType][resRef].res)
 end
 
-function releaseResource(resName)
-    if not resources[resName] then
+function releaseResource(resType, resRef)
+    if not resources[resType] then return end
+    
+    if resRef then
+        local resInfo = resources[resType][resRef]
+        if not resInfo then return end
+
+        if resInfo.releaseRes then
+            resInfo.releaseRes(resInfo.res)
+        end
+        resources[resType][resRef] = nil
+
+    else        
+        for i,resInfo in ipairs(resources[resType]) do
+            if resInfo.releaseRes then
+                resInfo.releaseRes(resInfo.res)
+            end
+        end
+        resources[resType] = {}
+    end
+end
+
+function gcResource(resType)
+    if not resType then
+        for resType,_ in pairs(resources) do
+            gcResource(resType)
+        end
         return
     end
-    for i,v in ipairs(resources[resName]) do
-        if v.releaseRes then
-            v.releaseRes(r.res)
+    if not resources[resType] then return end
+
+    local now = time()
+    for resRef,resInfo in pairs(resources[resType]) do
+        if now - resInfo.time >= 5 then
+            releaseResource(resType, resRef)
         end
     end
-    resources[resName] = {}
 end

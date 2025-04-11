@@ -30,7 +30,7 @@ function Rainbow:draw()
         rotate(-PI / 2)
         for hue=0,w-1 do
             fill(Color.hsb(hue / w, 0.5, 0.5))
-            arc(0, 0, h/2, h/2,
+            arc(0, 0, h/2,
                 TAU * hue / w,
                 TAU * (hue + 1) / w)
         end
@@ -62,7 +62,7 @@ function Rainbow:draw()
         for r=w/2,1,-d*2 do
             for hue=0,w-1,d do
                 fill(Color.hsb(hue / w, r / w, r / w))
-                arc(0, 0, r, r,
+                arc(0, 0, r,
                     TAU * hue / w,
                     TAU * (hue + d) / w)
             end

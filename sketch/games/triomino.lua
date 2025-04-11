@@ -127,7 +127,7 @@ function Triomino:click(mouse)
     if mino then
         mino.grid = mino.grid:rotate(mouse.id == 1)
         mino.grid.rotation = (mouse.id == 1 and -1 or 1) * PI/2
-        animate(mino.grid, {rotation = 0}, 1/6)
+        tween(mino.grid, {rotation = 0}, 1/6)
         self:updateShadow(mino)
     end
 end
@@ -307,8 +307,6 @@ function Triomino:draw()
     end
     
     self.stack:draw()
-
-    -- grid2d(cellSize)
 end
 
 Mino = class() : extends(Rect)
@@ -385,7 +383,7 @@ function TriominoGrid:draw(border, position, size)
     
     local w, h, marge = self.w, self.h, 0
 
-    Grid.draw(self, 0, 0, function(cell, i, j)
+    Grid.draw(self, 0, 0, function (cell, i, j)
         if cell.value then
             noStroke()
             fill(self.clr or cell.value)

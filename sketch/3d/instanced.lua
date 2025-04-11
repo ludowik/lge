@@ -12,8 +12,6 @@ function setup()
         end
     end
 
-    m.instancesBuffer = m:instancedBuffer(m.instances)
-
     local distance = 50
     camera(vec3(distance, distance, distance))
 end
@@ -22,5 +20,5 @@ function draw()
     background()
     perspective()
 
-    m:drawInstanced(m.instances, m.instancesBuffer)
+    m:drawInstanced(m.instances)
 end
